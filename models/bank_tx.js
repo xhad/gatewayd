@@ -8,7 +8,6 @@ var BankTx = sequelize.define('bank_transaction', {
   currency: { type: Sequelize.STRING, allowNull: false },
   bankAccountId: { 
 		type: Sequelize.INTEGER, 
-		allowNull: false,
 		references: 'BankAccount',
 		referencesKey: 'id'
 	},
