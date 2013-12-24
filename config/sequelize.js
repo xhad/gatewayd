@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 
 var dbConfig = {
   host: '127.0.0.1',
-  name: 'gateway_appliance',
+  name: 'sequelize_development',
   user: 'postgres',
   password: 'password'
 };

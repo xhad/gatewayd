@@ -1,4 +1,5 @@
 var BankAccount = require('../models/bank_account');
+var util = require('util');
 
 module.exports = (function(){
 	function userIndex(req, res) {
@@ -12,19 +13,24 @@ module.exports = (function(){
   }
   
   function create(req, res) {
-    if (req.body.userId) {
-			BankAccount.create({
-		    userId: req.body.userId,	
-			})
-			.success(function(bankAccount){
-				res.send(bankAccount);
-			})
-			.error(function(err){
-				res.send({ error: err });
-			});
-		} else {
-			res.send({ error: 'userId parameter required' });
+		req.checkBody('userId', 'Invalid userId')
+			.notEmpty().isInt();
+		
+		var errors = req.validationErrors();
+		if (errors) {
+			res.send({ error: util.inspect(errors) }, 400)
+			return;
 		}
+
+		BankAccount.create({
+			userId: parseInt(req.body.userId),	
+		})
+		.success(function(bankAccount){
+			res.send(bankAccount);
+		})
+		.error(function(err){
+			res.send({ error: err });
+		});
 	}
 
   function index(req, res) {

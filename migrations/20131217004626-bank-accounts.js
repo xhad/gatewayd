@@ -7,7 +7,11 @@ exports.up = function(db, callback) {
     userId: { type: 'int', unique: true, notNull: true },
     createdAt: { type: 'datetime', notNull: true },
     updatedAt: { type: 'datetime', unique: true, notNull: true }
-  }, callback);
+  }, function(){
+		db.runSql('ALTER TABLE bank_accounts ADD CONSTRAINT userfk FOREIGN KEY ("userId") REFERENCES users (id) MATCH FULL;', callback);
+	});
+
+
 }
 
 exports.down = function(db, callback) {

@@ -4,6 +4,8 @@ var express = require('express'),
     https   = require('https'),
     path    = require('path'),
     pg      = require('pg'),
+		util	  = require('util'),
+		expressValidator = require('express-validator'),
     db      = require('./config/sequelize.js');
 
 var WithdrawalsCtrl     = require('./controllers/withdrawals.js'),
@@ -23,10 +25,15 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon())
 app.use(express.bodyParser())
+app.use(expressValidator());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'oi09ajsdf09fwlkej33lkjpx'}));
 app.use(express.methodOverride())
+
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(function(err, req, res, next) {
+	res.send({ error: err });
+});
 
 app.get('/api/v1/users', UsersCtrl.index);
 app.post('/api/v1/users', UsersCtrl.create);
