@@ -1,4 +1,5 @@
 var User = require('../models/user'),
+		BankAccount = require('../models/bank_account'),
     utils = require('../utils');
 
 module.exports = (function() {
@@ -23,7 +24,19 @@ module.exports = (function() {
 
 			user.save()
 			.success(function() {
-				res.send({ status: 'user created', user: user })
+				// create a bank account for that user
+				BankAccount.create({ 
+					userId: user.id	
+				})
+				.success(function(bankAccount){
+					user.bankAccount = bankAccount;
+					res.send({ status: 'user created', user: user })
+				})
+				.error(function(err){
+					user.destroy().success(function(){
+						res.send({ status: 'user not created', error: err });
+					});
+				});
 			})
 			.error(function(err) {
 				res.send({ status: 'user not created', error: err });
