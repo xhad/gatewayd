@@ -12,6 +12,19 @@ module.exports = (function(){
 	}
 
   function create(req, res) {
+		req.checkBody('bankAccountId', 'Invalid bankAccountId')
+			.notEmpty().isInt();
+		req.checkBody('currency', 'Invalid currency')
+			.notEmpty().isAlpha();
+		req.checkBody('cashAmount', 'Invalid cashAmount')
+			.notEmpty().isFloat();
+		
+		var errors = req.validationErrors();
+		if (errors) {
+			res.send({ error: util.inspect(errors) }, 400)
+			return;
+		}
+
 		var params = req.body;
 		params.deposit = false;
 		BankTransaction.create(params)

@@ -11,7 +11,7 @@ var BankAccount = sequelize.define('bank_account', {
   userId: { 
 		type: Sequelize.INTEGER, 
 		references: 'User',
-		refenrecesKey: 'id'
+		referencesKey: 'id'
 	}
 });
 

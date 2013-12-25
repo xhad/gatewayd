@@ -15,12 +15,16 @@ angular.module('publicApp')
 		}
 
     $scope.createDeposit = function () {
-			console.log('create Deposit');
-			var userId = $scope.deposit.userId;
+			var bankAccountId = $scope.deposit.bankAccountId;
 			var currency = $scope.deposit.currency;
 			var cashAmount = $scope.deposit.cashAmount;
-			$http.post('/api/v1/deposits', { currency: currency, cashAmount: cashAmount })	
-			.success(function(){
+			$http.post('/api/v1/deposits', { 
+				currency: currency, 
+				cashAmount: cashAmount,
+				bankAccountId: bankAccountId
+			})	
+			.success(function(response){
+				console.log(response);
 				getDeposits();
 			})
 			.error(function(err){

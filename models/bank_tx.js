@@ -6,11 +6,7 @@ var BankTx = sequelize.define('bank_transaction', {
   id: { type: Sequelize.INTEGER, unique: true, primaryKey: true, autoIncrement: true },
   deposit: Sequelize.BOOLEAN,
   currency: { type: Sequelize.STRING, allowNull: false },
-  bankAccountId: { 
-		type: Sequelize.INTEGER, 
-		references: 'BankAccount',
-		referencesKey: 'id'
-	},
+  bankAccountId: { type: Sequelize.INTEGER, allowNull: false },
   cashAmount: { type: Sequelize.FLOAT(11,12), allowNull: false },
   rippleTxId: Sequelize.INTEGER
 });

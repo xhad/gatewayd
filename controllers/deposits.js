@@ -1,4 +1,5 @@
 var BankTx = require("../models/bank_tx.js");
+var util = require('util');
 
 var DepositsCtrl = (function(){ 
 	try {
@@ -33,6 +34,7 @@ var DepositsCtrl = (function(){
 			bankAccountId: req.body.bankAccountId
 		})
 		.success(function(transaction){
+			// here create corresponding ripple transaction
 			res.send({
 				status: 'success',
 				deposit: transaction,
