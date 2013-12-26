@@ -1,5 +1,8 @@
 var BankTx = require("../models/bank_tx.js");
+var Balance = require("../models/balance.js");
 var util = require('util');
+var errorResponse = require("../utils").errorResponse;
+
 
 var DepositsCtrl = (function(){ 
 	try {
@@ -27,22 +30,33 @@ var DepositsCtrl = (function(){
 			return;
 		}
 
-		BankTx.create({
-			deposit: true,
-			currency: req.body.currency,
-			cashAmount: req.body.cashAmount,
-			bankAccountId: req.body.bankAccountId
-		})
-		.success(function(transaction){
-			// here create corresponding ripple transaction
-			res.send({
-				status: 'success',
-				deposit: transaction,
-			});
-		})
-		.error(function(err){
-			res.send({ error: err });
-		})
+		// look up the account's balance for this curency
+		Balance.findOrCreateByCurrencyAndBankAccountId(
+			req.body.bankAccountId, 
+			req.body.currency, 
+		function(err, balance) {
+			if (err) { errorResponse(res)(err) }
+			BankTx.create({
+				deposit: true,
+				currency: req.body.currency,
+				cashAmount: req.body.cashAmount,
+				bankAccountId: req.body.bankAccountId,
+				balanceId: balance.id
+			})
+			.success(function(transaction){
+				balance.updateAttributes({
+					amount: (parseFloat(balance.amount) + parseFloat(req.body.cashAmount))
+				})
+				.success(function(){
+					// create corresponding ripple transaction
+					res.send({
+						status: 'success',
+						deposit: transaction,
+					});
+				}).error(errorResponse(res));
+			})
+			.error(errorResponse(res));
+		});
 	}
   } catch(e) {
 		res.send({ error: e });

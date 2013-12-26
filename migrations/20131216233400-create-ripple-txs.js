@@ -13,7 +13,8 @@ exports.up = function(db, callback) {
     fromAmount: { type: 'decimal', notNull: true },
     txHash: { type: 'string', notNull: true, unique: true },
     createdAt: { type: 'datetime', notNull: true },
-    destinationTag: { type: 'string' },
+    destinationTag: { type: 'string', notNull: true},
+    balanceId: { type: 'int', notNull: true },
     txState: { type: 'string' },
     updatedAt: { type: 'datetime' }
   }, callback);
