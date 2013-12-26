@@ -49,7 +49,7 @@ app.get('/api/v1/users/:userId/ripple_transactions', RippleTransactionsCtrl.user
 app.post('/api/v1/users/:userId/bank_accounts', BankAccountsCtrl.create);
 app.post('/api/v1/users/:userId/ripple_addresses', RippleAddressesCtrl.create);
 
-app.post('/api/v1/ripple_transactions', RippleTransactionsCtrl.create);
+app.post('/api/v1/ripple_transactions/inbound', RippleTransactionsCtrl.createInbound);
 app.post('/api/v1/withdrawals', WithdrawalsCtrl.create);
 app.post('/api/v1/deposits', DepositsCtrl.create);
 

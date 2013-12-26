@@ -13,8 +13,16 @@ function generateSalt () {
 	return sha.update(crypto.randomBytes(128)).digest('hex');
 } 
 
+function errorResponse (res) {		
+	return function (err) {
+		res.send({ error: err }, 400);
+		return;
+  };
+}
+
 module.exports = {
   verifyPassword: verifyPassword,
   saltPassword: saltPassword,
-  generateSalt: generateSalt
+  generateSalt: generateSalt,
+  errorResponse: errorResponse
 }

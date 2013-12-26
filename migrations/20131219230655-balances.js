@@ -4,7 +4,7 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable('balances', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
-    userId: { type: 'int',  notNull: true },
+    bankAccountId: { type: 'int',  notNull: true },
     amount: { type: 'decimal', notNull: true },
     currency: { type: 'string', notNull: true }
 	}, callback);

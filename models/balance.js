@@ -7,7 +7,7 @@ var Balance = sequelize.define('balance', {
 		primaryKey: true,
 		autoIncrement: true,
 	},
-  userId: { type: Sequelize.INTEGER, notNull: true },
+  bankAccountId: { type: Sequelize.INTEGER, notNull: true },
   currency: { type: Sequelize.STRING, notNull: true },
   amount: { type: Sequelize.DECIMAL, notNull: true }
 });

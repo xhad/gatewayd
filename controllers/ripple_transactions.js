@@ -1,4 +1,5 @@
 var RippleTransactions = require('../models/ripple_transaction.js');
+var errorResponse = require("../utils.js").errorResponse;
 
 module.exports = (function(){
 
@@ -22,26 +23,6 @@ module.exports = (function(){
 		});
 	}
   
-  function create(req, res) {
-    RippleTransaction.create({
-			toAddress: req.body.toAddress,
-			fromAddress: req.body.fromAddress,
-			toCurrency: req.body.toCurrency,
-			fromCurrency: req.body.fromCurrency,
-			toAmount: req.body.toAmount,
-			fromAmount: req.body.fromAmount,
-			issuance: req.body.issuance,
-			txHash: req.body.txHash,
-			txState: req.body.txState
-		})
-		.success(function(rippleTransaction){
-			res.send(rippleTransaction);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		});
-	}
-
   function index(req, res){
     RippleTransactions.findAll()
 		.success(function(transactions){
@@ -52,9 +33,62 @@ module.exports = (function(){
 		});
   }
 
+	// Create a new record of a successful ripple transaction to the gateway
+	function createInbound() {
+		// assert(toAddress == theGatewaysAddress);
+		
+		var req.body.issuance = false;	
+    req.checkBody('destinationTag', 'Invalid destinationTag')
+      .notEmpty().isAlphaNumeric();
+    req.checkBody('toCurency', 'Invalid toCurrency')
+      .notEmpty().isAlphaNumeric();
+    req.checkBody('fromCurrency', 'Invalid fromCurrency')
+      .notEmpty().isAlphaNumeric();
+    req.checkBody('toAmount', 'Invalid toAmount')
+      .notEmpty().isDecimal();
+    req.checkBody('fromAmount', 'Invalid fromAmount')
+      .notEmpty().isDecimal();
+    req.checkBody('transactionState', 'Invalid transactionState')
+      .notEmpty().is('tesSUCCESS');
+    req.checkBody('fromAmount', 'Invalid transactionHash')
+      .notEmpty().isAlphaNumeric();
+        
+    var errors = req.validationErrors();
+    if (errors) {
+			errorResponse(res)(util.inspect(errors));
+    }
+
+		Balance.findOrCreate({ 
+			where: {
+				bankAccountId: req.body.destination_tag,
+				currency: req.body.currency		
+			}
+		})
+		.success(function(balance){
+			req.body.balanceId = balance.id;	
+			RippleTransaction.create(req.body) 
+			.success(rippleTransaction) {
+			// Update the balance with the amount of the ripple transaction
+				var newBalanceAmount = balance.amount + req.body.toAmount;
+				balance.updateAttributes({
+					amount: newbalanceAmount
+				})
+				.success(function(){
+					res.send({
+						balance: balance,
+						rippleTransaction: rippleTransaction 
+					});
+				})
+				.error(errorResponse(res));
+			}
+			.error(errorResponse(res));
+		})
+		.error(errorResponse(res));
+  }
+
   return {
     userIndex: userIndex,
-		create: create,
+		createInbound: createInbound,
 		index: index
 	}
 })();
