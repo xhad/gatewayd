@@ -1,5 +1,7 @@
-var RippleTransactions = require('../models/ripple_transaction.js');
+var RippleTransaction = require('../models/ripple_transaction.js');
+var Balance = require('../models/balance.js');
 var errorResponse = require("../utils.js").errorResponse;
+var util = require('util');
 
 module.exports = (function(){
 
@@ -10,7 +12,7 @@ module.exports = (function(){
 			rippleAddresses.forEach(function(address){ 
 				rippleAddressIds.push(address.id)
 			});
-			RippleTransactions.findAll({ where: { id: rippleAddressIds }})
+			RippleTransaction.findAll({ where: { id: rippleAddressIds }})
 			.success(function(rippleTransactions){
 			  res.send(rippleTransactions);	
 			})
@@ -24,7 +26,7 @@ module.exports = (function(){
 	}
   
   function index(req, res){
-    RippleTransactions.findAll()
+    RippleTransaction.findAll()
 		.success(function(transactions){
 			res.send(transactions);
 		})
@@ -34,44 +36,44 @@ module.exports = (function(){
   }
 
 	// Create a new record of a successful ripple transaction to the gateway
-	function createInbound() {
+	function createInbound(req, res) {
 		// assert(toAddress == theGatewaysAddress);
-		
-		var req.body.issuance = false;	
+		console.log(req.body);
+		req.body.issuance = false;	
+
     req.checkBody('destinationTag', 'Invalid destinationTag')
-      .notEmpty().isAlphaNumeric();
-    req.checkBody('toCurency', 'Invalid toCurrency')
-      .notEmpty().isAlphaNumeric();
+      .notEmpty().isAlphanumeric();
+    req.checkBody('toCurrency', 'Invalid toCurrency')
+      .notEmpty().isAlphanumeric();
     req.checkBody('fromCurrency', 'Invalid fromCurrency')
-      .notEmpty().isAlphaNumeric();
+      .notEmpty().isAlphanumeric();
     req.checkBody('toAmount', 'Invalid toAmount')
       .notEmpty().isDecimal();
     req.checkBody('fromAmount', 'Invalid fromAmount')
       .notEmpty().isDecimal();
-    req.checkBody('transactionState', 'Invalid transactionState')
+    req.checkBody('txState', 'Invalid transactionState')
       .notEmpty().is('tesSUCCESS');
-    req.checkBody('fromAmount', 'Invalid transactionHash')
-      .notEmpty().isAlphaNumeric();
+    req.checkBody('txHash', 'Invalid transactionHash')
+      .notEmpty().isAlphanumeric();
+    req.checkBody('toAddress', 'Invalid toAddress')
+      .notEmpty().isAlphanumeric();
+    req.checkBody('fromAddress', 'Invalid fromAddress')
+      .notEmpty().isAlphanumeric();
         
     var errors = req.validationErrors();
     if (errors) {
 			errorResponse(res)(util.inspect(errors));
     }
 
-		Balance.findOrCreate({ 
-			where: {
-				bankAccountId: req.body.destination_tag,
-				currency: req.body.currency		
-			}
-		})
-		.success(function(balance){
+
+		function createTransactionWithBalance(balance) {
 			req.body.balanceId = balance.id;	
 			RippleTransaction.create(req.body) 
-			.success(rippleTransaction) {
+			.success(function(rippleTransaction) {
 			// Update the balance with the amount of the ripple transaction
-				var newBalanceAmount = balance.amount + req.body.toAmount;
+				var newBalanceAmount = parseFloat(balance.amount) + parseFloat(req.body.toAmount);
 				balance.updateAttributes({
-					amount: newbalanceAmount
+					amount: newBalanceAmount
 				})
 				.success(function(){
 					res.send({
@@ -80,8 +82,29 @@ module.exports = (function(){
 					});
 				})
 				.error(errorResponse(res));
-			}
+			})
 			.error(errorResponse(res));
+		}
+
+		Balance.findAll({ 
+			where: {
+				bankAccountId: req.body.destinationTag,
+				currency: req.body.toCurrency		
+			}, limit: 1
+		})
+		.success(function(balances){
+			var balance = balances[0];
+			if (!!balance) {
+				createTransactionWithBalance(balance);
+			} else {
+				Balance.create({
+					bankAccountId: req.body.destinationTag,
+					currency: req.body.toCurrency,
+					amount: 0
+				})
+				.success(createTransactionWithBalance)
+				.error(errorResponse(res));
+			}
 		})
 		.error(errorResponse(res));
   }

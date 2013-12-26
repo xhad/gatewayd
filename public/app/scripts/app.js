@@ -24,6 +24,10 @@ angular.module('publicApp', [
 				templateUrl: 'views/bank_transactions.html',
 				controller: 'BankTxsCtrl'
 			})
+			.when('/admin/ripple_transactions', {
+				templateUrl: 'views/ripple_transactions.html',
+				controller: 'RippleTxsCtrl'
+			})
 			.when('/api/docs', {
 				templateUrl: 'views/api.html',
 				controller: 'ApiDocsCtrl'

@@ -9,7 +9,7 @@ var Balance = sequelize.define('balance', {
 	},
   bankAccountId: { type: Sequelize.INTEGER, notNull: true },
   currency: { type: Sequelize.STRING, notNull: true },
-  amount: { type: Sequelize.DECIMAL, notNull: true }
+  amount: { type: Sequelize.DECIMAL, notNull: true, default: 0 }
 });
 
 module.exports = Balance;

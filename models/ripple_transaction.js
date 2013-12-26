@@ -9,6 +9,7 @@ var RippleTx = sequelize.define('ripple_transaction', {
   toAmount: { type: Sequelize.DECIMAL, notNull: true },
   fromCurrency: { type: Sequelize.STRING, notNull: true },
   fromAmount: { type: Sequelize.DECIMAL, notNull: true },
+  fromAddress: { type: Sequelize.STRING, notNull: true },
   issuance: { type: Sequelize.BOOLEAN, notNull: true },
   txHash: { type: Sequelize.STRING, notNull: true },
   txState: Sequelize.STRING

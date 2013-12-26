@@ -6,7 +6,9 @@ exports.up = function(db, callback) {
     id: { type: 'int', primaryKey: true, autoIncrement: true },
     bankAccountId: { type: 'int',  notNull: true },
     amount: { type: 'decimal', notNull: true },
-    currency: { type: 'string', notNull: true }
+    currency: { type: 'string', notNull: true },
+    createdAt: { type: 'datetime', notNull: true },
+    updatedAt: { type: 'datetime' }
 	}, callback);
 };
 

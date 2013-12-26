@@ -15,6 +15,7 @@ function generateSalt () {
 
 function errorResponse (res) {		
 	return function (err) {
+		console.log('error', err);
 		res.send({ error: err }, 400);
 		return;
   };
