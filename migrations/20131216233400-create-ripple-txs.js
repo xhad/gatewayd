@@ -11,9 +11,9 @@ exports.up = function(db, callback) {
     toAmount: { type: 'decimal', notNull: true },
     fromCurrency: { type: 'string', notNull: true },
     fromAmount: { type: 'decimal', notNull: true },
-    txHash: { type: 'string', notNull: true, unique: true },
+    txHash: { type: 'string', unique: true },
     createdAt: { type: 'datetime', notNull: true },
-    destinationTag: { type: 'string', notNull: true},
+    destinationTag: { type: 'string' },
     balanceId: { type: 'int', notNull: true },
     txState: { type: 'string' },
     updatedAt: { type: 'datetime' }

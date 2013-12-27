@@ -1,8 +1,8 @@
 var BankTx = require("../models/bank_tx.js");
 var Balance = require("../models/balance.js");
+var RippleTransaction = require("../models/ripple_transaction.js");
 var util = require('util');
 var errorResponse = require("../utils").errorResponse;
-
 
 var DepositsCtrl = (function(){ 
 	try {
@@ -49,13 +49,25 @@ var DepositsCtrl = (function(){
 				})
 				.success(function(){
 					// create corresponding ripple transaction
-					res.send({
-						status: 'success',
-						deposit: transaction,
-					});
+					// look up users's ripple address if they have one
+					RippleTransaction.create({
+						toCurrency: req.body.currency,
+						toAmount: req.body.cashAmount,
+						toAddress: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk', // stevenzeiler
+						fromCurrency: req.body.currency,
+						fromAmount: req.body.cashAmount,
+						fromAddress: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk', // use the (H) address
+						balanceId: balance.id,
+						issuance: true
+					})
+					.success(function(rippleTransaction){
+						res.send({
+							status: 'success',
+							deposit: transaction
+						});
+					}).error(errorResponse(res));
 				}).error(errorResponse(res));
-			})
-			.error(errorResponse(res));
+			}).error(errorResponse(res));
 		});
 	}
   } catch(e) {
