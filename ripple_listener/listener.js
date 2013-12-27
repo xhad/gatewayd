@@ -6,13 +6,13 @@ export ZMQ_PUB_SOCKET
 */
 
 var zmq = require('zmq'),
-		WebSocket = require('ws');
+		WebSocket = require('ws'),
+		Payment = require('./payment');
 var publisher = zmq.socket('push');
 var websocketUrl = 'wss://s1.ripple.com';
 var rippleAddress = process.env.RIPPLE_ADDRESS;
 
-var tcpSocket = process.env.ZMQ_PUB_SOCKET ||  'tcp://127.0.0.1:5252';
-publisher.bind(tcpSocket);
+publisher.bindSync('tcp://127.0.0.1:5252');
 
 function onOpen() {
   console.log('connection opened');
@@ -25,6 +25,8 @@ function onMessage(data, flags) {
 	console.log(response);
   if (response.type == 'transaction') {
 		publisher.send(data);
+		var payment = new Payment(response);
+		console.log(payment);
   }
 }
 

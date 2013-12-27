@@ -36,7 +36,7 @@ consumer.on('message', function(message) {
 	} else if (transaction instanceof Incoming) {
 		console.log('received some coin');
   }
-	console.log(transaction.data);
+	console.log(JSON.stringify(transaction.data, null, 4));
   // all outgoing transactions should have a destination tag
 	// that can be used to look up the ripple transcation in
   // the database
