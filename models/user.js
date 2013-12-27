@@ -1,5 +1,8 @@
 var Sequelize = require('sequelize');
 var db = require('../config/sequelize.js');
+var utils = require("../utils");
+var BankAccount = require('./bank_account.js');
+var RippleAddress = require('./ripple_address.js');
 
 var User = sequelize.define('user', {
   id: { 
@@ -32,7 +35,36 @@ var User = sequelize.define('user', {
 		bankBalances: function() {},
 		rippleBalance: function(currency) {},
 		rippleBalances: function() {} 
-  } 
-});
+  },
+	classMethods: {
+		createWithAddress: function(name, password, rippleAddress,callback){
+			var salt = utils.generateSalt();
+			var passwordHash = utils.saltPassword(password, salt);
 
-module.exports = User;
+			var user = User.create({
+				name: name,
+				salt: salt,
+				passwordHash: passwordHash,
+				federationTag: 'federationTag',
+				federationName: name
+			})
+			.success(function(user) {
+				RippleAddress.create({
+					userId: user.id,
+					address: rippleAddress
+				})
+				.success(function(rippleAddress) {
+					user.rippleAddress = rippleAddress;
+					callback(null, user);
+				})
+				.error(function(err){
+					callback(null, user);
+				});
+			})
+			.error(function(err) {
+				callback(err, null)
+			})
+		}
+  }
+});
+	module.exports = User;

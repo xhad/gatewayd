@@ -1,6 +1,7 @@
 var User = require('../models/user'),
 		BankAccount = require('../models/bank_account'),
-    utils = require('../utils');
+    utils = require('../utils'),
+		util = require('util');
 
 module.exports = (function() {
 	function index(req, res) {
@@ -10,40 +11,33 @@ module.exports = (function() {
 	}
 
   function create(req, res) {
-		if (req.body.name && req.body.password) {
-			var salt = utils.generateSalt();
-			var passwordHash = utils.saltPassword(req.body.password, salt);
-
-			var user = User.build({
-				name: req.body.name,
-				salt: salt,
-				passwordHash: passwordHash,
-				federationTag: 'federationTag',
-				federationName: 'federationName'
-			});
-
-			user.save()
-			.success(function() {
-				// create a bank account for that user
-				BankAccount.create({ 
-					userId: user.id	
-				})
+		req.checkBody('name', 'Invalid name')
+			.notEmpty().isAlphanumeric();
+		req.checkBody('password', 'Invalid password')
+			.notEmpty().isAlphanumeric();
+		req.checkBody('rippleAddress', 'Invalid rippleAddress')
+			.notEmpty().isAlphanumeric();
+		
+		var errors = req.validationErrors();
+		if (errors) {
+			res.send({ error: util.inspect(errors) }, 400)
+			return;
+		}
+		
+		User.createWithAddress(
+			req.body.name, 
+			req.body.password, 
+			req.body.rippleAddress,
+			function(err, user) {
+			  if (err) { utils.errorResponse(res)(err); return }
+				BankAccount.create({ userId: user.id })
 				.success(function(bankAccount){
 					user.bankAccount = bankAccount;
-					res.send({ status: 'user created', user: user })
+					res.send(user)
 				})
-				.error(function(err){
-					user.destroy().success(function(){
-						res.send({ status: 'user not created', error: err });
-					});
-				});
-			})
-			.error(function(err) {
-				res.send({ status: 'user not created', error: err });
-			});
-		} else {
-			res.send({ error: 'required params: name, password' });
-		}
+				.error(utils.errorResponse(res));
+			}
+		)
 	}
 	
 	return {
