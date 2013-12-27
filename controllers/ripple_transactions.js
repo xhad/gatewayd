@@ -65,48 +65,17 @@ module.exports = (function(){
 			errorResponse(res)(util.inspect(errors));
     }
 
-
-		function createTransactionWithBalance(balance) {
-			req.body.balanceId = balance.id;	
-			RippleTransaction.create(req.body) 
-			.success(function(rippleTransaction) {
-			// Update the balance with the amount of the ripple transaction
-				var newBalanceAmount = parseFloat(balance.amount) + parseFloat(req.body.toAmount);
-				balance.updateAttributes({
-					amount: newBalanceAmount
-				})
-				.success(function(){
-					res.send({
-						balance: balance,
-						rippleTransaction: rippleTransaction 
-					});
-				})
-				.error(errorResponse(res));
-			})
-			.error(errorResponse(res));
-		}
-
-		Balance.findAll({ 
-			where: {
-				bankAccountId: req.body.destinationTag,
-				currency: req.body.toCurrency		
-			}, limit: 1
-		})
-		.success(function(balances){
-			var balance = balances[0];
-			if (!!balance) {
-				createTransactionWithBalance(balance);
+		Balance.findOrCreateByCurrencyAndBankAccountId(
+			req.body.destinationTag, req.body.toCurrency, function(err, balance) {
+			if (err) {
+				errorResponse(res)(err);
 			} else {
-				Balance.create({
-					bankAccountId: req.body.destinationTag,
-					currency: req.body.toCurrency,
-					amount: 0
-				})
-				.success(createTransactionWithBalance)
-				.error(errorResponse(res));
+				RippleTransaction.createIncomingWithBalance(balance, req.body, function(err, tx){
+					if (err) { errorResponse(res)(err) }
+					res.send(tx);
+				});
 			}
 		})
-		.error(errorResponse(res));
   }
 
   return {
