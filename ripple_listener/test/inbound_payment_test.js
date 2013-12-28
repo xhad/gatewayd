@@ -14,6 +14,10 @@ assert.equal(payment.toCurrency, 'XRP');
 assert.equal(payment.fromCurrency, 'XRP');
 assert.equal(payment.toAmount, 10);
 assert.equal(payment.fromAmount, 10);
+assert.equal(payment.toAddress, 'rpL9vgUH7NBphD5H3FFqLQDhbtzEELS88n');
+assert.equal(payment.fromAddress, 'rHKueQebtVU9cEamhBbMV8AEViqKjXcBcB');
+assert.equal(payment.txState, 'tesSUCCESS');
+assert.equal(payment.txHash, '58B02124F7118B5E6E4384CD016DE4DB316C18F8DDC71E9B1001AE787CAC3C7B');
 
 /* ---------- */
 
@@ -38,4 +42,8 @@ assert.equal(payment.toCurrency, 'XAG');
 assert.equal(payment.fromCurrency, 'XAG');
 assert.equal(payment.toAmount, 1);
 assert.equal(payment.fromAmount, 1.01);
+assert.equal(payment.toAddress, 'rpL9vgUH7NBphD5H3FFqLQDhbtzEELS88n');
+assert.equal(payment.fromAddress, 'rHKueQebtVU9cEamhBbMV8AEViqKjXcBcB');
+assert.equal(payment.txState, 'tesSUCCESS');
+assert.equal(payment.txHash, '10F868E02B370769F6D9FA4C5D56960D72FF98A6D86A7F56785065E100F3E5BA');
 
