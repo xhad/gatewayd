@@ -11,8 +11,12 @@ function Payment(msg) {
   this.result = message.engine_result;
 	this.validated = message.validated;
 
+	function parseXrpAmount(drops) {
+		return parseFloat(drops) / 100000;
+	}
+
 	if ((typeof message.transaction.Amount) == 'string') {
-		this.toAmount = message.transaction.Amount;
+		this.toAmount = parseXrpAmount(message.transaction.Amount);
 		this.toCurrency = 'XRP';
 	} else {
 		this.toAmount = message.transaction.Amount.value;
@@ -23,9 +27,16 @@ function Payment(msg) {
 		this.fromAmount = message.transaction.SendMax.value;
 		this.fromCurrency = message.transaction.SendMax.currency;
 	} else {
-		this.fromAmount = message.transaction.Amount;
+		this.fromAmount = parseXrpAmount(message.transaction.Amount);
 		this.fromCurrency = 'XRP';
 	}
+
+	this.toAddress = message.transaction.Destination;
+	this.fromAddress = message.transaction.Account;
+
+	this.txState = message.meta.TransactionResult;
+	this.txHash = message.transaction.hash;
+	this.destinationTag = message.transaction.DestinationTag;
 
 	if (this.result != 'tesSUCCESS') {
 		throw new Error("Result not tesSUCCESS");
@@ -39,12 +50,14 @@ function Payment(msg) {
 Payment.prototype.toJSON = function() {
   return {
 		validated: this.validated,
-		transactionHash: this.transactionHash,
-		tranasctionStatus: this.transactoinStatus,
+		txState: this.txState,
+		txHash: this.txHash,
 	  toCurrency: this.toCurrency,	
 		fromCurrency: this.fromCurrency,
 		toAmount: this.toAmount,
 		fromAmount: this.fromAmount,
+		toAddress: this.toAddress,
+		fromAddress: this.fromAddress,
 		destinationTag: this.destinationTag
 	}
 }
