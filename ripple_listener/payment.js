@@ -6,7 +6,10 @@ function Ledger(hash, index) {
 	this.transactions = [];
 }
 
-function Payment(message) {
+function Payment(msg) {
+	
+	var message = JSON.parse(msg);
+	console.log(message);
 	this.data = message.transaction;
   this.result = message.engine_result;
 	this.validated = message.validated;
@@ -27,12 +30,18 @@ function Payment(message) {
 	}
 
 	if (this.isIOU()) {
-		this.data.Currency = 'XRP';
+		this.toCurrency = 'XRP';
+		this.toAmount = this.data.Amount;
+		this.fromCurrency = 'XRP';
+		this.fromAmount = this.data.Amount;
 	} else {
-		var amount = this.get('Amount');
-		this.data.Amount = amount.value;
-		this.data.Currency = amount.currency;
-		this.data.Issuer = amount.issuer;
+		var amount = this.data.Amount;
+		this.toAmount = amount.Value;
+		this.toCurrency = amount.Currency;
+		this.fromAmount = null;
+		this.fromCurrency = null;
+		this.destinationTag = this.data.DestinationTag;
+		this.issuer = amount.Issuer;
 	} 
 }
 
@@ -53,6 +62,19 @@ function OutgoingPayment(message, rippleAddress) {
 
 	if (message.transaction.account != rippleAddress) {
 		throw new Error("Payment is incoming to " + rippleAddress);
+	}
+}
+
+Payment.prototype.toJSON = function() {
+  return {
+		validated: this.validated,
+		transactionHash: this.transactionHash,
+		tranasctionStatus: this.transactoinStatus,
+	  toCurrency: this.toCurrency,	
+		fromCurrency: this.fromCurrency,
+		toAmount: this.toAmount,
+		fromAmount: this.fromAmount,
+		destinationTag: this.destinationTag
 	}
 }
 

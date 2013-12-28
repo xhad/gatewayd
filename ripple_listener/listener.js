@@ -25,8 +25,11 @@ function onMessage(data, flags) {
 	console.log(response);
   if (response.type == 'transaction') {
 		publisher.send(data);
-		var payment = new Payment(response);
-		console.log(payment);
+		try {
+			var payment = new Payment(response);
+		} catch(e) {
+			console.log(e);
+		}
   }
 }
 
