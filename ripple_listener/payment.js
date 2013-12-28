@@ -7,15 +7,25 @@ function Ledger(hash, index) {
 }
 
 function Payment(msg) {
-	
 	var message = JSON.parse(msg);
-	console.log(message);
-	this.data = message.transaction;
   this.result = message.engine_result;
 	this.validated = message.validated;
 
-	this.ledger = new Ledger(message);
-	this.ledger.transactions.push(this);
+	if ((typeof message.transaction.Amount) == 'string') {
+		this.toAmount = message.transaction.Amount;
+		this.toCurrency = 'XRP';
+	} else {
+		this.toAmount = message.transaction.Amount.value;
+		this.toCurrency = message.transaction.Amount.currency;
+	}
+
+	if (!!message.transaction.SendMax) {
+		this.fromAmount = message.transaction.SendMax.value;
+		this.fromCurrency = message.transaction.SendMax.currency;
+	} else {
+		this.fromAmount = message.transaction.Amount;
+		this.fromCurrency = 'XRP';
+	}
 
 	if (this.result != 'tesSUCCESS') {
 		throw new Error("Result not tesSUCCESS");
@@ -23,45 +33,6 @@ function Payment(msg) {
 
 	if (!this.validated) {
 		throw new Error("Payment not validated");
-	}
-
-  if (this.data.TransactionType != 'Payment') { 
-		throw new Error("Payment not a payment");
-	}
-
-	if (this.isIOU()) {
-		this.toCurrency = 'XRP';
-		this.toAmount = this.data.Amount;
-		this.fromCurrency = 'XRP';
-		this.fromAmount = this.data.Amount;
-	} else {
-		var amount = this.data.Amount;
-		this.toAmount = amount.Value;
-		this.toCurrency = amount.Currency;
-		this.fromAmount = null;
-		this.fromCurrency = null;
-		this.destinationTag = this.data.DestinationTag;
-		this.issuer = amount.Issuer;
-	} 
-}
-
-function IncomingPayment(message, rippleAddress) {
-  Payment.call(this, message);
-
-	if (message.transaction.account == rippleAddress) {
-		throw new Error("Payment is an Issuance from " + rippleAddress);
-	}
-}
-
-function OutgoingPayment(message, rippleAddress) {
-  Payment.call(this, message);
-
-	if (!rippleAddress) { 
-		throw new Error("Invalid rippleAddress");
-	}
-
-	if (message.transaction.account != rippleAddress) {
-		throw new Error("Payment is incoming to " + rippleAddress);
 	}
 }
 
@@ -83,28 +54,6 @@ Payment.parseFromMessage = function(message) {
   if (message.engine_result != 'tesSUCCESS') { return false }
   if (message.transaction.PaymentType != 'Payment') { return false }
 	return new Payment(message);
-}
-
-Payment.prototype.get = function(attribute) {
-  this.data[attribute];
-}
-
-Payment.prototype.isIOU = function() {
-	var currency = this.get('Currency');
-	if (!!currency) {
-	  if (currency == 'XRP') {
-			return false
-		} else {
-			return true	
-		} 
-	} else {
-		return false
-	}
-}
-
-Payment.prototype.isIssuanceOf = function(rippleAddress) {
-	if (!this.isIOU) { return false };
-	rippleAddress == this.get('account');
 }
 
 module.exports = Payment;
