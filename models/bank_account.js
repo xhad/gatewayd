@@ -15,5 +15,5 @@ var BankAccount = sequelize.define('bank_account', {
 	}
 });
 
-BankAccount.belongsTo(User, { foreignKeyConstraint: true });
+//BankAccount.belongsTo(User, { foreignKeyConstraint: true });
 module.exports = BankAccount;
