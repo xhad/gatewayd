@@ -8,7 +8,8 @@
     "sequelize-postgres": "",
     "db-migrate":"",
     "zmq":"",
-    "express-validator": ""
+    "express-validator": "",
+		"validator": ""
   },
   "devDependencies": {
     "mocha": "~1.14.0",
