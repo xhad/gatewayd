@@ -82,5 +82,12 @@ describe('PaymentQueue', function(){
 	it('should allow subscriptions to payments', function(){
 		var redis = { createClient: function(){ return {} } };
 		queue = new PaymentQueue({ redis: redis });	
+		var handlePayment = sinon.spy();
+		var payment = {};
+		queue.on('payment', function(payment){ 
+			handlePayment(payment);
+		});
+		queue.emit('payment', payment);
+		assert(handlePayment.calledWith(payment));
 	});
 });
