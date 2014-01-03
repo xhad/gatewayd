@@ -1,4 +1,5 @@
 var Balance = require("../models/balance");
+var PendingRippleTransaction = require("../models/pending_ripple_transaction");
 var Sequelize = require('sequelize');
 var db = require('../config/sequelize');
 
@@ -18,25 +19,40 @@ var RippleTx = sequelize.define('ripple_transaction', {
   txState: Sequelize.STRING
 }, {
   classMethods: {
-		createIncomingWithBalance: function(balance, txParams, callback) {
+		createIncomingWithBalance: function(balance, txParams, fn) {
 			var RippleTransaction = this;
 			txParams.balanceId = balance.id;	
 			txParams.bankAccountId = txParams.destinationTag;
-			RippleTransaction.create(txParams) 
-			.success(function(rippleTransaction) {
-				balance.updateAttributes({
-					amount: (parseFloat(balance.amount) + parseFloat(txParams.toAmount))
-				})
-				.success(function(){
-					callback(null, {
-						balance: balance,
-						rippleTransaction: rippleTransaction 
-					});
-				})
-				.error(function(){ callback(err, null) });
-			})
-			.error(function(){ callback(err, null) });
+			RippleTransaction.create(txParams).complete(function(err, tx) {
+				if (err) { fn(err, null); return false; }
+			  fn(null, rippleTransaction);	
+			});
 		}	
+	},
+	instanceMethods: {
+		updateBalance: function(fn){
+			var rippleTransaction = this;
+			Balance.find(rippleTransaction.balanceId).complete(function(err, balance) {
+				var oldAmount = parseFloat(balance.amount);
+				var newAmount = rippleTransaction.toAmount;
+				var sign = rippleTransaction.issuance ? -1 : 1;
+				var diff = sign * parseFloat(rippleTransaction.toAmount);
+				balance.updateAttributes({
+					amount: (oldAmount + diff)
+				}).complete(fn);
+			});
+		}
+	},
+	hooks: {
+		afterCreate: function(rippleTransaction, fn) {
+			PendingRippleTransaction.create({
+			  rippleTransactionId: rippleTransaction.id,
+				initialStatus: 'created'
+			}).complete(fn);
+		},
+		afterCreate: function(rippleTransaction, fn) {
+			rippleTransaction.updateBalance(fn);
+		}
 	}
 });
 
