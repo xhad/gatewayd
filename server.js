@@ -23,6 +23,7 @@ var certificate = fs.readFileSync('/home/ssh/certificate.pem').toString();
 var credentials = { key: privateKey, cert: certificate };
 var app = express();
 app.set('port', process.env.PORT || 3000);
+app.set('host', process.env.HOST || '127.0.0.1')
 app.use(express.favicon())
 app.use(express.bodyParser())
 app.use(expressValidator());
@@ -63,7 +64,8 @@ app.get('/api/v1/balances', BalancesCtrl.index);
 app.get('/api/v1/ripple_addresses', RippleAddressesCtrl.index);
 app.get('/api/v1/ripple_transactions', RippleTransactionsCtrl.index);
 
-var port = process.env.PORT || 443;
-https.createServer(credentials,app).listen(port);
-console.log('Listening on port '+port);
+var port = process.env.PORT || 443
+var host = process.env.HOST || '127.0.0.1'
+https.createServer(credentials,app).listen(port, host)
+console.log('Listening on port '+port)
 
