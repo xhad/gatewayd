@@ -5,7 +5,7 @@ controllers = require('./lib/node-require-all')({
   filter: /(.+)\.js(on)?$/
 })
 
-var app = express();
+var app = express()
 
 require('./config/initializers/middleware.js').configure(app)
 require('./config/routes').configure(app, controllers)
