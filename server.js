@@ -8,15 +8,15 @@ var express = require('express'),
 		expressValidator = require('express-validator'),
     db      = require('./config/sequelize.js');
 
-var WithdrawalsCtrl     = require('./controllers/withdrawals.js'),
-		DepositsCtrl        = require('./controllers/deposits.js'),
-		BalancesCtrl        = require('./controllers/balances.js'),
-		BankAccountsCtrl    = require('./controllers/bank_accounts.js'),
-		BankTransactionsCtrl         = require('./controllers/bank_transactions.js'),
-		RippleTransactionsCtrl       = require('./controllers/ripple_transactions.js'),
-		RippleAddressesCtrl = require('./controllers/ripple_addresses.js'),
-		UsersCtrl           = require('./controllers/users.js'),
-		SessionCtrl         = require('./controllers/session.js');
+var WithdrawalsCtrl     = require('./app/controllers/withdrawals.js'),
+		DepositsCtrl        = require('./app/controllers/deposits.js'),
+		BalancesCtrl        = require('./app/controllers/balances.js'),
+		BankAccountsCtrl    = require('./app/controllers/bank_accounts.js'),
+		BankTransactionsCtrl         = require('./app/controllers/bank_transactions.js'),
+		RippleTransactionsCtrl       = require('./app/controllers/ripple_transactions.js'),
+		RippleAddressesCtrl = require('./app/controllers/ripple_addresses.js'),
+		UsersCtrl           = require('./app/controllers/users.js'),
+		SessionCtrl         = require('./app/controllers/session.js');
 
 //var privateKey = fs.readFileSync('/home/ssh/privatekey.pem').toString();
 //var certificate = fs.readFileSync('/home/ssh/certificate.pem').toString();
