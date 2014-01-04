@@ -1,6 +1,7 @@
 var express = require('express')
+var requireAll = require('./lib/node-require-all/index')
 
-controllers = require('./lib/node-require-all')({
+controllers = requireAll({
   dirname: __dirname + '/app/controllers',
   filter: /(.+)\.js(on)?$/
 })
@@ -9,8 +10,6 @@ var app = express()
 
 require('./config/initializers/middleware.js').configure(app)
 require('./config/routes').configure(app, controllers)
-
-app.get('/api/steven', function(req,res){ res.send('zeiler') })
 
 port = process.env.PORT || 4000
 app.listen(port)

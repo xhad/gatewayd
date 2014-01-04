@@ -5,5 +5,14 @@
     "password": "password",
     "host": "127.0.0.1",
     "database": "sequelize_development"
+  },
+  "staging": {
+    "driver": "pg",
+    "host": "ec2-54-197-241-64.compute-1.amazonaws.com",
+    "database": "db4okr1k6l0859",
+    "user": "tijjyppdfivteg",
+    "port": 5432,
+    "password": "7-tZdjicDfXFBjzhd5LfS1HYCP",
+    "native": true 
   }
 }
