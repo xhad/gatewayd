@@ -1,6 +1,6 @@
 var User = require('../models/user'),
-		BankAccount = require('../models/bank_account'),
-    utils = require('../utils'),
+		Account = require('../models/account'),
+    utils = require('../../lib/utils'),
 		util = require('util');
 
 module.exports = (function() {
@@ -30,7 +30,7 @@ module.exports = (function() {
 			req.body.rippleAddress,
 			function(err, user) {
 			  if (err) { utils.errorResponse(res)(err); return }
-				BankAccount.create({ userId: user.id })
+				Account.create({ userId: user.id })
 				.success(function(bankAccount){
 					user.bankAccount = bankAccount;
 					res.send(user)

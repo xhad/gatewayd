@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var db = require('../config/sequelize');
+var db = require('../../config/initializers/sequelize');
 
 var RippleAddress = sequelize.define('ripple_address', {
   id: { 

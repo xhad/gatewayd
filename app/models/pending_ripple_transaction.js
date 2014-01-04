@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
-var db = require('../config/sequelize.js');
-var utils = require("../utils");
+var db = require('../../config/initializers/sequelize.js');
+var utils = require("../../lib/utils");
 
 var PendingRippleTransaction = sequelize.define('pending_ripple_transaction', {
   id: { 

@@ -1,7 +1,7 @@
 var Balance = require("../models/balance");
 var PendingRippleTransaction = require("../models/pending_ripple_transaction");
 var Sequelize = require('sequelize');
-var db = require('../config/sequelize');
+var db = require('../../config/initializers/sequelize');
 
 var RippleTx = sequelize.define('ripple_transaction', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, notNull: true },

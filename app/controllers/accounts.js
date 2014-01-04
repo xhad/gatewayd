@@ -5,7 +5,7 @@ module.exports = (function(){
 	function userIndex(req, res) {
 		Account.findAll({ where: { userId: req.params.userId }})
     .complete(function(err, accounts) {
-      if err {res.send({ error: err }); return }
+      if (err) {res.send({ error: err }); return }
 			res.send(accounts);
     })
   }
@@ -23,7 +23,7 @@ module.exports = (function(){
 		Account.create({
 			userId: parseInt(req.body.userId),	
 		}).complete(function(err, account){
-      if err {res.send({ error: err }); return }
+      if (err) {res.send({ error: err }); return }
 			res.send(account)
     })
 	}
@@ -31,7 +31,7 @@ module.exports = (function(){
   function index(req, res) {
     Account.findAll()
     .complete(function(err, accounts) {
-      if err {res.send({ error: err }); return }
+      if (err) {res.send({ error: err }); return }
 			res.send(accounts)
     })
 	}

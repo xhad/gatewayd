@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
-var db = require('../config/sequelize.js');
-var BankAccount = require('../models/bank_account');
+var db = require('../../config/initializers/sequelize.js');
+var BankAccount = require('../models/account');
 
 var BankTx = sequelize.define('bank_transaction', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },

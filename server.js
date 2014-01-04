@@ -1,68 +1,14 @@
-var express = require('express'),
-		fs      = require('fs'),
-    http    = require('http'),
-    https   = require('https'),
-    path    = require('path'),
-    pg      = require('pg'),
-		util	  = require('util'),
-		expressValidator = require('express-validator'),
-    db      = require('./config/sequelize.js');
+var express = require('express')
 
-var WithdrawalsCtrl     = require('./app/controllers/withdrawals.js'),
-		DepositsCtrl        = require('./app/controllers/deposits.js'),
-		BalancesCtrl        = require('./app/controllers/balances.js'),
-		BankAccountsCtrl    = require('./app/controllers/bank_accounts.js'),
-		BankTransactionsCtrl         = require('./app/controllers/bank_transactions.js'),
-		RippleTransactionsCtrl       = require('./app/controllers/ripple_transactions.js'),
-		RippleAddressesCtrl = require('./app/controllers/ripple_addresses.js'),
-		UsersCtrl           = require('./app/controllers/users.js'),
-		SessionCtrl         = require('./app/controllers/session.js');
+ctrls = require('./lib/node-require-all')({
+  dirname: __dirname + '/app/controllers',
+  filter: /(.+)\.js(on)?$/
+})
 
-//var privateKey = fs.readFileSync('/home/ssh/privatekey.pem').toString();
-//var certificate = fs.readFileSync('/home/ssh/certificate.pem').toString();
-//var credentials = { key: privateKey, cert: certificate };
 var app = express();
-app.set('port', process.env.PORT || 3000);
-app.set('host', process.env.HOST || '127.0.0.1')
-app.use(express.favicon())
-app.use(express.bodyParser())
-app.use(expressValidator());
-app.use(express.cookieParser());
-app.use(express.session({secret: 'oi09ajsdf09fwlkej33lkjpx'}));
-app.use(express.methodOverride())
 
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(function(err, req, res, next) {
-	res.send({ error: err });
-});
-
-app.get('/api/v1/users', UsersCtrl.index);
-app.post('/api/v1/users', UsersCtrl.create);
-app.post('/api/v1/session', SessionCtrl.create);
-app.get('/api/v1/session', SessionCtrl.index);
-
-app.get('/api/v1/users/:id/balances', BalancesCtrl.userBalances);
-app.get('/api/v1/users/:userId/bank_accounts', BankAccountsCtrl.userIndex);
-app.get('/api/v1/users/:userId/ripple_addresses', RippleAddressesCtrl.userIndex);
-app.get('/api/v1/users/:userId/bank_transactions', BankTransactionsCtrl.userIndex);
-app.get('/api/v1/users/:userId/ripple_transactions', RippleTransactionsCtrl.userIndex);
-
-app.post('/api/v1/users/:userId/bank_accounts', BankAccountsCtrl.create);
-app.post('/api/v1/users/:userId/ripple_addresses', RippleAddressesCtrl.create);
-
-app.post('/api/v1/ripple_transactions/inbound', RippleTransactionsCtrl.createInbound);
-app.post('/api/v1/withdrawals', WithdrawalsCtrl.create);
-app.post('/api/v1/deposits', DepositsCtrl.create);
-
-app.get('/api/v1/bank_transactions', BankTransactionsCtrl.index);
-app.get('/api/v1/withdrawals', WithdrawalsCtrl.index);
-app.get('/api/v1/deposits', DepositsCtrl.index);
-
-app.get('/api/v1/bank_accounts', BankAccountsCtrl.index);
-app.post('/api/v1/bank_accounts', BankAccountsCtrl.create);
-app.get('/api/v1/balances', BalancesCtrl.index);
-app.get('/api/v1/ripple_addresses', RippleAddressesCtrl.index);
-app.get('/api/v1/ripple_transactions', RippleTransactionsCtrl.index);
+require('./config/initializers/middleware.js').configure(app)
+require('./config/routes').configure(app, ctrls)
 
 app.listen()
 console.log('Listening on port ', app.set('port'))

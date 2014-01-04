@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize')
-var dbConfig = require('../config/database.json')['dev']
+var dbConfig = require('../database.json')['dev']
 
 console.log('database config')
 console.log(dbConfig)

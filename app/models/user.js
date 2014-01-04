@@ -1,7 +1,7 @@
 var Sequelize = require('sequelize');
-var db = require('../config/sequelize.js');
-var utils = require("../utils");
-var BankAccount = require('./bank_account.js');
+var db = require('../../config/initializers/sequelize.js');
+var utils = require("../../lib/utils");
+var BankAccount = require('./account.js');
 var RippleAddress = require('./ripple_address.js');
 
 var User = sequelize.define('user', {

@@ -2,7 +2,7 @@ var BankTx = require("../models/bank_tx.js");
 var Balance = require("../models/balance.js");
 var RippleTransaction = require("../models/ripple_transaction.js");
 var util = require('util');
-var errorResponse = require("../utils").errorResponse;
+var errorResponse = require("../../lib/utils").errorResponse;
 
 var DepositsCtrl = (function(){ 
 	try {
