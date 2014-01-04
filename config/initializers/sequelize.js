@@ -11,6 +11,4 @@ sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
   protocol: 'postgres'
 });
 
-//sequelize = new Sequelize("postgres://lldoroqhxcgiug:rU5SofCieoz8dv4BRHcYbQlAIg@ec2-54-197-237-231.compute-1.amazonaws.com:5432/d5pl4c2hkefd1f")
-
 module.exports = sequelize;
