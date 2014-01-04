@@ -1,5 +1,5 @@
 var express = require('express')
-var requireAll = require('./lib/node-require-all/index')
+var requireAll = require('./lib/require-all')
 
 controllers = requireAll({
   dirname: __dirname + '/app/controllers',
