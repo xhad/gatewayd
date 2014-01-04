@@ -18,9 +18,9 @@ var WithdrawalsCtrl     = require('./controllers/withdrawals.js'),
 		UsersCtrl           = require('./controllers/users.js'),
 		SessionCtrl         = require('./controllers/session.js');
 
-var privateKey = fs.readFileSync('/home/ssh/privatekey.pem').toString();
-var certificate = fs.readFileSync('/home/ssh/certificate.pem').toString();
-var credentials = { key: privateKey, cert: certificate };
+//var privateKey = fs.readFileSync('/home/ssh/privatekey.pem').toString();
+//var certificate = fs.readFileSync('/home/ssh/certificate.pem').toString();
+//var credentials = { key: privateKey, cert: certificate };
 var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '127.0.0.1')

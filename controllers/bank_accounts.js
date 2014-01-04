@@ -1,46 +1,39 @@
-var BankAccount = require('../models/bank_account');
-var util = require('util');
+var Account = require('../models/account')
+var util = require('util')
 
 module.exports = (function(){
 	function userIndex(req, res) {
-		BankAccount.findAll({ where: { userId: req.params.userId }})
-    .success(function(bankAccounts){
-			res.send(bankAccounts);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		});
+		Account.findAll({ where: { userId: req.params.userId }})
+    .complete(function(err, accounts) {
+      if err {res.send({ error: err }); return }
+			res.send(accounts);
+    })
   }
   
   function create(req, res) {
 		req.checkBody('userId', 'Invalid userId')
-			.notEmpty().isInt();
+			.notEmpty().isInt()
 		
-		var errors = req.validationErrors();
+		var errors = req.validationErrors()
 		if (errors) {
 			res.send({ error: util.inspect(errors) }, 400)
-			return;
+			return
 		}
 
-		BankAccount.create({
+		Account.create({
 			userId: parseInt(req.body.userId),	
-		})
-		.success(function(bankAccount){
-			res.send(bankAccount);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		});
+		}).complete(function(err, account){
+      if err {res.send({ error: err }); return }
+			res.send(account)
+    })
 	}
 
   function index(req, res) {
-    BankAccount.findAll()
-		.success(function(bankAccounts){
-			res.send(bankAccounts);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		})
+    Account.findAll()
+    .complete(function(err, accounts) {
+      if err {res.send({ error: err }); return }
+			res.send(accounts)
+    })
 	}
 
 	return {
