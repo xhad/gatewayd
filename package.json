@@ -7,7 +7,6 @@
     "sequelize": "",
     "sequelize-postgres": "",
     "db-migrate":"",
-    "zmq":"",
     "express-validator": "",
 		"validator": ""
   },

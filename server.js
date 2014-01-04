@@ -10,6 +10,9 @@ var app = express()
 require('./config/initializers/middleware.js').configure(app)
 require('./config/routes').configure(app, controllers)
 
-app.listen()
-console.log('Listening on port ', app.set('port'))
+app.get('/api/steven', function(req,res){ res.send('zeiler') })
+
+port = process.env.PORT || 4000
+app.listen(port)
+console.log('Listening on port ', port)
 
