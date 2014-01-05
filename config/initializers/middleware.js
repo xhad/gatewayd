@@ -5,6 +5,7 @@ module.exports = (function(){
   function configure(app) {
     app.set('port', process.env.PORT || 3000);
     app.set('host', process.env.HOST || '127.0.0.1')
+    app.use(express.static(__dirname + '/public'));
     app.use(express.bodyParser())
     app.use(expressValidator());
     app.use(express.cookieParser());
