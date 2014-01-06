@@ -6,6 +6,10 @@ module.exports = (function(){
     app.set('port', process.env.PORT || 3000);
     app.set('host', process.env.HOST || '127.0.0.1')
     app.use(express.static(__dirname + '/public'));
+    app.use(function(req,res,next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    })
     app.use(express.bodyParser())
     app.use(expressValidator());
     app.use(express.cookieParser());
