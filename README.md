@@ -14,7 +14,8 @@ Download the app repo
 
 create a postgres user with password
 
-		psql> create database gateway;
+		sudo -u postgres psql
+		psql> create database gateway_appliance;
 		psql> ALTER USER Postgres WITH PASSWORD '<newpassword>';
 		
 Next install db-migrate, a tool to define sequel database migration files
@@ -22,10 +23,11 @@ and run them up and down in sequence.
 
     npm install -g db-migrate
     
-configure config/database.json and config/sequelize.js with postgres creds
-run database migrations.
+Edit config/database.json and config/sequelize.js to add new Postgres credentials.
 
-		db-migrate up --config config/database.json --env dev
+Run database migrations
+
+		sudo -u postgres db-migrate up --config config/database.json --env dev
 
 start the server
 	
