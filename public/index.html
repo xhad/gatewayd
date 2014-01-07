@@ -87,117 +87,6 @@
       </tr>
     </tbody>
   </table>
-</section>
-<section style='padding:2em; border:1px solid #bbb;'>
-  <h2 style='text-align:center'>Ripple</h2>
-  <h2>
-    <a href="">
-      Ripple Addresses
-    </a><br>
-    <small>List Ripple Addresses related to User accounts.</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a>GET /api/v1/accounts/:account_id/ripple_addresses</a></td>
-        <td width="60%">Get the ripple address for a gateway account</td>
-      </tr>
-      <tr>
-        <td><a>POST /api/v1/accounts/:account_id/ripple_addresses/:ripple_address</a></td>
-        <td width="60%">Associate a ripple address with a gateway account</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-<section style='padding:2em; border:1px solid #bbb;'>
-  <h2 style='text-align:center'>Ripple Transactions</h2>
-  <h2>
-    <a>
-      Ripple Transactions
-    </a><br>
-    <small>List transactions made on ripple network to the gateway's address.</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a>GET /api/v1/ripple_transactions</a></td>
-            <td width="60%">Get all rippple transactions<td>
-          </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a> 
-      Ripple Deposits
-    </a><br>
-    <small>Send funds into the gateway from outside the ripple network</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a>GET /api/v1/withdrawals</a></td>
-        <td width="60%">List all deposits</td>
-      </tr>
-      <tr>
-        <td><a>GET /api/v1/accounts/:account_id/deposits</a></td>
-        <td width="60%">List all deposits for an account</td>
-      </tr>
-      <tr>
-        <td><a>POST /api/v1/account/:account_id/deposits</a></td>
-        <td width="60%">Create a deposit into a gateway account</td>
-      </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a> 
-      Ripple Withdrawals
-    </a><br>
-    <small>List Bank Transaction Withdrawals</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a>GET /api/v1/withdrawals</a></td>
-            <td width="60%">List all withdrawals</td>
-          </tr>
-          <tr>
-            <td><a>GET /api/v1/users/:userId/withdrawals</a></td>
-            <td width="60%">Get a list of a single user's withdrawals.</td>
-          </tr>
-          <tr>
-            <td><a>POST /api/v1/withdrawals</a></td>
-            <td width="60%">As an admin create a withdrawal</td>
-          </tr>
-    </tbody>
-  </table>
-  </div>
-
-</section>
-<section style='padding:2em; border:1px solid #bbb;'>
-  <h2 style='text-align:center'>Gateway Transactions</h2>
   <h2>
     <a>
       Gateway Transactions
@@ -213,16 +102,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">GET /api/v1/gateway/transactions</a></td>
-        <td width="60%">Show all gateway transactions</td>
+        <td><a href="">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
+        <td width="60%">Show gateway transactions from a specific account</td>
       </tr>
       <tr>
         <td><a href="">GET /api/v1/gateway/transactions/:id</a></td>
         <td width="60%">Show a single gateway transaction</td>
-      </tr>
-      <tr>
-        <td><a href="">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
-        <td width="60%">Show gateway transactions from a specific account</td>
       </tr>
     </tbody>
   </table>
@@ -274,4 +159,105 @@
       </tr>
     </tbody>
   </table>
+</section>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Ripple</h2>
+  <h2>
+    <a href="">
+      Ripple Addresses
+    </a><br>
+    <small>List Ripple Addresses related to User accounts.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a>GET /api/v1/accounts/:account_id/ripple_addresses</a></td>
+        <td width="60%">Get the ripple address for a gateway account</td>
+      </tr>
+      <tr>
+        <td><a>POST /api/v1/accounts/:account_id/ripple_addresses/:ripple_address</a></td>
+        <td width="60%">Associate a ripple address with a gateway account</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Ripple Transactions
+    </a><br>
+    <small>List transactions made on ripple network to the gateway's address.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a>GET /api/v1/ripple_addresses/:address/ripple_transactions</a></td>
+        <td width="60%">Get all rippple transactions for a ripple address<td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a> 
+      Ripple Deposits
+    </a><br>
+    <small>Send funds into the gateway from outside the ripple network</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a>GET /api/v1/ripple_addresses/:address/deposits</a></td>
+        <td width="60%">List all deposits for an account</td>
+      </tr>
+      <tr>
+        <td><a>POST /api/v1/ripple_addresses/:address/deposits</a></td>
+        <td width="60%">Create a deposit into a gateway account</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a> 
+      Ripple Withdrawals
+    </a><br>
+    <small>List Bank Transaction Withdrawals</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a>GET /api/v1/ripple_addresses/:address/withdrawals</a></td>
+        <td width="60%">Get a list of a single user's withdrawals to ripple account.</td>
+      </tr>
+      <tr>
+        <td><a>POST /api/v1/ripple_addresses/:address/withdrawals</a></td>
+        <td width="60%">Create a withdrawal from a gateway account to the ripple account.</td>
+      </tr>
+      <tr>
+        <td><a>PUT /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
+        <td>Update a withdrawal with its status from the ripple payment service.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
 </section>
