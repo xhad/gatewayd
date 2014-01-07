@@ -7,6 +7,7 @@ controllers = requireAll({
 })
 
 var app = express()
+app.use(express.static(__dirname + '/public'))
 
 require('./config/initializers/middleware.js').configure(app)
 require('./config/routes').configure(app, controllers)

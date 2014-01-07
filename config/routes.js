@@ -1,9 +1,12 @@
 module.exports = (function(){
   function configure(app, ctrls) {
-    app.get('/api/v1/users', ctrls['users'].index);
-    app.post('/api/v1/users', ctrls['users'].create);
-    app.post('/api/v1/session', ctrls['session'].create);
-    app.get('/api/v1/session', ctrls['session'].index);
+    app.get('/', function(req, res){
+      res.render('index.html') 
+    })
+    app.get('/api/v1/users', ctrls['users'].index)
+    app.post('/api/v1/users', ctrls['users'].create)
+    app.post('/api/v1/session', ctrls['session'].create)
+    app.get('/api/v1/session', ctrls['session'].index)
 
     app.get('/api/v1/users/:id/balances', 
         ctrls['balances'].userBalances);

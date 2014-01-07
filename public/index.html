@@ -1,12 +1,34 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)https://coinbase.com/api/doc/1.0.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>
+  <title>API documentation</title>
+  
+  <link type="text/css" rel="stylesheet" href="./apidocs_files/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="./apidocs_files/prettify.css">
+<link type="text/css" rel="stylesheet" href="./apidocs_files/bootstrap-responsive.min.css">
+  <link type="text/css" rel="stylesheet" href="./apidocs_files/application.css">
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+<script type="text/javascript" async="" src="./apidocs_files/embed.js"></script></head>
+<body>
+  <div class="container">
+    <ul class="breadcrumb">
+  <li class="active"><a href="./apidocs_files/apidocs.html">API Home 1.0</a></li>
+</ul>
+
 <div class="row" style='padding:0em 1em 1em 1em'>
 
-<div><h1 class="page-header">REST API Reference</h1>
-
+<div><h1 class="page-header">Ripple Gateway Accounts API Reference</h1>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Gateway</h2>
+  
   <h2>
     <a>
       Users
     </a><br>
-    <small>A user can register or an admin can list/create users</small>
+    <small>A user can register or an admin can list/create users. Users can also be maintained in a separate system and referenced with its unique id.</small>
   </h2>
   <table class="table">
     <thead>
@@ -17,12 +39,32 @@
     </thead>
     <tbody>
           <tr>
-            <td><a>GET /api/v1/users</a></td>
-            <td width="60%">List all users at this gateway.</td>
-          </tr>
-          <tr>
             <td><a>POST /api/v1/users</a></td>
             <td width="60%">Create a new user at this gateway.</td>
+          </tr>
+          <tr>
+            <td><a>GET /api/v1/users/:user_id/account</a></td>
+            <td width="60%">Get the user's account.</td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a href="https://coinbase.com/api/doc/1.0/buttons.html">
+      Gateway Accounts
+    </a><br>
+    <small>Create a new gateway account, which can be associated with a user, ripple addresses, and balances.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a>POST /api/v1/accounts</a></td>
+            <td width="60%">Create a new gateway account</td>
           </tr>
     </tbody>
   </table>
@@ -40,42 +82,17 @@
       </tr>
     </thead>
     <tbody>
-          <tr>
-            <td><a href="">GET /api/v1/balances</a></td>
-            <td width="60%">Get a list of all balances for all users</td>
-          </tr>
-          <tr>
-            <td><a href="">GET /api/v1/users/:userId/balances</a></td>
-            <td width="60%">Get the user's current balances at the gateway</td>
-          </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a href="https://coinbase.com/api/doc/1.0/buttons.html">
-      Bank Accounts
-    </a><br>
-    <small>Create payment buttons, pages, and iFrames to accept bitcoin on your website.</small>
-  </h2>
-  <table class="table">
-    <thead>
       <tr>
-        <th>Resource</th>
-        <th>Description</th>
+        <td><a href="">GET /api/v1/accounts/:accountId/balances</a></td>
+        <td width="60%">Get the balances for a gateway account</td>
       </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/buttons/create.html">POST /api/v1/buttons</a></td>
-            <td width="60%">Create a new payment button, page, or iFrame.</td>
-          </tr>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/buttons/create_order.html">POST /api/v1/buttons/:code/create_order</a></td>
-            <td width="60%">Create an order for this button.</td>
-          </tr>
     </tbody>
   </table>
+</section>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Ripple</h2>
   <h2>
-    <a href="https://coinbase.com/api/doc/1.0/buys.html">
+    <a href="">
       Ripple Addresses
     </a><br>
     <small>List Ripple Addresses related to User accounts.</small>
@@ -88,12 +105,19 @@
       </tr>
     </thead>
     <tbody>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/buys/create.html">POST /api/v1/buys</a></td>
-            <td width="60%">Purchase bitcoin by debiting your U.S. bank account.</td>
-          </tr>
+      <tr>
+        <td><a>GET /api/v1/accounts/:account_id/ripple_addresses</a></td>
+        <td width="60%">Get the ripple address for a gateway account</td>
+      </tr>
+      <tr>
+        <td><a>POST /api/v1/accounts/:account_id/ripple_addresses/:ripple_address</a></td>
+        <td width="60%">Associate a ripple address with a gateway account</td>
+      </tr>
     </tbody>
   </table>
+</section>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Ripple Transactions</h2>
   <h2>
     <a href="https://coinbase.com/api/doc/1.0/contacts.html">
       Ripple Transactions
@@ -115,10 +139,10 @@
     </tbody>
   </table>
   <h2>
-    <a href="https://coinbase.com/api/doc/1.0/currencies.html">
-      Bank Transactions
+    <a href="https://coinbase.com/api/doc/1.0/prices.html">
+      Ripple Deposits
     </a><br>
-    <small>List bank transactions made at this gateway</small>
+    <small>Send funds into the gateway from outside the ripple network</small>
   </h2>
   <table class="table">
     <thead>
@@ -128,43 +152,23 @@
       </tr>
     </thead>
     <tbody>
-          <tr>
-            <td><a href="">GET /api/v1/bank_transactions</a></td>
-            <td width="60%">Show all bank transactions</td>
-          </tr>
-          <tr>
-            <td><a href="">GET /api/v1/currencies/exchange_rates</a></td>
-            <td width="60%">Show exchange rates between BTC and other currencies.</td>
-          </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a href="https://coinbase.com/api/doc/1.0/orders.html">
-      Sessions
-    </a><br>
-    <small>List merchant orders received.</small>
-  </h2>
-  <table class="table">
-    <thead>
       <tr>
-        <th>Resource</th>
-        <th>Description</th>
+        <td><a>GET /api/v1/withdrawals</a></td>
+        <td width="60%">List all deposits</td>
       </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/orders/index.html">GET /api/v1/session</a></td>
-            <td width="60%">Get the currently authenticated user's session.</td>
-          </tr>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/orders/show.html">POST /api/v1/session</a></td>
-            <td width="60%">Create a session / sign in.</td>
-          </tr>
+      <tr>
+        <td><a>GET /api/v1/accounts/:account_id/deposits</a></td>
+        <td width="60%">List all deposits for an account</td>
+      </tr>
+      <tr>
+        <td><a>POST /api/v1/account/:account_id/deposits</a></td>
+        <td width="60%">Create a deposit into a gateway account</td>
+      </tr>
     </tbody>
   </table>
   <h2>
     <a href="https://coinbase.com/api/doc/1.0/prices.html">
-      Withdrawals
+      Ripple Withdrawals
     </a><br>
     <small>List Bank Transaction Withdrawals</small>
   </h2>
@@ -190,11 +194,16 @@
           </tr>
     </tbody>
   </table>
+  </div>
+
+</section>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Gateway Transactions</h2>
   <h2>
-    <a href="https://coinbase.com/api/doc/1.0/recurring_payments.html">
-      Deposits
+    <a href="https://coinbase.com/api/doc/1.0/currencies.html">
+      Gateway Transactions
     </a><br>
-    <small>List Bank Transaction Deposits</small>
+    <small>List bank transactions made at this gateway</small>
   </h2>
   <table class="table">
     <thead>
@@ -204,14 +213,66 @@
       </tr>
     </thead>
     <tbody>
-          <tr>
-            <td><a>GET /api/v1/deposits</a></td>
-            <td width="60%">List all deposits.</td>
-          </tr>
-          <tr>
-            <td><a href="https://coinbase.com/api/doc/1.0/recurring_payments/show.html">GET /api/v1/users/:userId/deposits</a></td>
-            <td width="60%">Show an individual user's deposits.</td>
-          </tr>
+      <tr>
+        <td><a href="">GET /api/v1/gateway/transactions</a></td>
+        <td width="60%">Show all gateway transactions</td>
+      </tr>
+      <tr>
+        <td><a href="">GET /api/v1/gateway/transactions/:id</a></td>
+        <td width="60%">Show a single gateway transaction</td>
+      </tr>
+      <tr>
+        <td><a href="">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
+        <td width="60%">Show gateway transactions from a specific account</td>
+      </tr>
     </tbody>
   </table>
-  </div>
+  <h2>
+    <a href="https://coinbase.com/api/doc/1.0/currencies.html">
+      Gateway Deposits
+    </a><br>
+    <small>List bank transactions made at this gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="">POST /api/v1/gateway/deposits</a></td>
+        <td width="60%">Record a deposit into the gateway from outside ripple network</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a href="https://coinbase.com/api/doc/1.0/currencies.html">
+      Gateway Withdrawals
+    </a><br>
+    <small>List bank transactions made at this gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="">GET /api/v1/gateway/withdrawals</a></td>
+        <td width="60%">Show all pending withdrawal requests</td>
+      </tr>
+      <tr>
+        <td><a href="">POST /api/v1/gateway/withdrawals/:id/accept</a></td>
+        <td width="60%">After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue</td>
+      </tr>
+      <tr>
+        <td><a href="">POST /api/v1/gateway/withdrawals/:id/reject</a></td>
+        <td width="60%">Reject a withdrawal request, destroying the gateway transaction record</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
