@@ -12,9 +12,14 @@ app.use(express.static(__dirname + '/public'))
 require('./config/initializers/middleware.js').configure(app)
 require('./config/routes').configure(app, controllers)
 
-address = process.env.ADDRESS || '127.0.0.1'
+address = process.env.ADDRESS
 port = process.env.PORT || 4000
-app.listen(port, address)
+
+if (address){
+  app.listen(port, address)
+  console.log('Listening on IP address ', address)
+} else {
+  app.listen(port)
+}
 console.log('Listening on port ', port)
-console.log('Listening on IP address ', address)
 
