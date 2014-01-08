@@ -5,6 +5,12 @@ var util = require('util');
 
 module.exports = (function(){
 
+  function show(req, res) {
+    RippleTransaction.find(req.params.id).complete(function(err, tx){
+      if (err) { res.send({ success: false, error: err}); return false }
+      res.send({ success: true, transaction: tx })
+    })
+  }
   function userIndex(req, res) {
 		RippleAddress.findAll({ where: { userId: req.params.userId }})
 		.success(function(rippleAddresses){
@@ -38,7 +44,6 @@ module.exports = (function(){
 	// Create a new record of a successful ripple transaction to the gateway
 	function createInbound(req, res) {
 		// assert(toAddress == theGatewaysAddress);
-		console.log(req.body);
 		req.body.issuance = false;	
 
     req.checkBody('destinationTag', 'Invalid destinationTag')
@@ -81,6 +86,7 @@ module.exports = (function(){
   return {
     userIndex: userIndex,
 		createInbound: createInbound,
-		index: index
+		index: index,
+    show: show
 	}
 })();

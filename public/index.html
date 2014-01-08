@@ -126,7 +126,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">POST /api/v1/gateway/deposits</a></td>
+        <td><a href="">POST /api/v1/gateway/accounts/:accountId/deposit</a></td>
         <td width="60%">Record a deposit into the gateway from outside ripple network</td>
       </tr>
     </tbody>
@@ -145,6 +145,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><a href="">POST /api/v1/gateway/accounts/:accountId/withdrawal</a></td>
+        <td width="60%">Create a withdrawal request out of the gateway to outside the ripple network</td>
+      </tr>
       <tr>
         <td><a href="">GET /api/v1/gateway/withdrawals</a></td>
         <td width="60%">Show all pending withdrawal requests</td>
@@ -203,6 +207,10 @@
       <tr>
         <td><a>GET /api/v1/ripple_addresses/:address/ripple_transactions</a></td>
         <td width="60%">Get all rippple transactions for a ripple address<td>
+      </tr>
+      <tr>
+        <td><a>GET /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
+        <td width='60%'>Get any given ripple transaction by id</td>
       </tr>
     </tbody>
   </table>

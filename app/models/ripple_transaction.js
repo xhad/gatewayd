@@ -42,17 +42,6 @@ var RippleTx = sequelize.define('ripple_transaction', {
 				}).complete(fn);
 			});
 		}
-	},
-	hooks: {
-		afterCreate: function(rippleTransaction, fn) {
-			PendingRippleTransaction.create({
-			  rippleTransactionId: rippleTransaction.id,
-				initialStatus: 'created'
-			}).complete(fn);
-		},
-		afterCreate: function(rippleTransaction, fn) {
-			rippleTransaction.updateBalance(fn);
-		}
 	}
 });
 

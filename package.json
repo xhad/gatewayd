@@ -9,7 +9,8 @@
     "sequelize-postgres": "",
     "db-migrate":"",
     "express-validator": "",
-		"validator": ""
+		"validator": "",
+    "bignumber.js": "1.3.0"
   },
   "devDependencies": {
     "request": "",

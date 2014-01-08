@@ -8,7 +8,7 @@ var BankTx = sequelize.define('bank_transaction', {
   currency: { type: Sequelize.STRING, allowNull: false },
   accountId: { type: Sequelize.INTEGER, allowNull: false },
 	balanceId: { type: Sequelize.INTEGER, allowNull: false },
-  cashAmount: { type: Sequelize.FLOAT(11,12), allowNull: false },
+  cashAmount: { type: Sequelize.DECIMAL, allowNull: false },
   rippleTxId: Sequelize.INTEGER
 });
 

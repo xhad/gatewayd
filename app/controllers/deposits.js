@@ -3,6 +3,7 @@ var Balance = require("../models/balance.js");
 var RippleTransaction = require("../models/ripple_transaction.js");
 var util = require('util');
 var errorResponse = require("../../lib/utils").errorResponse;
+var BigNumber = require('bignumber.js')
 
 var DepositsCtrl = (function(){ 
 	try {
@@ -17,7 +18,8 @@ var DepositsCtrl = (function(){
 	}
 
 	function create(req, res, err){
-		req.checkBody('bankAccountId', 'Invalid bankAccountId')
+    console.log(req.body.cashAmount)
+		req.checkParams('accountId', 'Invalid gatewayAccountId')
 			.notEmpty().isInt();
 		req.checkBody('currency', 'Invalid currency')
 			.notEmpty().isAlpha();
@@ -26,26 +28,29 @@ var DepositsCtrl = (function(){
 		
 		var errors = req.validationErrors();
 		if (errors) {
-			res.send({ error: util.inspect(errors) }, 400)
+			res.send({ success: false, error: util.inspect(errors) }, 400)
 			return;
 		}
 
 		// look up the account's balance for this curency
 		Balance.findOrCreateByCurrencyAndBankAccountId(
-			req.body.bankAccountId, 
+			req.params.accountId, 
 			req.body.currency, 
 		function(err, balance) {
+      console.log(balance)
 			if (err) { errorResponse(res)(err) }
 			BankTx.create({
 				deposit: true,
 				currency: req.body.currency,
 				cashAmount: req.body.cashAmount,
-				bankAccountId: req.body.bankAccountId,
+				accountId: req.params.accountId,
 				balanceId: balance.id
 			})
 			.success(function(transaction){
+        prev = new BigNumber(balance.amount)
+        diff = new BigNumber(req.body.cashAmount)
 				balance.updateAttributes({
-					amount: (parseFloat(balance.amount) + parseFloat(req.body.cashAmount))
+					amount: prev.plus(diff).toString()
 				})
 				.success(function(){
 					// create corresponding ripple transaction
@@ -62,7 +67,7 @@ var DepositsCtrl = (function(){
 					})
 					.success(function(rippleTransaction){
 						res.send({
-							status: 'success',
+						  success: true,
 							deposit: transaction
 						});
 					}).error(errorResponse(res));
