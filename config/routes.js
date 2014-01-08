@@ -3,10 +3,15 @@ module.exports = (function(){
     app.get('/', function(req, res){
       res.render('index.html') 
     })
+    // UsersController
     app.get('/v1/gateway/users/:userId/gateway_account', ctrls['users'].account)
     app.post('/v1/gateway/users', ctrls['users'].create)
+
+    // GatewayAccountsController
+    app.post('/v1/gateway/users/:userId/gateway_accounts', ctrls['accounts'].create)
     app.get('/v1/gateway/accounts/:account_id/balances', 
         ctrls['balances'].userBalances)
+
     app.get('/v1/users/:userId/bank_accounts',
         ctrls['accounts'].userIndex)
     app.get('/v1/users/:userId/ripple_addresses',

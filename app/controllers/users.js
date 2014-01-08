@@ -1,11 +1,11 @@
 var User = require('../models/user'),
-		Account = require('../models/account'),
+		GatewayAccount = require('../models/gateway_account'),
     utils = require('../../lib/utils'),
 		util = require('util');
 
 module.exports = (function() {
 	function account(req, res) {
-    Account.find({where: {
+    GatewayAccount.find({where: {
       userId: req.params.userId
     }}).complete(function(err, account){
       if (err) {  account = [] }

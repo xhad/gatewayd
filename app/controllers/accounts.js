@@ -1,9 +1,9 @@
-var Account = require('../models/account')
+var GatewayAccount = require('../models/gateway_account')
 var util = require('util')
 
 module.exports = (function(){
 	function userIndex(req, res) {
-		Account.findAll({ where: { userId: req.params.userId }})
+		GatewayAccount.findAll({ where: { userId: req.params.userId }})
     .complete(function(err, accounts) {
       if (err) {res.send({ error: err }); return }
 			res.send(accounts);
@@ -11,17 +11,8 @@ module.exports = (function(){
   }
   
   function create(req, res) {
-		req.checkBody('userId', 'Invalid userId')
-			.notEmpty().isInt()
-		
-		var errors = req.validationErrors()
-		if (errors) {
-			res.send({ error: util.inspect(errors) }, 400)
-			return
-		}
-
-		Account.create({
-			userId: parseInt(req.body.userId),	
+		GatewayAccount.create({
+			userId: req.params.userId,	
 		}).complete(function(err, account){
       if (err) {res.send({ error: err }); return }
 			res.send(account)
@@ -29,7 +20,7 @@ module.exports = (function(){
 	}
 
   function index(req, res) {
-    Account.findAll()
+    GatewayAccount.findAll()
     .complete(function(err, accounts) {
       if (err) {res.send({ error: err }); return }
 			res.send(accounts)

@@ -8,7 +8,11 @@ describe('creating a gateway user', function(){
     console.log(this.currentTest.title)
   })
 
-  before(function(){ var url = baseUrl + '/api/v1/gateway/users'})
+  before(function(){ 
+    console.log("Creating a User")
+    console.log("-------------------------------------------------------")
+    var url = baseUrl + '/api/v1/gateway/users'
+  })
   it('should require a name', function(done){
     request.post(baseUrl+'v1/gateway/users', {form:{}}, function(e,r,body) {
       resp = JSON.parse(body)
@@ -57,6 +61,9 @@ describe('creating a gateway user', function(){
 
 describe("getting a user's account", function(){
   before(function(){
+    console.log("")
+    console.log("Getting a user's account")
+    console.log("-------------------------------------------------------")
     createUser = function(callback){
       username = crypto.randomBytes(256).toString('hex')
       request.post(baseUrl+'v1/gateway/users', {form:{
@@ -73,7 +80,7 @@ describe("getting a user's account", function(){
     createUser(function(e,r,body) {
       user = JSON.parse(body)
       request.get(baseUrl+'v1/gateway/users/'+user.id+'/gateway_account', function(e,r,body){
-        assert.equal(body, JSON.stringify([]))
+        assert(!body)
         done()
       })
     })
