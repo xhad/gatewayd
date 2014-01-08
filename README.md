@@ -35,6 +35,10 @@ start the server
 
 Once the server is started visit https://0.0.0.0/app to use the app
 
+## Running REST API Integration Tests
+
+    mocha test/integration/
+
 ## Creating a User's Gateway Account
 
 In order to interact with a gateway an end user must register
