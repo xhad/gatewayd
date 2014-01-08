@@ -29,7 +29,7 @@ module.exports = (function(){
 
     app.post('/v1/ripple_transactions/inbound', 
         ctrls['ripple_transactions'].createInbound);
-    app.post('/v1/withdrawals', ctrls['withdrawals'].create);
+    app.post('/v1/gateway/accounts/:accountId/withdrawals', ctrls['withdrawals'].create);
 
     app.get('/v1/bank_transactions', ctrls['bank_transactions'].index);
     app.get('/v1/withdrawals', ctrls['withdrawals'].index);

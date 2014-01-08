@@ -18,7 +18,6 @@ var DepositsCtrl = (function(){
 	}
 
 	function create(req, res, err){
-    console.log(req.body.cashAmount)
 		req.checkParams('accountId', 'Invalid gatewayAccountId')
 			.notEmpty().isInt();
 		req.checkBody('currency', 'Invalid currency')
@@ -37,7 +36,6 @@ var DepositsCtrl = (function(){
 			req.params.accountId, 
 			req.body.currency, 
 		function(err, balance) {
-      console.log(balance)
 			if (err) { errorResponse(res)(err) }
 			BankTx.create({
 				deposit: true,

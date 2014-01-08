@@ -1,4 +1,9 @@
 var BankTransaction = require("../models/bank_tx.js");
+var Balance = require('../models/balance')
+var BigNumber = require("bignumber.js")
+var BankTx = require("../models/bank_tx")
+var errorResponse = require("../../lib/utils").errorResponse; 
+var util = require('util')
 
 module.exports = (function(){
 	function index(req, res) {
@@ -12,7 +17,7 @@ module.exports = (function(){
 	}
 
   function create(req, res) {
-		req.checkBody('bankAccountId', 'Invalid bankAccountId')
+		req.checkParams('accountId', 'Invalid accountId')
 			.notEmpty().isInt();
 		req.checkBody('currency', 'Invalid currency')
 			.notEmpty().isAlpha();
@@ -25,15 +30,36 @@ module.exports = (function(){
 			return;
 		}
 
-		var params = req.body;
-		params.deposit = false;
-		BankTransaction.create(params)
-		.success(function(bankTransaction){
-			res.send(bankTransaction);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		});
+		Balance.findOrCreateByCurrencyAndBankAccountId(
+			req.params.accountId, 
+			req.body.currency, 
+		function(err, balance) {
+			if (err) { errorResponse(res)(err) }
+      diff = new BigNumber(req.body.cashAmount)
+      amount = new BigNumber(balance.amount)
+      if (amount.minus(diff) < 0) { errResponse(res)({ error: 'insuffiencient funds' })}
+			BankTx.create({
+				deposit: false,
+				currency: req.body.currency,
+				cashAmount: req.body.cashAmount,
+				accountId: req.params.accountId,
+				balanceId: balance.id
+			})
+			.success(function(transaction){
+        prev = new BigNumber(balance.amount)
+        diff = new BigNumber(req.body.cashAmount)
+        console.log('new', prev.minus(diff).toString())
+				balance.updateAttributes({
+					amount: prev.minus(diff).toString()
+				})
+				.success(function(){
+          res.send({
+            success: true,
+            withdrawal: transaction
+          });
+				}).error(errorResponse(res));
+			}).error(errorResponse(res));
+    })
 	} 
 
   return {
