@@ -2,18 +2,15 @@ var Sequelize = require('sequelize');
 var db = require('../../config/initializers/sequelize');
 var User = require('../models/user');
 
-var BankAccount = sequelize.define('bank_account', {
+var GatewayAccount = sequelize.define('bank_account', {
   id: { 
 		type: Sequelize.INTEGER, 
 		primaryKey: true,
 		autoIncrement: true,
 	},
   userId: { 
-		type: Sequelize.INTEGER, 
-		references: 'User',
-		referencesKey: 'id'
+		type: Sequelize.STRING
 	}
 });
 
-//BankAccount.belongsTo(User, { foreignKeyConstraint: true });
-module.exports = BankAccount;
+module.exports = GatewayAccount

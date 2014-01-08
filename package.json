@@ -11,6 +11,7 @@
 		"validator": ""
   },
   "devDependencies": {
+    "request": "",
     "mocha": "~1.14.0",
     "sinon-chai": "~2.4.0",
     "sinon":"~1.7.3",

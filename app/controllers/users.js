@@ -4,10 +4,13 @@ var User = require('../models/user'),
 		util = require('util');
 
 module.exports = (function() {
-	function index(req, res) {
-		User.all().success(function(users) {
-			res.send(users);
-		});
+	function account(req, res) {
+    Account.find({where: {
+      userId: req.params.userId
+    }}).complete(function(err, account){
+      if (err) {  account = [] }
+      res.send(account)
+    })
 	}
 
   function create(req, res) {
@@ -15,33 +18,25 @@ module.exports = (function() {
 			.notEmpty().isAlphanumeric();
 		req.checkBody('password', 'Invalid password')
 			.notEmpty().isAlphanumeric();
-		req.checkBody('rippleAddress', 'Invalid rippleAddress')
-			.notEmpty().isAlphanumeric();
 		
 		var errors = req.validationErrors();
 		if (errors) {
 			res.send({ error: util.inspect(errors) }, 400)
 			return;
 		}
-		
-		User.createWithAddress(
-			req.body.name, 
-			req.body.password, 
-			req.body.rippleAddress,
-			function(err, user) {
-			  if (err) { utils.errorResponse(res)(err); return }
-				Account.create({ userId: user.id })
-				.success(function(bankAccount){
-					user.bankAccount = bankAccount;
-					res.send(user)
-				})
-				.error(utils.errorResponse(res));
-			}
-		)
+
+    var salt = utils.generateSalt()
+    var password = req.body.password
+    var passwordHash = utils.saltPassword(password, salt)
+
+    var user = User.createEncrypted(req.body.name, password, function(err, user){
+      if (err) { res.send({ error: err }); return }
+      res.send(user)
+    })
 	}
 	
 	return {
-		index: index,
+		account: account,
 		create: create
 	}
 })();

@@ -4,7 +4,7 @@ var type = dbm.dataType
 exports.up = function(db, callback) {
   db.createTable('accounts', { 
     id: { type: 'int', primaryKey: true, autoIncrement: true },
-    userId: { type: 'int', unique: true, notNull: true },
+    userId: { type: 'string', unique: true },
     createdAt: { type: 'datetime', notNull: true },
     updatedAt: { type: 'datetime', unique: true, notNull: true }
   }, callback)

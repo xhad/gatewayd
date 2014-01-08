@@ -1,7 +1,6 @@
 var Sequelize = require('sequelize');
 var db = require('../../config/initializers/sequelize.js');
 var utils = require("../../lib/utils");
-var BankAccount = require('./account.js');
 var RippleAddress = require('./ripple_address.js');
 
 var User = sequelize.define('user', {
@@ -15,7 +14,6 @@ var User = sequelize.define('user', {
   federationTag: Sequelize.STRING,
   federationName: Sequelize.STRING,
   kycId: Sequelize.INTEGER,
-  bankAccountId: Sequelize.INTEGER,
   name: Sequelize.STRING,
   salt: Sequelize.STRING,
   passwordHash: Sequelize.STRING
@@ -36,35 +34,20 @@ var User = sequelize.define('user', {
 		rippleBalance: function(currency) {},
 		rippleBalances: function() {} 
   },
-	classMethods: {
-		createWithAddress: function(name, password, rippleAddress,callback){
-			var salt = utils.generateSalt();
-			var passwordHash = utils.saltPassword(password, salt);
+  classMethods: {
+    createEncrypted: function(name, password, callback) {
+      var salt = utils.generateSalt();
+      var passwordHash = utils.saltPassword(password, salt);
 
-			var user = User.create({
-				name: name,
-				salt: salt,
-				passwordHash: passwordHash,
-				federationTag: 'federationTag',
-				federationName: name
-			})
-			.success(function(user) {
-				RippleAddress.create({
-					userId: user.id,
-					address: rippleAddress
-				})
-				.success(function(rippleAddress) {
-					user.rippleAddress = rippleAddress;
-					callback(null, user);
-				})
-				.error(function(err){
-					callback(null, user);
-				});
-			})
-			.error(function(err) {
-				callback(err, null)
-			})
-		}
+      var user = User.create({
+        name: name,
+        salt: salt,
+        passwordHash: passwordHash,
+      }).complete(function(err, user){
+        callback(err, user)
+      })
+    }
   }
 });
-	module.exports = User;
+
+module.exports = User;
