@@ -17,6 +17,7 @@ describe('creating a gateway withdrawal', function(){
     user =  null
     account = null
 
+    console.log("")
     console.log("Creating a Gateway Withdrawal")
     console.log("-------------------------------------------------------")
     createUser = function(callback){
@@ -34,15 +35,6 @@ describe('creating a gateway withdrawal', function(){
       })
     })
   })
-  it('should create a deposit for a gatewayAccount', function(done){
-    request.post(baseUrl+'v1/gateway/accounts/'+account.id+'/deposits', {form:{
-      currency: 'BTC', cashAmount: '0.2' 
-    }}, function(e,r,body){
-      resp = JSON.parse(body)
-      assert(resp.success)
-      done()
-    })
-  }) 
   it('should not create a withdrawal without a currency', function(done){
     request.post(baseUrl+'v1/gateway/accounts/'+account.id+'/deposits', {form:{
       cashAmount: '0.2' 
@@ -83,15 +75,15 @@ describe('creating a gateway withdrawal', function(){
         getBalances(account.id, function(e,r,body){
           resp = JSON.parse(body)
           balance = JSON.parse(body)['balances'][0]
-          assert.equal(parseFloat(balance.amount), 0.4)
+          assert.equal(parseFloat(balance.amount), 0.2)
           assert(resp.success)
-          createWithdrawal(account.id, 'BTC', '0.3', function(e,r,body){
+          createWithdrawal(account.id, 'BTC', '0.05', function(e,r,body){
             assert(!e)
             assert(JSON.parse(body).success)
             getBalances(account.id, function(e,r,body){
               resp = JSON.parse(body)
               balance = JSON.parse(body)['balances'][0]
-              assert.equal(parseFloat(balance.amount), 0.1)
+              assert.equal(parseFloat(balance.amount), 0.15)
               assert(resp.success)
               done()
             })
