@@ -1,8 +1,7 @@
 var request = require('request')
 var assert = require('assert')
 var crypto = require('crypto')
-var testHelpers = require('./helpers')
-console.log(testHelpers)
+var helpers = require('./helpers')
 baseUrl = 'http://127.0.0.1:4000/'
 
 describe('creating a gateway deposit', function(){
@@ -13,19 +12,14 @@ describe('creating a gateway deposit', function(){
     user =  null
     account = null
 
+    console.log()
     console.log("Creating a Gateway Deposit")
     console.log("-------------------------------------------------------")
-    createUser = function(callback){
-      username = crypto.randomBytes(256).toString('hex')
-      request.post(baseUrl+'v1/gateway/users', {form:{
-        name: username, password: username
-      }}, callback)
-    }
 
-    createUser(function(e,r,body){
-      user = JSON.parse(body)
+    helpers.createUser(function(e,r,body){
+      user = JSON.parse(body).user
       request.post(baseUrl+'v1/gateway/users/'+user.id+'/gateway_accounts', function(e,r,body) {
-        account = JSON.parse(body)
+        account = JSON.parse(body).gatewayAccount
         done()
       })
     })

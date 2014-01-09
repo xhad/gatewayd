@@ -8,7 +8,7 @@ module.exports = (function(){
     app.post('/v1/gateway/users', ctrls['users'].create)
 
     // GatewayAccountsController
-    app.post('/v1/gateway/users/:userId/gateway/accounts', ctrls['accounts'].create)
+    app.post('/v1/gateway/users/:userId/gateway_accounts', ctrls['accounts'].create)
     app.get('/v1/gateway/accounts/:accountId/balances', 
         ctrls['balances'].gatewayAccountBalances)
     app.post('/v1/gateway/accounts/:accountId/deposits', ctrls['deposits'].create);

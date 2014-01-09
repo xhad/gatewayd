@@ -9,6 +9,7 @@ describe('creating a gateway user', function(){
   })
 
   before(function(){ 
+    console.log()
     console.log("Creating a User")
     console.log("-------------------------------------------------------")
     var url = baseUrl + '/api/v1/gateway/users'
@@ -37,8 +38,8 @@ describe('creating a gateway user', function(){
     request.post(baseUrl+'v1/gateway/users', {form:{
       name: username, password: username
     }}, function(e,r,body) {
-      body = JSON.parse(body)
-      assert.equal(body.name, username)
+      user = JSON.parse(body).user
+      assert.equal(user.name, username)
       done()
     })
   }) 
@@ -52,7 +53,7 @@ describe('creating a gateway user', function(){
         name: username, password: username
       }}, function(e,r,body) {
         resp = JSON.parse(body)
-        assert(resp.error)
+        assert(!resp.success)
         done()
       })
     })
@@ -80,7 +81,8 @@ describe("getting a user's account", function(){
     createUser(function(e,r,body) {
       user = JSON.parse(body)
       request.get(baseUrl+'v1/gateway/users/'+user.id+'/gateway_account', function(e,r,body){
-        assert(!body)
+        resp = JSON.parse(body)
+        assert(!resp.success)
         done()
       })
     })

@@ -15,7 +15,7 @@ module.exports = (function(){
 			userId: req.params.userId,	
 		}).complete(function(err, account){
       if (err) {res.send({ error: err }); return }
-			res.send(account)
+			res.send({ success: true, gatewayAccount: account })
     })
 	}
 

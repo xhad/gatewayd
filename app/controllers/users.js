@@ -31,7 +31,7 @@ module.exports = (function() {
 
     var user = User.createEncrypted(req.body.name, password, function(err, user){
       if (err) { res.send({ error: err }); return }
-      res.send(user)
+      res.send({ success: true, user: user })
     })
 	}
 	

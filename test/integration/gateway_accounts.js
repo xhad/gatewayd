@@ -15,8 +15,8 @@ describe('creating a gateway account', function(){
   it('should create a gateway account given a userId', function(done){
     id = crypto.randomBytes(20).toString('hex')
     request.post(baseUrl+'v1/gateway/users/'+id+'/gateway_accounts', function(e,r,body) {
-      resp = JSON.parse(body)
-      assert.equal(resp.userId, id)
+      account = JSON.parse(body).gatewayAccount
+      assert.equal(account.userId, id)
       done()
     })
   }) 
