@@ -4,6 +4,27 @@ var errorResponse = require("../../lib/utils.js").errorResponse;
 var util = require('util');
 
 module.exports = (function(){
+  function withdraw(req, res) {
+
+  }
+  function index(req, res){
+
+  }
+  
+  function update(req, res){
+    req.checkBody('txHash', 'Invalid txHash').notEmpty()
+    req.checkBody('txStatus', 'Invalid txStatus').notEmpty()
+    
+    RippleTransaction.find(req.params.id).complete(function(err, tx){
+      if (err) { res.send({ success: false, error: err}); return false }
+      tx.txHash = req.body.txHash  
+      tx.txStatus = req.body.txStatus
+      tx.save().complete(function(err, tx){
+        if (err) { res.send({ success: false, error: err}); return false }
+        res.send({ success: true, transaction: tx })
+      })
+    })
+  }
 
   function show(req, res) {
     RippleTransaction.find(req.params.id).complete(function(err, tx){
@@ -11,38 +32,8 @@ module.exports = (function(){
       res.send({ success: true, transaction: tx })
     })
   }
-  function userIndex(req, res) {
-		RippleAddress.findAll({ where: { userId: req.params.userId }})
-		.success(function(rippleAddresses){
-			rippleAddressIds = [];
-			rippleAddresses.forEach(function(address){ 
-				rippleAddressIds.push(address.id)
-			});
-			RippleTransaction.findAll({ where: { id: rippleAddressIds }})
-			.success(function(rippleTransactions){
-			  res.send(rippleTransactions);	
-			})
-			.error(function(err){
-				res.send({ error: err });	
-			});
-		})
-		.error(function(){
-			res.send({ error: err });
-		});
-	}
-  
-  function index(req, res){
-    RippleTransaction.findAll()
-		.success(function(transactions){
-			res.send(transactions);
-		})
-		.error(function(err){
-			res.send({ error: err });
-		});
-  }
 
-	// Create a new record of a successful ripple transaction to the gateway
-	function createInbound(req, res) {
+	function createDeposit(req, res) {
 		// assert(toAddress == theGatewaysAddress);
 		req.body.issuance = false;	
 
@@ -84,8 +75,7 @@ module.exports = (function(){
   }
 
   return {
-    userIndex: userIndex,
-		createInbound: createInbound,
+    update: update,
 		index: index,
     show: show
 	}

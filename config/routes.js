@@ -8,7 +8,7 @@ module.exports = (function(){
     app.post('/v1/gateway/users', ctrls['users'].create)
 
     // GatewayAccountsController
-    app.post('/v1/gateway/users/:userId/gateway_accounts', ctrls['accounts'].create)
+    app.post('/v1/gateway/users/:userId/gateway_accounts', ctrls['users'].account)
     app.get('/v1/gateway/accounts/:accountId/balances', 
         ctrls['balances'].gatewayAccountBalances)
     app.post('/v1/gateway/accounts/:accountId/deposits', ctrls['deposits'].create);
@@ -19,18 +19,12 @@ module.exports = (function(){
         ctrls['accounts'].userIndex)
     app.get('/v1/users/:userId/ripple_addresses',
         ctrls['ripple_addresses'].userIndex)
-    app.get('/v1/users/:userId/gateway_transactions', 
-        ctrls['gateway_transactions'].userIndex)
-    app.get('/v1/users/:userId/ripple_transactions', 
-        ctrls['ripple_transactions'].userIndex)
 
     app.post('/v1/users/:userId/gateway/accounts', 
         ctrls['accounts'].create);
     app.post('/v1/users/:userId/ripple_addresses', 
         ctrls['ripple_addresses'].create);
 
-    app.post('/v1/ripple_transactions/inbound', 
-        ctrls['ripple_transactions'].createInbound);
     app.post('/v1/gateway/accounts/:accountId/withdrawals', ctrls['withdrawals'].create);
 
     app.get('/v1/gateway_transactions', ctrls['gateway_transactions'].index);
@@ -43,6 +37,7 @@ module.exports = (function(){
     app.get('/v1/ripple_addresses', ctrls['ripple_addresses'].index);
     app.get('/v1/ripple_transactions', ctrls['ripple_transactions'].index);
     app.get('/v1/ripple_transactions/:id', ctrls['ripple_transactions'].show);
+    app.put('/v1/ripple_transactions/:id', ctrls['ripple_transactions'].update);
   }
 
   return { configure: configure  }
