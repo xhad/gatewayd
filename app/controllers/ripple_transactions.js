@@ -36,28 +36,30 @@ module.exports = (function(){
     })
   }
 
-	function createDeposit(req, res) {
+	function create(req, res) {
 		// assert(toAddress == theGatewaysAddress);
 		req.body.issuance = false;	
 
-    req.checkBody('destinationTag', 'Invalid destinationTag')
-      .notEmpty().isAlphanumeric();
+    req.checkBody('sourceTag', 'Invalid sourceTag')
+      .notEmpty().isAlphanumeric()
     req.checkBody('toCurrency', 'Invalid toCurrency')
-      .notEmpty().isAlphanumeric();
+      .notEmpty().isAlphanumeric()
     req.checkBody('fromCurrency', 'Invalid fromCurrency')
-      .notEmpty().isAlphanumeric();
+      .notEmpty().isAlphanumeric()
     req.checkBody('toAmount', 'Invalid toAmount')
-      .notEmpty().isDecimal();
+      .notEmpty().isDecimal()
     req.checkBody('fromAmount', 'Invalid fromAmount')
-      .notEmpty().isDecimal();
+      .notEmpty().isDecimal()
     req.checkBody('txState', 'Invalid transactionState')
-      .notEmpty().is('tesSUCCESS');
+      .notEmpty().is('tesSUCCESS')
     req.checkBody('txHash', 'Invalid transactionHash')
-      .notEmpty().isAlphanumeric();
+      .notEmpty().isAlphanumeric()
     req.checkBody('toAddress', 'Invalid toAddress')
-      .notEmpty().isAlphanumeric();
+      .notEmpty().isAlphanumeric()
     req.checkBody('fromAddress', 'Invalid fromAddress')
-      .notEmpty().isAlphanumeric();
+      .notEmpty().isAlphanumeric()
+    req.checkBody('deposit', 'Must have deposit Boolean')
+      .isBoolean()
         
     var errors = req.validationErrors();
     if (errors) {
