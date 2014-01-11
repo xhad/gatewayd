@@ -36,6 +36,7 @@ module.exports = (function(){
     app.get('/v1/balances', ctrls['balances'].index);
     app.get('/v1/ripple_addresses', ctrls['ripple_addresses'].index);
     app.get('/v1/ripple_transactions', ctrls['ripple_transactions'].index);
+    app.post('/v1/ripple_transactions', ctrls['ripple_transactions'].create);
     app.get('/v1/ripple_transactions/:id', ctrls['ripple_transactions'].show);
     app.put('/v1/ripple_transactions/:id', ctrls['ripple_transactions'].update);
   }
