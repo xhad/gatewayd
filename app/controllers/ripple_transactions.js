@@ -13,12 +13,15 @@ module.exports = (function(){
   
   function update(req, res){
     req.checkBody('txHash', 'Invalid txHash').notEmpty()
-    req.checkBody('txStatus', 'Invalid txStatus').notEmpty()
+    req.checkBody('txState', 'Invalid txStatus').notEmpty()
+    if (errors = req.validationErrors()) {
+			errorResponse(res)(util.inspect(errors));
+    }
     
     RippleTransaction.find(req.params.id).complete(function(err, tx){
       if (err) { res.send({ success: false, error: err}); return false }
       tx.txHash = req.body.txHash  
-      tx.txStatus = req.body.txStatus
+      tx.txState = req.body.txState
       tx.save().complete(function(err, tx){
         if (err) { res.send({ success: false, error: err}); return false }
         res.send({ success: true, transaction: tx })
