@@ -5,7 +5,6 @@ module.exports = (function(){
     get('/v1/gateway/users/:userId/gateway_account', 'users#account')
     post('v1/gateway/users', 'users#create')
     post('/v1/gateway/users/:userId/gateway_accounts', 'users#account')
-    get('/v1/gateway/accounts/:accountId/balances', 'balances#gatewayAccountBalances')
     post('/v1/gateway/accounts/:accountId/deposits', 'deposits#create')
     get('/v1/gateway/accounts/:accountId/transactions', 'gateway_transactions#forAccount')
     get('/v1/users/:userId/gateway/accounts', 'accounts#userAccount')
@@ -20,7 +19,6 @@ module.exports = (function(){
 
     get('/v1/gateway/accounts', 'accounts#index')
     post('/v1/gateway/accounts', 'accounts#create')
-    get('/v1/balances', 'balances#index')
     get('/v1/ripple_addresses', 'ripple_addresses#index')
     get('/v1/ripple_transactions', 'ripple_transactions#index')
     post('/v1/ripple_transactions', 'ripple_transactions#create')
