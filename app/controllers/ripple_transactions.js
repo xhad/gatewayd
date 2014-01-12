@@ -36,7 +36,8 @@ module.exports = (function(){
 	function create(req, res) {
 		// assert(toAddress == theGatewaysAddress);
 		req.body.issuance = false;	
-
+    console.log(req.body)
+/*
     req.checkBody('sourceTag', 'Invalid sourceTag')
       .notEmpty().isAlphanumeric()
     req.checkBody('toCurrency', 'Invalid toCurrency')
@@ -56,23 +57,18 @@ module.exports = (function(){
     req.checkBody('fromAddress', 'Invalid fromAddress')
       .notEmpty().isAlphanumeric()
     req.sanitize('deposit').toBoolean()
+
+*/
         
     var errors = req.validationErrors();
     if (errors) {
 			errorResponse(res)(util.inspect(errors));
     }
 
-		Balance.findOrCreateByCurrencyAndBankAccountId(
-			req.body.destinationTag, req.body.toCurrency, function(err, balance) {
-			if (err) {
-				errorResponse(res)(err);
-			} else {
-				RippleTransaction.createIncomingWithBalance(balance, req.body, function(err, tx){
-					if (err) { errorResponse(res)(err) }
-					res.send(tx);
-				});
-			}
-		})
+    RippleTransaction.create(req.body, function(err, tx){
+      if (err) { errorResponse(res)(err) }
+      res.send(tx);
+    })
   }
 
   return {
