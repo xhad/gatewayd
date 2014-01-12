@@ -55,8 +55,7 @@ module.exports = (function(){
       .notEmpty().isAlphanumeric()
     req.checkBody('fromAddress', 'Invalid fromAddress')
       .notEmpty().isAlphanumeric()
-    req.checkBody('deposit', 'Must have deposit Boolean')
-      .isBoolean()
+    req.sanitize('deposit').toBoolean()
         
     var errors = req.validationErrors();
     if (errors) {
