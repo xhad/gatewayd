@@ -4,6 +4,9 @@ The Ripple Gateway appliance is a virtual machine image that
 is meant to serve as a standalone package for configuring
 and running a Ripple gateway system.
 
+
+T
+
 ## Installation Instructions
 
 Download the app repo
@@ -34,6 +37,10 @@ start the server
 		node server.js
 
 Once the server is started visit https://0.0.0.0/app to use the app
+
+## API Documentation
+
+Visit the root url of the app to see the REST API Documenation
 
 ## Running REST API Integration Tests
 
