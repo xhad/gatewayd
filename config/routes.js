@@ -25,7 +25,7 @@ module.exports = (function(){
     post('/api/v1/gateway/withdrawals/:id/accept', 'gateway_withdrawals#accept')
     post('/api/v1/gateway/withdrawals/:id/reject', 'gateway_withdrawals#reject')
 
-    // Balances
+    // Gateway Balances
     get('/v1/gateway/accounts/:accountId/balances', 'balances#index')
 
     // Ripple Addresses
@@ -37,8 +37,8 @@ module.exports = (function(){
     get ('/api/v1/ripple_transactions/:ripple_transaction_id', 'ripple_transactions#show')
 
     // Ripple Deposits
-    get('/api/v1/ripple_addresses/:address/deposits', 'rippleDeposits#index')
-    post('/api/v1/ripple_addresses/:address/deposits', 'rippleDeposits#create')
+    get('/api/v1/ripple_addresses/:address/deposits', 'ripple_deposits#index')
+    post('/api/v1/ripple_addresses/:address/deposits', 'ripple_deposits#create')
 
     // Ripple Withdrawals
     get('/v1/ripple_addresses/:address/withdrawals', 'ripple_withdrawals#show')
