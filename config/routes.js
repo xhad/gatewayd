@@ -6,28 +6,44 @@ module.exports = (function(){
     router = app; controllers = ctrls
     app.get('/', function(req, res){ res.render('index.html') })
 
+    // Users
     get('/v1/gateway/users/:userId/gateway_account', 'users#account')
     post('v1/gateway/users', 'users#create')
-    post('/v1/gateway/users/:userId/gateway_accounts', 'users#account')
-    post('/v1/gateway/accounts/:accountId/deposits', 'deposits#create')
+
+    // Gateway Accounts
+    post('/v1/gateway/users/:userId/gateway_accounts', 'gateway_accounts#create')
+
+    // Gateway Transactions
     get('/v1/gateway/accounts/:accountId/transactions', 'gateway_transactions#forAccount')
-    get('/v1/users/:userId/gateway/accounts', 'accounts#userAccount')
-    get('/v1/users/:userId/ripple_addresses','ripple_addresses#userIndex')
-    post('/v1/users/:userId/gateway/accounts', 'accounts#create')
-    post('/v1/users/:userId/ripple_addresses', 'ripple_addresses#create')
 
+    // Gateway Deposits
+    post('/v1/gateway/accounts/:accountId/deposits', 'deposits#create')
+
+    // Gateway Withdrawals
     post('/v1/gateway/accounts/:accountId/withdrawals', 'withdrawals#create')
-    get('/v1/gateway_transactions', 'gateway_transactions#index')
-    get('/v1/withdrawals', 'withdrawals#index')
-    get('/v1/deposits', 'deposits#index')
+    get('/api/v1/gateway/withdrawals', 'gateway_withdrawals#pending')
+    post('/api/v1/gateway/withdrawals/:id/accept', 'gateway_withdrawals#accept')
+    post('/api/v1/gateway/withdrawals/:id/reject', 'gateway_withdrawals#reject')
 
-    get('/v1/gateway/accounts', 'accounts#index')
-    post('/v1/gateway/accounts', 'accounts#create')
-    get('/v1/ripple_addresses', 'ripple_addresses#index')
-    get('/v1/ripple_transactions', 'ripple_transactions#index')
-    post('/v1/ripple_transactions', 'ripple_transactions#create')
-    get('/v1/ripple_transactions/:id', 'ripple_transactions#show')
-    put('/v1/ripple_transactions/:id', 'ripple_transactions#update')
+    // Balances
+    get('/v1/gateway/accounts/:accountId/balances', 'balances#index')
+
+    // Ripple Addresses
+    get('/v1/accounts/:account_id/ripple_addresses', 'ripple_addresses#index')
+    get('/v1/accounts/:account_id/ripple_transactions/:address', 'ripple_transactions#index')
+
+    // Ripple Transactions
+    get('/api/v1/ripple_addresses/:address/ripple_transactions', 'ripple_transactions#index')
+    get ('/api/v1/ripple_transactions/:ripple_transaction_id', 'ripple_transactions#show')
+
+    // Ripple Deposits
+    get('/api/v1/ripple_addresses/:address/deposits', 'rippleDeposits#index')
+    post('/api/v1/ripple_addresses/:address/deposits', 'rippleDeposits#create')
+
+    // Ripple Withdrawals
+    get('/v1/ripple_addresses/:address/withdrawals', 'ripple_withdrawals#show')
+    post('/v1/ripple_addresses/:address/withdrawals', 'ripple_transactions#create')
+    put('/v1/ripple_addresses/:address/withdrawals/:id', 'ripple_transactions#update')
   }
 
   function route(method, path, controllerAction) {
