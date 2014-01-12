@@ -82,7 +82,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">GET /api/v1/accounts/:accountId/balances</a></td>
+        <td><a href="/doc/gateway_balances/for_account.html">GET /api/v1/accounts/:accountId/balances</a></td>
         <td width="60%">Get the balances for a gateway account</td>
       </tr>
     </tbody>
@@ -91,7 +91,7 @@
     <a>
       Gateway Transactions
     </a><br>
-    <small>List bank transactions made at this gateway</small>
+    <small>List gateway transactions made at this gateway</small>
   </h2>
   <table class="table">
     <thead>
@@ -102,11 +102,11 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
+        <td><a href="/doc/gateway_transactions/for_account.html">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
         <td width="60%">Show gateway transactions from a specific account</td>
       </tr>
       <tr>
-        <td><a href="">GET /api/v1/gateway/transactions/:id</a></td>
+        <td><a href="/doc/gateway_transactions/show.html">GET /api/v1/gateway/transactions/:id</a></td>
         <td width="60%">Show a single gateway transaction</td>
       </tr>
     </tbody>
@@ -126,7 +126,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">POST /api/v1/gateway/accounts/:accountId/deposit</a></td>
+        <td><a href="/doc/gateway_deposits/create.html">POST /api/v1/gateway/accounts/:accountId/deposit</a></td>
         <td width="60%">Record a deposit into the gateway from outside ripple network</td>
       </tr>
     </tbody>
@@ -146,19 +146,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="">POST /api/v1/gateway/accounts/:accountId/withdrawal</a></td>
+        <td><a href="/doc/gateway_withdrawals/create.html">POST /api/v1/gateway/accounts/:accountId/withdrawal</a></td>
         <td width="60%">Create a withdrawal request out of the gateway to outside the ripple network</td>
       </tr>
       <tr>
-        <td><a href="">GET /api/v1/gateway/withdrawals</a></td>
+        <td><a href="/doc/gateway_withdrawals/pending.html">GET /api/v1/gateway/withdrawals</a></td>
         <td width="60%">Show all pending withdrawal requests</td>
       </tr>
       <tr>
-        <td><a href="">POST /api/v1/gateway/withdrawals/:id/accept</a></td>
+        <td><a href="/doc/gateway_withdrawals/accept.html">POST /api/v1/gateway/withdrawals/:id/accept</a></td>
         <td width="60%">After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue</td>
       </tr>
       <tr>
-        <td><a href="">POST /api/v1/gateway/withdrawals/:id/reject</a></td>
+        <td><a href="/doc/gateway_withdrawals/reject.html">POST /api/v1/gateway/withdrawals/:id/reject</a></td>
         <td width="60%">Reject a withdrawal request, destroying the gateway transaction record</td>
       </tr>
     </tbody>
@@ -259,5 +259,4 @@
     </tbody>
   </table>
   </div>
-
 </section>
