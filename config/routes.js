@@ -1,5 +1,9 @@
+var router
+var controllers
+
 module.exports = (function(){
   function configure(app, ctrls) {
+    router = app; controllers = ctrls
     app.get('/', function(req, res){ res.render('index.html') })
 
     get('/v1/gateway/users/:userId/gateway_account', 'users#account')
@@ -27,10 +31,9 @@ module.exports = (function(){
   }
 
   function route(method, path, controllerAction) {
-    controllerAction = controllerAction.split('#')[0]
-    controller = controllerAction[0]
-    action = controllerAction[1]
-    app[method](path, controller][action])
+    controller = controllerAction.split('#')[0]
+    action = controllerAction.split('#')[1]
+    router[method](path, controllers[controller][action])
   }
 
   function get(path, action) { route('get', path, action) } 
