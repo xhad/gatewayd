@@ -242,7 +242,7 @@
     <a> 
       Ripple Withdrawals
     </a><br>
-    <small>List Bank Transaction Withdrawals</small>
+    <small>List Ripple Transaction Withdrawals</small>
   </h2>
   <table class="table">
     <thead>
@@ -253,15 +253,11 @@
     </thead>
     <tbody>
       <tr>
-        <td><a>GET /api/v1/ripple_addresses/:address/withdrawals</a></td>
-        <td width="60%">Get a list of a single user's withdrawals to ripple account.</td>
-      </tr>
-      <tr>
-        <td><a>POST /api/v1/ripple_addresses/:address/withdrawals</a></td>
+        <td><a href='/doc/ripple_withdrawals/create.html'>POST /api/v1/ripple_addresses/:address/withdrawals</a></td>
         <td width="60%">Create a withdrawal from a gateway account to the ripple account.</td>
       </tr>
       <tr>
-        <td><a>PUT /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
+        <td><a href='/doc/ripple_withdrawals/update.html'>PUT /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
         <td>Update a withdrawal with its status from the ripple payment service.</td>
       </tr>
     </tbody>
