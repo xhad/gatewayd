@@ -1,11 +1,12 @@
-## Ripple Gateway Appliance Software
+## Gateway Accounts REST API
+
+This software is a database-backed web server that serves as a
+back end for Ripple Gateway applications.
 
 The Ripple Gateway appliance is a virtual machine image that
 is meant to serve as a standalone package for configuring
 and running a Ripple gateway system.
 
-
-T
 
 ## Installation Instructions
 
