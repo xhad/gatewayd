@@ -14,6 +14,7 @@ exports.up = function(db, callback) {
     txHash: { type: 'string', unique: true },
     createdAt: { type: 'datetime', notNull: true },
     destinationTag: { type: 'string' },
+    sourceTag: { type: 'string' },
     balanceId: { type: 'int', notNull: true },
     txState: { type: 'string' },
     updatedAt: { type: 'datetime' }

@@ -1,9 +1,7 @@
-var Balance = require("../models/balance");
-var PendingRippleTransaction = require("../models/pending_ripple_transaction");
 var Sequelize = require('sequelize');
 var db = require('../../config/initializers/sequelize');
 
-var RippleTx = sequelize.define('ripple_transaction', {
+module.exports = sequelize.define('ripple_transaction', {
   id:             { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   toCurrency:     { type: Sequelize.STRING, notNull: true },
   toAddress:      { type: Sequelize.STRING, notNull: true },
@@ -15,8 +13,8 @@ var RippleTx = sequelize.define('ripple_transaction', {
   balanceId:      { type: Sequelize.INTEGER, notNull: true },
   issuance:       { type: Sequelize.BOOLEAN, notNull: true },
   destinationTag: { type: Sequelize.STRING },
+  sourceTag:      { type: Sequelize.INTEGER },
   txHash:         { type: Sequelize.STRING },
   txState:        { type: Sequelize.STRING }
 })
 
-module.exports = RippleTx;
