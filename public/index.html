@@ -69,7 +69,7 @@
   </table>
   <h2>
     <a>
-      Balances
+      Gateway Balances
     </a><br>
     <small>Resource to check on user balances in various currencies with the gateway</small>
   </h2>
@@ -82,7 +82,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="/doc/gateway_balances/for_account.html">GET /api/v1/accounts/:accountId/balances</a></td>
+        <td><a href="/doc/gateway_balances/account.html">GET /api/v1/accounts/:accountId/balances</a></td>
         <td width="60%">Get the balances for a gateway account</td>
       </tr>
     </tbody>
@@ -102,7 +102,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="/doc/gateway_transactions/for_account.html">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
+        <td><a href="/doc/gateway_transactions/account.html">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
         <td width="60%">Show gateway transactions from a specific account</td>
       </tr>
       <tr>
@@ -150,15 +150,15 @@
         <td width="60%">Create a withdrawal request out of the gateway to outside the ripple network</td>
       </tr>
       <tr>
-        <td><a href="/doc/gateway_withdrawals/pending.html">GET /api/v1/gateway/withdrawals</a></td>
+        <td><a href="/doc/gateway_withdrawals/pending.html">GET /api/v1/gateway/withdrawals/pending</a></td>
         <td width="60%">Show all pending withdrawal requests</td>
       </tr>
       <tr>
-        <td><a href="/doc/gateway_withdrawals/accept.html">POST /api/v1/gateway/withdrawals/:id/accept</a></td>
+        <td><a href="/doc/gateway_withdrawals/accept.html">PUT /api/v1/gateway/withdrawals/:id/accept</a></td>
         <td width="60%">After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue</td>
       </tr>
       <tr>
-        <td><a href="/doc/gateway_withdrawals/reject.html">POST /api/v1/gateway/withdrawals/:id/reject</a></td>
+        <td><a href="/doc/gateway_withdrawals/reject.html">PUT /api/v1/gateway/withdrawals/:id/reject</a></td>
         <td width="60%">Reject a withdrawal request, destroying the gateway transaction record</td>
       </tr>
     </tbody>

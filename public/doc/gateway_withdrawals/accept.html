@@ -22,18 +22,17 @@
   </li>
   <li>
     <a href='/api/doc/1.0/buttons.html'>
-      Buttons
-      
+      Gateway Withdrawals<br/>
     </a>
     <span class='divider'>/</span>
   </li>
-  <li class='active'>create</li>
+  <li class='active'>accept</li>
 </ul>
 
   <div class='page-header'>
     <h1>
-      POST /api/v1/buttons<br>
-      <small>Create a new payment button, page, or iFrame.</small>
+      PUT /api/v1/gateway/withdrawals/:id/accept<br>
+      <small>After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue.</small>
     </h1>
   </div>
 
