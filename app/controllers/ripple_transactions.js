@@ -4,9 +4,6 @@ var errorResponse = require("../../lib/utils.js").errorResponse;
 var util = require('util');
 
 module.exports = (function(){
-  function withdraw(req, res) {
-
-  }
   function index(req, res){
 
   }
@@ -81,6 +78,7 @@ module.exports = (function(){
 
   return {
     update: update,
+    create: create,
 		index: index,
     show: show
 	}
