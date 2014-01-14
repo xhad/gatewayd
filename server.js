@@ -23,6 +23,8 @@ app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 app.post('/api/v1/ripple_withdrawals', ctrls['ripple_withdrawals'].create)
 app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
 
+app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].account)
+
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
 
