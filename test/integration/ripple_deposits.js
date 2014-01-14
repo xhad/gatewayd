@@ -1,5 +1,6 @@
 assert = require('assert')
 Ripple = require('../../lib/ripple')
+crypto = require("crypto")
 
 describe('depositing from ripple', function() {
   before(function(){
@@ -10,6 +11,7 @@ describe('depositing from ripple', function() {
     })
   })
   it('create a valid transaction record', function(done){
+    txHash = crypto.randomBytes(32).toString('hex')
     client.createRippleDeposit({ 
       toCurrency: 'XAG',
       toAmount: '10',
@@ -17,10 +19,8 @@ describe('depositing from ripple', function() {
       toAddress: 'theGatewaysRippleAddress',
       fromAddress: 'someRippleAddress',
       txState: 'tesSUCCESS',
-      txHash: 'someTransactionHash'
+      txHash: txHash
     }, function(err, rippleDeposit){
-      console.log(err)
-      console.log(rippleDeposit)
       assert.equal(rippleDeposit.txState, 'tesSUCCESS') 
       done()
     })
