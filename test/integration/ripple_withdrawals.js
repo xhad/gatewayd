@@ -21,10 +21,9 @@ describe('withdrawing to ripple', function() {
       fromAddress: 'someRippleAddress',
       sendTag: '10',
       issuance: true
-    }, function(err, res){
+    }, function(err, rippleTransaction){
       console.log(err)
-      console.log(res)
-      assert.equal(res.rippleTransaction.txState, 'created') 
+      assert.equal(rippleTransaction.txState, 'created') 
       done()
     })
   })
