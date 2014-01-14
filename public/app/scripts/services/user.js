@@ -5,15 +5,14 @@ angular.module('publicApp').service('UserService', ['$http','$location', functio
 
     updateSession: function(fn){
       $http.get('/api/v1/sessions').success(function(resp){
-        console.log('response')
-        console.log(resp)
-        if (resp.success && resp.session) {
-          console.log('yes')
-          console.log(user)
+        if (resp.success && resp.session.username) {
           user.isLogged = true
           user.username = resp.session.username
-          console.log('user',user)
           $location.path('/gateway_account')
+        } else {
+          user.isLogged = false
+          user.username = ''
+          $location.path('/login')
         }
       })
     },

@@ -53,7 +53,7 @@ angular.module('publicApp', [
 				controller: 'AdminNewUserCtrl'
 			})
 			.when('/login', {
-				templateUrl: 'views/main.html',
+				templateUrl: 'views/login.html',
 				controller: 'LoginCtrl'
 			})
       .otherwise({
