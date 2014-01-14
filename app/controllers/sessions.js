@@ -3,6 +3,7 @@ var User = require('../models/user.js'),
 
 module.exports = (function(){
 	function destroy(req, res) {
+    req.session = null
 		res.send({
       success: true,
 			session: req.session
