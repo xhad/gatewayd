@@ -15,6 +15,7 @@ require('./config/routes').configure(app, ctrls)
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
 app.get('/api/v1/sessions', ctrls['sessions'].show)
+app.delete('/api/v1/sessions', ctrls['sessions'].destroy)
 
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
