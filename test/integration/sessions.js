@@ -23,17 +23,12 @@ describe('managing a user session', function(){
     client.createSession({ 
       username: 'username',
       password: 'password'
-    }, function(err, resp, body) {
-      assert(body.success)
+    }, function(err, resp, session) {
+      console.log(err)
+      console.log(session)
+      assert.equal(session.username, 'username')
       done()
     })
   })
 })
-
-  
-
-
-
-
-  
 
