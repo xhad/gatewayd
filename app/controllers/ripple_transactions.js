@@ -34,12 +34,8 @@ module.exports = (function(){
   }
 
 	function create(req, res) {
-		// assert(toAddress == theGatewaysAddress);
 		req.body.issuance = false;	
-    console.log(req.body)
-/*
-    req.checkBody('sourceTag', 'Invalid sourceTag')
-      .notEmpty().isAlphanumeric()
+    
     req.checkBody('toCurrency', 'Invalid toCurrency')
       .notEmpty().isAlphanumeric()
     req.checkBody('fromCurrency', 'Invalid fromCurrency')
@@ -48,26 +44,25 @@ module.exports = (function(){
       .notEmpty().isDecimal()
     req.checkBody('fromAmount', 'Invalid fromAmount')
       .notEmpty().isDecimal()
-    req.checkBody('txState', 'Invalid transactionState')
-      .notEmpty().is('tesSUCCESS')
-    req.checkBody('txHash', 'Invalid transactionHash')
-      .notEmpty().isAlphanumeric()
     req.checkBody('toAddress', 'Invalid toAddress')
       .notEmpty().isAlphanumeric()
     req.checkBody('fromAddress', 'Invalid fromAddress')
       .notEmpty().isAlphanumeric()
     req.sanitize('deposit').toBoolean()
 
-*/
-        
     var errors = req.validationErrors();
     if (errors) {
 			errorResponse(res)(util.inspect(errors));
     }
 
+    console.log('body', req.body)
     RippleTransaction.create(req.body, function(err, tx){
-      if (err) { errorResponse(res)(err) }
-      res.send(tx);
+      console.log('error',err)
+      console.log('tx', tx)
+      if (err) { 
+        res.send({ success: false, error: err })
+      }
+      res.send({ success: true, rippleTransaction: tx });
     })
   }
 
