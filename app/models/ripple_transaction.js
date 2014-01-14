@@ -10,7 +10,6 @@ module.exports = sequelize.define('ripple_transaction', {
   fromCurrency:   { type: Sequelize.STRING, notNull: true },
   fromAmount:     { type: Sequelize.DECIMAL, notNull: true },
   fromAddress:    { type: Sequelize.STRING, notNull: true },
-  balanceId:      { type: Sequelize.INTEGER, notNull: true },
   issuance:       { type: Sequelize.BOOLEAN, notNull: true },
   destinationTag: { type: Sequelize.STRING },
   sourceTag:      { type: Sequelize.INTEGER },
