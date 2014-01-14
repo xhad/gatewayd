@@ -4,7 +4,8 @@ var User = require('../models/user.js'),
 module.exports = (function(){
 	function index(req, res) {
 		res.send({
-			session: req.session.session
+      success: true,
+			session: req.session.username
 		});
 	}
 
