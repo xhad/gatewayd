@@ -5,7 +5,9 @@ var util = require('util');
 
 module.exports = (function(){
   function index(req, res){
-
+    RippleTransaction.all().complete(function(err, txns){
+      res.send({ success: true, rippleTransactions: txns })
+    })
   }
   
   function update(req, res){
@@ -55,14 +57,12 @@ module.exports = (function(){
 			errorResponse(res)(util.inspect(errors));
     }
 
-    console.log('body', req.body)
-    RippleTransaction.create(req.body, function(err, tx){
-      console.log('error',err)
-      console.log('tx', tx)
+    RippleTransaction.create(req.body).complete(function(err, tx){
       if (err) { 
         res.send({ success: false, error: err })
+      } else {
+        res.send({ success: true, rippleTransaction: tx })
       }
-      res.send({ success: true, rippleTransaction: tx });
     })
   }
 
