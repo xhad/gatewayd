@@ -49,6 +49,39 @@
   </table>
   <h2>
     <a>
+      User Sessions
+    </a><br>
+    <small>Sign in a user and use the cookie token to interact with the api on their behalf</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='/doc/users/create.html'>POST /api/v1/sessions</a></td>
+            <td width="60%">Create a user session</td>
+          </tr>
+          <tr>
+            <td><a href='/doc/users/show.html'>GET /api/v1/sessions</a></td>
+            <td width="60%">Get the current session</td>
+          </tr>
+          <tr>
+            <form method='post' action='/api/v1/sessions'>
+            <td>username <input name='name' /></td>
+            <td>password <input name='password' />
+              <input type='submit'>
+            </td>
+            
+            </form>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
       Gateway Accounts
     </a><br>
     <small>Create a new gateway account, which can be associated with a user, ripple addresses, and balances.</small>
