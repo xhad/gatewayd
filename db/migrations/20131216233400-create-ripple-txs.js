@@ -15,7 +15,6 @@ exports.up = function(db, callback) {
     createdAt: { type: 'datetime', notNull: true },
     destinationTag: { type: 'string' },
     sourceTag: { type: 'string' },
-    balanceId: { type: 'int', notNull: true },
     txState: { type: 'string' },
     updatedAt: { type: 'datetime' }
   }, callback);
