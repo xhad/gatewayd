@@ -3,9 +3,11 @@
 angular.module('publicApp')
   .controller('LoginCtrl', ['$scope', '$http', '$location', 'UserService', function ($scope, $http, $location, $user) {
     $scope.user = {}
+    $scope.userService = $user
 
     $user.updateSession(function(user){
-      if (user.isLogged){
+      console.log('username', user.username)
+      if (user.isLogged && user.username){
         console.log('user is logged in from the session')
         $user.
         $location.path('/gatway_account');

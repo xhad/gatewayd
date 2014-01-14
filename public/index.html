@@ -30,7 +30,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <header>
+    <header ng-controller='LoginCtrl'>
      <nav class='navbar navbar-default'>
         <a class='navbar-brand' href='/'>
            Ripple Gateway in a Box
@@ -39,7 +39,7 @@
           </li>
           <li class='dropdown dark user-menu'>
             <a class='dropdown-toggle' data-toggle='dropdown'>
-              <span class='user-name'>Username</span>
+              <span class='user-name'>{{ userService.username }}</span>
               <b class='caret'></b>
             </a>
             <ul class='dropdown-menu'>
@@ -55,11 +55,9 @@
               </li>
               <li class='divider'></li>
               <li>
-                <form>
-                <a type='submit'href='/api/v1/sessions/destroy'>
+                <a href='/api/v1/sessions/destroy'>
                   Sign out
                 </a>
-                  <form>
               </li>
             </ul>
           </li>
@@ -69,11 +67,10 @@
 		<div class="header">
 		</div>
 
-		<div style='margin:0 auto' class='row span12'>
+		<div ng-controller='LoginCtrl' style='margin:0 auto' class='row span12'>
 			<div class="col-md-9"  ng-view=""></div>
 			<div class='well nav bs-sidenav col-md-2' style='margin-left:1em'>
-				<ul class="nav">
-					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/gateway_account/">Gateway Account</a></li>
+				<ul class="nav" ng-show='userService.admin'>
 					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/admin/deposits/new">Deposit</a></li>
 					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/admin/withdrawals/new">Withdraw</a></li>
 					<li><a ng-class="getClass('/admin/users')" ng-href="#/admin/users">Users</a></li>
@@ -84,6 +81,11 @@
 					<li><a ng-class="getClass('/admin/ripple_transactions')" ng-href="#/admin/ripple_transactions">Ripple Transactions</a></li>
 					<li><a ng-class="getClass('/admin/ripple_addresses')" ng-href="#/admin/ripple_addresses">Ripple Addresses</a></li>
 					<li><a ng-class="getClass('/api/docs')" ng-href="#/api/docs">Api Docs</a></li>
+				</ul>
+				<ul class="nav" ng-hide='userService.admin'>
+					<li><a ng-class="getClass('/gateway_account')" ng-href="#/gateway_account/">Gateway Account</a></li>
+					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/admin/deposits/new">Deposit</a></li>
+					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/admin/withdrawals/new">Withdraw</a></li>
 				</ul>
 			</div>
     </div>
