@@ -11,9 +11,9 @@ module.exports = (function(){
     post('v1/gateway/users', 'users#create')
 
     // User Sessions
+    get('v1/session/destroy', 'sessions#destroy')
     post('v1/session', 'sessions#create')
     get('v1/session', 'sessions#show')
-    get('v1/session', 'sessions#destroy')
 
     // Gateway Accounts
     post('/v1/gateway/users/:userId/gateway_accounts', 'gateway_accounts#create')
@@ -54,6 +54,7 @@ module.exports = (function(){
   function route(method, path, controllerAction) {
     controller = controllerAction.split('#')[0]
     action = controllerAction.split('#')[1]
+    console.log(controller, action)
     router[method](path, controllers[controller][action])
   }
 
