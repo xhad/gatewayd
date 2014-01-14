@@ -18,11 +18,11 @@ angular.module('publicApp', [
       })
       .when('/gateway/deposit', {
         templateUrl: 'views/gateway/deposit.html',
-        controller: 'GatewayDepositsCtrl'
+        controller: 'GatewayDepositCtrl'
       })
       .when('/gateway/withdraw', {
         templateUrl: 'views/gateway/withdraw.html',
-        controller: 'GatewayWithdrawalsCtrl'
+        controller: 'GatewayWithdrawCtrl'
       })
       .when('/ripple/account', {
         templateUrl: 'views/ripple/account.html',
@@ -32,13 +32,9 @@ angular.module('publicApp', [
         templateUrl: 'views/ripple/deposit.html',
         controller: 'RippleDepositsCtrl'
       })
-      .when('/gateway_account', {
-        templateUrl: 'views/ripple/withdrawals.html',
-        controller: 'RippleWithdrawals'
-      })
-      .when('/gateway_account', {
-        templateUrl: 'views/gateway_account.html',
-        controller: 'GatewayAccountsCtrl'
+      .when('/ripple/withdraw', {
+        templateUrl: 'views/ripple/withdraw.html',
+        controller: 'RippleWithdrawCtrl'
       })
       .when('/gateway_account', {
         templateUrl: 'views/gateway_account.html',
