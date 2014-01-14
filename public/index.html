@@ -41,6 +41,12 @@
             <td><a href='/doc/users/create.html'>POST /api/v1/gateway/users</a></td>
             <td width="60%">Create a new user at this gateway.</td>
           </tr>
+            <form method='post' action='/api/v1/gateway/users'>
+            <td>username <input name='name' /></td>
+            <td>password <input name='password' />
+              <input type='submit'>
+            </td>
+            </form>
           <tr>
             <td><a href='/doc/users/show.html'>GET /api/v1/gateway/users/:userId/gateway_account</a></td>
             <td width="60%">Get the user's account.</td>
@@ -66,17 +72,25 @@
             <td width="60%">Create a user session</td>
           </tr>
           <tr>
-            <td><a href='/doc/users/show.html'>GET /api/v1/sessions</a></td>
-            <td width="60%">Get the current session</td>
-          </tr>
-          <tr>
             <form method='post' action='/api/v1/sessions'>
             <td>username <input name='name' /></td>
             <td>password <input name='password' />
               <input type='submit'>
             </td>
-            
             </form>
+          </tr>
+          <tr>
+            <td><a href='/doc/users/show.html'>GET /api/v1/sessions</a></td>
+            <td width="60%">Get the current session</td>
+          </tr>
+          <tr>
+            <td><a href='/doc/users/show.html'>POST /api/v1/sessions/destroy</a></td>
+            <td width="60%">Clear the current user session
+
+            <form method='post' action='/api/v1/sessions/destroy'>
+            <input type='submit'>
+            </form>
+          </td>
           </tr>
     </tbody>
   </table>
