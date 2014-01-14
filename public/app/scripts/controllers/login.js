@@ -6,19 +6,17 @@ angular.module('publicApp')
 			var name = $scope.user.name;
 			var password = $scope.user.password;
 			var confirmation = $scope.user.password_confirmation;
-			$http.post('/api/session', {
+			$http.post('/api/v1/sessions', {
 				name: name,
 				password: password
 			})	
-			.success(function(response){
-        if (response.isValidUser) {
-					$location.path('/admin/users');
+			.complete(function(err, response){
+        console.log(response)
+        if (response.success) {
+					$location.path('/gatway_account');
 				} else {
 					$location.path('/admin/users/new');
 				}
 			})
-			.error(function(err){
-				console.log('error: could not create a session');
-			});
 		}
   }]);

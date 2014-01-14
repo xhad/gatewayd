@@ -12,6 +12,8 @@ app.use(express.static(__dirname + '/public'))
 require('./config/initializers/middleware.js').configure(app)
 //require('./config/routes').configure(app, ctrls)
 
+
+app.post('/api/v1/users', ctrls['users'].create)
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
 app.get('/api/v1/sessions', ctrls['sessions'].show)

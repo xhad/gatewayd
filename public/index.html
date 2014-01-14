@@ -14,6 +14,9 @@
         <!-- build:css({.tmp,app}) styles/main.css -->
         <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="/styles/light-theme.css">
+        <link rel="stylesheet" href="/styles/theme-colors.css">
+        <link rel="stylesheet" href="/styles/demo.css">
 				<style> .header { padding: 0px 20px 20px 20px; } </style>
         <!-- endbuild -->
 </head>
@@ -28,8 +31,41 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
+    <header>
+     <nav class='navbar navbar-default'>
+        <a class='navbar-brand' href='/'>
+           Ripple Gateway in a Box
+        </a>
+        <ul class='nav'>
+          </li>
+          <li class='dropdown dark user-menu'>
+            <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+              <span class='user-name'>Username</span>
+              <b class='caret'></b>
+            </a>
+            <ul class='dropdown-menu'>
+              <li>
+                <a href='user_profile.html'>
+                  Account
+                </a>
+              </li>
+              <li>
+                <a href=''>
+                  Settings
+                </a>
+              </li>
+              <li class='divider'></li>
+              <li>
+                <a href=''>
+                  Sign out
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
 		<div class="header">
-			<h1 ng-href="#" class="text-muted">Ripple Gateway in a Box</h1>
 		</div>
 
 		<div style='margin:0 auto' class='row span12'>
