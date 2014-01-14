@@ -58,5 +58,12 @@ describe('managing a user session', function(){
       })
     })
   })
+
+  it('should destroy a session', function(done) {
+    client.destroySession(function(err, success){
+      assert(success)
+      done()
+    })
+  })
 })
 
