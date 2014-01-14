@@ -38,13 +38,13 @@
         <ul class='nav'>
           </li>
           <li class='dropdown dark user-menu'>
-            <a class='dropdown-toggle' data-toggle='dropdown' href='#'>
+            <a class='dropdown-toggle' data-toggle='dropdown'>
               <span class='user-name'>Username</span>
               <b class='caret'></b>
             </a>
             <ul class='dropdown-menu'>
               <li>
-                <a href='user_profile.html'>
+                <a ng-href='/#/gateway_account'>
                   Account
                 </a>
               </li>
@@ -55,9 +55,11 @@
               </li>
               <li class='divider'></li>
               <li>
-                <a href=''>
+                <form>
+                <a type='submit'href='/api/v1/sessions/destroy'>
                   Sign out
                 </a>
+                  <form>
               </li>
             </ul>
           </li>
@@ -71,6 +73,7 @@
 			<div class="col-md-9"  ng-view=""></div>
 			<div class='well nav bs-sidenav col-md-2' style='margin-left:1em'>
 				<ul class="nav">
+					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/gateway_account/">Gateway Account</a></li>
 					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/admin/deposits/new">Deposit</a></li>
 					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/admin/withdrawals/new">Withdraw</a></li>
 					<li><a ng-class="getClass('/admin/users')" ng-href="#/admin/users">Users</a></li>
