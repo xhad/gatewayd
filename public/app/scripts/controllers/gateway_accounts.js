@@ -1,13 +1,12 @@
-'use strict';
+'use strict'
 
 angular.module('publicApp')
-  .controller('GatewayAccountsCtrl', ['$scope', '$http','$location', function ($scope, $http, $location) {
-    $scope.user = {}
-
-    $http.get("http://localhost:4000/api/v1/sessions").success(function(session){
-      if (!!!session.accountId) {
-        $location.path('/login') 
-      }
-    })
-
-  }]);
+  .controller('GatewayAccountsCtrl', ['$scope', '$http','$location', 'UserService', function ($scope, $http, $location, $user) {
+    console.log('in the gateway accounts controller')
+    console.log($user)
+    if ($user.isLogged) {
+      console.log("show the account page for "+$user.username)
+    } else {
+      $location.path('/login') 
+    }
+  }])
