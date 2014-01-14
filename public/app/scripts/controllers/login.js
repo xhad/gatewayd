@@ -9,10 +9,9 @@ angular.module('publicApp')
 			$http.post('/api/v1/sessions', {
 				name: name,
 				password: password
-			})	
-			.complete(function(err, response){
+			}).success(function(response){
         console.log(response)
-        if (response.success) {
+        if (!!response.session.username) {
 					$location.path('/gatway_account');
 				} else {
 					$location.path('/admin/users/new');
