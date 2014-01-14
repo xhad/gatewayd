@@ -9,7 +9,7 @@ describe('withdrawing to ripple', function() {
       clientSecret: 'somethingSuperSecretAndRandom'
     })
   })
-  it('should require params for a valid ripple transaction record', function(fn){
+  it('create a valid transaction record', function(done){
     client.createRippleTransaction({ 
       toCurrency: 'XAG',
       fromCurrency: 'XAG',
@@ -17,13 +17,15 @@ describe('withdrawing to ripple', function() {
       fromAmount: '10.01', 
       toIssuer: 'someIssurRippleAddress',
       fromIssuer: 'someIssurRippleAddress',
+      toAddress: 'someRippleAddress',
+      fromAddress: 'someRippleAddress',
       sendTag: '10',
       issuance: true
     }, function(err, res){
-      response = JSON.parse(res)
-      assert(response.success)
-      assert.equal(response.rippleTransaction.txState, 'created') 
-      fn()
+      console.log(err)
+      console.log(res)
+      assert.equal(res.rippleTransaction.txState, 'created') 
+      done()
     })
   })
 })
