@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>
+  <title>API documentation</title>
+  
+  <link type="text/css" rel="stylesheet" href="apidocs_files/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="apidocs_files/prettify.css">
+<link type="text/css" rel="stylesheet" href="apidocs_files/bootstrap-responsive.min.css">
+  <link type="text/css" rel="stylesheet" href="apidocs_files/application.css">
+  <!-- IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+<script type="text/javascript" async="" src="apidocs_files/embed.js"></script></head>
+<body>
+  <div class="container">
+    <ul class="breadcrumb">
+  <li class="active"><a href="apidocs_files/apidocs.html">API Home 1.0</a></li>
+</ul>
+
+<div class="row" style='padding:0em 1em 1em 1em'>
+
+<div><h1 class="page-header">Ripple Gateway Accounts API Reference</h1>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Gateway</h2>
+  
+  <h2>
+    <a>
+      Users
+    </a><br>
+    <small>A user can register or an admin can list/create users. Users can also be maintained in a separate system and referenced with its unique id.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='/doc/users/create.html'>POST /api/v1/gateway/users</a></td>
+            <td width="60%">Create a new user at this gateway.</td>
+          </tr>
+            <form method='post' action='/api/v1/gateway/users'>
+            <td>username <input name='name' /></td>
+            <td>password <input name='password' />
+              <input type='submit'>
+            </td>
+            </form>
+          <tr>
+            <td><a href='/doc/users/show.html'>GET /api/v1/gateway/users/:userId/gateway_account</a></td>
+            <td width="60%">Get the user's account.</td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      User Sessions
+    </a><br>
+    <small>Sign in a user and use the cookie token to interact with the api on their behalf</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='/doc/users/create.html'>POST /api/v1/sessions</a></td>
+            <td width="60%">Create a user session</td>
+          </tr>
+          <tr>
+            <form method='post' action='/api/v1/sessions'>
+            <td>username <input name='name' /></td>
+            <td>password <input name='password' />
+              <input type='submit'>
+            </td>
+            </form>
+          </tr>
+          <tr>
+            <td><a href='/doc/users/show.html'>GET /api/v1/sessions</a></td>
+            <td width="60%">Get the current session</td>
+          </tr>
+          <tr>
+            <td><a href='/doc/users/show.html'>POST /api/v1/sessions/destroy</a></td>
+            <td width="60%">Clear the current user session
+
+            <form method='post' action='/api/v1/sessions/destroy'>
+            <input type='submit'>
+            </form>
+          </td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Gateway Accounts
+    </a><br>
+    <small>Create a new gateway account, which can be associated with a user, ripple addresses, and balances.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><a href='/doc/gateway_accounts/create.html'>POST /api/v1/gateway/users/:userId/gateway_accounts</a></td>
+            <td width="60%">Create a new gateway account given a user id</td>
+          </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Gateway Balances
+    </a><br>
+    <small>Resource to check on user balances in various currencies with the gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/doc/gateway_balances/account.html">GET /api/v1/accounts/:accountId/balances</a></td>
+        <td width="60%">Get the balances for a gateway account</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Gateway Transactions
+    </a><br>
+    <small>List gateway transactions made at this gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/doc/gateway_transactions/account.html">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
+        <td width="60%">Show gateway transactions from a specific account</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/gateway_transactions/show.html">GET /api/v1/gateway/transactions/:id</a></td>
+        <td width="60%">Show a single gateway transaction</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a> 
+      Gateway Deposits
+    </a><br>
+    <small>List bank transactions made at this gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/doc/gateway_deposits/create.html">POST /api/v1/gateway/accounts/:accountId/deposit</a></td>
+        <td width="60%">Record a deposit into the gateway from outside ripple network</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Gateway Withdrawals
+    </a><br>
+    <small>List bank transactions made at this gateway</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/doc/gateway_withdrawals/create.html">POST /api/v1/gateway/accounts/:accountId/withdrawal</a></td>
+        <td width="60%">Create a withdrawal request out of the gateway to outside the ripple network</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/gateway_withdrawals/pending.html">GET /api/v1/gateway/withdrawals/pending</a></td>
+        <td width="60%">Show all pending withdrawal requests</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/gateway_withdrawals/accept.html">PUT /api/v1/gateway/withdrawals/:id/accept</a></td>
+        <td width="60%">After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/gateway_withdrawals/reject.html">PUT /api/v1/gateway/withdrawals/:id/reject</a></td>
+        <td width="60%">Reject a withdrawal request, destroying the gateway transaction record</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+<section style='padding:2em; border:1px solid #bbb;'>
+  <h2 style='text-align:center'>Ripple</h2>
+  <h2>
+    <a href="">
+      Ripple Addresses
+    </a><br>
+    <small>List Ripple Addresses related to User accounts.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href='/doc/ripple_addresses/account.html'>GET /api/v1/accounts/:account_id/ripple_addresses</a></td>
+        <td width="60%">Get the ripple address for a gateway account</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_addresses/associate_account.html'>POST /api/v1/accounts/:account_id/ripple_addresses/:ripple_address</a></td>
+        <td width="60%">Associate a ripple address with a gateway account</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a>
+      Ripple Transactions
+    </a><br>
+    <small>List transactions made on ripple network to the gateway's address.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href='/doc/ripple_transactions/address.html'>GET /api/v1/ripple_addresses/:address/ripple_transactions</a></td>
+        <td width="60%">Get all rippple transactions for a ripple address<td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_transactions/show.html'>GET /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
+        <td width='60%'>Get any given ripple transaction by id</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a> 
+      Ripple Deposits
+    </a><br>
+    <small>Send funds into the gateway from outside the ripple network</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href='/doc/ripple_deposits/create.html'>POST /api/v1/ripple_addresses/:address/deposits</a></td>
+        <td width="60%">Create a deposit into a gateway account</td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>
+    <a> 
+      Ripple Withdrawals
+    </a><br>
+    <small>List Ripple Transaction Withdrawals</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href='/doc/ripple_withdrawals/create.html'>POST /api/v1/ripple_addresses/:address/withdrawals</a></td>
+        <td width="60%">Create a withdrawal from a gateway account to the ripple account.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_withdrawals/update.html'>PUT /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
+        <td>Update a withdrawal with its status from the ripple payment service.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
