@@ -20,6 +20,8 @@ app.post('/api/v1/sessions/destroy', ctrls['sessions'].destroy)
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 
+app.post('/api/v1/ripple_withdrawals', ctrls['ripple_withdrawals'].create)
+
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
 

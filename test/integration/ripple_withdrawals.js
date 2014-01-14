@@ -22,8 +22,18 @@ describe('withdrawing to ripple', function() {
       sendTag: '10',
       issuance: true
     }, function(err, rippleTransaction){
-      console.log(err)
       assert.equal(rippleTransaction.txState, 'created') 
+      done()
+    })
+  })
+
+  it('creates a ripple withdrawal', function(done){
+    client.createRippleWithdrawal({
+      toCurrency: 'XAU',
+      toAmount: 0.123,
+      toAddress: 'someRippleAddress'
+    }, function(err, rippleWithdrawal){
+      assert.equal(rippleWithdrawal.txState, 'created')
       done()
     })
   })
