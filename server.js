@@ -17,6 +17,8 @@ app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
 app.get('/api/v1/sessions', ctrls['sessions'].show)
 app.post('/api/v1/sessions/destroy', ctrls['sessions'].destroy)
 
+app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
+
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
 
