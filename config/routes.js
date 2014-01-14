@@ -5,10 +5,15 @@ module.exports = (function(){
   function configure(app, ctrls) {
     router = app; controllers = ctrls
     app.get('/', function(req, res){ res.render('index.html') })
-
+  
     // Users
     get('/v1/gateway/users/:userId/gateway_account', 'users#account')
     post('v1/gateway/users', 'users#create')
+
+    // User Sessions
+    post('v1/session', 'sessions#create')
+    get('v1/session', 'sessions#show')
+    get('v1/session', 'sessions#destroy')
 
     // Gateway Accounts
     post('/v1/gateway/users/:userId/gateway_accounts', 'gateway_accounts#create')
