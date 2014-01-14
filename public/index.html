@@ -87,7 +87,7 @@
 				<ul class="nav">
 					<li><a ng-href="#/gateway/account/">Account</a></li>
 					<li><a ng-href="#/gateway/deposit">Deposit</a></li>
-					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/gateway/withdrawal">Withdrawal</a></li>
+					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/gateway/withdraw">Withdrawal</a></li>
 				</ul>
       
         <hr/>
@@ -95,7 +95,7 @@
 				<ul class="nav">
 					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/ripple/account">Account</a></li>
 					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/ripple/deposit">Deposit</a></li>
-					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/ripple/withdrawal">Withdrawal</a></li>
+					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/ripple/withdraw">Withdrawal</a></li>
 				</ul>
         </span>
 			</div>
@@ -151,6 +151,12 @@
         <script src="/app/scripts/controllers/balances.js"></script>
         <script src="/app/scripts/controllers/gateway_accounts.js"></script>
         <script src="/app/scripts/services/user.js"></script>
+        <script src="/app/scripts/controllers/ripple/account.js"></script>
+        <script src="/app/scripts/controllers/ripple/withdraw.js"></script>
+        <script src="/app/scripts/controllers/ripple/deposit.js"></script>
+        <script src="/app/scripts/controllers/gateway/withdraw.js"></script>
+        <script src="/app/scripts/controllers/gateway/deposit.js"></script>
+        <script src="/app/scripts/controllers/gateway/account.js"></script>
         <!-- endbuild -->
 </body>
 </html>
