@@ -10,7 +10,7 @@ var app = express()
 app.use(express.static(__dirname + '/public'))
 
 require('./config/initializers/middleware.js').configure(app)
-require('./config/routes').configure(app, ctrls)
+//require('./config/routes').configure(app, ctrls)
 
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
@@ -23,7 +23,7 @@ app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 app.post('/api/v1/ripple_withdrawals', ctrls['ripple_withdrawals'].create)
 app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
 
-app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].account)
+app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].gateway)
 
 address = process.env.ADDRESS
 port = process.env.PORT || 4000

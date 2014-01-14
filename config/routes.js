@@ -6,6 +6,7 @@ module.exports = (function(){
     router = app; controllers = ctrls
     app.get('/', function(req, res){ res.render('index.html') })
   
+/*
     // Users
     get('/v1/gateway/users/:userId/gateway_account', 'users#account')
     post('v1/gateway/users', 'users#create')
@@ -48,7 +49,9 @@ module.exports = (function(){
     // Ripple Withdrawals
     get('/v1/ripple_addresses/:address/withdrawals', 'ripple_withdrawals#show')
     post('/v1/ripple_addresses/:address/withdrawals', 'ripple_transactions#create')
+
     put('/v1/ripple_addresses/:address/withdrawals/:id', 'ripple_transactions#update')
+*/
   }
 
   function route(method, path, controllerAction) {

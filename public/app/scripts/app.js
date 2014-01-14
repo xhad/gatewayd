@@ -12,6 +12,10 @@ angular.module('publicApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/gateway_account', {
+        templateUrl: 'views/gateway_account.html',
+        controller: 'GatewayAccountsCtrl'
+      })
       .when('/admin/balances', {
         templateUrl: 'views/balances.html',
         controller: 'BalancesCtrl'
