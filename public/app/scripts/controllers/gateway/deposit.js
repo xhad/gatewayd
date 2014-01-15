@@ -1,12 +1,8 @@
 'use strict'
 
 angular.module('publicApp')
-  .controller('GatewayAccountsCtrl', ['$scope', '$http','$location', 'UserService', function ($scope, $http, $location, $user) {
-    console.log('in the gateway accounts controller')
-    console.log($user)
-    if ($user.isLogged) {
-      console.log("show the account page for "+$user.username)
-    } else {
+  .controller('GatewayDepositCtrl', ['$scope', '$http','$location', 'UserService', function ($scope, $http, $location, $user) {
+    if (!$user.isLogged) {
       $location.path('/login') 
     }
   }])
