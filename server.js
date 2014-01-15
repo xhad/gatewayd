@@ -48,9 +48,17 @@ app.get('/admin/confirm',
     }
   })
 
+app.get('/api/v1/gateway/accounts/:id', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    GatewayAccount.find(req.params.id).complete(function(err, account){
+      if (err) { res.send({ success: false }); return false }
+      res.send({ success: true, gatewayAccount: account })
+    }) 
+  })
+
 app.get('/api/v1/gateway/account/balances', 
   passport.authenticate('basic', { session: false }), function(req,res){
-    GatewayAccount.find({ where: { userId: req.user.id }}).complete(function(err, account){
+    GatewayAccount.find({ where: { userId: req.user.id.toString() }}).complete(function(err, account){
       if (err) { res.send({ success: false }); return false }
       res.send({ success: true, gatewayAccount: account })
     }) 
@@ -58,8 +66,8 @@ app.get('/api/v1/gateway/account/balances',
 
 app.get('/api/v1/gateway/account', 
   passport.authenticate('basic', { session: false }), function(req,res){
-    GatewayAccount.find({ where: { userId: req.user.id }}).complete(function(err, account){
-      if (err) { res.send({ success: false }); return false }
+    GatewayAccount.findAll({ where: { userId: req.user.id.toString() }}).complete(function(err, account){
+      if (err) { res.send({ success: false, user: req.user, account: account }); return false }
       res.send({ success: true, gatewayAccount: account })
     }) 
   })

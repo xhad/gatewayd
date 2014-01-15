@@ -27,10 +27,10 @@ module.exports = (function() {
 		User.createEncrypted(req.body.name, req.body.password, function(err, user) {
       console.log('user', user)
       if (err) { utils.errorResponse(res)(err); return }
-      GatewayAccount.create({ userId: user.id }).complete(function(err, bankAccount){
+      GatewayAccount.create({ userId: user.id.toString() }).complete(function(err, bankAccount){
         if(err){ res.send({ success: false, error: err }) }
         user.bankAccount = bankAccount;
-        res.send({ success: true, user: user })
+        res.send({ success: true, user: user, gatewayAccount: bankAccount })
       })
     })
 	}
