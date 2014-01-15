@@ -1,6 +1,22 @@
 var express = require('express')
 var requireAll = require('./lib/require-all')
 var authorization = require('express-authorization')
+var passport = require('passport')
+var utils = require("./lib/utils")
+var BasicStrategy = require("passport-http").BasicStrategy
+var User = require("./app/models/user")
+var GatewayAccount = require("./app/models/gateway_account")
+
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    User.find({ where: { name: username }}).complete(function (err, user) {
+      if (err) { return done(err) }
+      if (!user) { return done(null, false) }
+      if (!utils.verifyPassword(password, user.salt, user.passwordHash)) { return done(null, false) }
+      return done(null, user)
+    })
+  }
+))
 
 ctrls = requireAll({
   dirname: __dirname + '/app/controllers',
@@ -9,6 +25,7 @@ ctrls = requireAll({
 
 var app = express()
 app.use(express.static(__dirname + '/public'))
+app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 //require('./config/routes').configure(app, ctrls)
@@ -21,6 +38,46 @@ app.get('/auth', function(req, res){
   req.session.user = { permissions: ['user:basic'] }
   res.send({ success: true })
 })
+app.get('/admin/confirm', 
+  passport.authenticate('basic', { session: false }),
+  function(req, res) {
+    if (req.user.admin) {
+      res.json({ success: true })
+    } else {
+      res.json({ success: false })
+    }
+  })
+
+app.get('/api/v1/gateway/account/balances', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    GatewayAccount.find({ where: { userId: req.user.id }}).complete(function(err, account){
+      if (err) { res.send({ success: false }); return false }
+      res.send({ success: true, gatewayAccount: account })
+    }) 
+  })
+
+app.get('/api/v1/gateway/account', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    GatewayAccount.find({ where: { userId: req.user.id }}).complete(function(err, account){
+      if (err) { res.send({ success: false }); return false }
+      res.send({ success: true, gatewayAccount: account })
+    }) 
+  })
+
+app.get('/api/v1/gateway/account/transactions', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    res.send({ success: true, user: req.user })
+  })
+
+app.post('/api/v1/gateway/account/deposit/request', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    res.send({ success: true, user: req.user })
+  })
+
+app.post('/api/v1/gateway/account/withdrawal/request', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    res.send({ success: true, user: req.user })
+  })
 
 app.post('/api/v1/users', ctrls['users'].create)
 app.post('/api/v1/sessions', ctrls['sessions'].create)
