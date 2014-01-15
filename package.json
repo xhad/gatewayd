@@ -11,7 +11,9 @@
     "express-validator": "",
 		"validator": "",
     "bignumber.js": "1.3.0",
-    "express-authorization": "0.1.1"
+    "express-authorization": "0.1.1",
+    "passport":"",
+    "passport-http":""
   },
   "devDependencies": {
     "request": "",
