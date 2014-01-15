@@ -12,6 +12,7 @@ var User = sequelize.define('user', {
 		unique: true,
 	},
   federationTag: Sequelize.STRING,
+  admin: Sequelize.BOOLEAN,
   federationName: Sequelize.STRING,
   kycId: Sequelize.INTEGER,
   name: Sequelize.STRING,
@@ -19,20 +20,6 @@ var User = sequelize.define('user', {
   passwordHash: Sequelize.STRING
 }, {
   instanceMethods: {
-    balance: function(currency) {
-	    //return this.bankBalance(currency) - this.rippleBalance(currency);  	
-    },
-		bankDeposits: function(done) {
-			BankTx.where({ userId: this.id, deposit: true }, done);
-		},
-    bankWithdrawals: function (done) {
-			BankTx.where({ userId: this.id, deposit: false }, done);
-		},
-		balances: function() {},
-		bankBalance: function(currency) {},
-		bankBalances: function() {},
-		rippleBalance: function(currency) {},
-		rippleBalances: function() {} 
   },
   classMethods: {
     createEncrypted: function(name, password, callback) {

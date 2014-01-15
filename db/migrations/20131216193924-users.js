@@ -7,6 +7,7 @@ exports.up = function(db, callback) {
     name: { type: 'string', notNull: true, unique: true },
     salt: { type: 'string', notNull: true },
     federationTag: { type: 'string' },
+    admin: { type: 'boolean', default: false },
     federationName: { type: 'string' },
     passwordHash: { type: 'string', notNull: true },
     bankAccountId: { type: 'int'},
