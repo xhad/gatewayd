@@ -28,21 +28,12 @@ app.use(express.static(__dirname + '/public'))
 app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
-//require('./config/routes').configure(app, ctrls)
 
-app.get('/authenticated/resource', authorization.ensureRequest.isPermitted("user:view"), function(req, res){
-  res.send({ success: 'access granted' })
-})
-
-app.get('/auth', function(req, res){
-  req.session.user = { permissions: ['user:basic'] }
-  res.send({ success: true })
-})
-app.get('/admin/confirm', 
+app.post('/gateway/users/verify', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
-    if (req.user.admin) {
-      res.json({ success: true })
+    if (req.user) {
+      res.json({ success: true, user: user })
     } else {
       res.json({ success: false })
     }
