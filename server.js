@@ -59,8 +59,9 @@ app.get('/api/v1/gateway/accounts/:id',
 app.get('/api/v1/gateway/account/balances', 
   passport.authenticate('basic', { session: false }), function(req,res){
     GatewayAccount.find({ where: { userId: req.user.id.toString() }}).complete(function(err, account){
-      if (err) { res.send({ success: false }); return false }
-      res.send({ success: true, gatewayAccount: account })
+      account.getBalances(function(resp){
+        res.send({ success: true, gatewayAccount: account, balances: resp.balances || [] })
+      })
     }) 
   })
 
