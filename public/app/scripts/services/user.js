@@ -9,7 +9,7 @@ angular.module('publicApp').service('UserService', ['$http','$location', functio
           user.isLogged = true
           user.username = resp.session.username
           user.rippleAddress = true
-          $location.path('/gateway_account')
+          $location.path('/gateway/account')
         } else {
           user.isLogged = false
           user.username = ''
@@ -27,8 +27,7 @@ angular.module('publicApp').service('UserService', ['$http','$location', functio
           user.isLogged = true
           user.username = username
           user.rippleAddress = true //response.session.rippleAddress
-          console.log('about to redirect to /gateway_account')
-					$location.path('/')
+					$location.path('/gateway/account')
 				} else {
 					$location.path('/admin/users/new')
 				}

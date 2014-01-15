@@ -9,8 +9,7 @@ angular.module('publicApp')
       console.log('username', user.username)
       if (user.isLogged && user.username){
         console.log('user is logged in from the session')
-        $user.
-        $location.path('/gatway_account');
+        $location.path('/gateway/account');
       } 
     })
 
@@ -19,7 +18,7 @@ angular.module('publicApp')
 			var password = $scope.user.password;
       $user.login(name, password, function(err, session){
         if (!!session.username) {
-					$location.path('/gatway_account');
+					$location.path('/gateway/account');
 				} else {
 					$location.path('/admin/users/new');
 				}
