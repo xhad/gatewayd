@@ -29,11 +29,11 @@ app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 
-app.post('/gateway/users/login', 
+app.post('/api/v1/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
     if (req.user) {
-      res.json({ success: true, user: user })
+      res.json({ success: true, user: req.user })
     } else {
       res.json({ success: false })
     }
@@ -88,7 +88,7 @@ app.post('/api/v1/gateway/account/withdrawal/request',
 
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
-app.post('/api/v1/admin/users', ctrls['admin_users'].create)
+//app.post('/api/v1/admin/users', ctrls['admin_users'].create)
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)

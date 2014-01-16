@@ -36,13 +36,17 @@
            Ripple Gateway in a Box
         </a>
         <ul class='nav'>
+          <li ng-show='!userService.username' class='dropdown dark user-menu'>
+            <a ng-href='/#/login)' >
+              <span class='user-name'>Login</span>
+            </a>
           </li>
-          <li class='dropdown dark user-menu'>
+          <li  ng-show-'userService.username' class='dropdown dark user-menu'>
             <a class='dropdown-toggle' data-toggle='dropdown'>
               <span class='user-name'>{{ userService.username }}</span>
               <b class='caret'></b>
             </a>
-            <ul class='dropdown-menu'>
+            <ul ng-show='userService.username' class='dropdown-menu'>
               <li>
                 <a ng-href='/#/gateway_account'>
                   Account
@@ -55,7 +59,7 @@
               </li>
               <li class='divider'></li>
               <li>
-                <a href='/api/v1/sessions/destroy'>
+                <a ng-click='userService.logout()'>
                   Sign out
                 </a>
               </li>
@@ -150,6 +154,7 @@
         <script src="/app/scripts/controllers/ripple_txs.js"></script>
         <script src="/app/scripts/controllers/balances.js"></script>
         <script src="/app/scripts/services/user.js"></script>
+        <script src="/app/scripts/services/base64.js"></script>
         <script src="/app/scripts/controllers/ripple/account.js"></script>
         <script src="/app/scripts/controllers/ripple/withdraw.js"></script>
         <script src="/app/scripts/controllers/ripple/deposit.js"></script>
