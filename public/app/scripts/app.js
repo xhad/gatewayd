@@ -32,13 +32,9 @@ angular.module('publicApp', [
         templateUrl: 'views/ripple/account.html',
         controller: 'RippleAccountsCtrl'
       })
-      .when('/ripple/deposit', {
-        templateUrl: 'views/ripple/deposit.html',
-        controller: 'RippleDepositsCtrl'
-      })
-      .when('/ripple/withdraw', {
-        templateUrl: 'views/ripple/withdraw.html',
-        controller: 'RippleWithdrawCtrl'
+      .when('/admin/gateway/withdrawals', {
+        templateUrl: 'views/admin/gateway/withdrawals/new.html',
+        controller: 'AdminGatewayWithdrawalsCtrl'
       })
       .when('/admin/gateway/accounts/:account_id/balances', {
         templateUrl: 'views/balances.html',
