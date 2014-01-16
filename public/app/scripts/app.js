@@ -12,6 +12,10 @@ angular.module('publicApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/gateway/users/new', {
+        templateUrl: 'views/gateway/users/new.html',
+        controller: 'GatewayNewUserCtrl'
+      })
       .when('/gateway/account', {
         templateUrl: 'views/gateway/account.html',
         controller: 'GatewayAccountsCtrl'
@@ -36,23 +40,19 @@ angular.module('publicApp', [
         templateUrl: 'views/ripple/withdraw.html',
         controller: 'RippleWithdrawCtrl'
       })
-      .when('/gateway_account', {
-        templateUrl: 'views/gateway_account.html',
-        controller: 'GatewayAccountsCtrl'
-      })
-      .when('/admin/balances', {
+      .when('/admin/gateway/accounts/:account_id/balances', {
         templateUrl: 'views/balances.html',
         controller: 'BalancesCtrl'
       })
-      .when('/admin/users', {
+      .when('/admin/gateway/users', {
         templateUrl: 'views/users.html',
-        controller: 'UsersCtrl'
+        controller: 'AdminGatewayUsersCtrl'
       })
-			.when('/admin/bank_transactions', {
+			.when('/admin/gateway/transactions', {
 				templateUrl: 'views/bank_transactions.html',
 				controller: 'BankTxsCtrl'
 			})
-			.when('/admin/ripple_transactions', {
+			.when('/admin/ripple/transactions', {
 				templateUrl: 'views/ripple_transactions.html',
 				controller: 'RippleTxsCtrl'
 			})
@@ -60,21 +60,17 @@ angular.module('publicApp', [
 				templateUrl: 'views/api.html',
 				controller: 'ApiDocsCtrl'
 			})
-			.when('/admin/withdrawals/new', {
+			.when('/admin/gateway/withdrawals/new', {
 				templateUrl: 'views/withdrawals/new.html',
 				controller: 'AdminWithdrawalsCtrl'
 			})
-			.when('/admin/deposits/new', {
+			.when('/admin/gateway/deposits/new', {
 				templateUrl: 'views/deposits/new.html',
 				controller: 'AdminDepositsCtrl'
 			})
-			.when('/admin/bank_accounts', {
+			.when('/admin/gateway/accounts', {
 				templateUrl: 'views/admin/bank_accounts/index.html',
 				controller: 'BankAccountsCtrl'
-			})
-			.when('/admin/users/new', {
-				templateUrl: 'views/admin/users/new.html',
-				controller: 'AdminNewUserCtrl'
 			})
 			.when('/login', {
 				templateUrl: 'views/login.html',
