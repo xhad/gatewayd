@@ -36,12 +36,12 @@
            Ripple Gateway in a Box
         </a>
         <ul class='nav'>
-          <li ng-hide='userService.username' class='dark user-menu'>
+          <li ng-hide='userService.isLogged' class='dark user-menu'>
             <a ng-href='/#/login'>
               <span class='user-name'>Login</span>
             </a>
           </li>
-          <li class='dropdown dark user-menu'>
+          <li ng-hide='!userService.isLogged' class='dropdown dark user-menu'>
             <a class='dropdown-toggle' data-toggle='dropdown'>
               <span class='user-name'>{{ userService.username }}</span>
               <b class='caret'></b>
