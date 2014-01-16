@@ -24,7 +24,7 @@ module.exports = (function() {
 			return;
 		}
 		
-		User.createEncrypted(req.body.name, req.body.password, function(err, user) {
+		User.createEncrypted({ name: name, password: password }, function(err, user) {
       console.log('user', user)
       if (err) { utils.errorResponse(res)(err); return }
       GatewayAccount.create({ userId: user.id.toString() }).complete(function(err, bankAccount){
