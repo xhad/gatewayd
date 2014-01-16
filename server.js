@@ -88,7 +88,7 @@ app.post('/api/v1/gateway/account/withdrawal/request',
 
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
-app.post('/api/v1/admin/users', ctrls['admin_users'].create)
+//app.post('/api/v1/admin/users', ctrls['admin_users'].create)
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
