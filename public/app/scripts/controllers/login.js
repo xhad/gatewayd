@@ -5,13 +5,9 @@ angular.module('publicApp')
     $scope.user = {}
     $scope.userService = $user
 
-    $user.updateSession(function(user){
-      console.log('username', user.username)
-      if (user.isLogged && user.username){
-        console.log('user is logged in from the session')
-        $location.path('/gateway/account');
-      } 
-    })
+    $scope.logout = function() {
+      $user.logout()
+    }
 
     $scope.login = function () {
 			var name = $scope.user.name;
