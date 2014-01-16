@@ -25,24 +25,24 @@ var User = sequelize.define('user', {
   classMethods: {
     createAdmin: function(email, callback) {
       User.find({ where: { admin: true }}).complete(function(err, admins){
-        console.log(admins)
-        if (typeof admins == 'undefined') {
+        if (admins && (admins.length > 0)) {
+          callback('admin already exists', null)
+        } else {
           var password = crypto.randomBytes(32).toString('hex')
           User.createEncrypted({
             name: email,
-            password: password
+            password: password,
+            admin: true
           }, function(err, admin) {
             admin.password = password 
             callback(err, admin)
           })
-        } else {
-          callback('admin already exists', null)
         }
       })
     },
     createEncrypted: function(opts, callback) {
       var salt = utils.generateSalt();
-      var passwordHash = utils.saltPassword(opts.password, salt);
+      var passwordHash = utils.saltPassword(opts.password, salt)
       var admin = opts.admin || false
 
       var user = User.create({
