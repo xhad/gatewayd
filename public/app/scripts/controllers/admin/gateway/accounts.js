@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('AdminGatewayAccountsCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('AdminGatewayAccountsCtrl', ['$scope', '$http', 'UserService', '$location', function ($scope, $http, $user, $location) {
+    if (!$user.admin) { $location.path('/login') }
 		$scope.gatewayAccounts = [];
 		$scope.gatewayAccount = {};
 

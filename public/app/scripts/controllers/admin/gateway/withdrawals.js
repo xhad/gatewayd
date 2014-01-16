@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('AdminDepositsCtrl', ['$scope', '$http', 'UserService', '$location', function ($scope, $http, $user, $location) {
+  .controller('AdminGatewayWithdrawalsCtrl', ['$scope', '$http', '$locatin', 'UserService', function ($scope, $http, $location, $user) {
     if (!$user.admin) { $location.path('/login') }
 		$scope.deposits = [];
 

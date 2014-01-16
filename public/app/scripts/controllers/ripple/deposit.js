@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('publicApp')
-  .controller('GatewayAccountsCtrl', ['$scope', '$http','$location', 'UserService', function ($scope, $http, $location, $user) {
+  .controller('RippleDepositsCtrl', ['$scope', '$http','$location', 'UserService', function ($scope, $http, $location, $user) {
     console.log('in the gateway accounts controller')
     console.log($user)
     if ($user.isLogged) {
