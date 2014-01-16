@@ -8,16 +8,14 @@ module.exports = (function() {
     GatewayAccount.find({where: {
       userId: req.params.userId
     }}).complete(function(err, account){
-      if (err) {  account = [] }
-      res.send(account)
+      if (err) {  res.send({ success: false }) }
+      res.send({ success: true, gatewayAccount: account[0] })
     })
 	}
 
   function create(req, res) {
-		req.checkBody('name', 'Invalid name')
-			.notEmpty().isAlphanumeric();
-		req.checkBody('password', 'Invalid password')
-			.notEmpty().isAlphanumeric();
+		req.checkBody('name', 'Invalid name').notEmpty().isAlphanumeric()
+		req.checkBody('password', 'Invalid password').notEmpty().isAlphanumeric()
 		
 		var errors = req.validationErrors();
 		if (errors) {
@@ -25,11 +23,7 @@ module.exports = (function() {
 			return;
 		}
 
-    var salt = utils.generateSalt()
-    var password = req.body.password
-    var passwordHash = utils.saltPassword(password, salt)
-
-    var user = User.createEncrypted(req.body.name, password, function(err, user){
+    var user = User.createEncrypted({ name: req.body.name, password: req.body.password }, function(err, user){
       if (err) { res.send({ error: err }); return }
       res.send({ success: true, user: user })
     })
