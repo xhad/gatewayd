@@ -29,7 +29,7 @@ app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 
-app.post('/gateway/users/verify', 
+app.post('/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
     if (req.user) {
@@ -38,6 +38,13 @@ app.post('/gateway/users/verify',
       res.json({ success: false })
     }
   })
+
+app.get('/api/v1/gateway/users', function(req, res) {
+  User.all().complete(function(err, users){
+    if(err){ res.send({ success: false, error: err }); return }
+    res.send({ success: true, gatewayUsers: users })
+  }) 
+})
 
 app.get('/api/v1/gateway/accounts/:id', 
   passport.authenticate('basic', { session: false }), function(req,res){
@@ -79,11 +86,9 @@ app.post('/api/v1/gateway/account/withdrawal/request',
     res.send({ success: true, user: req.user })
   })
 
-app.post('/api/v1/users', ctrls['users'].create)
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
-app.get('/api/v1/sessions', ctrls['sessions'].show)
-app.get('/api/v1/sessions/destroy', ctrls['sessions'].destroy)
+app.post('/api/v1/admin/users', ctrls['admin_users'].create)
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
