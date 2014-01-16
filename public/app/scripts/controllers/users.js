@@ -1,26 +1,27 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('UsersCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
-		$scope.user = null;
-		$scope.users = [];
+  .controller('AdminGatewayUsersCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+		$scope.user = null
+		$scope.users = []
 
 		function updateUsers() {
-			$http.get('/api/v1/users').success(function(users){
-				$scope.users = users;
+			$http.get('/api/v1/gateway/users').success(function(resp){
+				$scope.users = resp.gatewayUsers;
 			});
 		}
 
-    $scope.submit = function () {
+    $scope.registerUser = function () {
       if ($scope.user.password == $scope.user.password_confirmation) {
-				delete $scope.user.password_confirmation;
-		    $http.post('/api/v1/users', $scope.user)
+				delete $scope.user.password_confirmation
+		    $http.post('/api/v1/gateway/users', $scope.user)
 				.success(function(user){
-					updateUsers();
+					updateUsers()
 				})
-				.error(console.log);
+				.error(console.log)
 			}
 		}
 
+    $scope.loadingUsers = true
 		updateUsers();
   }]);
