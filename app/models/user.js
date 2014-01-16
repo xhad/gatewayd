@@ -1,7 +1,8 @@
-var Sequelize = require('sequelize');
-var db = require('../../config/initializers/sequelize.js');
-var utils = require("../../lib/utils");
-var RippleAddress = require('./ripple_address.js');
+var Sequelize = require('sequelize')
+var db = require('../../config/initializers/sequelize.js')
+var utils = require("../../lib/utils")
+var RippleAddress = require('./ripple_address.js')
+var crypto = require("crypto")
 
 var User = sequelize.define('user', {
   id: { 
@@ -22,12 +23,31 @@ var User = sequelize.define('user', {
   instanceMethods: {
   },
   classMethods: {
-    createEncrypted: function(name, password, callback) {
+    createAdmin: function(email, callback) {
+      User.find({ where: { admin: true }}).complete(function(err, admins){
+        console.log(admins)
+        if (typeof admins == 'undefined') {
+          var password = crypto.randomBytes(32).toString('hex')
+          User.createEncrypted({
+            name: email,
+            password: password
+          }, function(err, admin) {
+            admin.password = password 
+            callback(err, admin)
+          })
+        } else {
+          callback('admin already exists', null)
+        }
+      })
+    },
+    createEncrypted: function(opts, callback) {
       var salt = utils.generateSalt();
-      var passwordHash = utils.saltPassword(password, salt);
+      var passwordHash = utils.saltPassword(opts.password, salt);
+      var admin = opts.admin || false
 
       var user = User.create({
-        name: name,
+        name: opts.name,
+        admin: admin,
         salt: salt,
         passwordHash: passwordHash,
       }).complete(function(err, user){
