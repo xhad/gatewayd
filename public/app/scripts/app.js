@@ -12,6 +12,14 @@ angular.module('publicApp', [
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/admin', {
+        templateUrl: 'views/admin/index.html',
+        controller: 'AdminIndexCtrl'
+      })
+      .when('/admin/settings', {
+        templateUrl: 'views/admin/settings.html',
+        controller: 'AdminSettingsCtrl'
+      })
       .when('/gateway/users/new', {
         templateUrl: 'views/gateway/users/new.html',
         controller: 'GatewayNewUserCtrl'
