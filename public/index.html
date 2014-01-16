@@ -31,11 +31,15 @@
 
     <!-- Add your site or application content here -->
     <header ng-controller='LoginCtrl'>
-     <nav class='navbar navbar-default'>
+     <nav ng-cloak class='navbar navbar-default'>
         <a class='navbar-brand' href='/'>
            Ripple Gateway in a Box
         </a>
         <ul class='nav'>
+          <li ng-hide='userService.username' class='dark user-menu'>
+            <a ng-href='/#/login'>
+              <span class='user-name'>Login</span>
+            </a>
           </li>
           <li class='dropdown dark user-menu'>
             <a class='dropdown-toggle' data-toggle='dropdown'>
@@ -55,7 +59,7 @@
               </li>
               <li class='divider'></li>
               <li>
-                <a href='/api/v1/sessions/destroy'>
+                <a ng-click='userService.logout()'>
                   Sign out
                 </a>
               </li>
@@ -67,22 +71,22 @@
 		<div class="header">
 		</div>
 
-		<div ng-controller='LoginCtrl' style='margin:0 auto' class='row span12'>
+		<div ng-cloak ng-controller='LoginCtrl' style='margin:0 auto' class='row span12'>
 			<div class="col-md-9"  ng-view=""></div>
 			<div class='well nav bs-sidenav col-md-2' style='margin-left:1em'>
 				<ul class="nav" ng-show='userService.admin'>
-					<li><a ng-class="getClass('/admin/deposits/new')" ng-href="#/admin/deposits/new">Deposit</a></li>
-					<li><a ng-class="getClass('/admin/withdrawals/new')" ng-href="#/admin/withdrawals/new">Withdraw</a></li>
-					<li><a ng-class="getClass('/admin/users')" ng-href="#/admin/users">Users</a></li>
-					<li><a ng-class="getClass('/admin/users/new')" ng-href="#/admin/users/new">Register</a></li>
-					<li><a ng-class="getClass('/admin/bank_transactions')" ng-href="#/admin/bank_transactions">Bank Transactions</a></li>
-					<li><a ng-class="getClass('/admin/bank_accounts')" ng-href="#/admin/bank_accounts">Bank Accounts</a></li>
-					<li><a ng-class="getClass('/admin/balances')" ng-href="#/admin/balances">Balances</a></li>
-					<li><a ng-class="getClass('/admin/ripple_transactions')" ng-href="#/admin/ripple_transactions">Ripple Transactions</a></li>
-					<li><a ng-class="getClass('/admin/ripple_addresses')" ng-href="#/admin/ripple_addresses">Ripple Addresses</a></li>
-					<li><a ng-class="getClass('/api/docs')" ng-href="#/api/docs">Api Docs</a></li>
+					<li><a ng-href="#/admin/deposits/new">Deposit</a></li>
+					<li><a ng-href="#/admin/withdrawals/new">Withdraw</a></li>
+					<li><a ng-href="#/admin/users">Users</a></li>
+					<li><a ng-href="#/admin/users/new">Register</a></li>
+					<li><a ng-href="#/admin/bank_transactions">Bank Transactions</a></li>
+					<li><a ng-href="#/admin/bank_accounts">Bank Accounts</a></li>
+					<li><a ng-href="#/admin/balances">Balances</a></li>
+					<li><a ng-href="#/admin/ripple_transactions">Ripple Transactions</a></li>
+					<li><a ng-href="#/admin/ripple_addresses">Ripple Addresses</a></li>
+					<li><a ng-href="#/api/docs">Api Docs</a></li>
 				</ul>
-        <span>
+        <span ng-hide='userService.admin'>
         <h3>Gateway</h3>
 				<ul class="nav">
 					<li><a ng-href="#/gateway/account/">Account</a></li>
@@ -140,16 +144,13 @@
         <!-- build:js({.tmp,app}) /app/scripts/scripts.js -->
         <script src="/app/scripts/app.js"></script>
         <script src="/app/scripts/controllers/main.js"></script>
-        <script src="/app/scripts/controllers/users.js"></script>
-        <script src="/app/scripts/controllers/admin_new_user.js"></script>
         <script src="/app/scripts/controllers/admin_withdrawals.js"></script>
         <script src="/app/scripts/controllers/admin/gateway/deposits.js"></script>
         <script src="/app/scripts/controllers/login.js"></script>
         <script src="/app/scripts/controllers/admin/gateway/accounts.js"></script>
-        <script src="/app/scripts/controllers/bank_txs.js"></script>
-        <script src="/app/scripts/controllers/ripple_txs.js"></script>
         <script src="/app/scripts/controllers/balances.js"></script>
         <script src="/app/scripts/services/user.js"></script>
+        <script src="/app/scripts/services/base64.js"></script>
         <script src="/app/scripts/controllers/ripple/account.js"></script>
         <script src="/app/scripts/controllers/ripple/withdraw.js"></script>
         <script src="/app/scripts/controllers/ripple/deposit.js"></script>

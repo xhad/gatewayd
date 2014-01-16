@@ -29,11 +29,11 @@ app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 
-app.post('/gateway/users/login', 
+app.post('/api/v1/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
     if (req.user) {
-      res.json({ success: true, user: user })
+      res.json({ success: true, user: req.user })
     } else {
       res.json({ success: false })
     }
