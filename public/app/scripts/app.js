@@ -70,7 +70,7 @@ angular.module('publicApp', [
 			})
 			.when('/admin/gateway/accounts', {
 				templateUrl: 'views/admin/bank_accounts/index.html',
-				controller: 'BankAccountsCtrl'
+				controller: 'AdminGatewayAccountsCtrl'
 			})
 			.when('/login', {
 				templateUrl: 'views/login.html',
