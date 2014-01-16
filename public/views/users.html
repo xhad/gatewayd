@@ -1,19 +1,17 @@
 <div class='row'>
 	<div class='col-md-6'>
-		<h2>List all Users</h2>
 		<table class='table table-striped'>
+		<h2>List all Users</h2>
 		 <tr>
 				<td>id</td>	
 				<td>name</td>	
-				<td>ripple address</td>
-				<td>created at</td>	
+				<td>admin</td>
 			</tr>
 			<hr/>
 			<tr ng-repeat='user in users'>
 				<td>{{ user.id }}</td>
 				<td>{{ user.name }}</td>
-				<td>{{ user.rippleAddress }}</td>
-				<td>{{ user.createdAt }}</td>
+				<td>{{ user.admin }}</td>
 			<tr>
 		</table>
 	</div>
@@ -23,10 +21,6 @@
 			<div class='form-group'>
 				<label name='name'>name: </label>
 				<input class='form-control' ng-model='user.name' type='text' name='name'/>
-			</div>
-			<div class='form-group'>
-				<label name='name'>ripple address: </label>
-				<input class='form-control' ng-model='user.rippleAddress' type='text' name='rippleAddress'/>
 			</div>
 			<p>
 				<label name='password'>password: </label>
