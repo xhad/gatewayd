@@ -8,7 +8,7 @@ exports.up = function(db, callback) {
     managed: { type: 'boolean', default: false, notNull: true},
     address: { type: 'string', notNull: true, unique: true },
     type: { type: 'string', notNull: true },
-    tag: { type: 'string' }
+    tag: { type: 'string' },
     secret: { type: 'string' }
 	}, callback);
 };
