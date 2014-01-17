@@ -11,12 +11,14 @@ module.exports = (function() {
 	}
 
   function create(req, res) {
+    console.log(req.body)
 		req.checkBody('name', 'Invalid name')
 			.notEmpty().isAlphanumeric();
 		req.checkBody('password', 'Invalid password')
 			.notEmpty().isAlphanumeric();
-		//req.checkBody('rippleAddress', 'Invalid rippleAddress')
-  	//	.notEmpty().isAlphanumeric();
+
+    var name = req.body.name;
+    var password = req.body.password;
 		
 		var errors = req.validationErrors();
 		if (errors) {
