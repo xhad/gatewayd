@@ -7,7 +7,6 @@ var BankTx = sequelize.define('bank_transaction', {
   deposit: { type: Sequelize.BOOLEAN, allowNull: false },
   currency: { type: Sequelize.STRING, allowNull: false },
   accountId: { type: Sequelize.INTEGER, allowNull: false },
-	balanceId: { type: Sequelize.INTEGER, allowNull: false },
   cashAmount: { type: Sequelize.DECIMAL, allowNull: false },
   rippleTxId: Sequelize.INTEGER
 });
