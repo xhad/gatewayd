@@ -15,12 +15,21 @@ angular.module('publicApp')
 
     $scope.loading = true
     $scope.adminExists = false
+    $scope.admin = { email: '' }
 
     $scope.user = {}
     $scope.userService = $user
 
     $scope.logout = function() {
       $user.logout()
+    }
+
+    $scope.registerAdmin = function() {
+      if ($scope.admin.email) {
+        $http.post('/api/v1/admin/users', { email: $scope.admin.email }).success(function(resp) {
+          console.log(resp)
+        })
+      }
     }
 
     $scope.login = function () {
