@@ -7,7 +7,9 @@ exports.up = function(db, callback) {
     userId: { type: 'int', notNull: true },
     managed: { type: 'boolean', default: false, notNull: true},
     address: { type: 'string', notNull: true, unique: true },
-    type: { type: 'string', notNull: true }
+    type: { type: 'string', notNull: true },
+    tag: { type: 'string' },
+    secret: { type: 'string' }
 	}, callback);
 };
 

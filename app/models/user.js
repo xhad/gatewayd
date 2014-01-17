@@ -2,7 +2,9 @@ var Sequelize = require('sequelize')
 var db = require('../../config/initializers/sequelize.js')
 var utils = require("../../lib/utils")
 var RippleAddress = require('./ripple_address.js')
+var RippleWallet = require('./../../lib/rippleAddress').RippleWallet
 var crypto = require("crypto")
+var sjcl = require('sjcl')
 
 var User = sequelize.define('user', {
   id: { 
@@ -34,11 +36,41 @@ var User = sequelize.define('user', {
             password: password,
             admin: true
           }, function(err, admin) {
+            if (err) { callback(err, null); return } 
+            hotWallet = RippleWallet.generate()
+            coldWallet = RippleWallet.generate()
             admin.password = password 
-            callback(err, admin)
+
+            RippleAddress.create({
+              managed: true,
+              userId: admin.id,
+              type: 'hot',
+              address: hotWallet.address,
+              secret: hotWallet.secret
+            }).complete(function(err, address) {
+              if(err) { 
+                callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+              }
+              RippleAddress.create({
+                managed: true,
+                userId: admin.id,
+                type: 'cold',
+                address: coldWallet.address,
+                secret: coldWallet.secret
+              }).complete(function(err, address) {
+                callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+                if (err) { 
+                  callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+                }
+                callback(null, { admin: admin, password: password, wallets: { hot: hotWallet, cold: coldWallet }})
+              })
+            })
           })
         }
       })
+    },
+    generateWallet: function() {
+      
     },
     createEncrypted: function(opts, callback) {
       var salt = utils.generateSalt();
