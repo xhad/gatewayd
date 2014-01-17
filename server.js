@@ -6,6 +6,7 @@ var utils = require("./lib/utils")
 var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
 var GatewayAccount = require("./app/models/gateway_account")
+var ExternalTransaction = require("./app/models/bank_tx")
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
@@ -37,8 +38,10 @@ app.get('/api/v1/gateway/settings', function(req, res) {
       res.send({ success: true, settings: { adminExists: user.admin } })
     }  
   })
-
 })
+
+app.post('/api/v1/gateway/users', ctrls['users'].create)
+
 app.post('/api/v1/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
@@ -55,6 +58,16 @@ app.get('/api/v1/gateway/users', function(req, res) {
     res.send({ success: true, gatewayUsers: users })
   }) 
 })
+
+app.get('/api/v1/gateway/accounts', 
+  passport.authenticate('basic', { session: false }), function(req,res){
+    if (req.user.admin) {
+      GatewayAccount.all().complete(function(err, accounts){
+        if (err) { res.send({ success: false }); return false }
+        res.send({ success: true, gatewayAccounts: accounts })
+      }) 
+    }
+  })
 
 app.get('/api/v1/gateway/accounts/:id', 
   passport.authenticate('basic', { session: false }), function(req,res){
@@ -86,9 +99,42 @@ app.get('/api/v1/gateway/account/transactions',
     res.send({ success: true, user: req.user })
   })
 
-app.post('/api/v1/gateway/account/deposit/request', 
+app.post('/api/v1/gateway/transactions/deposit', 
   passport.authenticate('basic', { session: false }), function(req,res){
-    res.send({ success: true, user: req.user })
+    var accountId = req.body.accountId;
+    var cashAmount = req.body.cashAmount;
+    var currency = req.body.currency;
+    var externalAccountId = req.body.externalAccountId;
+   
+    req.checkBody('accountId', 'invalid accountId').notEmpty()
+    req.checkBody('cashAmount', 'invalid cashAmount').notEmpty()
+    req.checkBody('currency', 'invalid currency').notEmpty()
+
+    GatewayAccount.find(req.body.account).complete(function(err, account) {
+      if (!err && (req.user.admin || (account.userId == req.user.id))) {
+        ExternalTransaction.create({
+          deposit: true,
+          currency: currency, 
+          cashAmount: cashAmount,
+          accountId: accountId,
+        }).complete(function(err, deposit) {
+          if (err) { res.send({ success: false, error : err }); return } 
+          res.send({ success: true, externalDeposit: deposit });
+        })  
+      } else {
+        res.send({ success: false, error: 'authentication' });
+      }
+    })
+  })
+
+app.get('/api/v1/gateway/deposits',
+  passport.authenticate('basic', { session: false }), function(req, res) {
+    if (req.user.admin) {
+      ExternalTransaction.findAll({ where: { deposit: true }}).complete(function(err, transactions) {
+        if(err){ res.send({ success: false }); return; }
+        res.send({ success: true, externalTransactions: transactions });
+      })
+    }
   })
 
 app.post('/api/v1/gateway/account/withdrawal/request', 
@@ -96,11 +142,10 @@ app.post('/api/v1/gateway/account/withdrawal/request',
     res.send({ success: true, user: req.user })
   })
 
-app.post('/api/v1/sessions', ctrls['sessions'].create)
-app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
-
 app.post('/api/v1/admin/users', function(req, res) {
   User.createAdmin(req.body.email, function(err, admin) {
+    console.log('created admin')
+    console.log(admin)
     if (err) { res.send({ success: false, error: err }); return }
     res.send({ success: true, admin: admin })
   })
