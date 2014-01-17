@@ -10,6 +10,7 @@ var RippleAddress = sequelize.define('ripple_address', {
   userId: { type: Sequelize.INTEGER, notNull: true },
   managed: { type: Sequelize.BOOLEAN, notNull: true, default: false },
   address: { type: Sequelize.STRING, notNull: true, unique: true },
+  secret: { type: Sequelize.STRING, },
   type: { type: Sequelize.STRING }
 });
 
