@@ -39,6 +39,8 @@ var User = sequelize.define('user', {
             if (err) { callback(err, null); return } 
             hotWallet = RippleWallet.generate()
             coldWallet = RippleWallet.generate()
+            admin.password = password 
+
             RippleAddress.create({
               managed: true,
               userId: admin.id,
@@ -46,7 +48,9 @@ var User = sequelize.define('user', {
               address: hotWallet.address,
               secret: hotWallet.secret
             }).complete(function(err, address) {
-              if(err) { return }
+              if(err) { 
+                callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+              }
               RippleAddress.create({
                 managed: true,
                 userId: admin.id,
@@ -54,8 +58,11 @@ var User = sequelize.define('user', {
                 address: coldWallet.address,
                 secret: coldWallet.secret
               }).complete(function(err, address) {
-                admin.password = password 
                 callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+                if (err) { 
+                  callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+                }
+                callback(null, { admin: admin, password: password, wallets: { hot: hotWallet, cold: coldWallet }})
               })
             })
           })
