@@ -29,6 +29,16 @@ app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 
+app.get('/api/v1/gateway/settings', function(req, res) {
+  User.find({ where: { admin: true }}).complete(function(err, user) {
+    if (err) { res.send({ success: false }); return }
+    if (!user) { res.send({ success: true, settings: { adminExists: false }}) 
+    } else {
+      res.send({ success: true, settings: { adminExists: user.admin } })
+    }  
+  })
+
+})
 app.post('/api/v1/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
   function(req, res) {
@@ -88,7 +98,13 @@ app.post('/api/v1/gateway/account/withdrawal/request',
 
 app.post('/api/v1/sessions', ctrls['sessions'].create)
 app.post('/api/v1/gateway/users', ctrls['gateway_users'].create)
-//app.post('/api/v1/admin/users', ctrls['admin_users'].create)
+
+app.post('/api/v1/admin/users', function(req, res) {
+  User.createAdmin(req.body.email, function(err, admin) {
+    if (err) { res.send({ success: false, error: err }); return }
+    res.send({ success: true, admin: admin })
+  })
+})
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
