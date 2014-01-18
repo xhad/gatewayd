@@ -15,7 +15,8 @@
     "passport":"",
     "passport-http":"",
     "sjcl":"1.0.0",
-    "ripple-lib": ""
+    "ripple-lib": "",
+    "request": ""
   },
   "devDependencies": {
     "request": "",
