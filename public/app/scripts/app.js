@@ -13,8 +13,8 @@ angular.module('publicApp', [
         controller: 'MainCtrl'
       })
       .when('/admin', {
-        templateUrl: 'views/admin/index.html',
-        controller: 'AdminIndexCtrl'
+        templateUrl: 'views/admin/settings.html',
+        controller: 'AdminSettingsCtrl'
       })
       .when('/admin/settings', {
         templateUrl: 'views/admin/settings.html',
@@ -49,7 +49,7 @@ angular.module('publicApp', [
         controller: 'BalancesCtrl'
       })
       .when('/admin/gateway/users', {
-        templateUrl: 'views/users.html',
+        templateUrl: 'views/admin/gateway/users.html',
         controller: 'AdminGatewayUsersCtrl'
       })
 			.when('/admin/gateway/transactions', {

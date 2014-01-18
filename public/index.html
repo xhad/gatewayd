@@ -80,11 +80,15 @@
 					<li><a ng-href="#/admin/gateway/deposits/new">External Deposit</a></li>
 					<li><a ng-href="#/admin/gateway/withdrawals/new">External Withdraw</a></li>
 					<li><a ng-href="#/admin/gateway/accounts">External Accounts</a></li>
-					<li><a ng-href="#/admin/ripple_transactions">Ripple Transactions</a></li>
-					<li><a ng-href="#/admin/gateway/transactions">External Transactions</a></li>
-					<li><a ng-href="#/admin/ripple_addresses">Ripple Addresses</a></li>
 					<li><a ng-href="#/api/docs">Api Docs</a></li>
 				</ul>
+        <hr/>
+
+				<ul class="nav" ng-show='userService.admin'>
+					<li><a ng-href="#/admin/ripple/deposits">Ripple Deposits</a></li>
+					<li><a ng-href="#/admin/ripple/withdrawals">Ripple Withdrawals</a></li>
+					<li><a ng-href="#/admin/ripple/addresses">Ripple Addresses</a></li>
+        </ul>
         <span ng-hide='userService.admin'>
         <h3>Gateway</h3>
 				<ul class="nav">
