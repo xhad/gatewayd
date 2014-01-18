@@ -14,7 +14,8 @@
     "express-authorization": "0.1.1",
     "passport":"",
     "passport-http":"",
-    "sjcl":"1.0.0"
+    "sjcl":"1.0.0",
+    "ripple-lib": ""
   },
   "devDependencies": {
     "request": "",
