@@ -7,6 +7,8 @@ var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
 var GatewayAccount = require("./app/models/gateway_account")
 var ExternalTransaction = require("./app/models/bank_tx")
+var sys = require('sys');
+var exec = require('child_process').exec;
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
@@ -169,4 +171,16 @@ if (address){
   app.listen(port)
 }
 console.log('Listening on port ', port)
+
+// Spawn child proccesses
+var listener = exec("node listener.js", print)
+
+function print(error, stdout, stderr) {
+  console.log(error)
+  console.log(stderr)
+  console.log(stdout)
+  if (error !== null) {
+    console.log('exec error: ' + error)
+  }
+}
 
