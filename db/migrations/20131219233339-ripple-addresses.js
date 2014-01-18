@@ -9,7 +9,8 @@ exports.up = function(db, callback) {
     address: { type: 'string', notNull: true, unique: true },
     type: { type: 'string', notNull: true },
     tag: { type: 'string' },
-    secret: { type: 'string' }
+    secret: { type: 'string' },
+    previousTxHash: { type: 'string' }
 	}, callback);
 };
 
