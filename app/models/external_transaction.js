@@ -1,8 +1,6 @@
-var Sequelize = require('sequelize');
-var db = require('../../config/initializers/sequelize.js');
-var GatewayAccount = require('../models/gateway_account');
+var sequelize = require('../../config/initializers/sequelize.js');
 
-var BankTx = sequelize.define('bank_transaction', {
+var ExternalTransaction = sequelize.define('external_transaction', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   deposit: { type: Sequelize.BOOLEAN, allowNull: false },
   currency: { type: Sequelize.STRING, allowNull: false },
@@ -11,4 +9,4 @@ var BankTx = sequelize.define('bank_transaction', {
   rippleTxId: Sequelize.INTEGER
 });
 
-module.exports = BankTx;
+module.exports = ExternalTransaction;
