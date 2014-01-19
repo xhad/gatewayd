@@ -6,7 +6,7 @@ var utils = require("./lib/utils")
 var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
 var GatewayAccount = require("./app/models/gateway_account")
-var ExternalTransaction = require("./app/models/bank_tx")
+var ExternalTransaction = require("./app/models/external_transaction")
 var sys = require('sys');
 var exec = require('child_process').exec;
 
@@ -161,6 +161,13 @@ app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
 
 app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].gateway)
 
+
+app.get('/api/v1/gateway/accounts/:accountId/externalTransactions', function(req, resp) {
+  GatewayAccount.find(req.params.accountId).complete(function(err, account){
+    res.send({ success: true, gatewayAccount: account });
+  });
+});
+
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
 
@@ -173,11 +180,10 @@ if (address){
 console.log('Listening on port ', port)
 
 // Spawn child proccesses
-var listener = exec("node listener.js", print)
+var listener = exec("node listener.js", print);
+console.log('spawned child process "node listener.js"');
 
 function print(error, stdout, stderr) {
-  console.log(error)
-  console.log(stderr)
   console.log(stdout)
   if (error !== null) {
     console.log('exec error: ' + error)

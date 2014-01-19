@@ -1,5 +1,4 @@
 var RippleTransaction = require('../models/ripple_transaction.js');
-var Balance = require('../models/balance.js');
 var errorResponse = require("../../lib/utils.js").errorResponse;
 var util = require('util');
 
