@@ -7,6 +7,7 @@ var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
 var GatewayAccount = require("./app/models/gateway_account")
 var ExternalTransaction = require("./app/models/external_transaction")
+var ExternalAccount = require("./app/models/external_account")
 var sys = require('sys');
 var exec = require('child_process').exec;
 
@@ -161,10 +162,41 @@ app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
 
 app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].gateway)
 
+app.get('/api/v1/gateway/accounts/:accountId/externalAccounts', function(req, res) {
+  GatewayAccount.find(req.params.accountId).complete(function(err, account) {
+    if (account) {
+      account.externalAccounts(function(err, externalAccounts) {
+        res.send({ success:true, externalAccounts: externalAccounts || []});
+      });
+    } else {
+      res.send({ success:false, error: 'account does not exist' });
+    }
+  });
+});
 
-app.get('/api/v1/gateway/accounts/:accountId/externalTransactions', function(req, resp) {
+app.post("/api/v1/gateway/accounts/:accountId/externalAccounts", function(req, res) {
+  ExternalAccount.create({
+    name: req.body.name,
+    gateway_account_id: req.params.accountId,
+  }).complete(function(err, externalAccount) {
+    console.log('error', err);
+    res.send({ success: true, externalAccount: externalAccount });
+  });
+});
+
+app.get('/api/v1/gateway/accounts/:accountId/externalTransactions', function(req, res) {
   GatewayAccount.find(req.params.accountId).complete(function(err, account){
-    res.send({ success: true, gatewayAccount: account });
+    if (account) {
+      account.externalTransactions(function(err, externalTransactions) {
+        console.log(err)
+        if (err) { res.send({ success: false }); return };
+        res.send({ 
+          success: true, 
+          gatewayAccount: account, 
+          externalTransactions: externalTransactions || []
+        });
+      });
+    }
   });
 });
 
