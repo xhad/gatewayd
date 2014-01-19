@@ -20,12 +20,24 @@ var GatewayAccount = sequelize.define('gateway_account', {
     gatewayBalances: function(fn){
       var query = '';
       query = 'select SUM("cashAmount") as amount, "currency"';
-      query += 'FROM bank_txs GROUP BY "currency"';
+      query += 'FROM external_transactions GROUP BY "currency"';
       query += 'WHERE accountId = ?';
       sequelize.query(query, this.id).complete(fn);
     },
     user: function(fn){
       var query = 'select * from users where gatewayAccountId = ?';
+      sequelize.query(query, this.id).complete(fn);
+    },
+    externalAccounts: function(fn){
+      var query = 'select * from external_accounts where gatewayAccountId = ?';
+      sequelize.query(query, this.id).complete(fn);
+    },
+    externalTransactions: function(){
+      var query = 'select * from external_transactions';
+      query += 'left outer join external_transactions';
+      query += 'on external_transactions.externalAccountId = external_accounts.id';
+      query += 'left outer join external_accounts';
+      query += 'on external_accounts.gatewayAccountId = ?';
       sequelize.query(query, this.id).complete(fn);
     },
     rippleAddresses: function(fn){
@@ -34,7 +46,7 @@ var GatewayAccount = sequelize.define('gateway_account', {
     },
     rippleTransactions: function(fn){
       var query = 'select * from ripple_transactions';
-      query += 'left outer join ripple_transactions' ;
+      query += 'left outer join ripple_transactions';
       query += 'on ripple_transactions.rippleAddressId = ripple_addresses.id'; 
       query += 'left outer join ripple_addresses';
       query += 'on ripple_addresses.gatewayAccountId = ?';
