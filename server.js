@@ -5,7 +5,6 @@ var passport = require('passport')
 var utils = require("./lib/utils")
 var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
-var GatewayAccount = require("./app/models/gateway_account")
 var ExternalTransaction = require("./app/models/external_transaction")
 var ExternalAccount = require("./app/models/external_account")
 var sys = require('sys');
@@ -52,18 +51,9 @@ app.post('/api/v1/gateway/users/login',
 app.get('/api/v1/gateway/users', function(req, res) {
   User.all().complete(function(err, users){
     if(err){ res.send({ success: false, error: err }); return }
-    res.send({ success: true, gatewayUsers: users })
-  }) 
-})
-
-app.get('/api/v1/gateway/user/balances', 
-  passport.authenticate('basic', { session: false }), function(req,res){
-    GatewayAccount.find({ where: { userId: req.user.id.toString() }}).complete(function(err, account){
-      account.getBalances(function(resp){
-        res.send({ success: true, gatewayAccount: account, balances: resp.balances || [] })
-      })
-    }) 
-  })
+    res.send({ success: true, gatewayUsers: users });
+  }); 
+});
 
 app.get('/api/v1/gateway/user', 
   passport.authenticate('basic', { session: false }), 
@@ -74,28 +64,20 @@ app.get('/api/v1/gateway/account/transactions',
     res.send({ success: true, user: req.user });
   });
 
-app.post('/api/v1/external_transactions/deposit', 
-  passport.authenticate('basic', { session: false }), 
-  createDeposit);
-
 app.post('/api/v1/gateway/account/withdrawal/request', 
   passport.authenticate('basic', { session: false }), function(req,res){
     res.send({ success: true, user: req.user })
-  })
+  });
 
-app.post('/api/v1/admin/users', function(req, res) {
-})
+app.post('/api/v1/admin/users', ctrls['users'].createAdmin);
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
 app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 
-app.post('/api/v1/ripple_withdrawals', ctrls['ripple_withdrawals'].create)
-app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
-
 app.get('/api/v1gateway_users/:user_id/balances', ctrls['balances'].gateway)
 
 app.post("/api/v1/gateway/users/:user_id/external_accounts", ctrls['external_accounts'].userIndex);
-app.get('/api/v1/gateway/users/:id/external_transactions', ctrls['external_transactions'].forUser);
+app.get('/api/v1/gateway/users/:id/external_transactions', ctrls['external_transactions'].userIndex);
 
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
