@@ -35,7 +35,7 @@ var User = sequelize.define('user', {
     rippleBalances: function(fn) {
       var query = '';
       query = 'select SUM("amount") as amount, "currency"';
-      query += ' FROM ripple_transactions GROUP BY "currency";
+      query += ' FROM ripple_transactions GROUP BY "currency"';
       query += ' WHERE user_id =?';
     },
     externalAccounts: function(fn){
