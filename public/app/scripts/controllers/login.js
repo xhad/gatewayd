@@ -35,11 +35,13 @@ angular.module('publicApp')
     $scope.login = function () {
 			var name = $scope.user.name;
 			var password = $scope.user.password;
+      console.log('about to login');
       $user.login(name, password, function(err, session){
         if (!!session.username) {
-					$location.path('/gateway/account');
+          console.log($user.id);
+					$location.path('/users/'+$user.id);
 				} else {
-					$location.path('/admin/users/new');
+					$location.path('/registration');
 				}
       })
 		}
