@@ -1,0 +1,72 @@
+<h2>Your Gateway Profile</h2>
+
+<div class='col-sm-4'>
+  <div class='box box-nomargin'>
+    <div class='box-header'>
+      <div class='title'>Balances</div>
+    </div>
+    <div class='box-content'>
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>currency</th>
+          <th>amount</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="balance in user.balances">
+          <td>{{ balance.currency }}</td>
+          <td>{{ balance.amount }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class='col-sm-4'>
+  <div class='box box-nomargin'>
+    <div class='box-header'>
+      <div class='title'>External Transaction</div>
+    </div>
+    <div class='box-content'>
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>date</th>
+          <th>currency</th>
+          <th>amount</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="transaction in user.external_transactions">
+          <td>{{ transaction.createdAt }}</td>
+          <td>{{ transaction.currency }}</td>
+          <td>{{ transaction.amount }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class='col-sm-4'>
+  <div class='box box-nomargin'>
+    <div class='box-header'>
+      <div class='title'>Ripple Transactions</div>
+    </div>
+    <div class='box-content'>
+      <table class='table table-striped'>
+        <thead>
+        <tr>
+          <th>date</th>
+          <th>currency</th>
+          <th>amount</th>
+        </tr>
+        </thead>
+        <tr ng-repeat="transaction in user.ripple_transactions">
+          <td>{{ tranasction.createdAt }}</td>
+          <td>{{ transaction.currency }}</td>
+          <td>{{ transaction.amount }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
