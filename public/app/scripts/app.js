@@ -9,15 +9,15 @@ angular.module('publicApp', [
   .config(function ($routeProvider) {
     $routeProvider
       .when('/users/:id', {
-        templateUrl: 'views/user.html',
+        templateUrl: 'views/users.html',
         controller: 'UsersCtrl'
       })
       .when('/admin', {
-        templateUrl: 'views/admin/settings.html',
+        templateUrl: 'views/admin.html',
         controller: 'AdminCtrl'
       })
       .when('/register', {
-        templateUrl: 'views/register',
+        templateUrl: 'views/register.html',
         controller: 'RegistrationCtrl'
       })
 			.when('/login', {
@@ -28,7 +28,15 @@ angular.module('publicApp', [
 				templateUrl: 'views/api.html',
 				controller: 'ApiDocsCtrl'
 			})
+      .when('/ripple/deposit', {
+        templateUrl: 'views/ripple/deposit.html',
+        controller: 'RippleTransactionsCtrl'
+      })
+      .when('/ripple/withdraw', {
+        templateUrl: 'views/ripple/withdraw.html',
+        controller: 'RippleTransactionsCtrl'
+      })
       .otherwise({
-        redirectTo: '/api/docs'
+        redirectTo: '/users/-1'
       });
   });
