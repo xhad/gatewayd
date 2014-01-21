@@ -1,5 +1,4 @@
 var User = require('../models/user'),
-    GatewayAccount = require("../models/gateway_account"),
     utils = require('../../lib/utils'),
 		util = require('util');
 
@@ -48,13 +47,8 @@ module.exports = (function() {
 		}
 		
 		User.createEncrypted({ name: name, password: password }, function(err, user) {
-      console.log('user', user)
-      if (err) { utils.errorResponse(res)(err); return }
-      GatewayAccount.create({ userId: user.id.toString() }).complete(function(err, bankAccount){
-        if(err){ res.send({ success: false, error: err }) }
-        user.bankAccount = bankAccount;
-        res.send({ success: true, user: user, gatewayAccount: bankAccount })
-      })
+      if(err){ res.send({ success: false, error: err }) }
+      res.send({ success: true, user: user, gatewayAccount: bankAccount })
     })
 	}
 	
