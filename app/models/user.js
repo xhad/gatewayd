@@ -24,39 +24,42 @@ var User = sequelize.define('user', {
   external_id: Sequelize.STRING
 }, {
   instanceMethods: {
-    gatewayBalances: function(fn){
-      var query = '';
-      query = 'select SUM("cashAmount") as amount, "currency"';
-      query += ' FROM external_transactions GROUP BY "currency"';
-      query += ' WHERE accountId = ?';
+    externalBalances: function(fn){
+      var query = 'select * from ripple_transactions';
+      query += ' left outer join ripple_transactions';
+      query += ' on ripple_transactions.ripple_address_id = ripple_addresses.id'; 
+      query += ' left outer join ripple_addresses';
+      query += ' on ripple_addresses.gateway_account_id = ?';
       sequelize.query(query, this.id).complete(fn);
     },
-    user: function(fn){
-      var query = 'select * from users where gatewayAccountId = ?';
-      sequelize.query(query, this.id).complete(fn);
+    rippleBalances: function(fn) {
+      var query = '';
+      query = 'select SUM("amount") as amount, "currency"';
+      query += ' FROM ripple_transactions GROUP BY "currency";
+      query += ' WHERE user_id =?';
     },
     externalAccounts: function(fn){
-      var query = 'select * from external_accounts where gateway_account_id = '+this.id;
+      var query = 'select * from external_accounts where user_id = '+this.id;
       sequelize.query(query).complete(fn);
     },
     externalTransactions: function(fn){
       var query = 'select * from external_transactions';
       query += ' left outer join external_transactions';
-      query += ' on external_transactions.externalAccountId = external_accounts.id';
+      query += ' on external_transactions.external_account_id = external_accounts.id';
       query += ' left outer join external_accounts';
-      query += ' on external_accounts.gatewayAccountId = ?';
+      query += ' on external_accounts.user_id = ?';
       sequelize.query(query, this.id).complete(fn);
     },
     rippleAddresses: function(fn){
-      var query = 'select * from ripple_addresses where gatewayAccountId = ?';
+      var query = 'select * from ripple_addresses where user_id = ?';
       sequelize.query(query, this.id).complete(fn);
     },
     rippleTransactions: function(fn){
       var query = 'select * from ripple_transactions';
       query += ' left outer join ripple_transactions';
-      query += ' on ripple_transactions.rippleAddressId = ripple_addresses.id'; 
+      query += ' on ripple_transactions.ripple_address_id = ripple_addresses.id'; 
       query += ' left outer join ripple_addresses';
-      query += ' on ripple_addresses.gatewayAccountId = ?';
+      query += ' on ripple_addresses.gateway_account_id = ?';
       sequelize.query(query, this.id).complete(fn);
     }
   },
