@@ -7,13 +7,13 @@ var RippleAddress = sequelize.define('ripple_address', {
 		primaryKey: true,
 		autoIncrement: true,
 	},
-  userId: { type: Sequelize.INTEGER, notNull: true },
+  user_id: { type: Sequelize.INTEGER, notNull: true },
   managed: { type: Sequelize.BOOLEAN, notNull: true, default: false },
   address: { type: Sequelize.STRING, notNull: true, unique: true },
   secret: { type: Sequelize.STRING },
   tag: { type: Sequelize.STRING },
   type: { type: Sequelize.STRING },
-  previousTxHash: { type: Sequelize.STRING }
+  previous_transaction_hash: { type: Sequelize.STRING }
 });
 
 module.exports = RippleAddress;

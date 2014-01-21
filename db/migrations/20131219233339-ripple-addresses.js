@@ -4,13 +4,13 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable('ripple_addresses', {
     id: { type: 'int', primaryKey: true, autoIncrement: true },	 	
-    userId: { type: 'int', notNull: true },
+    user_id: { type: 'int', notNull: true },
     managed: { type: 'boolean', default: false, notNull: true},
     address: { type: 'string', notNull: true, unique: true },
     type: { type: 'string', notNull: true },
     tag: { type: 'string' },
     secret: { type: 'string' },
-    previousTxHash: { type: 'string' }
+    previous_transaction_hash: { type: 'string' }
 	}, callback);
 };
 

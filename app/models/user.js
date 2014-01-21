@@ -14,14 +14,14 @@ var User = sequelize.define('user', {
 		notNull: true,
 		unique: true,
 	},
-  federationTag: Sequelize.STRING,
+  federation_tag: Sequelize.STRING,
   admin: Sequelize.BOOLEAN,
-  federationName: Sequelize.STRING,
-  kycId: Sequelize.INTEGER,
+  federation_name: Sequelize.STRING,
+  kyc_id: Sequelize.INTEGER,
   name: Sequelize.STRING,
   salt: Sequelize.STRING,
-  passwordHash: Sequelize.STRING,
-  externalId: Sequelize.STRING
+  password_hash: Sequelize.STRING,
+  external_id: Sequelize.STRING
 }, {
   instanceMethods: {
     gatewayBalances: function(fn){

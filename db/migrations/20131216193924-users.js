@@ -6,15 +6,15 @@ exports.up = function(db, callback) {
 		id: { type: 'int', primaryKey: true, autoIncrement: true },
     name: { type: 'string', notNull: true, unique: true },
     salt: { type: 'string', notNull: true },
-    federationTag: { type: 'string' },
+    federation_tag: { type: 'string' },
     admin: { type: 'boolean', default: false },
-    federationName: { type: 'string' },
-    passwordHash: { type: 'string', notNull: true },
-    bankAccountId: { type: 'int'},
-    kycId: { type: 'int' },
+    federation_name: { type: 'string' },
+    password_hash: { type: 'string', notNull: true },
+    bank_account_id: { type: 'int'},
+    kyc_id: { type: 'int' },
     createdAt: { type: 'datetime', notNull: true },
     updatedAt: { type: 'datetime' },
-    externalId: { type: string' }
+    external_id: { type: string' }
   }, callback);
 };
 

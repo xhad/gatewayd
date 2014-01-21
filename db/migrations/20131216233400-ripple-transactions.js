@@ -5,17 +5,17 @@ exports.up = function(db, callback) {
   db.createTable('ripple_transactions', { 
 		id: { type: 'int', primaryKey: true, autoIncrement: true, notNull: true, unique: true },
     issuance: { type: 'boolean', notNull: true },
-    toCurrency: { type: 'string', notNull: true },
-    toAddress: { type: 'string', notNull: true },
-    fromAddress: { type: 'string', notNull: true },
-    toAmount: { type: 'decimal', notNull: true },
-    fromCurrency: { type: 'string', notNull: true },
-    fromAmount: { type: 'decimal', notNull: true },
-    txHash: { type: 'string', unique: true },
+    to_currency: { type: 'string', notNull: true },
+    to_address: { type: 'string', notNull: true },
+    from_address: { type: 'string', notNull: true },
+    to_amount: { type: 'decimal', notNull: true },
+    from_currency: { type: 'string', notNull: true },
+    from_amount: { type: 'decimal', notNull: true },
+    destination_tag: { type: 'string' },
+    source_tag: { type: 'string' },
+    transaction_state: { type: 'string' },
+    transaction_hash: { type: 'string', unique: true },
     createdAt: { type: 'datetime', notNull: true },
-    destinationTag: { type: 'string' },
-    sourceTag: { type: 'string' },
-    txState: { type: 'string' },
     updatedAt: { type: 'datetime' }
   }, callback);
 };

@@ -6,9 +6,9 @@ exports.up = function(db, callback) {
 		id: { type: 'int', primaryKey: true, autoIncrement: true },
     deposit: { type: 'boolean', notNull: true },
     currency: { type: 'string', notNull: true },
-    cashAmount: { type: 'decimal', notNull: true },
-    externalAccountId: { type: 'int', notNull: true },
-    rippleTxId: { type: 'int'},
+    cash_amount: { type: 'decimal', notNull: true },
+    external_account_id: { type: 'int', notNull: true },
+    ripple_transaction_id: { type: 'int'},
     createdAt: { type: 'datetime', notNull: true },
     updatedAt: { type: 'datetime' }
   }, callback);
