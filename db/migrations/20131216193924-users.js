@@ -13,7 +13,8 @@ exports.up = function(db, callback) {
     bankAccountId: { type: 'int'},
     kycId: { type: 'int' },
     createdAt: { type: 'datetime', notNull: true },
-    updatedAt: { type: 'datetime' }
+    updatedAt: { type: 'datetime' },
+    externalId: { type: string' }
   }, callback);
 };
 
