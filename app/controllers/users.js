@@ -10,6 +10,27 @@ module.exports = (function() {
 		});
 	}
 
+  function login(req, res) {
+    if (req.user) {
+      res.json({ success: true, user: req.user })
+    } else {
+      res.json({ success: false })
+    }
+  }
+
+  function createAdmin(req, res) {
+    User.createAdmin(req.body.email, function(err, admin) {
+      console.log(admin)
+      if (err) { res.send({ success: false, error: err }); return }
+      res.send({ success: true, admin: admin })
+    })
+  }
+
+  function show(req, res) {
+    if (err) { res.send({ success: false }); return false };
+    res.send({ success: true, user: user });
+  }
+
   function create(req, res) {
     console.log(req.body)
 		req.checkBody('name', 'Invalid name')
@@ -39,6 +60,9 @@ module.exports = (function() {
 	
 	return {
 		index: index,
-		create: create
+		create: create,
+    createAdmin: createAdmin,
+    login: login,
+    show: show
 	}
 })();

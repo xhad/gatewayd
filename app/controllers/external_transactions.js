@@ -10,6 +10,33 @@ module.exports = (function(){
     })
   }
 
+  function createDeposit(req, res) {
+    var accountId = req.body.accountId;
+    var cashAmount = req.body.cashAmount;
+    var currency = req.body.currency;
+    var externalAccountId = req.body.externalAccountId;
+   
+    req.checkBody('accountId', 'invalid accountId').notEmpty();
+    req.checkBody('cashAmount', 'invalid cashAmount').notEmpty();
+    req.checkBody('currency', 'invalid currency').notEmpty();
+
+    GatewayAccount.find(req.body.account).complete(function(err, account) {
+      if (!err && (req.user.admin || (account.userId == req.user.id))) {
+        ExternalTransaction.create({
+          deposit: true,
+          currency: currency, 
+          cashAmount: cashAmount,
+          accountId: accountId,
+        }).complete(function(err, deposit) {
+          if (err) { res.send({ success: false, error : err }); return } 
+          res.send({ success: true, externalDeposit: deposit });
+        })  
+      } else {
+        res.send({ success: false, error: 'authentication' });
+      }
+    })
+  };
+
 	function userIndex(req, res){
     ExternalTransaction.findAll({ where: { accountId: req.body.userId }})
     .complete(function(err, transactions){
@@ -29,6 +56,7 @@ module.exports = (function(){
   return {
 		userIndex: userIndex,
 		index: index,
-    forAccount: forAccount
+    forAccount: forAccount,
+    createDeposit: createDeposit
 	}
 })();

@@ -47,13 +47,7 @@ app.post('/api/v1/gateway/users', ctrls['users'].create)
 
 app.post('/api/v1/gateway/users/login', 
   passport.authenticate('basic', { session: false }),
-  function(req, res) {
-    if (req.user) {
-      res.json({ success: true, user: req.user })
-    } else {
-      res.json({ success: false })
-    }
-  })
+  ctrls['users'].login);
 
 app.get('/api/v1/gateway/users', function(req, res) {
   User.all().complete(function(err, users){
@@ -62,37 +56,7 @@ app.get('/api/v1/gateway/users', function(req, res) {
   }) 
 })
 
-app.get('/api/v1/gateway/accounts', 
-  passport.authenticate('basic', { session: false }), function(req,res){
-    if (req.user.admin) {
-      GatewayAccount.all().complete(function(err, accounts){
-        if (err) { res.send({ success: false }); return false }
-        res.send({ success: true, gatewayAccounts: accounts })
-      }) 
-    }
-  })
-
-app.post('/api/v1/gateway/accounts',
-  passport.authenticate('basic', { session: false }), function(req, res) {
-    if (req.user.admin) {
-      GatewayAccount.create({
-        userId: req.body.userId
-      }).complete(function(err, gatewayAccount) {
-        if (err) { res.send({ success: false, error: err }); return; }
-        res.send({ success: true, gatewayAccount: gatewayAccount });
-      });
-    } else { res.status(401) }
-  })
-
-app.get('/api/v1/gateway/accounts/:id', 
-  passport.authenticate('basic', { session: false }), function(req,res){
-    GatewayAccount.find(req.params.id).complete(function(err, account){
-      if (err) { res.send({ success: false }); return false }
-      res.send({ success: true, gatewayAccount: account })
-    }) 
-  })
-
-app.get('/api/v1/gateway/account/balances', 
+app.get('/api/v1/gateway/user/balances', 
   passport.authenticate('basic', { session: false }), function(req,res){
     GatewayAccount.find({ where: { userId: req.user.id.toString() }}).complete(function(err, account){
       account.getBalances(function(resp){
@@ -101,57 +65,18 @@ app.get('/api/v1/gateway/account/balances',
     }) 
   })
 
-app.get('/api/v1/gateway/account', 
-  passport.authenticate('basic', { session: false }), function(req,res){
-    console.log('get the account for userId', req.user.id.toString());
-    GatewayAccount.find({ where: { userId: req.user.id }}).complete(function(err, account){
-      if (err) { res.send({ success: false, user: req.user, account: account }); return false }
-      res.send({ success: true, gatewayAccount: account })
-    }) 
-  })
+app.get('/api/v1/gateway/user', 
+  passport.authenticate('basic', { session: false }), 
+  ctrls['users'].show);
 
 app.get('/api/v1/gateway/account/transactions', 
   passport.authenticate('basic', { session: false }), function(req,res){
-    res.send({ success: true, user: req.user })
-  })
+    res.send({ success: true, user: req.user });
+  });
 
-app.post('/api/v1/gateway/transactions/deposit', 
-  passport.authenticate('basic', { session: false }), function(req,res){
-    var accountId = req.body.accountId;
-    var cashAmount = req.body.cashAmount;
-    var currency = req.body.currency;
-    var externalAccountId = req.body.externalAccountId;
-   
-    req.checkBody('accountId', 'invalid accountId').notEmpty()
-    req.checkBody('cashAmount', 'invalid cashAmount').notEmpty()
-    req.checkBody('currency', 'invalid currency').notEmpty()
-
-    GatewayAccount.find(req.body.account).complete(function(err, account) {
-      if (!err && (req.user.admin || (account.userId == req.user.id))) {
-        ExternalTransaction.create({
-          deposit: true,
-          currency: currency, 
-          cashAmount: cashAmount,
-          accountId: accountId,
-        }).complete(function(err, deposit) {
-          if (err) { res.send({ success: false, error : err }); return } 
-          res.send({ success: true, externalDeposit: deposit });
-        })  
-      } else {
-        res.send({ success: false, error: 'authentication' });
-      }
-    })
-  })
-
-app.get('/api/v1/gateway/deposits',
-  passport.authenticate('basic', { session: false }), function(req, res) {
-    if (req.user.admin) {
-      ExternalTransaction.findAll({ where: { deposit: true }}).complete(function(err, transactions) {
-        if(err){ res.send({ success: false }); return; }
-        res.send({ success: true, externalTransactions: transactions });
-      })
-    }
-  })
+app.post('/api/v1/external_transactions/deposit', 
+  passport.authenticate('basic', { session: false }), 
+  createDeposit);
 
 app.post('/api/v1/gateway/account/withdrawal/request', 
   passport.authenticate('basic', { session: false }), function(req,res){
@@ -159,12 +84,6 @@ app.post('/api/v1/gateway/account/withdrawal/request',
   })
 
 app.post('/api/v1/admin/users', function(req, res) {
-  User.createAdmin(req.body.email, function(err, admin) {
-    console.log('created admin')
-    console.log(admin)
-    if (err) { res.send({ success: false, error: err }); return }
-    res.send({ success: true, admin: admin })
-  })
 })
 
 app.post('/api/v1/ripple_transactions', ctrls['ripple_transactions'].create)
@@ -173,45 +92,10 @@ app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 app.post('/api/v1/ripple_withdrawals', ctrls['ripple_withdrawals'].create)
 app.post('/api/v1/ripple_deposits', ctrls['ripple_deposits'].create)
 
-app.get('/api/v1/gateway_accounts/:accountId/balances', ctrls['balances'].gateway)
+app.get('/api/v1gateway_users/:user_id/balances', ctrls['balances'].gateway)
 
-app.get('/api/v1/gateway/accounts/:accountId/externalAccounts', function(req, res) {
-  GatewayAccount.find(req.params.accountId).complete(function(err, account) {
-    if (account) {
-      account.externalAccounts(function(err, externalAccounts) {
-        res.send({ success:true, externalAccounts: externalAccounts || []});
-      });
-    } else {
-      res.send({ success:false, error: 'account does not exist' });
-    }
-  });
-});
-
-app.post("/api/v1/gateway/accounts/:accountId/externalAccounts", function(req, res) {
-  ExternalAccount.create({
-    name: req.body.name,
-    gateway_account_id: req.params.accountId,
-  }).complete(function(err, externalAccount) {
-    console.log('error', err);
-    res.send({ success: true, externalAccount: externalAccount });
-  });
-});
-
-app.get('/api/v1/gateway/accounts/:accountId/externalTransactions', function(req, res) {
-  GatewayAccount.find(req.params.accountId).complete(function(err, account){
-    if (account) {
-      account.externalTransactions(function(err, externalTransactions) {
-        console.log(err)
-        if (err) { res.send({ success: false }); return };
-        res.send({ 
-          success: true, 
-          gatewayAccount: account, 
-          externalTransactions: externalTransactions || []
-        });
-      });
-    }
-  });
-});
+app.post("/api/v1/gateway/users/:user_id/external_accounts", ctrls['external_accounts'].userIndex);
+app.get('/api/v1/gateway/users/:id/external_transactions', ctrls['external_transactions'].forUser);
 
 address = process.env.ADDRESS
 port = process.env.PORT || 4000

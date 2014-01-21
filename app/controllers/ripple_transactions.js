@@ -8,6 +8,22 @@ module.exports = (function(){
       res.send({ success: true, rippleTransactions: txns })
     })
   }
+
+  function forUser(req, res) {
+    GatewayAccount.find(req.params.accountId).complete(function(err, account){
+      if (account) {
+        account.externalTransactions(function(err, externalTransactions) {
+          console.log(err)
+          if (err) { res.send({ success: false }); return };
+          res.send({ 
+            success: true, 
+            gatewayAccount: account, 
+            externalTransactions: externalTransactions || []
+          });
+        });
+      }
+    });
+  } 
   
   function update(req, res){
     req.checkBody('txHash', 'Invalid txHash').notEmpty()
