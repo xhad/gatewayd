@@ -18,11 +18,13 @@ angular.module('publicApp').service('UserService', ['$http','$location', 'Base64
           user.isLogged = true
           user.username = resp.user.name
           user.admin = resp.user.admin
+          user.id = resp.user.id
           user.password = password
+          $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(user.username+':'+user.password);
     
-					$location.path('/gateway/account')
+					$location.path('/users/'+user.id);
 				} else {
-					$location.path('/admin/users/new')
+					$location.path('/register');
 				}
 			}).error(function(){
     
