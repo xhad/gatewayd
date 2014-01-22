@@ -10,7 +10,7 @@ function respondToValidationErrors(req, res) {
 
 module.exports = (function(){
   function userIndex(req, res) {
-    RippleAddress.find({ where: { user_id: req.params.id }}).complete(function(err, addresses) {
+    RippleAddress.findAll({ where: { user_id: req.params.id }}).complete(function(err, addresses) {
       res.send({ success: true, ripple_addresses: addresses });
     })
 	}

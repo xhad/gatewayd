@@ -3,7 +3,7 @@ ExternalAccount = require("../models/external_account.js");
 module.exports = (function(){
   
 	function index(req, res){
-    ExternalAccount.find({ where: { user_id: req.params.id }}).complete(function(err, accounts) {
+    ExternalAccount.findAll({ where: { user_id: req.params.id }}).complete(function(err, accounts) {
       res.send({ external_accounts: accounts || [] });
     }); 
 	}
