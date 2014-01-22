@@ -1,7 +1,7 @@
 var Ripple = require('ripple-lib')
 var request = require('request')
-var RippleAddress = require('./app/models/ripple_address.js');
-var RippleTransaction = require('./app/models/ripple_transaction.js');
+var RippleAddress = require('../app/models/ripple_address.js');
+var RippleTransaction = require('../app/models/ripple_transaction.js');
 
 var address = null;
 var lastTxId = null;
