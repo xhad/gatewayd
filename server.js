@@ -37,7 +37,9 @@ require('./config/initializers/middleware.js').configure(app)
 // USER SCOPED ENDPOINTS
 
 app.get('/api/v1/users/:id/ripple_addresses', ctrls['ripple_addresses'].userIndex);
-app.get('/api/v1/users/:id/ripple_transactions', ctrls['ripple_transactions'].userIndex);
+
+app.get('/api/v1/users/:id/ripple_transactions', ctrls['ripple_transactions'].index);
+app.post('/api/v1/users/:user_id/ripple_transactions', ctrls['ripple_transactions'].create);
 
 app.get('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].index);
 app.post('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].create);
