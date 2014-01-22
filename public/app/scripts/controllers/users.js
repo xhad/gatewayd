@@ -7,12 +7,30 @@ angular.module('publicApp')
       if (($user.id == $routeParams.id) || $user.admin) {
         // do ALL THE THINGS!
         setupDashboard();
+        getExternalTransactions();
+        getRippleTransactions();
         console.log($scope.user);
       } else {
         $location.path('/users/'+$user.id);
       }
     } else {
       $location.path('/login');
+    }
+
+    function getExternalTransactions() {
+      $http.get('/api/v1/users/'+$user.id+'/external_transactions').success(function(resp){
+        $scope.user.external_transactions = resp.external_transactions;
+      });
+    }
+
+    function getRippleTransactions() {
+      $http.get('/api/v1/users/'+$user.id+'/ripple_transactions').success(function(resp){
+        $scope.user.ripple_transactions = resp.ripple_transactions;
+      });
+    }
+
+    function getBalances() {
+
     }
 
     function setupDashboard() {
