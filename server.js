@@ -35,6 +35,9 @@ require('./config/initializers/middleware.js').configure(app)
 
 app.get('/api/v1/users/:id/ripple_addresses', ctrls['ripple_addresses'].userIndex);
 app.get('/api/v1/users/:id/ripple_transactions', ctrls['ripple_transactions'].userIndex);
+app.get('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].userIndex);
+app.get('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].userIndex);
+app.get('/api/v1/users/:id/balances', ctrls['balances'].userIndex);
 
 app.get('/api/v1/gateway/settings', function(req, res) {
   User.find({ where: { admin: true }}).complete(function(err, user) {
