@@ -76,6 +76,8 @@ app.get('/api/v1/external_transactions', function(req, res) {
   });
 });
 
+app.get('/api/v1/balances', ctrls['balances'].index);
+
 app.post('/api/v1/gateway/users', ctrls['users'].create)
 
 app.post('/api/v1/gateway/users/login', 

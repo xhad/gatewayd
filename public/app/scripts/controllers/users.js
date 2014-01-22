@@ -9,6 +9,7 @@ angular.module('publicApp')
         setupDashboard();
         getExternalTransactions();
         getRippleTransactions();
+        getBalances();
         console.log($scope.user);
       } else {
         $location.path('/users/'+$user.id);
@@ -30,11 +31,14 @@ angular.module('publicApp')
     }
 
     function getBalances() {
+      $http.get('/api/v1/balances').success(function(resp){
+        $scope.user.balances = resp.balances;
+      });
 
     }
 
     function setupDashboard() {
-      $scope.user.balances = [{ currency: 'USD', amount: 1510 }, { currency: 'XAG', amount: 75 }];
+      $scope.user.balances = [];
       $scope.user.ripple_transactions = [];
       $scope.user.external_transaction = [];
       $scope.user.external_accounts = [];

@@ -14,7 +14,21 @@ module.exports = (function(){
     });
   } 
 
+  function index(req, res) {
+    var query = 'SELECT to_currency as currency, SUM(to_amount) as amount FROM ripple_transactions';
+    query += ' GROUP BY to_currency';
+    sequelize.query(query).complete(function(err, result){
+      var rippleTransactions = result;
+
+      var query = 'SELECT currency, SUM(cash_amount) as amount FROM external_transactions GROUP BY currency';
+      sequelize.query(query).complete(function(err, external){
+        res.send({ error: err, balances: result.concat(external), external_balances: external });
+      });
+    });
+  }
+
   return {
+    index: index,
     userIndex: userIndex,
 
     gateway: function(req, res) {
