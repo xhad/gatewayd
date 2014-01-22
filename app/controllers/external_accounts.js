@@ -1,29 +1,15 @@
-ExternalTransaction = require("../models/external_transaction.js");
+ExternalAccount = require("../models/external_account.js");
 handleError = require("../../lib/action_controller").handleError
 
 module.exports = (function(){
+  
 	function userIndex(req, res){
-    ExternalAccount.create({
-      name: req.body.name,
-      user_id: req.user.id,
-    }).complete(function(err, externalAccount) {
-      console.log('error', err);
-      res.send({ success: true, externalAccount: externalAccount });
-    });
-	}
-
-	function index(req, res) {
-    if (req.user.admin) {
-      ExternalTransaction.findAll()
-      .complete(function(err, transactions){
-        if (err) { return handleError(err, res) }
-        res.send({ success: true, gatewayTransactions: transactions })
-      })
-    } else { res.status(401); }
+    ExternalAccount.find({ where: { user_id: req.params.id }}).complete(function(err, accounts) {
+      res.send({ external_accounts: accounts || [] });
+    }); 
 	}
 
   return {
-		userIndex: userIndex,
-		index: index
+		userIndex: userIndex
 	}
 })();

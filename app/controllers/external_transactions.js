@@ -1,4 +1,5 @@
 ExternalTransaction = require("../models/external_transaction.js");
+User = require('../models/user.js');
 handleError = require("../../lib/action_controller").handleError
 
 module.exports = (function(){
@@ -37,13 +38,13 @@ module.exports = (function(){
     })
   };
 
-	function userIndex(req, res){
-    ExternalTransaction.findAll({ where: { accountId: req.body.userId }})
-    .complete(function(err, transactions){
-      if (err) { return handleError(err, res) }
-			res.send({ success: true, gatewayTransactions: transactions })
-    })
-	}
+  function userIndex(req, res) {
+    User.find(req.params.id).complete(function(err, user) {
+      user.externalTransactions(function(err, transactions) {
+        res.send({ external_transactions: (transactions || []) });
+      });
+    });
+  } 
 
 	function index(req, res) {
     ExternalTransaction.findAll()
