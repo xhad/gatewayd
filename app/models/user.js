@@ -82,34 +82,31 @@ var User = sequelize.define('user', {
 
             RippleAddress.create({
               managed: true,
-              userId: admin.id,
+              user_id: admin.id,
               type: 'hot',
               address: hotWallet.address,
               secret: hotWallet.secret
-            }).complete(function(err, address) {
+            }).complete(function(err, hotAddress) {
               if(err) { 
                 callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
               }
               RippleAddress.create({
                 managed: true,
-                userId: admin.id,
+                user_id: admin.id,
                 type: 'cold',
                 address: coldWallet.address,
                 secret: coldWallet.secret
-              }).complete(function(err, address) {
-                callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+              }).complete(function(err, coldAddress) {
+                console.log('error creating address', err);
                 if (err) { 
-                  callback(null, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
+                  callback(err, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
                 }
-                callback(null, { admin: admin, password: password, wallets: { hot: hotWallet, cold: coldWallet }})
+                callback(null, { admin: admin, password: password, addresses: [hotAddress, coldAddress], wallets: { hot: hotWallet, cold: coldWallet }})
               })
             })
           })
         }
       })
-    },
-    generateWallet: function() {
-      
     },
     createEncrypted: function(opts, callback) {
       var salt = utils.generateSalt();
@@ -120,9 +117,25 @@ var User = sequelize.define('user', {
         name: opts.name,
         admin: admin,
         salt: salt,
-        passwordHash: passwordHash,
+        password_hash: passwordHash,
       }).complete(function(err, user){
-        callback(err, user)
+        if (err) {
+          callback(err, null);
+        } else {
+          if (!!user) {
+            if (!user.admin) {
+              RippleAddress.createHosted(user, function(err, address) {
+                console.log('created hosted address');
+                console.log(address);
+                callback(err, user);
+              });
+            } else {
+              callback(null, user);
+            }
+          } else {
+             callback(err, user);
+          }
+        }
       })
     }
   }
