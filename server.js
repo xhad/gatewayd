@@ -16,7 +16,7 @@ passport.use(new BasicStrategy(
     User.find({ where: { name: username }}).complete(function (err, user) {
       if (err) { return done(err) }
       if (!user) { return done(null, false) }
-      if (!utils.verifyPassword(password, user.salt, user.passwordHash)) { return done(null, false) }
+      if (!utils.verifyPassword(password, user.salt, user.password_hash)) { return done(null, false) }
       return done(null, user)
     })
   }
@@ -64,7 +64,16 @@ app.get('/api/v1/gateway/settings', function(req, res) {
   });
 });
 
-app.get('/api/v1/gateway/settings', function(req, res) {
+app.get('/api/v1/users', function(req, res) {
+  User.all().complete(function(err ,users) {
+    res.send({ users: users, error: err });
+  });
+});
+
+app.get('/api/v1/external_transactions', function(req, res) {
+  ExternalTransaction.all().complete(function(err, transactions) {
+    res.send({ external_transactions: transactions, error: err });
+  });
 });
 
 app.post('/api/v1/gateway/users', ctrls['users'].create)
