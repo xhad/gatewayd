@@ -20,7 +20,6 @@ angular.module('publicApp').service('UserService', ['$http','$location', 'Base64
           user.admin = resp.user.admin
           user.id = resp.user.id
           user.password = password
-          $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(user.username+':'+user.password);
     
 					$location.path('/users/'+user.id);
 				} else {
