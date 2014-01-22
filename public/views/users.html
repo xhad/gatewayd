@@ -62,8 +62,8 @@
         </thead>
         <tr ng-repeat="transaction in user.ripple_transactions">
           <td>{{ tranasction.createdAt }}</td>
-          <td>{{ transaction.currency }}</td>
-          <td>{{ transaction.amount }}</td>
+          <td>{{ transaction.from_currency }}</td>
+          <td>{{ transaction.from_amount }}</td>
         </tr>
       </table>
     </div>
