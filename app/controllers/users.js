@@ -31,7 +31,6 @@ module.exports = (function() {
   }
 
   function create(req, res) {
-    console.log(req.body)
 		req.checkBody('name', 'Invalid name')
 			.notEmpty().isAlphanumeric();
 		req.checkBody('password', 'Invalid password')
@@ -48,7 +47,7 @@ module.exports = (function() {
 		
 		User.createEncrypted({ name: name, password: password }, function(err, user) {
       if(err){ res.send({ success: false, error: err }) }
-      res.send({ success: true, user: user, gatewayAccount: bankAccount })
+      res.send({ success: true, user: user })
     })
 	}
 	
