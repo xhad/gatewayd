@@ -44,7 +44,9 @@ app.post('/api/v1/users/:user_id/ripple_transactions', ctrls['ripple_transaction
 app.get('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].index);
 app.post('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].create);
 
-app.get('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].userIndex);
+app.get('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].index);
+app.post('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].create);
+
 app.get('/api/v1/users/:id/balances', ctrls['balances'].userIndex);
 
 /////////////////////////
