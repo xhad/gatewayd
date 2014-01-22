@@ -14,7 +14,7 @@ exports.up = function(db, callback) {
     kyc_id: { type: 'int' },
     createdAt: { type: 'datetime', notNull: true },
     updatedAt: { type: 'datetime' },
-    external_id: { type: string' }
+    external_id: { type: 'string' }
   }, callback);
 };
 
