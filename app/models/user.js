@@ -53,16 +53,17 @@ var User = sequelize.define('user', {
       sequelize.query(query, this.id).complete(fn);
     },
     rippleAddresses: function(fn){
-      var query = 'select * from ripple_addresses where user_id = ?';
-      sequelize.query(query, this.id).complete(fn);
+      RippleAddress.findAll({ where: { user_id: this.id }}).complete(fn);
     },
     rippleTransactions: function(fn){
-      var query = 'select * from ripple_transactions';
-      query += ' left outer join ripple_transactions';
-      query += ' on ripple_transactions.ripple_address_id = ripple_addresses.id'; 
-      query += ' left outer join ripple_addresses';
-      query += ' on ripple_addresses.user_id = ?';
-      sequelize.query(query, this.id).complete(fn);
+      this.rippleAddresses(function(err, addresses) {
+        rippleAddressIds = addresses.map(function(address){
+          return address.id;
+        });
+        RippleTransaction.findAll({ where: { ripple_address_id: rippleAddressIds }}).complete(function(err, transactions) {
+          fn(err, transactions);
+        });
+      });
     }
   },
   classMethods: {
