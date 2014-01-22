@@ -18,6 +18,7 @@ module.exports = (function(){
   }
 
   return {
-		index: index
+		index: index,
+    create: create
 	}
 })();
