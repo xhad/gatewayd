@@ -97,9 +97,6 @@ app.get('/api/v1/ripple_transactions', ctrls['ripple_transactions'].index)
 
 app.get('/api/v1gateway_users/:user_id/balances', ctrls['balances'].gateway)
 
-app.post("/api/v1/gateway/users/:user_id/external_accounts", ctrls['external_accounts'].userIndex);
-app.get('/api/v1/gateway/users/:id/external_transactions', ctrls['external_transactions'].userIndex);
-
 address = process.env.ADDRESS
 port = process.env.PORT || 4000
 
