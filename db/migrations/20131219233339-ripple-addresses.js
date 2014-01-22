@@ -6,11 +6,13 @@ exports.up = function(db, callback) {
     id: { type: 'int', primaryKey: true, autoIncrement: true },	 	
     user_id: { type: 'int', notNull: true },
     managed: { type: 'boolean', default: false, notNull: true},
-    address: { type: 'string', notNull: true, unique: true },
+    address: { type: 'string', notNull: true },
     type: { type: 'string', notNull: true },
     tag: { type: 'string' },
     secret: { type: 'string' },
-    previous_transaction_hash: { type: 'string' }
+    previous_transaction_hash: { type: 'string' },
+    createdAt: { type: 'datetime' },
+    updatedAt: { type: 'datetime' }
 	}, callback);
 };
 
