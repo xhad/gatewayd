@@ -45,12 +45,14 @@ var User = sequelize.define('user', {
       sequelize.query(query).complete(fn);
     },
     externalTransactions: function(fn){
-      var query = 'select * from external_transactions';
-      query += ' left outer join external_transactions';
-      query += ' on external_transactions.external_account_id = external_accounts.id';
-      query += ' left outer join external_accounts';
-      query += ' on external_accounts.user_id = ?';
-      sequelize.query(query, this.id).complete(fn);
+      this.externalAccounts(function(err, accounts) {
+        externalAccountIds = accounts.map(function(account){
+          return account.id;
+        });
+        ExternalTransaction.findAll({ where: { external_account_id: externalAccountIds }}).complete(function(err, transactions) {
+          fn(err, transactions);
+        });
+      });
     },
     rippleAddresses: function(fn){
       RippleAddress.findAll({ where: { user_id: this.id }}).complete(fn);
