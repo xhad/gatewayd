@@ -31,15 +31,13 @@
       <table class='table table-striped'>
         <thead>
         <tr>
-          <th>date</th>
           <th>currency</th>
           <th>amount</th>
         </tr>
         </thead>
         <tr ng-repeat="transaction in user.external_transactions">
-          <td>{{ transaction.createdAt }}</td>
           <td>{{ transaction.currency }}</td>
-          <td>{{ transaction.amount }}</td>
+          <td>{{ transaction.cash_amount }}</td>
         </tr>
       </table>
     </div>
@@ -55,13 +53,11 @@
       <table class='table table-striped'>
         <thead>
         <tr>
-          <th>date</th>
           <th>currency</th>
           <th>amount</th>
         </tr>
         </thead>
         <tr ng-repeat="transaction in user.ripple_transactions">
-          <td>{{ tranasction.createdAt }}</td>
           <td>{{ transaction.from_currency }}</td>
           <td>{{ transaction.from_amount }}</td>
         </tr>
