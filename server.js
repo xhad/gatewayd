@@ -6,6 +6,7 @@ var utils = require("./lib/utils")
 var BasicStrategy = require("passport-http").BasicStrategy
 var User = require("./app/models/user")
 var ExternalTransaction = require("./app/models/external_transaction")
+var RippleAddress = require('./app/models/ripple_address');
 var ExternalAccount = require("./app/models/external_account")
 var sys = require('sys');
 var exec = require('child_process').exec;
@@ -32,15 +33,24 @@ app.use(passport.initialize())
 
 require('./config/initializers/middleware.js').configure(app)
 
+app.get('/api/v1/users/:id/ripple_addresses', ctrls['ripple_addresses'].userIndex);
+app.get('/api/v1/users/:id/ripple_transactions', ctrls['ripple_transactions'].userIndex);
+
 app.get('/api/v1/gateway/settings', function(req, res) {
   User.find({ where: { admin: true }}).complete(function(err, user) {
     if (err) { res.send({ success: false }); return }
-    if (!user) { res.send({ success: true, settings: { adminExists: false }}) 
-    } else {
-      res.send({ success: true, settings: { adminExists: user.admin } })
-    }  
-  })
-})
+    RippleAddress.find({ where: { type: 'hot' }}).complete(function(err, address) {
+      if (!user) { 
+        res.send({ success: true, settings: { adminExists: false }}) 
+      } else {
+        res.send({ success: true, settings: { adminExists: user.admin, hotWallet: address.address } })
+      }  
+    });    
+  });
+});
+
+app.get('/api/v1/gateway/settings', function(req, res) {
+});
 
 app.post('/api/v1/gateway/users', ctrls['users'].create)
 
