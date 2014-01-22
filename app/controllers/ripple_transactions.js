@@ -1,4 +1,5 @@
 var RippleTransaction = require('../models/ripple_transaction.js');
+var User = require('../models/user.js');
 var errorResponse = require("../../lib/utils.js").errorResponse;
 var util = require('util');
 
@@ -9,19 +10,11 @@ module.exports = (function(){
     })
   }
 
-  function forUser(req, res) {
-    GatewayAccount.find(req.params.accountId).complete(function(err, account){
-      if (account) {
-        account.externalTransactions(function(err, externalTransactions) {
-          console.log(err)
-          if (err) { res.send({ success: false }); return };
-          res.send({ 
-            success: true, 
-            gatewayAccount: account, 
-            externalTransactions: externalTransactions || []
-          });
-        });
-      }
+  function userIndex(req, res) {
+    User.find(req.params.id).complete(function(err, user) {
+      user.rippleTransactions(function(err, transactions) {
+        res.send({ ripple_transactions: (transactions || []) });
+      });
     });
   } 
   
@@ -85,6 +78,7 @@ module.exports = (function(){
     update: update,
     create: create,
 		index: index,
-    show: show
+    show: show,
+    userIndex: userIndex
 	}
 })();
