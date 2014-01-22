@@ -1,15 +1,23 @@
 ExternalAccount = require("../models/external_account.js");
-handleError = require("../../lib/action_controller").handleError
 
 module.exports = (function(){
   
-	function userIndex(req, res){
+	function index(req, res){
     ExternalAccount.find({ where: { user_id: req.params.id }}).complete(function(err, accounts) {
       res.send({ external_accounts: accounts || [] });
     }); 
 	}
 
+  function create(req, res) { 
+    ExternalAccount.create({
+      name: req.body.name,
+      user_id: req.params.id
+    }).complete(function(err, account) {
+      res.send({ error: err, account: account });
+    });
+  }
+
   return {
-		userIndex: userIndex
+		index: index
 	}
 })();
