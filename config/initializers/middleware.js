@@ -4,9 +4,6 @@ var passport = require('./passport.js');
 
 module.exports = (function(){
   function configure(app) {
-    app.use(express.static(__dirname + '/public'))
-    app.use(passport.initialize())
-    app.use(express.static(__dirname + '/public'))
     app.use(function(req,res,next) {
       res.header("Access-Control-Allow-Origin", "*")
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
@@ -17,6 +14,8 @@ module.exports = (function(){
     app.use(express.cookieParser())
     app.use(express.session({secret: 'oi09ajsdf09fwlkej33lkjpx'}))
     app.use(express.methodOverride())
+    app.use(express.static(__dirname + '/../../public'))
+    app.use(passport.initialize())
     app.use(function(err, req, res, next) {
       res.send({ error: err })
     });
