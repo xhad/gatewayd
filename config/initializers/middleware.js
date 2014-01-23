@@ -1,10 +1,11 @@
-express = require('express')
-expressValidator = require('express-validator')
+var express = require('express')
+var expressValidator = require('express-validator')
+var passport = require('./passport.js');
 
 module.exports = (function(){
   function configure(app) {
-    app.set('port', process.env.PORT || 3000);
-    app.set('host', process.env.HOST || '127.0.0.1')
+    app.use(express.static(__dirname + '/public'))
+    app.use(passport.initialize())
     app.use(express.static(__dirname + '/public'))
     app.use(function(req,res,next) {
       res.header("Access-Control-Allow-Origin", "*")
