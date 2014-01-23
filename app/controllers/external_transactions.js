@@ -2,6 +2,11 @@ ExternalTransaction = require("../models/external_transaction.js");
 User = require('../models/user.js');
 
 module.exports = (function(){
+  function index(req, res) {
+    ExternalTransaction.all().complete(function(err, transactions) {
+      res.send({ external_transactions: transactions, error: err });
+    });
+  }
 
   function create(req, res) {
     req.checkBody('cash_amount', 'invalid cash_amount').notEmpty();
@@ -23,7 +28,7 @@ module.exports = (function(){
     });
   };
 
-  function index(req, res) {
+  function userIndex(req, res) {
     User.find(req.params.id).complete(function(err, user) {
       user.externalTransactions(function(err, transactions) {
         res.send({ external_transactions: (transactions || []) });
@@ -33,6 +38,7 @@ module.exports = (function(){
 
   return {
 		index: index,
+    userIndex: userIndex,
     create: create
 	}
 })();
