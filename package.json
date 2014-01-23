@@ -16,7 +16,8 @@
     "passport-http":"",
     "sjcl":"1.0.0",
     "ripple-lib": "",
-    "request": ""
+    "request": "",
+    "async": ""
   },
   "devDependencies": {
     "request": "",
