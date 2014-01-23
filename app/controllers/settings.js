@@ -1,6 +1,5 @@
-var User = require('../models/user'),
-    utils = require('../../lib/utils'),
-		util = require('util');
+var User = require('../models/user');
+var RippleAddress = require('../models/ripple_address');
 
 module.exports = (function() {
   function index(req, res) {
