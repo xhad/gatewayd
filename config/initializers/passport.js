@@ -1,6 +1,7 @@
 var passport = require('passport');
 var BasicStrategy = require("passport-http").BasicStrategy;
 var User = require("../../app/models/user");
+var utils = require("../../lib/utils");
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
