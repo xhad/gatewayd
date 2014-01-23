@@ -1,70 +1,52 @@
-var router
-var controllers
+var requireAll = require('../lib/require-all');
+var passport = require('./initializers/passport.js');
+var ctrls = requireAll({
+  dirname: __dirname + '/../app/controllers',
+  filter: /(.+)\.js(on)?$/
+})
 
 module.exports = (function(){
-  function configure(app, ctrls) {
-    router = app; controllers = ctrls
+  function configure(app) {
     app.get('/', function(req, res){ res.render('index.html') })
-  
-/*
-    // Users
-    get('/v1/gateway/users/:userId/gateway_account', 'users#account')
-    post('v1/gateway/users', 'users#create')
+    /////////////////////////
+    //  Unauthenticated Resources
 
-    // User Sessions
-    get('v1/session/destroy', 'sessions#destroy')
-    post('v1/session', 'sessions#create')
-    get('v1/session', 'sessions#show')
+    app.get('/api/v1/gateway/settings', ctrls['settings'].index);
+    app.post('/api/v1/gateway/users', ctrls['users'].create)
+    app.post('/api/v1/admin/users', ctrls['users'].createAdmin);
 
-    // Gateway Accounts
-    post('/v1/gateway/users/:userId/gateway_accounts', 'gateway_accounts#create')
+    ////////////////////////
+    // User Authenticated Resources
 
-    // Gateway Transactions
-    get('/v1/gateway/accounts/:accountId/transactions', 'gateway_transactions#forAccount')
+    app.get('/api/v1/users/:id/ripple_addresses', ctrls['ripple_addresses'].userIndex);
 
-    // Gateway Deposits
-    post('/v1/gateway/accounts/:accountId/deposits', 'deposits#create')
+    app.get('/api/v1/users/:id/ripple_transactions', ctrls['ripple_transactions'].index);
+    app.post('/api/v1/users/:user_id/ripple_transactions', ctrls['ripple_transactions'].create);
 
-    // Gateway Withdrawals
-    post('/v1/gateway/accounts/:accountId/withdrawals', 'withdrawals#create')
-    get('/api/v1/gateway/withdrawals', 'gateway_withdrawals#pending')
-    post('/api/v1/gateway/withdrawals/:id/accept', 'gateway_withdrawals#accept')
-    post('/api/v1/gateway/withdrawals/:id/reject', 'gateway_withdrawals#reject')
+    app.get('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].index);
+    app.post('/api/v1/users/:id/external_accounts', ctrls['external_accounts'].create);
 
-    // Gateway Balances
-    get('/v1/gateway/accounts/:accountId/balances', 'balances#index')
+    app.get('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].userIndex);
+    app.post('/api/v1/users/:id/external_transactions', ctrls['external_transactions'].create);
 
-    // Ripple Addresses
-    get('/v1/accounts/:account_id/ripple_addresses', 'ripple_addresses#index')
-    get('/v1/accounts/:account_id/ripple_transactions/:address', 'ripple_transactions#index')
+    app.get('/api/v1/users/:id/balances', ctrls['balances'].userIndex);
 
-    // Ripple Transactions
-    get('/api/v1/ripple_addresses/:address/ripple_transactions', 'ripple_transactions#index')
-    get ('/api/v1/ripple_transactions/:ripple_transaction_id', 'ripple_transactions#show')
+    app.post('/api/v1/gateway/users/login', 
+      passport.authenticate('basic', { session: false }),
+      ctrls['users'].login);
 
-    // Ripple Deposits
-    get('/api/v1/ripple_addresses/:address/deposits', 'ripple_deposits#index')
-    post('/api/v1/ripple_addresses/:address/deposits', 'ripple_deposits#create')
+    app.get('/api/v1/gateway/user', 
+      passport.authenticate('basic', { session: false }), 
+      ctrls['users'].show);
 
-    // Ripple Withdrawals
-    get('/v1/ripple_addresses/:address/withdrawals', 'ripple_withdrawals#show')
-    post('/v1/ripple_addresses/:address/withdrawals', 'ripple_transactions#create')
+    /////////////////////////
+    // Admin Authenticated Resources
 
-    put('/v1/ripple_addresses/:address/withdrawals/:id', 'ripple_transactions#update')
-*/
+    app.get('/api/v1/users', ctrls['users'].index);
+    app.get('/api/v1/external_transactions', ctrls['external_transactions'].index);
+
+    /////////////////////////
   }
 
-  function route(method, path, controllerAction) {
-    controller = controllerAction.split('#')[0]
-    action = controllerAction.split('#')[1]
-    console.log(controller, action)
-    router[method](path, controllers[controller][action])
-  }
-
-  function get(path, action) { route('get', path, action) } 
-  function put(path, action) { route('put', path, action) }
-  function post(path, action) { route('post', path, action) }
-  function del(path, action) { route('delete', path, action) }
-
-  return { configure: configure  }
+  return { route: configure }
 })()
