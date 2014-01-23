@@ -5,6 +5,8 @@ var RippleAddress = require('./ripple_address.js')
 var RippleWallet = require('./../../lib/rippleAddress').RippleWallet
 var crypto = require("crypto")
 var sjcl = require('sjcl')
+var async = require('async');
+var bn = require("bignumber.js");
 
 var User = sequelize.define('user', {
   id: { 
@@ -24,20 +26,83 @@ var User = sequelize.define('user', {
   external_id: Sequelize.STRING
 }, {
   instanceMethods: {
+    balances: function(fn) {
+      var user = this;
+      var bal = {};
+      async.parallel([
+        function (complete) {
+          user.externalBalances(function(err, balances) {
+            console.log('bell', balances);
+            bal['external'] = balances;
+            complete();
+          });
+        },
+        function (complete) {
+          /*user.rippleBalances(function(err, balances){
+            balances['ripple'] = balances; 
+            complete();
+          });*/
+          complete();
+        }
+      ], function(err){
+        console.log('bal');
+        console.log(bal);
+        fn(err, bal);
+      });
+    },
     externalBalances: function(fn){
-      var query = 'select * from external_transactions';
-      query += ' left outer join ripple_transactions';
-      query += ' on ripple_transactions.ripple_address_id = ripple_addresses.id'; 
-      query += ' left outer join ripple_addresses';
-      query += ' on ripple_addresses.user_id = ?';
-      sequelize.query(query, this.id).complete(fn);
+      var externalDepsosits, externalWithdrawals;
+      var user = this;
+      async.parallel([
+        function(complete) {
+          console.log('getting external withdrawals');
+          var query = 'select SUM(cash_amount) as amount, currency from external_transactions ';
+          query += 'join external_accounts on external_transactions.external_account_id = external_accounts.id ';
+          query += 'where user_id = '+user.id+' and deposit = false group by currency;'
+          sequelize.query(query).complete(function(err, withdrawals){
+            externalWithdrawals = withdrawals;
+            complete();
+          });
+        },
+        function(complete) {
+          var query = 'select SUM(cash_amount) as amount, currency from external_transactions ';
+          query += 'join external_accounts on external_transactions.external_account_id = external_accounts.id ';
+          query += 'where user_id = '+user.id+' and deposit = true group by currency;'
+          sequelize.query(query).complete(function(err, deposits){
+            externalDeposits = deposits;
+            complete();
+          });
+        }
+      ], function(err) {
+        var externalBalances ={};
+        externalDeposits.forEach(function(deposit){
+          if (!externalBalances[deposit.currency]) {
+            externalBalances[deposit.currency] = (new bn(0));
+          }
+          var diff = externalBalances[deposit.currency].plus(new bn(deposit.amount));
+          externalBalances[deposit.currency] = diff;
+        });
+
+        externalWithdrawals.forEach(function(withdrawal){
+          if (!externalBalances[withdrawal.currency]) {
+            externalBalances[withdrawal.currency] = (new bn(0));
+          }
+          var diff = externalBalances[withdrawal.currency].minus(new bn(withdrawal.amount));
+          externalBalances[withdrawal.currency] = diff;
+        });
+
+
+        var balances = [];
+        for(var index in externalBalances) { 
+           if (externalBalances.hasOwnProperty(index)) {
+              balances.push({ currency: index, amount: externalBalances[index].toString() });
+           }
+        }
+
+        fn(err, balances);
+      });
     },
     rippleBalances: function(fn) {
-      var query = 'select * from ripple_transactions';
-      query += ' left outer join ripple_transactions';
-      query += ' on ripple_transactions.ripple_address_id = ripple_addresses.id'; 
-      query += ' left outer join ripple_addresses';
-      query += ' on ripple_addresses.user_id = ?';
       sequelize.query(query, this.id).complete(fn);
     },
     externalAccounts: function(fn){
