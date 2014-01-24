@@ -7,6 +7,7 @@ exports.up = function(db, callback) {
     ripple_address_id: { type: 'int', notNull: true },
     transaction_state: { type: 'string' },
     transaction_hash:  { type: 'string', unique: true },
+    issuance:          { type: 'string' },
 
     to_address:        { type: 'string', notNull: true },
     to_amount:         { type: 'decimal', notNull: true },
