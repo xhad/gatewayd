@@ -36,6 +36,14 @@ angular.module('publicApp', [
         templateUrl: 'views/ripple/withdraw.html',
         controller: 'RippleTransactionsCtrl'
       })
+      .when('/external/deposit', {
+        templateUrl: 'views/external/deposit.html',
+        controller: 'ExternalTransactionsCtrl'
+      })
+      .when('/external/withdraw', {
+        templateUrl: 'views/external/withdraw.html',
+        controller: 'ExternalTransactionsCtrl'
+      })
       .otherwise({
         redirectTo: '/users/-1'
       });
