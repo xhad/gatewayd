@@ -31,7 +31,7 @@ angular.module('publicApp')
     }
 
     function getBalances() {
-      $http.get('/api/v1/balances').success(function(resp){
+      $http.get('/api/v1/users/'+$user.id+'/balances').success(function(resp){
         $scope.user.balances = resp.balances;
       });
 
