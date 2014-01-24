@@ -1,10 +1,11 @@
 var request = require('request');
+var assert = require('assert');
 
 var payment = {
   src_address: 'rHKueQebtVU9cEamhBbMV8AEViqKjXcBcB',
   dst_address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
   dst_amount: {
-    currency: 'USD',
+    currency: 'MXN',
     value: '0.10',
     issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
   },
@@ -21,6 +22,7 @@ describe('making a payment', function(){
   it('should succeed', function(done){
     request.post(params, function(e,r,body){
       console.log(body);
+      assert(body.success);
       done();
     });
   });
