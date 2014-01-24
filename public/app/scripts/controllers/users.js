@@ -5,8 +5,12 @@ angular.module('publicApp')
     $scope.user = $user;
     if ($user.isLogged) {
       if (($user.id == $routeParams.id) || $user.admin) {
-        // do ALL THE THINGS!
-        setupDashboard();
+        $scope.user.balances = [];
+        $scope.user.ripple_transactions = [];
+        $scope.user.external_transaction = [];
+        $scope.user.external_accounts = [];
+        $scope.user.ripple_addresses = [];
+
         getExternalTransactions();
         getRippleTransactions();
         getBalances();
@@ -32,17 +36,8 @@ angular.module('publicApp')
 
     function getBalances() {
       $http.get('/api/v1/users/'+$user.id+'/balances').success(function(resp){
-        $scope.user.balances = resp.balances;
+        $scope.user.balances = resp.balances.external;
       });
-
-    }
-
-    function setupDashboard() {
-      $scope.user.balances = [];
-      $scope.user.ripple_transactions = [];
-      $scope.user.external_transaction = [];
-      $scope.user.external_accounts = [];
-      $scope.user.ripple_addresses = [];
     }
 
   }]);
