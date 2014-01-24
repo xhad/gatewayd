@@ -5,7 +5,7 @@ module.exports = sequelize.define('ripple_transaction', {
 
   id:               { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   ripple_address_id:{ type: Sequelize.INTEGER, notNull: true },
-  transaction_hash: { type: Sequelize.STRING, default: 'new' },
+  transaction_hash: { type: Sequelize.STRING },
   transaction_state:{ type: Sequelize.STRING },
   issuance:         { type: Sequelize.BOOLEAN, notNull: true},
 
