@@ -1,7 +1,22 @@
-<h2>Deposit from Ripple</h2>
+<h2>Withdraw to a Ripple Wallet</h2>
 
-<p>Send funds to the following ripple address.</p>
-<p>Don't forget to include the destination tag.</p>
-<div class='well'>
-  <p>al;kj;lk2j;lkjwelkjeoirj;alksje;rkjoijo2i?dt=5</p>
+<div class='col-sm-6'>
+  <form role='form' ng-submit='createRippleWithdrawal()'>
+    <div class='form-group'>
+      <label name='currency'>ripple address</label>
+      <input ng-model='rippleWithdrawal.ripple_address' class='form-control'/>
+    </div>
+    <div class='form-group'>
+      <label name='currency'>currency</label>
+      <input ng-model='rippleWithdrawal.currency' type='text' class='form-control'/>
+    </div>
+    <div class='form-group'>
+      <label name='currency'>amount</label>
+      <input ng-model='rippleWithdrawal.amount' type='text' class='form-control'/>
+    </div>
+    <div class='form-group'>
+      <input type='submit' class='btn btn-positive btn-default pull-right'/>
+    </div>
+    </div>
+  </form>
 </div>
