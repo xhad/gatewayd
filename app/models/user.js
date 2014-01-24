@@ -28,26 +28,93 @@ var User = sequelize.define('user', {
   instanceMethods: {
     balances: function(fn) {
       var user = this;
-      var bal = {};
+      var externalBalances = [];
+      var rippleBalances = [];
+      var aggregateBalances = [];
       async.parallel([
         function (complete) {
           user.externalBalances(function(err, balances) {
-            console.log('bell', balances);
-            bal['external'] = balances;
+            externalBalances = balances;
             complete();
           });
         },
         function (complete) {
-          /*user.rippleBalances(function(err, balances){
-            balances['ripple'] = balances; 
+          user.rippleBalances(function(err, balances){
+            rippleBalances = balances; 
             complete();
-          });*/
-          complete();
+          });
         }
       ], function(err){
-        console.log('bal');
-        console.log(bal);
-        fn(err, bal);
+        var balances = {}
+        externalBalances.concat(rippleBalances).forEach(function(balance){
+          if (!balances[balance.currency]) {
+            balances[balance.currency] = (new bn(0));
+          }
+          var diff = balances[balance.currency].plus(new bn(balance.amount));
+          balances[balance.currency] = diff;
+        });
+
+        var result = [];
+        for(var index in balances) { 
+           if (balances.hasOwnProperty(index)) {
+              result.push({ currency: index, amount: balances[index].toString() });
+           };
+        };
+
+        fn(err, result);
+      });
+    },
+    rippleBalances: function(fn){
+      var rippleDeposits, rippleWithdrawals;
+      var user = this;
+      async.parallel([
+        function(complete) {
+          // ripple withdrawals
+          var query = 'select SUM(from_amount) as amount, from_currency as currency from ripple_transactions ';
+          query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
+          query += "where user_id = "+user.id+" and issuance = 'false' group by currency;";
+          sequelize.query(query).complete(function(err, withdrawals){
+            rippleWithdrawals = withdrawals;
+            complete();
+          });
+        },
+        function(complete) {
+          // ripple deposits
+          var query = 'select SUM(to_amount) as amount, from_currency as currency from ripple_transactions ';
+          query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
+          query += "where user_id = "+user.id+" and issuance = 'true' group by currency;"
+          sequelize.query(query).complete(function(err, deposits){
+            rippleDeposits = deposits;
+            complete();
+          });
+        }
+      ], function(err) {
+        var rippleBalances ={};
+        rippleDeposits.forEach(function(deposit){
+          if (!rippleBalances[deposit.currency]) {
+            rippleBalances[deposit.currency] = (new bn(0));
+          }
+          var diff = rippleBalances[deposit.currency].plus(new bn(deposit.amount));
+          rippleBalances[deposit.currency] = diff;
+        });
+
+        rippleWithdrawals.forEach(function(withdrawal){
+          if (!rippleBalances[withdrawal.currency]) {
+            rippleBalances[withdrawal.currency] = (new bn(0));
+          }
+          var diff = rippleBalances[withdrawal.currency].minus(new bn(withdrawal.amount));
+          rippleBalances[withdrawal.currency] = diff;
+        });
+
+
+        var balances = [];
+        for(var index in rippleBalances) { 
+           if (rippleBalances.hasOwnProperty(index)) {
+              balances.push({ currency: index, amount: rippleBalances[index].toString() });
+           }
+        }
+
+        fn(err, balances);
       });
     },
     externalBalances: function(fn){
@@ -101,9 +168,6 @@ var User = sequelize.define('user', {
 
         fn(err, balances);
       });
-    },
-    rippleBalances: function(fn) {
-      sequelize.query(query, this.id).complete(fn);
     },
     externalAccounts: function(fn){
       var query = 'select * from external_accounts where user_id = '+this.id;
