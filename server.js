@@ -12,19 +12,21 @@ router.route(app);
 host ? app.listen(port, host) : app.listen(port);
 
 var paymentApi = childProcess.spawn("node", ["ripple-simple/app.js"]); 
-var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
 
 paymentApi.stdout.on('data', function(data) {
   console.log(data.toString());
 });
 
-outgoingPaymentsMonitor.stdout.on('data', function(data) {
-  console.log(data.toString());
-});
+setTimeout(function(){
+  var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
+  outgoingPaymentsMonitor.stdout.on('data', function(data) {
+    console.log(data.toString());
+  });
 
-outgoingPaymentsMonitor.stderr.on('data', function(data) {
-  console.log(data.toString());
-});
+  outgoingPaymentsMonitor.stderr.on('data', function(data) {
+    console.log(data.toString());
+  });
+},10000);
 
 console.log('Serving HTTP on', (host || 'localhost')+":"+port);
 
