@@ -26,7 +26,10 @@ function popCreatedRippleTransaction() {
       };
 
       request.post(params, function(err,resp,body){
-        if (body.success) {
+        console.log(err);
+        console.log(resp);
+        console.log(body);
+        if ((!err) && (body.success)) {
           console.log("success", body);
           transaction.transaction_state = 'submitted';
           transaction.transaction_hash = body.confirmation_token;
