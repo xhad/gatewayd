@@ -22,5 +22,9 @@ outgoingPaymentsMonitor.stdout.on('data', function(data) {
   console.log(data.toString());
 });
 
+outgoingPaymentsMonitor.stderr.on('data', function(data) {
+  console.log(data.toString());
+});
+
 console.log('Serving HTTP on', (host || 'localhost')+":"+port);
 
