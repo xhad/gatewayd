@@ -56,7 +56,7 @@ remote.once('connect', function(){
   // app.post('/api/v1/addresses/:address/payments/options', PaymentCtrl.paymentOptions);
 
 
-  var port = process.env.PORT || 5990;
+  var port = 5990;
   app.listen(port);
   console.log('Listening on port: ' + port);
 
