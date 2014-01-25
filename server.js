@@ -10,9 +10,17 @@ middleware.configure(app);
 router.route(app);
 
 host ? app.listen(port, host) : app.listen(port);
-childProcess.exec("node ripple-simple/app.js"); // http://0.0.0.0:5990
-childProcess.exec("node workers/outgoing_ripple_payments.js");
-childProcess.exec("node listener.js");
+
+var paymentApi = childProcess.spawn("node", ["ripple-simple/app.js"]); 
+var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
+
+paymentApi.stdout.on('data', function(data) {
+  console.log(data.toString());
+});
+
+outgoingPaymentsMonitor.stdout.on('data', function(data) {
+  console.log(data.toString());
+});
 
 console.log('Serving HTTP on', (host || 'localhost')+":"+port);
 
