@@ -178,8 +178,10 @@ var User = sequelize.define('user', {
         externalAccountIds = accounts.map(function(account){
           return account.id;
         });
-        ExternalTransaction.findAll({ where: { external_account_id: externalAccountIds }}).complete(function(err, transactions) {
+        ExternalTransaction.findAll({ order: '"createdAt" DESC', limit: 10, where: { external_account_id: externalAccountIds }}).complete(function(err, transactions) {
+          console.log(err);
           fn(err, transactions);
+
         });
       });
     },
@@ -191,7 +193,7 @@ var User = sequelize.define('user', {
         rippleAddressIds = addresses.map(function(address){
           return address.id;
         });
-        RippleTransaction.findAll({ where: { ripple_address_id: rippleAddressIds }}).complete(function(err, transactions) {
+        RippleTransaction.findAll({ order: '"createdAt" DESC', limit: 10, where: { ripple_address_id: rippleAddressIds }}).complete(function(err, transactions) {
           fn(err, transactions);
         });
       });
