@@ -12,5 +12,7 @@ angular.module('publicApp').service('GatewayService', ['$http', function($http) 
     updateSettings: updateSettings 
   }
 
+  updateSettings();
+
   return settings;
 }])
