@@ -11,15 +11,6 @@ router.route(app);
 
 host ? app.listen(port, host) : app.listen(port);
 
-var paymentApi = childProcess.spawn("node", ["ripple-simple/app.js"]); 
-
-paymentApi.stdout.on('data', function(data) {
-  console.log(data.toString());
-});
-paymentApi.stderr.on('data', function(data) {
-  console.log(data.toString());
-});
-
 setTimeout(function(){
   var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
   outgoingPaymentsMonitor.stdout.on('data', function(data) {
