@@ -1,5 +1,7 @@
 <h2>Withdraw to a Ripple Wallet</h2>
 
+<h5 ng-show='hotWallet'>Make sure to trust {{ hotWallet }}for the amount you wish to withdraw</h5>
+
 <div class='col-sm-6'>
   <form role='form' ng-submit='createRippleWithdrawal()'>
     <div class='form-group'>
