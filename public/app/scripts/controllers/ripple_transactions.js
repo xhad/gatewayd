@@ -28,6 +28,7 @@ angular.module('publicApp')
       $http.post('/api/v1/users/'+$user.id+'/ripple_transactions', opts, function(err, transaction) {
         console.log(err); 
         console.log(transaction);
+        $location.path('/users/'+$user.id); 
       });
     }
   }]);
