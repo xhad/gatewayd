@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('RippleTransactionsCtrl', ['$scope', '$http', '$location', '$route', '$routeParams', 'UserService', function ($scope, $http, $location, $route, $routeParams, $user) {
+  .controller('RippleTransactionsCtrl', ['$scope', '$http', '$location', '$route', '$routeParams', 'UserService', 'GatewayService',function ($scope, $http, $location, $route, $routeParams, $user, $gateway) {
     if (!$user.isLogged) { $location.path('/login') };
 
     $scope.user = $user;
     $scope.rippleWithdrawal = {};
+    console.log($gateway);
+    $scope.hotWallet = $gateway.hotWallet;
 
     $scope.createRippleWithdrawal = function() {
       var opts  = {};
@@ -25,10 +27,11 @@ angular.module('publicApp')
 
       opts.ripple_address_id = 3;
       
-      $http.post('/api/v1/users/'+$user.id+'/ripple_transactions', opts, function(err, transaction) {
-        console.log(err); 
+
+      $http.post('/api/v1/users/'+$user.id+'/ripple_transactions', opts).success(function(err, transaction) {
+        console.log(err);
         console.log(transaction);
-        $location.path('/users/'+$user.id); 
       });
+      $location.path('/users/'+$user.id);
     }
   }]);
