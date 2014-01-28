@@ -20,30 +20,23 @@ function popCreatedRippleTransaction() {
       };
 
       var params = {
-        url: 'http://localhost:5990/api/v1/addresses/'+hotWallet.address+'/payments',
+        url: 'https://sendthembitcoins-ripple-simple.herokuapp.com/api/v1/addresses/'+hotWallet.address+'/payments',
         form: payment,
         json: true
       };
 
       request.post(params, function(err,resp,body){
-        console.log(err);
-        console.log(resp);
-        console.log(body);
         if ((!err) && (body.success)) {
-          console.log("success", body);
           transaction.transaction_state = 'submitted';
           transaction.transaction_hash = body.confirmation_token;
         } else {
           transaction.transaction_state = body.error;
         }
         transaction.save().complete(function(err, transaction){
-          console.log('saved');
-          console.log(transaction);
           setTimeout(popCreatedRippleTransaction, 1000);
         });
       });
     } else {
-      console.log('no new transactions to send out');
       setTimeout(popCreatedRippleTransaction, 1000);
     }
   });
@@ -54,7 +47,6 @@ function getHotWallet(fn) {
 }
 
 getHotWallet(function(err, wallet) {
-  console.log('got the hot wallet', wallet.secret);
   hotWallet = wallet;
   popCreatedRippleTransaction();
 });
