@@ -11,6 +11,15 @@ router.route(app);
 
 host ? app.listen(port, host) : app.listen(port);
 
+var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
+incomingPaymentsMonitor.stdout.on('data', function(data){
+  console.log(data.toString());
+});
+
+incomingPaymentsMonitor.stderr.on('data', function(data){  
+  console.log(data.toString());
+});
+
 setTimeout(function(){
   var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
   outgoingPaymentsMonitor.stdout.on('data', function(data) {
