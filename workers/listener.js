@@ -2,18 +2,22 @@ var Ripple = require('ripple-lib')
 var request = require('request')
 var RippleAddress = require('../app/models/ripple_address.js');
 var RippleTransaction = require('../app/models/ripple_transaction.js');
+var RippleSimpleClient = require('../lib/ripple_simple_client.js');
 
-var address = null;
-var lastTxId = null;
+var client = new RippleSimpleClient({
+  apiUrl: process.env.RIPPLE_SIMPLE_API
+});
+
+getHotWallet(function(wallet){
+  address = wallet.address;
+  client.address = wallet.address;
+  getNextNotification();
+});
 
 function getNextNotification() {
-  base = 'http://ripple-simple-api.herokuapp.com/api/v1/';
-  url = base + 'address/' + address + '/next_notification';
-  if (lastTxId) { url = (url + '/' + lastTxId) };
-  request.get({ url: url, json: true }, function(err, resp, body) {
-    if (body.notification) {
-      lastTxId = body.notification.txHash;
-      handleNewNotification(body.notification);
+  client.getNextNotification(function(err, notification){
+    if (notification) {
+      handleNewNotification(notification);
     } else {
       setTimeout(getNextNotification, 2000);
     }
@@ -26,48 +30,26 @@ function getHotWallet(fn) {
   });
 }
 
-function handleNewNotification(notification) {
-  // Inbound
-  // -- Create ripple transaction
-
-  // Outbound
-  // -- Find and update ripple transaction
-  console.log(notification);
-
-  var base = 'http://ripple-simple-api.herokuapp.com/api/v1/';
-  url = base + 'address/'+notification.address+'/tx/'+notification.txHash;
-  request.get({ url: url, json: true }, function(err, resp, body) {
-    getHotWallet(function(address) {
-      address.previous_transaction_hash = body.tx.hash;
-      address.save().complete(function(err, add) {
-        console.log('updated the last transaction hash for the hot wallet address');
-        if (notification.direction == 'incoming') {
-          console.log('received an incoming payment');
-          console.log('TODO: create a new ripple transaction record');
-          console.log(body.tx);
-        } else {
-          console.log('received confirmation of an outgoing payment');
-          RippleTransaction.find({ where: { transaction_hash: body.tx.hash } }).complete(function(err, transaction) {
-            console.log("trying to match a ripple transaction from the database...");
-            if (transaction) {
-              console.log('a transaction in the database matches!');
-              console.log(transaction);
-            } else {
-              console.log('no transaction record found in the databse.');
-            }
-            getNextNotification();
-          });
-        }
-      });
-    });
-  });
+function lookupTransaction(transactionHash, fn){
+  RippleTransaction.find({ where: { 
+    transaction_hash: transactionHash 
+  }}).complete(fn);
 }
 
-
-getHotWallet(function(wallet){
-  lastTxId = wallet.previous_transaction_hash;
-  address = wallet.address;
-  console.log('listening for transactions on', address);
-  getNextNotification();
-});
-
+function handleNewNotification(notification) {
+  if (notification.type == 'payment') {
+    console.log(notification.tx_hash);
+    lookupTransaction(notification.tx_hash, function(err, transaction) {
+      console.log(err);
+      console.log(transaction);
+      if (transaction) {
+        transaction.transaction_state = notification.tx_result;
+        transaction.save().complete(function(err, transaction){
+          console.log(transaction); 
+        });
+      } else if (notification.tx_direction == 'inbound') {
+        console.log('inbound transaction');
+      }
+    });
+  }
+}
