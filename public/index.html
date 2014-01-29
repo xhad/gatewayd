@@ -41,6 +41,11 @@
               <span class='user-name'>Login</span>
             </a>
           </li>
+          <li ng-hide='userService.isLogged' class='dark user-menu'>
+            <a ng-href='/#/register'>
+              <span class='user-name'>Register</span>
+            </a>
+          </li>
           <li ng-hide='!userService.isLogged' class='dropdown dark user-menu'>
             <a class='dropdown-toggle' data-toggle='dropdown'>
               <span class='user-name'>{{ userService.username }}</span>
