@@ -10,21 +10,22 @@ and running a Ripple gateway system.
 
 ## Installation Instructions
 
-Download the app repo
+1. Download the app repo
 
     git clone git@github.com:stevenzeiler/ripple-gateway-api.git
-		cd ripple-gateway-api
-		npm install
+    cd ripple-gateway-api
+    npm install
+    npm install -g db-migrate
 
-configure the environment with a postgres connection. Rememeber to append `?native=true` if connecting over SSL
+2. Configure PostgreSQL. Rememeber to append `?native=true` if connecting over SSL:
 
     export DATABASE_URL=postgres://user:pass@host:port/database?native=true
-		
-    npm install -g db-migrate
-    
-		sudo db-migrate up --migrations-dir=db/migrations/ --env development
 
-start the server
+3. Run the database migrations to build the schema: 
+
+    sudo db-migrate up --migrations-dir=db/migrations/ --env development
+
+4. start the server
 	
 		node server.js
 
