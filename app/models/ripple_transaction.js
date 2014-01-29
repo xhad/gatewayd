@@ -1,7 +1,6 @@
-var Sequelize = require('sequelize');
 var db = require('../../config/initializers/sequelize');
 
-module.exports = sequelize.define('ripple_transaction', {
+module.exports = db.define('ripple_transaction', {
 
   id:               { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   ripple_address_id:{ type: Sequelize.INTEGER, notNull: true },
