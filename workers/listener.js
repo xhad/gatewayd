@@ -8,16 +8,33 @@ var client = new RippleSimpleClient({
   apiUrl: process.env.RIPPLE_SIMPLE_API
 });
 
+
+// Proposed!!
+/*
+client.on('payment:inbound', function(payment) {
+
+});
+
+client.on('payment:outbound', function(payment) {
+
+});
+
+client.listener.start();
+*/
+
 getHotWallet(function(wallet){
   address = wallet.address;
   client.address = wallet.address;
   getNextNotification();
+  console.log("listening for transactions to ", address);
 });
 
 function getNextNotification() {
   client.getNextNotification(function(err, notification){
     if (notification) {
-      handleNewNotification(notification);
+      handlePayment(notification, function(){
+        setTimeout(getNextNotification, 2000);
+      });
     } else {
       setTimeout(getNextNotification, 2000);
     }
@@ -36,20 +53,62 @@ function lookupTransaction(transactionHash, fn){
   }}).complete(fn);
 }
 
-function handleNewNotification(notification) {
+function handleUnknownPayment(notification, fn) {
+  client.getPayment(notification.tx_hash, function(err, payment) {
+    if (payment.dst_tag) {
+      RippleAddress.find({ where: { 
+        address: address, 
+        tag: payment.dst_tag.toString() 
+      }}).complete(function(err, address){
+        if (address) {
+          RippleTransaction.create({
+            ripple_address_id: address.id,
+            to_address: payment.dst_address,
+            from_address: payment.src_address,
+            from_amount: payment.src_amount.value,
+            from_currency: payment.src_amount.currency,
+            from_issuer: payment.src_amount.issuer,
+            to_address: payment.dst_address,
+            to_amount: payment.dst_amount.value,
+            to_currency: payment.dst_amount.currency,
+            to_issuer: payment.dst_amount.issuer,
+            transaction_state: payment.tx_state,
+            transaction_hash: payment.tx_hash,
+            issuance: false
+          }).complete(function(err, transaction) {
+            console.log(err);
+            console.log(transaction.toJSON());
+            fn();
+          });
+        } else {
+          console.log(err);
+          fn();
+        }
+      });
+    } else {
+      console.log('no destination tag');
+      fn();
+    }
+  });
+}
+
+function handleKnownPayment(notification, record, fn) {
+  record.transaction_state = notification.tx_result;
+  record.save().complete(fn);
+}
+
+function handlePayment(notification,fn) {
   if (notification.type == 'payment') {
-    console.log(notification.tx_hash);
     lookupTransaction(notification.tx_hash, function(err, transaction) {
-      console.log(err);
-      console.log(transaction);
+      console.log(notification.tx_hash);
       if (transaction) {
-        transaction.transaction_state = notification.tx_result;
-        transaction.save().complete(function(err, transaction){
-          console.log(transaction); 
-        });
-      } else if (notification.tx_direction == 'inbound') {
-        console.log('inbound transaction');
+        handleKnownPayment(notification, transaction, fn);
+      } else {
+        handleUnknownPayment(notification, fn);
       }
     });
+  } else {
+    fn();
   }
 }
+
