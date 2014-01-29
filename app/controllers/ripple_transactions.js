@@ -38,8 +38,6 @@ module.exports = (function(){
   }
 
 	function create(req, res) {
-		req.body.issuance = false;	
-    
     req.checkBody('to_currency', 'Invalid to_currency')
       .notEmpty().isAlphanumeric()
     req.checkBody('from_currency', 'Invalid from_currency')
@@ -58,7 +56,7 @@ module.exports = (function(){
       .notEmpty().isAlphanumeric()
     req.checkBody('ripple_address_id', 'Invalid ripple_address_id')
       .notEmpty().isAlphanumeric()
-    req.sanitize('deposit').toBoolean()
+    req.sanitize('issuance').toBoolean()
 
     var errors = req.validationErrors();
     if (errors) { res.send(util.inspect(errors)); return }
