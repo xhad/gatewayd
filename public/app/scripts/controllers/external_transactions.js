@@ -8,7 +8,9 @@ angular.module('publicApp')
     $scope.createExternalDeposit = function() {
       console.log($scope.externalDeposit);
       var url = '/api/v1/users/'+$user.id+'/external_transactions';
-      $http.post(url, $scope.externalDeposit, function(err, response) {
+      var deposit = new Object($scope.externalDeposit);
+      deposit.user_id = $user.id;
+      $http.post(url, deposit, function(err, response) {
         console.log(err); 
         console.log(response);
       });
@@ -16,9 +18,11 @@ angular.module('publicApp')
 
     $scope.createExternalWithdrawal = function() {
       console.log($scope.externalWithdrawal);
-      $http.post('/api/v1/users/'+$user.id+'/external_transactions', { form: {
-        deposit: false
-      }},function(err, transaction) {
+      $http.post('/api/v1/users/'+$user.id+'/external_transactions', {
+        deposit: false,
+        currency: $scope.externalWithdrawal.currency,
+        amount: $scope.externalWithdrawal.amount
+      },function(err, transaction) {
         console.log(err); 
         console.log(transaction);
       });
