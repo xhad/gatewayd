@@ -78,7 +78,7 @@ var User = db.define('user', {
           // ripple withdrawals
           var query = 'select SUM(from_amount) as amount, from_currency as currency from ripple_transactions ';
           query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
-          query += "where user_id = "+user.id+" and issuance = 'false' group by currency;";
+          query += "where user_id = "+user.id+" and issuance = 'true' group by currency;";
           db.query(query).complete(function(err, withdrawals){
             rippleWithdrawals = withdrawals;
             complete();
@@ -88,7 +88,7 @@ var User = db.define('user', {
           // ripple deposits
           var query = 'select SUM(to_amount) as amount, from_currency as currency from ripple_transactions ';
           query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
-          query += "where user_id = "+user.id+" and issuance = 'true' group by currency;"
+          query += "where user_id = "+user.id+" and issuance = 'false' group by currency;"
           db.query(query).complete(function(err, deposits){
             rippleDeposits = deposits;
             complete();
