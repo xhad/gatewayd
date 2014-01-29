@@ -9,10 +9,13 @@ angular.module('publicApp')
       console.log($scope.externalDeposit);
       var url = '/api/v1/users/'+$user.id+'/external_transactions';
       var deposit = new Object($scope.externalDeposit);
+      console.log(deposit);
       deposit.user_id = $user.id;
-      $http.post(url, deposit, function(err, response) {
-        console.log(err); 
-        console.log(response);
+      $http.get('/api/v1/users/'+$user.id+'/external_accounts').success(function(resp){
+        deposit.external_account_id = resp.external_accounts[0].id;
+        $http.post(url, deposit).success(function(error, response) {
+          $location.path("/users"+$user.id);
+        });
       });
     }
 
