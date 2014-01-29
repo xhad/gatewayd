@@ -6,6 +6,7 @@ var crypto = require("crypto")
 var sjcl = require('sjcl')
 var async = require('async');
 var bn = require("bignumber.js");
+var Sequelize = require('sequelize');
 
 var User = db.define('user', {
   id: { 
@@ -25,6 +26,12 @@ var User = db.define('user', {
   external_id: Sequelize.STRING
 }, {
   instanceMethods: {
+    defaultExternalAccount: function(fn) {
+      ExternalAccount.find({ where: {
+        user_id: this.id,
+        name: 'Default' 
+      }}).complete(fn);
+    },
     balances: function(fn) {
       var user = this;
       var externalBalances = [];
@@ -71,8 +78,8 @@ var User = db.define('user', {
           // ripple withdrawals
           var query = 'select SUM(from_amount) as amount, from_currency as currency from ripple_transactions ';
           query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
-          query += "where user_id = "+user.id+" and issuance = 'false' group by currency;";
-          sequelize.query(query).complete(function(err, withdrawals){
+          query += "where user_id = "+user.id+" and issuance = 'true' group by currency;";
+          db.query(query).complete(function(err, withdrawals){
             rippleWithdrawals = withdrawals;
             complete();
           });
@@ -81,8 +88,8 @@ var User = db.define('user', {
           // ripple deposits
           var query = 'select SUM(to_amount) as amount, from_currency as currency from ripple_transactions ';
           query += 'join ripple_addresses on ripple_transactions.ripple_address_id = ripple_addresses.id ';
-          query += "where user_id = "+user.id+" and issuance = 'true' group by currency;"
-          sequelize.query(query).complete(function(err, deposits){
+          query += "where user_id = "+user.id+" and issuance = 'false' group by currency;"
+          db.query(query).complete(function(err, deposits){
             rippleDeposits = deposits;
             complete();
           });
@@ -125,7 +132,7 @@ var User = db.define('user', {
           var query = 'select SUM(cash_amount) as amount, currency from external_transactions ';
           query += 'join external_accounts on external_transactions.external_account_id = external_accounts.id ';
           query += 'where user_id = '+user.id+' and deposit = false group by currency;'
-          sequelize.query(query).complete(function(err, withdrawals){
+          db.query(query).complete(function(err, withdrawals){
             externalWithdrawals = withdrawals;
             complete();
           });
@@ -134,7 +141,7 @@ var User = db.define('user', {
           var query = 'select SUM(cash_amount) as amount, currency from external_transactions ';
           query += 'join external_accounts on external_transactions.external_account_id = external_accounts.id ';
           query += 'where user_id = '+user.id+' and deposit = true group by currency;'
-          sequelize.query(query).complete(function(err, deposits){
+          db.query(query).complete(function(err, deposits){
             externalDeposits = deposits;
             complete();
           });
@@ -170,7 +177,7 @@ var User = db.define('user', {
     },
     externalAccounts: function(fn){
       var query = 'select * from external_accounts where user_id = '+this.id;
-      sequelize.query(query).complete(fn);
+      db.query(query).complete(fn);
     },
     externalTransactions: function(fn){
       this.externalAccounts(function(err, accounts) {

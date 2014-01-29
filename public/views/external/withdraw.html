@@ -1,22 +1,15 @@
 <h2>Withdraw to an External Account</h2>
+<p>Send funds from the gateway outside the Ripple network</p>
 
 <div class='col-sm-6'>
   <form role='form' ng-submit='createExternalWithdrawal()'>
     <div class='form-group'>
-      <label name='currency'>external account id</label>
-      <input ng-model='externalDeposit.external_account_id' class='form-control'/>
-    </div>
-    <div class='form-group'>
-      <label name='currency'>user id</label>
-      <input ng-model='externalDeposit.user_id' type='text' class='form-control'/>
-    </div>
-    <div class='form-group'>
       <label name='currency'>currency</label>
-      <input ng-model='externalDeposit.currency' type='text' class='form-control'/>
+      <input ng-model='externalWithdrawal.currency' type='text' class='form-control'/>
     </div>
     <div class='form-group'>
       <label name='currency'>amount</label>
-      <input ng-model='externalDeposit.amount' type='text' class='form-control'/>
+      <input ng-model='externalWithdrawal.amount' type='text' class='form-control'/>
     </div>
     <div class='form-group'>
       <input type='submit' class='btn btn-positive btn-default pull-right'/>

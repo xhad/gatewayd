@@ -20,7 +20,7 @@ function popCreatedRippleTransaction() {
       };
 
       var params = {
-        url: 'https://sendthembitcoins-ripple-simple.herokuapp.com/api/v1/addresses/'+hotWallet.address+'/payments',
+        url: process.env.RIPPLE_SIMPLE_API+'addresses/'+hotWallet.address+'/payments',
         form: payment,
         json: true
       };

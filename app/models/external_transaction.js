@@ -1,4 +1,5 @@
 var db = require('../../config/initializers/sequelize.js');
+var Sequelize = require("sequelize");
 
 var ExternalTransaction = db.define('external_transactions', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },

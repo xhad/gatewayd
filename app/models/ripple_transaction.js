@@ -1,4 +1,5 @@
 var db = require('../../config/initializers/sequelize');
+var Sequelize = require("sequelize");
 
 module.exports = db.define('ripple_transaction', {
 

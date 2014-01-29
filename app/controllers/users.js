@@ -46,8 +46,10 @@ module.exports = (function() {
 		}
 		
 		User.createEncrypted({ name: name, password: password }, function(err, user) {
-      if(err){ res.send({ success: false, error: err }) }
-      res.send({ success: true, user: user })
+      if(err){ res.send({ success: false, error: err }) }   
+      ExternalAccount.create({ user_id: user.id, name: "Default" }).complete(function() {
+        res.send({ success: true, user: user })
+      });
     })
 	}
 	

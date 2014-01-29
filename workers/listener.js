@@ -55,7 +55,7 @@ function lookupTransaction(transactionHash, fn){
 
 function handleUnknownPayment(notification, fn) {
   client.getPayment(notification.tx_hash, function(err, payment) {
-    if (payment.dst_tag) {
+    if (payment && payment.dst_tag) {
       RippleAddress.find({ where: { 
         address: address, 
         tag: payment.dst_tag.toString() 

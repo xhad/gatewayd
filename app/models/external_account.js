@@ -1,4 +1,5 @@
 var db = require('../../config/initializers/sequelize.js');
+var Sequelize = require('sequelize');
 
 var ExternalAccount = db.define('external_accounts', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
