@@ -27,7 +27,9 @@ angular.module('publicApp')
     $scope.registerAdmin = function() {
       if ($scope.admin.email) {
         $http.post('/api/v1/admin/users', { email: $scope.admin.email }).success(function(resp) {
-          console.log(resp)
+          alert("here is your admin password, save it right now! c582b4dd80459dc5fccacca210b3251297575bd86c2adc22d3384dc9a392d3d1");
+          $location.path('/login');
+          console.log(resp);
         })
       }
     }
