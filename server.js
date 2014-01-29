@@ -5,31 +5,36 @@ var router = require('./config/routes.js');
 var host = process.env.HOST;
 var port = process.env.PORT || 4000;
 var app = express();
+var sequelize = require('./config/initializers/sequelize.js');
 
 middleware.configure(app);
 router.route(app);
 
-host ? app.listen(port, host) : app.listen(port);
 
-var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
-incomingPaymentsMonitor.stdout.on('data', function(data){
-  console.log(data.toString());
-});
+sequelize.sync().success(function(){
+  host ? app.listen(port, host) : app.listen(port);
 
-incomingPaymentsMonitor.stderr.on('data', function(data){  
-  console.log(data.toString());
-});
+  var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
 
-setTimeout(function(){
-  var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
-  outgoingPaymentsMonitor.stdout.on('data', function(data) {
+  incomingPaymentsMonitor.stdout.on('data', function(data){
     console.log(data.toString());
   });
 
-  outgoingPaymentsMonitor.stderr.on('data', function(data) {
+  incomingPaymentsMonitor.stderr.on('data', function(data){  
     console.log(data.toString());
   });
-},10000);
 
-console.log('Serving HTTP on', (host || 'localhost')+":"+port);
+  setTimeout(function(){
+    var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
+    outgoingPaymentsMonitor.stdout.on('data', function(data) {
+      console.log(data.toString());
+    });
+
+    outgoingPaymentsMonitor.stderr.on('data', function(data) {
+      console.log(data.toString());
+    });
+  },10000);
+
+  console.log('Serving HTTP on', (host || 'localhost')+":"+port);
+})
 
