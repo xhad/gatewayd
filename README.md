@@ -25,8 +25,13 @@ Run the database migrations to build the schema:
 
     sudo db-migrate up --migrations-dir=db/migrations/ --env development
 
+Configure the Ripple Simple REST Api
+
+    export RIPPLE_SIMPLE_API=https://ripple-simple-api.herokuapp.com/api/v1/
+
 Start the server
-	
-		node server.js
+
+    node server.js
 
 Once the server is started visit https://0.0.0.0:4000/
+
