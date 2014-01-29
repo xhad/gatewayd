@@ -14,20 +14,24 @@ angular.module('publicApp')
       $http.get('/api/v1/users/'+$user.id+'/external_accounts').success(function(resp){
         deposit.external_account_id = resp.external_accounts[0].id;
         $http.post(url, deposit).success(function(error, response) {
-          $location.path("/users"+$user.id);
+          $location.path("/users/"+$user.id);
         });
       });
     }
 
     $scope.createExternalWithdrawal = function() {
       console.log($scope.externalWithdrawal);
-      $http.post('/api/v1/users/'+$user.id+'/external_transactions', {
-        deposit: false,
-        currency: $scope.externalWithdrawal.currency,
-        amount: $scope.externalWithdrawal.amount
-      },function(err, transaction) {
-        console.log(err); 
-        console.log(transaction);
+      $http.get('/api/v1/users/'+$user.id+'/external_accounts').success(function(resp){
+        var account = resp.external_accounts[0];
+        $http.post('/api/v1/users/'+$user.id+'/external_transactions', {
+          deposit: false,
+          currency: $scope.externalWithdrawal.currency,
+          cash_amount: $scope.externalWithdrawal.amount,
+          user_id: $user.id,
+          external_account_id: account.id
+        },function(err, transaction) {
+          $location.path("/users/"+$user.id);
+        });
       });
     }
 
