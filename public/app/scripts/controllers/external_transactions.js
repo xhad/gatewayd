@@ -29,7 +29,7 @@ angular.module('publicApp')
           cash_amount: $scope.externalWithdrawal.amount,
           user_id: $user.id,
           external_account_id: account.id
-        },function(err, transaction) {
+        }).success(function(err, transaction) {
           $location.path("/users/"+$user.id);
         });
       });
