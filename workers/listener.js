@@ -3,6 +3,7 @@ var request = require('request')
 var RippleAddress = require('../app/models/ripple_address.js');
 var RippleTransaction = require('../app/models/ripple_transaction.js');
 var RippleSimpleClient = require('../lib/ripple_simple_client.js');
+var sequelize = require("../config/initializers/sequelize.js");
 
 var client = new RippleSimpleClient({
   apiUrl: process.env.RIPPLE_SIMPLE_API
@@ -22,11 +23,15 @@ client.on('payment:outbound', function(payment) {
 client.listener.start();
 */
 
-getHotWallet(function(wallet){
-  address = wallet.address;
-  client.address = wallet.address;
-  getNextNotification();
-  console.log("listening for transactions to ", address);
+sequelize.sync().success(function(){
+
+  getHotWallet(function(wallet){
+    address = wallet.address;
+    client.address = wallet.address;
+    getNextNotification();
+    console.log("listening for transactions to ", address);
+  });
+
 });
 
 function getNextNotification() {
@@ -77,7 +82,6 @@ function handleUnknownPayment(notification, fn) {
             issuance: false
           }).complete(function(err, transaction) {
             console.log(err);
-            console.log(transaction.toJSON());
             fn();
           });
         } else {
