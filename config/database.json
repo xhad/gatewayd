@@ -1,11 +1,11 @@
 {
   "development": {
-    "ENV": "POSTGRES_URL"
+    "ENV": "DATABASE_URL"
   },
   "staging": {
-    "ENV": "POSTGRES_URL"
+    "ENV": "DATABASE_URL"
   },
   "production": {
-    "ENV": "POSTGRES_URL"
+    "ENV": "DATABASE_URL"
   }
 }
