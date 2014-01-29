@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('RegistrationCtrl', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+  .controller('RegistrationCtrl', ['$scope', '$http', '$location','UserService', function ($scope, $http, $location, $user) {
 		$scope.user = null;
 
     $scope.registerUser = function () {
@@ -9,7 +9,7 @@ angular.module('publicApp')
       console.log('passwords are the same.');
       $http.post('/api/v1/gateway/users', $scope.user)
       .success(function(user){
-        //updateUsers();
+        $user.login($scope.user.name, $scope.user.password);
       })
       .error(function(err) {
 
