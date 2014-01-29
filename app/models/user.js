@@ -26,6 +26,12 @@ var User = db.define('user', {
   external_id: Sequelize.STRING
 }, {
   instanceMethods: {
+    defaultExternalAccount: function(fn) {
+      ExternalAccount.find({ where: {
+        user_id: this.id,
+        name: 'Default' 
+      }}).complete(fn);
+    },
     balances: function(fn) {
       var user = this;
       var externalBalances = [];
