@@ -1,4 +1,3 @@
-var Sequelize = require('sequelize')
 var db = require('../../config/initializers/sequelize.js')
 var utils = require("../../lib/utils")
 var RippleAddress = require('./ripple_address.js')
@@ -8,7 +7,7 @@ var sjcl = require('sjcl')
 var async = require('async');
 var bn = require("bignumber.js");
 
-var User = sequelize.define('user', {
+var User = db.define('user', {
   id: { 
 		type: Sequelize.INTEGER,
 		primaryKey: true,
@@ -178,7 +177,7 @@ var User = sequelize.define('user', {
         externalAccountIds = accounts.map(function(account){
           return account.id;
         });
-        ExternalTransaction.findAll({ order: '"createdAt" DESC', limit: 10, where: { external_account_id: externalAccountIds }}).complete(function(err, transactions) {
+        ExternalTransaction.findAll({ where: { external_account_id: externalAccountIds }, limit: 10, order: '"createdAt" DESC' }).complete(function(err, transactions) {
           console.log(err);
           fn(err, transactions);
 
