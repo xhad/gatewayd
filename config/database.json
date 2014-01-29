@@ -1,18 +1,11 @@
 {
-  "dev": {
-    "driver": "pg",
-    "user": "postgres",
-    "password": "password",
-    "host": "127.0.0.1",
-    "database": "sequelize_development"
+  "development": {
+    "ENV": "POSTGRES_URL"
   },
   "staging": {
-    "driver": "pg",
-    "host": "ec2-54-197-241-64.compute-1.amazonaws.com",
-    "database": "db4okr1k6l0859",
-    "user": "tijjyppdfivteg",
-    "port": 5432,
-    "password": "7-tZdjicDfXFBjzhd5LfS1HYCP",
-    "native": true 
+    "ENV": "POSTGRES_URL"
+  },
+  "production": {
+    "ENV": "POSTGRES_URL"
   }
 }
