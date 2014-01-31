@@ -1,13 +1,57 @@
 #!/usr/bin/env node
 
 var cli = require('cli');
+var async = require('async');
+var RippleWallet = require('../lib/rippleAddress.js');
+var db = require('../db');
+var sequelize = require('../config/initializers/sequelize.js');
+
+var done = false;
+
+cli.parse(null, ['install', 'configure', 'start']);
+
+sequelize.sync().success(function(){
+  configure();
+});
+
+function configure() {
+  db.models['ripple_address'].find({ where: { type: 'hot' }})
+    .complete(function(err, address) {
+      if(address) {
+        console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
+      } else {
+        console.log('configure the gateway address here');
+      }
+      //setEmail();
+    });
+}
+
+function setEmail() {
+  console.log('Enter your email address');
+  cli.withInput(function(stdin){
+    console.log(stdin);
+    console.log('\n');
+    setPassword();
+  });
+}
+
+function setPassword() {
+  console.log('Enter your password');
+  cli.withInput(function(stdin){
+    console.log(stdin);
+    console.log('\n');
+    done = true;
+  });
+}
+
+var app = this;
 
 cli.main(function(args, options){
   switch(args[0]) {
-  case 'gateway':
-    console.log('configure the gateway here');
+  case 'configure':
+    console.log('Configure the Gateway Ripple Account');
+    console.log('------------------------------------\n');
+    configure();
     break;
   }
 });
-
-
