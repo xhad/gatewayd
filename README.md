@@ -17,13 +17,13 @@ Download the app repo
     npm install
     npm install -g db-migrate
 
-Configure PostgreSQL. Rememeber to append `?native=true` if connecting over SSL:
+Configure Postgres. Rememeber to append `?native=true` if connecting over SSL such as with Heroku:
 
     export DATABASE_URL=postgres://user:pass@host:port/database?native=true
 
 Run the database migrations to build the schema: 
 
-    sudo db-migrate up --migrations-dir=db/migrations/ --env development
+    db-migrate up --migrations-dir=db/migrations/ --env development
 
 Configure the Ripple Simple REST Api
 
