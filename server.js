@@ -10,7 +10,6 @@ var sequelize = require('./config/initializers/sequelize.js');
 middleware.configure(app);
 router.route(app);
 
-
 sequelize.sync().success(function(){
   host ? app.listen(port, host) : app.listen(port);
 
