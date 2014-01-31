@@ -1,7 +1,8 @@
 {
-  "name": "ripple-gateway-in-a-box",
+  "name": "ripple-gateway-api",
   "version": "0.0.1",
   "scripts": { "test": "mocha test/integration/users.js" },    
+  "bin" : { "gateway" : "./bin/gateway.js" },
   "dependencies" : {
     "express": "3.x",
     "pg": "",
@@ -17,7 +18,8 @@
     "sjcl":"1.0.0",
     "ripple-lib": "",
     "request": "",
-    "async": ""
+    "async": "",
+    "cli":""
   },
   "devDependencies": {
     "request": "",
