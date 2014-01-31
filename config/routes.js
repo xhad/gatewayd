@@ -12,50 +12,47 @@ module.exports = (function(){
     //  Unauthenticated Resources
 
     app.get('/api/v1/gateway/settings', 
-      passport.authentication('basic', { session: false },
       ctrls['settings'].index);
 
     app.post('/api/v1/gateway/users', 
-      passport.authentication('basic', { session: false },
       ctrls['users'].create)
 
     app.post('/api/v1/admin/users', 
-      passport.authentication('basic', { session: false },
       ctrls['users'].createAdmin);
 
     ////////////////////////
     // User Authenticated Resources
 
     app.get('/api/v1/users/:id/ripple_addresses', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['ripple_addresses'].userIndex);
 
     app.get('/api/v1/users/:id/ripple_transactions', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['ripple_transactions'].index);
 
     app.post('/api/v1/users/:user_id/ripple_transactions', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['ripple_transactions'].create);
 
     app.get('/api/v1/users/:id/external_accounts', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['external_accounts'].index);
 
     app.post('/api/v1/users/:id/external_accounts', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['external_accounts'].create);
 
     app.get('/api/v1/users/:id/external_transactions', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['external_transactions'].userIndex);
 
     app.post('/api/v1/users/:id/external_transactions', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['external_transactions'].create);
 
     app.get('/api/v1/users/:id/balances', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['balances'].userIndex);
 
     app.post('/api/v1/gateway/users/login', 
@@ -70,10 +67,11 @@ module.exports = (function(){
     // Admin Authenticated Resources
 
     app.get('/api/v1/users', 
+      passport.authenticate('basic', { session: false }),
       ctrls['users'].index);
 
     app.get('/api/v1/external_transactions', 
-      passport.authentication('basic', { session: false },
+      passport.authenticate('basic', { session: false }),
       ctrls['external_transactions'].index);
 
     /////////////////////////
