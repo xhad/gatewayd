@@ -6,17 +6,7 @@ var host = process.env.HOST;
 var port = process.env.PORT || 4000;
 var app = express();
 var sequelize = require('./config/initializers/sequelize.js');
-var fs = require('fs');
-var nconf = require("nconf");
-
-nconf
-  .env()
-  .file({ file: './config/gateway.json' });
-
-nconf.defaults({
-  'RIPPLE_REST_API': 'http://localhost:5990',
-  'DATABASE_URL': 'postgres://username:password@localhost/ripple_gateway'
-});
+var nconf = require('./config/nconf.js');
 
 middleware.configure(app);
 router.route(app);
