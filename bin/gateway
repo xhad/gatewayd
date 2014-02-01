@@ -2,10 +2,8 @@
 var program = require('commander');
 var RippleWallet = require('../lib/rippleAddress').RippleWallet;
 var GatewayClient = require('../lib/ripple').Gateway.Client;
-var nconf = require('nconf');
 var crypto = require('crypto');
-
-nconf.env().file({ file: './config/config.json' });
+var nconf = require('../config/nconf.js');
 
 var client = new GatewayClient({
   api: 'http://localhost:4000',
