@@ -91,7 +91,7 @@ program
 
 program
   .command('key:set')
-  .description('set the admin password')
+  .description('set the admin api key')
   .action(function(account, secret){
     var password = crypto.randomBytes(32).toString('hex');
     nconf.set('KEY', password);
@@ -102,9 +102,18 @@ program
 
 program
   .command('key:get')
-  .description('get the admin password')
+  .description('get the admin api key')
   .action(function(account, secret){
-    console.log(nconf.get('KEY'));
+    var key = nconf.get('KEY');
+    if (typeof key == 'undefined') {
+      key = crypto.randomBytes(32).toString('hex');
+      nconf.set('KEY', key);
+      nconf.save(function(err) {
+        console.log(nconf.get('KEY'));
+      })
+    } else {
+      console.log(nconf.get('KEY'));
+    }
   });
 
 program
