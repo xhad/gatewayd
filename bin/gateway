@@ -3,6 +3,7 @@ var program = require('commander');
 var RippleWallet = require('../lib/rippleAddress').RippleWallet;
 var GatewayClient = require('../lib/ripple').Gateway.Client;
 var nconf = require('nconf');
+var crypto = require('crypto');
 
 nconf.env().file({ file: './config/config.json' });
 
@@ -91,24 +92,29 @@ program
   });
 
 program
-  .command('password:set')
+  .command('key:set')
   .description('set the admin password')
   .action(function(account, secret){
-    console.log('set the admin password');
+    var password = crypto.randomBytes(32).toString('hex');
+    nconf.set('KEY', password);
+    nconf.save(function(err){
+      console.log(nconf.get('KEY'));
+    });
   });
 
 program
-  .command('password:get')
+  .command('key:get')
   .description('get the admin password')
   .action(function(account, secret){
-    console.log('get the admin password');
+    console.log(nconf.get('KEY'));
   });
 
 program
-  .command('password:generate')
+  .command('key:generate')
   .description('get the admin password')
   .action(function(account, secret){
-    console.log('get the admin password');
+    var password = crypto.randomBytes(32).toString('hex');
+    console.log(password);
   });
 
 program
