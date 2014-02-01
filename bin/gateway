@@ -2,6 +2,9 @@
 var program = require('commander');
 var RippleWallet = require('../lib/rippleAddress').RippleWallet;
 var GatewayClient = require('../lib/ripple').Gateway.Client;
+var nconf = require('nconf');
+
+nconf.env().file({ file: './config/config.json' });
 
 var client = new GatewayClient({
   api: 'http://localhost:4000',
@@ -17,15 +20,19 @@ program
 program
   .command('postgres:set <url>')
   .description('set the url of the postgres database')
-  .action(function(){
-    console.log('set the postgres url');
+  .action(function(url){
+    nconf.set('DATABASE_URL', url);
+    nconf.save(function (err) {
+      console.log('set DATABASE_URL to:');
+      console.log(nconf.get('DATABASE_URL'));
+    });
   });
 
 program
   .command('postgres:get')
   .description('get the url of the postgres database')
   .action(function(cmd){
-    console.log('get the ripple rest api url');
+    console.log(nconf.get('DATABASE_URL'));
   });
 
 program
