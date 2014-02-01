@@ -35,5 +35,26 @@ program
   });
 
 program
+  .command('wallet:set <type> <account> <secret>')
+  .description('set the gateway hot wallet')
+  .action(function(account, secret){
+    console.log('set the hot wallet');
+  });
+
+program
+  .command('wallet:get')
+  .description('get the gateway hot wallet')
+  .action(function(){
+    console.log('get the hot wallet');
+  });
+
+program
+  .command('wallet:generate')
+  .description('generate a random ripple wallet')
+  .action(function(account, secret){
+    console.log('generate a random ripple wallet');
+  });
+
+program
   .parse(process.argv);
 
