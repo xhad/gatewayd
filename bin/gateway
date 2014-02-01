@@ -38,15 +38,19 @@ program
 program
   .command('ripple:rest:set <url>')
   .description('set the url of the ripple rest api')
-  .action(function(){
-    console.log('set the ripple rest api url');
+  .action(function(url){
+    nconf.set('RIPPLE_REST_API', url);
+    nconf.save(function(err) {
+      console.log('set the ripple rest api url');
+      console.log(nconf.get('RIPPLE_REST_API'));
+    });
   });
 
 program
   .command('ripple:rest:get')
   .description('get the url of the ripple rest api')
   .action(function(cmd){
-    console.log('get the ripple rest api url');
+    console.log(nconf.get('RIPPLE_REST_API'));
   });
 
 program
