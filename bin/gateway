@@ -5,6 +5,7 @@ var program = require('commander');
 
 program
   .version('0.0.1')
+  .option('-i, --issuer', 'specify an issuer other than the cold wallet');
 
 program
   .command('postgres:set <url>')
@@ -53,6 +54,55 @@ program
   .description('generate a random ripple wallet')
   .action(function(account, secret){
     console.log('generate a random ripple wallet');
+  });
+
+program
+  .command('username:set <username>')
+  .description('set the admin username')
+  .action(function(account, secret){
+    console.log('set the admin username');
+  });
+
+program
+  .command('username:get')
+  .description('get the admin username')
+  .action(function(account, secret){
+    console.log('get the admin username');
+  });
+
+program
+  .command('password:set <password>')
+  .description('set the admin password')
+  .action(function(account, secret){
+    console.log('set the admin password');
+  });
+
+program
+  .command('password:get')
+  .description('get the admin password')
+  .action(function(account, secret){
+    console.log('get the admin password');
+  });
+
+program
+  .command('withdrawals:get')
+  .description('get pending withdrawals to external accounts')
+  .action(function(account, secret){
+    console.log('get pending withdrawals');
+  });
+
+program
+  .command('withdrawals:clear <external_transaction_id>')
+  .description('clear pending withdrawal to external account')
+  .action(function(account, secret){
+    console.log('clear a pending withdrawal');
+  });
+
+program
+  .command('deposit <external_account_id> <amount> <currency>')
+  .description('deposit from an external account')
+  .action(function(account, secret){
+    console.log('deposit from an external account');
   });
 
 program
