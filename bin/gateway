@@ -1,57 +1,131 @@
 #!/usr/bin/env node
 
-var cli = require('cli');
-var async = require('async');
-var RippleWallet = require('../lib/rippleAddress.js');
-var db = require('../db');
-var sequelize = require('../config/initializers/sequelize.js');
 
-var done = false;
+var program = require('commander');
 
-cli.parse(null, ['install', 'configure', 'start']);
+program
+  .version('0.0.1')
+  .option('-i, --issuer', 'specify an issuer other than the cold wallet');
 
-sequelize.sync().success(function(){
-  configure();
-});
-
-function configure() {
-  db.models['ripple_address'].find({ where: { type: 'hot' }})
-    .complete(function(err, address) {
-      if(address) {
-        console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
-      } else {
-        console.log('configure the gateway address here');
-      }
-      //setEmail();
-    });
-}
-
-function setEmail() {
-  console.log('Enter your email address');
-  cli.withInput(function(stdin){
-    console.log(stdin);
-    console.log('\n');
-    setPassword();
+program
+  .command('postgres:set <url>')
+  .description('set the url of the postgres database')
+  .action(function(){
+    console.log('set the postgres url');
   });
-}
 
-function setPassword() {
-  console.log('Enter your password');
-  cli.withInput(function(stdin){
-    console.log(stdin);
-    console.log('\n');
-    done = true;
+program
+  .command('postgres:get')
+  .description('get the url of the postgres database')
+  .action(function(cmd){
+    console.log('get the ripple rest api url');
   });
-}
 
-var app = this;
+program
+  .command('ripple:set <url>')
+  .description('set the url of the ripple rest api')
+  .action(function(){
+    console.log('set the ripple rest api url');
+  });
 
-cli.main(function(args, options){
-  switch(args[0]) {
-  case 'configure':
-    console.log('Configure the Gateway Ripple Account');
-    console.log('------------------------------------\n');
-    configure();
-    break;
-  }
-});
+program
+  .command('ripple:get')
+  .description('get the url of the ripple rest api')
+  .action(function(cmd){
+    console.log('get the ripple rest api url');
+  });
+
+program
+  .command('wallet:set <type> <account> <secret>')
+  .description('set the gateway hot wallet')
+  .action(function(account, secret){
+    console.log('set the hot wallet');
+  });
+
+program
+  .command('wallet:get')
+  .description('get the gateway hot wallet')
+  .action(function(){
+    console.log('get the hot wallet');
+  });
+
+program
+  .command('wallet:generate')
+  .description('generate a random ripple wallet')
+  .action(function(account, secret){
+    console.log('generate a random ripple wallet');
+  });
+
+program
+  .command('username:set <username>')
+  .description('set the admin username')
+  .action(function(account, secret){
+    console.log('set the admin username');
+  });
+
+program
+  .command('username:get')
+  .description('get the admin username')
+  .action(function(account, secret){
+    console.log('get the admin username');
+  });
+
+program
+  .command('password:set <password>')
+  .description('set the admin password')
+  .action(function(account, secret){
+    console.log('set the admin password');
+  });
+
+program
+  .command('password:get')
+  .description('get the admin password')
+  .action(function(account, secret){
+    console.log('get the admin password');
+  });
+
+program
+  .command('withdrawals:get')
+  .description('get pending withdrawals to external accounts')
+  .action(function(account, secret){
+    console.log('get pending withdrawals');
+  });
+
+program
+  .command('withdrawals:clear <external_transaction_id>')
+  .description('clear pending withdrawal to external account')
+  .action(function(account, secret){
+    console.log('clear a pending withdrawal');
+  });
+
+program
+  .command('deposit <external_account_id> <amount> <currency>')
+  .description('deposit from an external account')
+  .action(function(account, secret){
+    console.log('deposit from an external account');
+  });
+
+program
+  .command('currencies:add <currency> --issuer');
+  .description('add support for a currency') 
+  .action(function(account, secret){
+    console.log('add support for a currency');
+  });
+
+program
+  .command('currencies:remove <currency> --issuer');
+  .description('remove support for a currency')
+  .action(function(account, secret){
+    console.log('add a curreny');
+  });
+
+program
+  .command('currencies:get')
+  .description('list currencies supported by the gateway')
+  .action(function(account, secret){
+    console.log('list all currencies supported');
+  });
+
+program
+  .parse(process.argv);
+

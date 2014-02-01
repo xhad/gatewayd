@@ -19,7 +19,9 @@
     "ripple-lib": "",
     "request": "",
     "async": "",
-    "cli":""
+    "cli":"",
+    "convict": "~0.4.2",
+    "commander":"2.1.0"
   },
   "devDependencies": {
     "request": "",
