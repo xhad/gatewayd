@@ -62,13 +62,26 @@ program
   });
 
 program
-  .command('wallet:get')
+  .command('wallet:get:hot')
   .description('get the gateway hot wallet')
   .action(function(){
     /*
     var client = RippleGateway.client({ apiKey: 'password' });
     client.hotWallet.get(function(hotWallet) {
       console.log(hotWallet);
+    });
+    */
+    console.log('get the hot wallet');
+  });
+
+program
+  .command('wallet:get:cold')
+  .description('get the gateway cold wallet')
+  .action(function(){
+    /*
+    var client = RippleGateway.client({ apiKey: 'password' });
+    client.coldWallet.get(function(wallet) {
+      console.log(wallet);
     });
     */
     console.log('get the hot wallet');
