@@ -2,6 +2,8 @@ var RippleTransaction = require('../app/models/ripple_transaction');
 var RippleAddress = require('../app/models/ripple_address');
 var request = require('request');
 var hotWallet = null;
+var nconf = require('../config/nconf.js');
+var rippleRest = nconf.get('RIPPLE_REST_API');
 
 function popCreatedRippleTransaction() {
   RippleTransaction.find({ where: [
@@ -20,7 +22,7 @@ function popCreatedRippleTransaction() {
       };
 
       var params = {
-        url: process.env.RIPPLE_SIMPLE_API+'addresses/'+hotWallet.address+'/payments',
+        url: rippleRest+'/api/v1/addresses/'+hotWallet.address+'/payments',
         form: payment,
         json: true
       };
