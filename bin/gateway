@@ -8,21 +8,25 @@ var sequelize = require('../config/initializers/sequelize.js');
 
 var done = false;
 
-cli.parse(null, ['install', 'configure', 'start']);
+cli.parse({
+  hotwallet: ['h', 'get and set hot wallet'],
+  coldwallet: ['c', 'get and set cold wallet']
+})
 
-sequelize.sync().success(function(){
-  configure();
-});
-
-function configure() {
+function hotwallet() {
   db.models['ripple_address'].find({ where: { type: 'hot' }})
     .complete(function(err, address) {
+      var hotwallet = null;
       if(address) {
-        console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
+        hotwallet = address.address;
+        console.log('\nThe gateway\'s hot wallet is '+hotwallet+'\n');
       } else {
-        console.log('configure the gateway address here');
+        db.models['ripple_address'].create({
+          address: RippleWallet.generate().address
+        }).complete(function(err, address) {
+          console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
+        });
       }
-      //setEmail();
     });
 }
 
@@ -44,14 +48,15 @@ function setPassword() {
   });
 }
 
-var app = this;
-
 cli.main(function(args, options){
-  switch(args[0]) {
-  case 'configure':
-    console.log('Configure the Gateway Ripple Account');
-    console.log('------------------------------------\n');
-    configure();
-    break;
-  }
+  sequelize.sync().success(function(){
+    switch(args[0]) {
+    case 'coldwallet':
+      coldwallet();
+      break;
+    case 'hotwallet':
+      hotwallet();
+      break;
+    }
+  });
 });
