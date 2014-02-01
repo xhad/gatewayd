@@ -5,21 +5,35 @@ var program = require('commander');
 
 program
   .version('0.0.1')
-  .option('-C, --chdir <path>', 'change the working directory');
 
 program
-  .command('setup')
-  .description('run remote setup commands')
+  .command('postgres:set <url>')
+  .description('set the url of the postgres database')
   .action(function(){
-    console.log('setup');
+    console.log('set the postgres url');
   });
 
 program
-  .command('exec <cmd>')
-  .description('run the given remote command')
+  .command('postgres:get')
+  .description('get the url of the postgres database')
   .action(function(cmd){
-    console.log('exec "%s"', cmd);
+    console.log('get the ripple rest api url');
+  });
+
+program
+  .command('ripple:set <url>')
+  .description('set the url of the ripple rest api')
+  .action(function(){
+    console.log('set the ripple rest api url');
+  });
+
+program
+  .command('ripple:get')
+  .description('get the url of the ripple rest api')
+  .action(function(cmd){
+    console.log('get the ripple rest api url');
   });
 
 program
   .parse(process.argv);
+
