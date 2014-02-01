@@ -65,7 +65,7 @@ Once the server is started visit https://0.0.0.0:4000/
     gateway withdrawals:get
     gateway withdrawals:clear [transaction id]
 
-    gateway deposit [external_account_id] [amount] [code] --issuer
+    gateway deposit [external_account_id] [amount] [currency] --issuer
 
     gateway start --env
     gateway stop
