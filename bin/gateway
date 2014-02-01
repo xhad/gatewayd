@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-
-
 var program = require('commander');
+var RippleWallet = require('../lib/rippleAddress').RippleWallet;
 
 program
   .version('0.0.1')
@@ -37,9 +36,28 @@ program
   });
 
 program
-  .command('wallet:set <type> <account> <secret>')
+  .command('wallet:set:hot <account> <secret>')
   .description('set the gateway hot wallet')
   .action(function(account, secret){
+    /*
+    var client = Ripple.client();
+    client.hotWallet.set(account, secret, function(hotWallet){
+      console.log(hotWallet)
+    })
+    */
+    console.log('set the hot wallet');
+  });
+
+program
+  .command('wallet:set:cold <type> <account> <secret>')
+  .description('set the gateway hot wallet')
+  .action(function(account, secret){
+    /*
+    var client = Ripple.client();
+    client.hotWallet.set(account, secret, function(hotWallet){
+      console.log(hotWallet)
+    })
+    */
     console.log('set the hot wallet');
   });
 
@@ -47,6 +65,12 @@ program
   .command('wallet:get')
   .description('get the gateway hot wallet')
   .action(function(){
+    /*
+    var client = RippleGateway.client({ apiKey: 'password' });
+    client.hotWallet.get(function(hotWallet) {
+      console.log(hotWallet);
+    });
+    */
     console.log('get the hot wallet');
   });
 
@@ -54,25 +78,12 @@ program
   .command('wallet:generate')
   .description('generate a random ripple wallet')
   .action(function(account, secret){
-    console.log('generate a random ripple wallet');
+    var wallet = RippleWallet.generate();
+    console.log(wallet);
   });
 
 program
-  .command('username:set <username>')
-  .description('set the admin username')
-  .action(function(account, secret){
-    console.log('set the admin username');
-  });
-
-program
-  .command('username:get')
-  .description('get the admin username')
-  .action(function(account, secret){
-    console.log('get the admin username');
-  });
-
-program
-  .command('password:set <password>')
+  .command('password:set')
   .description('set the admin password')
   .action(function(account, secret){
     console.log('set the admin password');
@@ -80,6 +91,13 @@ program
 
 program
   .command('password:get')
+  .description('get the admin password')
+  .action(function(account, secret){
+    console.log('get the admin password');
+  });
+
+program
+  .command('password:generate')
   .description('get the admin password')
   .action(function(account, secret){
     console.log('get the admin password');
@@ -107,14 +125,14 @@ program
   });
 
 program
-  .command('currencies:add <currency> --issuer');
+  .command('currencies:add <currency> --issuer')
   .description('add support for a currency') 
   .action(function(account, secret){
     console.log('add support for a currency');
   });
 
 program
-  .command('currencies:remove <currency> --issuer');
+  .command('currencies:remove <currency> --issuer')
   .description('remove support for a currency')
   .action(function(account, secret){
     console.log('add a curreny');
