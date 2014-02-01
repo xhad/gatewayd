@@ -35,3 +35,32 @@ Start the server
 
 Once the server is started visit https://0.0.0.0:4000/
 
+## Command Line Interface
+
+    gateway set postgres [postgresl url]
+    gateway get postgres
+
+    gateway set ripple [ripple simple url]
+    gateway get ripple
+
+    gateway set hotwallet [account] [secret]  
+    gateway get hotwallet
+
+    gateway set coldwallet [account] [secret]
+    gateway get coldwallet
+
+    gateway set username [username]
+    gateway get username
+
+    gateway set password [password]
+    gateway get password
+
+    gateway add currency [code] [issuer]
+    gateway remove currency [code] [issuer]
+    gateway get currencies
+
+    gateway start [--env]
+    gateway stop
+
+    gateway logs
+
