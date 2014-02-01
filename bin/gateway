@@ -13,6 +13,23 @@ cli.parse({
   coldwallet: ['c', 'get and set cold wallet']
 })
 
+function coldwallet() {
+  db.models['ripple_address'].find({ where: { type: 'cold' }})
+    .complete(function(err, address) {
+      var hotwallet = null;
+      if(address) {
+        hotwallet = address.address;
+        console.log('\nThe gateway\'s cold wallet is '+hotwallet+'\n');
+      } else {
+        db.models['ripple_address'].create({
+          type: 'cold',
+          address: RippleWallet.generate().address
+        }).complete(function(err, address) {
+          console.log('\nThe gateway\'s cold wallet is '+address.address+'\n');
+        });
+      }
+    });
+}
 function hotwallet() {
   db.models['ripple_address'].find({ where: { type: 'hot' }})
     .complete(function(err, address) {
@@ -22,6 +39,7 @@ function hotwallet() {
         console.log('\nThe gateway\'s hot wallet is '+hotwallet+'\n');
       } else {
         db.models['ripple_address'].create({
+          type: 'hot',
           address: RippleWallet.generate().address
         }).complete(function(err, address) {
           console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
@@ -51,12 +69,24 @@ function setPassword() {
 cli.main(function(args, options){
   sequelize.sync().success(function(){
     switch(args[0]) {
-    case 'coldwallet':
-      coldwallet();
+    case 'g':
+      generator.handle(args, options);
       break;
-    case 'hotwallet':
-      hotwallet();
+    case 'generate':
+      generator.handle(args, options);
       break;
     }
   });
 });
+
+var generator = (function(){
+  var actions = {};
+  actions.hotwallet = hotwallet;
+  actions.coldwallet = coldwallet;
+  function handle(args, options) {
+    actions[args[1]](args, options);
+  } 
+  return {
+    handle: handle
+  }
+})();
