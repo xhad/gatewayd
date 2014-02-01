@@ -37,6 +37,9 @@ Once the server is started visit https://0.0.0.0:4000/
 
 ## Command Line Interface
 
+    gateway set rest [gateway api url]
+    gateway get rest
+
     gateway set postgres [postgresl url]
     gateway get postgres
 
@@ -59,6 +62,12 @@ Once the server is started visit https://0.0.0.0:4000/
     gateway remove currency [code] [issuer]
     gateway get currencies
 
+    gateway get withdrawals
+    gateway clear withdrawal [transaction id]
+
+    gateway deposit [account id] [amount] [code] [issuer]
+
+    gateway init
     gateway start [--env]
     gateway stop
 
