@@ -106,5 +106,26 @@ program
   });
 
 program
+  .command('currencies:add <currency> --issuer');
+  .description('add support for a currency') 
+  .action(function(account, secret){
+    console.log('add support for a currency');
+  });
+
+program
+  .command('currencies:remove <currency> --issuer');
+  .description('remove support for a currency')
+  .action(function(account, secret){
+    console.log('add a curreny');
+  });
+
+program
+  .command('currencies:get')
+  .description('list currencies supported by the gateway')
+  .action(function(account, secret){
+    console.log('list all currencies supported');
+  });
+
+program
   .parse(process.argv);
 
