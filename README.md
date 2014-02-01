@@ -37,38 +37,37 @@ Once the server is started visit https://0.0.0.0:4000/
 
 ## Command Line Interface
 
-    gateway set rest [gateway api url]
-    gateway get rest
+    gateway ripple:rest:set [gateway api url]
+    gateway ripple:rest:get
 
-    gateway set postgres [postgresl url]
-    gateway get postgres
+    gateway postgres:set [postgresl url]
+    gateway postgres:get
 
-    gateway set ripple [ripple simple url]
-    gateway get ripple
+    gateway ripple:set [ripple simple url]
+    gateway ripple:get
 
-    gateway set hotwallet [account] [secret]  
-    gateway get hotwallet
+    gateway hotwallet:set [account] [secret]  
+    gateway hotwallet:get
 
-    gateway set coldwallet [account] [secret]
-    gateway get coldwallet
+    gateway coldwallet:set [account] [secret]
+    gateway coldwallet:get
 
-    gateway set username [username]
-    gateway get username
+    gateway username:set [username]
+    gateway username:get
 
-    gateway set password [password]
-    gateway get password
+    gateway password:set [password]
+    gateway password:get
 
-    gateway add currency [code] [issuer]
-    gateway remove currency [code] [issuer]
-    gateway get currencies
+    gateway currency:add [currency] --issuer
+    gateway currency:remove [currency] --issuer
+    gateway currencies:get
 
-    gateway get withdrawals
-    gateway clear withdrawal [transaction id]
+    gateway withdrawals:get
+    gateway withdrawals:clear [transaction id]
 
-    gateway deposit [account id] [amount] [code] [issuer]
+    gateway deposit [external_account_id] [amount] [code] --issuer
 
-    gateway init
-    gateway start [--env]
+    gateway start --env
     gateway stop
 
     gateway logs
