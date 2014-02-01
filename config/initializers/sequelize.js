@@ -1,11 +1,13 @@
 Sequelize = require('sequelize')
-dbConfig = require('../database.json')['staging']
 pg = require('pg').native;
 
+var nconf = require('./../nconf.js');
 var db;
 
-if (process.env.DATABASE_URL) {
-  var match = process.env.DATABASE_URL.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
+var databaseUrl = nconf.get('DATABASE_URL');
+console.log('sequelize', databaseUrl);
+if (databaseUrl) {
+  var match = databaseUrl.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
   var db = new Sequelize(match[5], match[1], match[2], {
     dialect: 'postgres',
     protocol: 'postgres',
@@ -15,14 +17,7 @@ if (process.env.DATABASE_URL) {
     native: true
   });
 } else {
-  var db = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
-    dialect: "postgres",
-    host: dbConfig.host,
-    port: 5432,
-    omitNull: true,
-    native: true,
-    protocol: 'postgres'
-  });
+  throw new Error('DATABASE_URL env variable is required');
 }
 
 module.exports = db;
