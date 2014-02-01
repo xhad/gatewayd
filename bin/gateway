@@ -5,7 +5,8 @@ var program = require('commander');
 
 program
   .version('0.0.1')
-  .option('-i, --issuer', 'specify an issuer other than the cold wallet');
+  .option('-i, --issuer', 'specify an issuer other than the cold wallet')
+  .option('-e, --env', 'specify the environment');
 
 program
   .command('postgres:set <url>')
@@ -124,6 +125,27 @@ program
   .description('list currencies supported by the gateway')
   .action(function(account, secret){
     console.log('list all currencies supported');
+  });
+
+program
+  .command('start')
+  .description('start the gateway api server')
+  .action(function(account, secret){
+    console.log('start the gateway api server');
+  });
+
+program
+  .command('stop')
+  .description('stop the gateway api server')
+  .action(function(account, secret){
+    console.log('stop the gateway api server');
+  });
+
+program
+  .command('restart')
+  .description('restart the gateway api server after update')
+  .action(function(account, secret){
+    console.log('restart the gateway api server');
   });
 
 program
