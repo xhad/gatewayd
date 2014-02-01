@@ -58,8 +58,8 @@ Once the server is started visit https://0.0.0.0:4000/
     gateway password:set [password]
     gateway password:get
 
-    gateway currency:add [currency] --issuer
-    gateway currency:remove [currency] --issuer
+    gateway currencies:add [currency] --issuer
+    gateway currencies:remove [currency] --issuer
     gateway currencies:get
 
     gateway withdrawals:get
