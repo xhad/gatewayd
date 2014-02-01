@@ -6,13 +6,6 @@ var RippleWallet = require('../lib/rippleAddress.js');
 var db = require('../db');
 var sequelize = require('../config/initializers/sequelize.js');
 
-var done = false;
-
-cli.parse({
-  hotwallet: ['h', 'get and set hot wallet'],
-  coldwallet: ['c', 'get and set cold wallet']
-})
-
 function coldwallet() {
   db.models['ripple_address'].find({ where: { type: 'cold' }})
     .complete(function(err, address) {
@@ -30,6 +23,7 @@ function coldwallet() {
       }
     });
 }
+
 function hotwallet() {
   db.models['ripple_address'].find({ where: { type: 'hot' }})
     .complete(function(err, address) {
@@ -69,22 +63,45 @@ function setPassword() {
 cli.main(function(args, options){
   sequelize.sync().success(function(){
     switch(args[0]) {
-    case 'g':
-      generator.handle(args, options);
+    case 'set':
+      set.handle(args, options);
       break;
     case 'generate':
-      generator.handle(args, options);
+      generate.handle(args, options);
       break;
     }
   });
 });
 
-var generator = (function(){
+function setHotWallet(args, options) {
+  console.log(args[1], args[2]);
+}
+
+function setColdWallet(args, options) {
+  console.log(args[1], args[2]);
+}
+
+var set = (function(){
+  var actions = {};
+  actions.hotwallet = setHotWallet;
+  actions.coldwallet = setColdWallet;
+  function handle(args, options) {
+    actions[args[1]](args, options); 
+  }
+  
+  return { handle: handle };
+})();
+
+var generate = (function(){
   var actions = {};
   actions.hotwallet = hotwallet;
   actions.coldwallet = coldwallet;
   function handle(args, options) {
-    actions[args[1]](args, options);
+    try {
+      actions[args[1]](args, options);
+    } catch(e) {
+
+    }
   } 
   return {
     handle: handle
