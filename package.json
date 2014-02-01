@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": { "test": "mocha test/integration/users.js" },    
   "bin" : { "gateway" : "./bin/gateway.js" },
   "dependencies" : {
