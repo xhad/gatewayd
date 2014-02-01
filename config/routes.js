@@ -11,7 +11,7 @@ module.exports = (function(){
     /////////////////////////
     //  Unauthenticated Resources
 
-    app.get('/api/v1/gateway/settings', 
+    app.get('/api/v1/settings', 
       ctrls['settings'].index);
 
     app.post('/api/v1/gateway/users', 
