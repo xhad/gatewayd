@@ -1,109 +1,25 @@
 #!/usr/bin/env node
 
-var cli = require('cli');
-var async = require('async');
-var RippleWallet = require('../lib/rippleAddress.js');
-var db = require('../db');
-var sequelize = require('../config/initializers/sequelize.js');
 
-function coldwallet() {
-  db.models['ripple_address'].find({ where: { type: 'cold' }})
-    .complete(function(err, address) {
-      var hotwallet = null;
-      if(address) {
-        hotwallet = address.address;
-        console.log('\nThe gateway\'s cold wallet is '+hotwallet+'\n');
-      } else {
-        db.models['ripple_address'].create({
-          type: 'cold',
-          address: RippleWallet.generate().address
-        }).complete(function(err, address) {
-          console.log('\nThe gateway\'s cold wallet is '+address.address+'\n');
-        });
-      }
-    });
-}
+var program = require('commander');
 
-function hotwallet() {
-  db.models['ripple_address'].find({ where: { type: 'hot' }})
-    .complete(function(err, address) {
-      var hotwallet = null;
-      if(address) {
-        hotwallet = address.address;
-        console.log('\nThe gateway\'s hot wallet is '+hotwallet+'\n');
-      } else {
-        db.models['ripple_address'].create({
-          type: 'hot',
-          address: RippleWallet.generate().address
-        }).complete(function(err, address) {
-          console.log('\nThe gateway\'s hot wallet is '+address.address+'\n');
-        });
-      }
-    });
-}
+program
+  .version('0.0.1')
+  .option('-C, --chdir <path>', 'change the working directory');
 
-function setEmail() {
-  console.log('Enter your email address');
-  cli.withInput(function(stdin){
-    console.log(stdin);
-    console.log('\n');
-    setPassword();
+program
+  .command('setup')
+  .description('run remote setup commands')
+  .action(function(){
+    console.log('setup');
   });
-}
 
-function setPassword() {
-  console.log('Enter your password');
-  cli.withInput(function(stdin){
-    console.log(stdin);
-    console.log('\n');
-    done = true;
+program
+  .command('exec <cmd>')
+  .description('run the given remote command')
+  .action(function(cmd){
+    console.log('exec "%s"', cmd);
   });
-}
 
-cli.main(function(args, options){
-  sequelize.sync().success(function(){
-    switch(args[0]) {
-    case 'set':
-      set.handle(args, options);
-      break;
-    case 'generate':
-      generate.handle(args, options);
-      break;
-    }
-  });
-});
-
-function setHotWallet(args, options) {
-  console.log(args[1], args[2]);
-}
-
-function setColdWallet(args, options) {
-  console.log(args[1], args[2]);
-}
-
-var set = (function(){
-  var actions = {};
-  actions.hotwallet = setHotWallet;
-  actions.coldwallet = setColdWallet;
-  function handle(args, options) {
-    actions[args[1]](args, options); 
-  }
-  
-  return { handle: handle };
-})();
-
-var generate = (function(){
-  var actions = {};
-  actions.hotwallet = hotwallet;
-  actions.coldwallet = coldwallet;
-  function handle(args, options) {
-    try {
-      actions[args[1]](args, options);
-    } catch(e) {
-
-    }
-  } 
-  return {
-    handle: handle
-  }
-})();
+program
+  .parse(process.argv);
