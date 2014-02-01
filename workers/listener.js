@@ -4,9 +4,11 @@ var RippleAddress = require('../app/models/ripple_address.js');
 var RippleTransaction = require('../app/models/ripple_transaction.js');
 var RippleSimpleClient = require('../lib/ripple_simple_client.js');
 var sequelize = require("../config/initializers/sequelize.js");
+var nconf = require('../config/nconf.js');
+
 
 var client = new RippleSimpleClient({
-  apiUrl: process.env.RIPPLE_SIMPLE_API
+  apiUrl: nconfg.get('RIPPLE_REST_API');
 });
 
 
