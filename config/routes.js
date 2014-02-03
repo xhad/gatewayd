@@ -37,9 +37,25 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }),
       ctrls['external_transactions'].userIndex);
 
-    app.post('/api/v1/external_transactions', 
+    app.post('/api/v1/deposits',
       passport.authenticate('basic', { session: false }),
-      ctrls['external_transactions'].create);
+      ctrls['deposits'].create);
+
+    app.post('/api/v1/withdrawals',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
+
+    app.post('/api/v1/withdrawals/pending',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
+
+    app.post('/api/v1/withdrawals/:id/clear',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
+
+    app.get('/api/v1/external_transactions',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
 
     app.get('/api/v1/balances', 
       passport.authenticate('basic', { session: false }),
