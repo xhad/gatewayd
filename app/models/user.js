@@ -206,14 +206,14 @@ var User = db.define('user', {
     }
   },
   classMethods: {
-    createAdmin: function(email, callback) {
+    createAdmin: function(callback) {
       User.find({ where: { admin: true }}).complete(function(err, admins){
         if (admins && (admins.length > 0)) {
           callback('admin already exists', null)
         } else {
           var password = crypto.randomBytes(32).toString('hex')
           User.createEncrypted({
-            name: email,
+            name: 'admin',
             password: password,
             admin: true
           }, function(err, admin) {
@@ -239,7 +239,6 @@ var User = db.define('user', {
                 address: coldWallet.address,
                 secret: coldWallet.secret
               }).complete(function(err, coldAddress) {
-                console.log('error creating address', err);
                 if (err) { 
                   callback(err, { admin: admin, wallets: { hot: hotWallet, cold: coldWallet }})
                 }
