@@ -13,7 +13,7 @@ if (databaseUrl) {
     protocol: 'postgres',
     port: match[4],
     host: match[3],
-    logging: true,
+    logging: false,
     native: true
   });
 } else {
