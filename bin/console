@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+
+program.version('0.0.1')
+  .option('-u, --username', 'specify the username')
+  .option('-p, --password', 'specify the password')
+  .option('-i, --issuer', 'specify the password')
+
+program
+  .command('withdrawals')
+  .description('list withdrawals from the user account')
+  .action(function(amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program
+  .command('deposits')
+  .description('list deposits from the user account')
+  .action(function() {
+    console.log('deposits');
+  });
+
+program
+  .command('payments')
+  .description('see pending ripple payments')
+  .action(function(amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program
+  .command('balances')
+  .description('list the balances of the hosted wallet')
+  .action(function(amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program
+  .command('withdraw <amount> <currency>')
+  .description('withdraw from the hosted wallet to an external account')
+  .action(function(amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program
+  .command('payment <address> <amount> <currency>')
+  .description('send from the hosted wallet to a ripple address')
+  .action(function(address, amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program
+  .command('set <username> <password>')
+  .description('set the session username and password')
+  .action(function(username) {
+    console.log('set the session username');
+  });
+
+program
+  .command('clear')
+  .description('send from the hosted wallet to a ripple address')
+  .action(function() {
+    console.log('clear the user');
+  });
+
+program
+  .command('')
+  .description('')
+  .action(function(amount, currency) {
+    console.log(amount, currency); 
+  });
+
+program.parse(process.argv);
