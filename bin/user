@@ -3,6 +3,9 @@
 var program = require('commander');
 var nconf = require('../config/nconf.js');
 
+var RippleClient = require('../lib/ripple.js');
+var client = new RippleClient();
+
 program.version('0.0.1')
   .option('-u, --username', 'specify the username')
   .option('-p, --password', 'specify the password')
@@ -11,8 +14,10 @@ program.version('0.0.1')
 program
   .command('withdrawals')
   .description('list withdrawals from the user account')
-  .action(function(amount, currency) {
-    console.log(amount, currency); 
+  .action(function(username, password) {
+    console.log('username', username);
+    console.log('password', password);
+    console.log('list the user withdrawals');
   });
 
 program
@@ -32,7 +37,9 @@ program
 program
   .command('balances')
   .description('list the balances of the hosted wallet')
-  .action(function(amount, currency) {
+  .action(function(username, password) {
+    client.clientId = username;
+    client.clientSecret = password;
     console.log(amount, currency); 
   });
 

@@ -14,65 +14,68 @@ module.exports = (function(){
     app.get('/api/v1/settings', 
       ctrls['settings'].index);
 
-    app.post('/api/v1/gateway/users', 
+    ////////////////////////
+    //  Secured with Basic Auth
+
+    app.post('/api/v1/users', 
+      passport.authenticate('basic', { session: false }),
       ctrls['users'].create)
 
-    app.post('/api/v1/admin/users', 
-      ctrls['users'].createAdmin);
+    app.get('/api/v1/users', 
+      passport.authenticate('basic', { session: false }), 
+      ctrls['users'].index);
 
-    ////////////////////////
-    // User Authenticated Resources
-
-    app.get('/api/v1/users/:id/ripple_addresses', 
-      passport.authenticate('basic', { session: false }),
-      ctrls['ripple_addresses'].userIndex);
-
-    app.get('/api/v1/users/:id/ripple_transactions', 
-      passport.authenticate('basic', { session: false }),
-      ctrls['ripple_transactions'].index);
-
-    app.post('/api/v1/users/:user_id/ripple_transactions', 
-      passport.authenticate('basic', { session: false }),
-      ctrls['ripple_transactions'].create);
-
-    app.get('/api/v1/users/:id/external_accounts', 
+    app.get('/api/v1/external_accounts', 
       passport.authenticate('basic', { session: false }),
       ctrls['external_accounts'].index);
 
-    app.post('/api/v1/users/:id/external_accounts', 
+    app.post('/api/v1/external_accounts', 
       passport.authenticate('basic', { session: false }),
       ctrls['external_accounts'].create);
 
-    app.get('/api/v1/users/:id/external_transactions', 
+    app.get('/api/v1/external_transactions', 
       passport.authenticate('basic', { session: false }),
       ctrls['external_transactions'].userIndex);
 
-    app.post('/api/v1/users/:id/external_transactions', 
+    app.post('/api/v1/deposits',
       passport.authenticate('basic', { session: false }),
-      ctrls['external_transactions'].create);
+      ctrls['deposits'].create);
 
-    app.get('/api/v1/users/:id/balances', 
+    app.post('/api/v1/withdrawals',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
+
+    app.get('/api/v1/withdrawals/pending',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].pending);
+
+    app.post('/api/v1/withdrawals/:id/clear',
+      passport.authenticate('basic', { session: false }),
+      ctrls['withdrawals'].create);
+
+    app.get('/api/v1/balances', 
       passport.authenticate('basic', { session: false }),
       ctrls['balances'].userIndex);
 
-    app.post('/api/v1/gateway/users/login', 
+    app.get('/api/v1/ripple_addresses', 
       passport.authenticate('basic', { session: false }),
-      ctrls['users'].login);
+      ctrls['ripple_addresses'].index);
 
-    app.get('/api/v1/gateway/user', 
-      passport.authenticate('basic', { session: false }), 
-      ctrls['users'].show);
-
-    /////////////////////////
-    // Admin Authenticated Resources
-
-    app.get('/api/v1/users', 
+    app.post('/api/v1/ripple_addresses', 
       passport.authenticate('basic', { session: false }),
-      ctrls['users'].index);
+      ctrls['ripple_addresses'].create);
 
-    app.get('/api/v1/external_transactions', 
+    app.get('/api/v1/ripple_transactions', 
       passport.authenticate('basic', { session: false }),
-      ctrls['external_transactions'].index);
+      ctrls['ripple_transactions'].index);
+
+    app.post('/api/v1/ripple_transactions',
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_transactions'].create);
+
+    app.get('/api/v1/ripple_transactions/pending',
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_transactions'].create);
 
     /////////////////////////
   }
