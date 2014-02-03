@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander');
+var nconf = require('../config/nconf.js');
 
 program.version('0.0.1')
   .option('-u, --username', 'specify the username')
@@ -52,15 +53,23 @@ program
 program
   .command('set <username> <password>')
   .description('set the session username and password')
-  .action(function(username) {
-    console.log('set the session username');
+  .action(function(username, password) {
+    nconf.set('cli:USERNAME', username);
+    nconf.set('cli:PASSWORD', password);
+    nconf.save(function() {
+      console.log('set the user to', username);
+    });
   });
 
 program
   .command('clear')
   .description('send from the hosted wallet to a ripple address')
   .action(function() {
-    console.log('clear the user');
+    nconf.set('cli:USERNAME', null);
+    nconf.set('cli:PASSWORD', null);
+    nconf.save(function() {
+      console.log('cleared the user');
+    });
   });
 
 program
