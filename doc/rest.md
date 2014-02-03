@@ -6,26 +6,28 @@ A simplified RESTful API for running a the [Ripple Network](http://ripple.com).
 
 __This API is still in beta.__ Please open issues for any problems you encounter.
 
-## Available API Routes
+## Available Resources
 
-1. [Deposits](#1-deposits)
+1. [Users](#1-deposits)
     + [`GET  /api/v1/addresses/:address/next_notification`](#get-apiv1addressesaddressnext_notification)
     + [`GET  /api/v1/addresses/:address/next_notification/:prev_tx_hash`](#get-apiv1addressesaddressnext_notificationprev_tx_hash)
-2. [Withdrawals](#2-payments)
+2. [External Accounts](#4-server-info)
+    + [`GET  /api/v1/status`](#get-apiv1status)
+3. [Deposits](#2-payments)
     + [`GET  /api/v1/addresses/:address/payments/options`](#get-apiv1addressesaddresspaymentsoptions)
     + [`POST /api/v1/addresses/:address/payments`](#post-apiv1addressesaddresspayments)
     + [`GET  /api/v1/addresses/:address/payments/:tx_hash`](#get-apiv1addressesaddresspaymentstx_hash)
-3. [Balances Ripple Transactions](#3-standard-ripple-transactions)
+4. [Withdrawals](#3-standard-ripple-transactions)
     + [`GET  /api/v1/addresses/:address/txs/:tx_hash`](#get-apiv1addressesaddresstxstx_hash)
     + [`POST /api/v1/addresses/:address/txs/`](#post-apiv1addressesaddresstxs)
-4. [Ripple Transactions](#4-server-info)
+5. [Balances](#4-server-info)
     + [`GET  /api/v1/status`](#get-apiv1status)
-5. [Users](#4-server-info)
+6. [Ripple Addresses](#4-server-info)
     + [`GET  /api/v1/status`](#get-apiv1status)
-6. [External Accounts](#4-server-info)
+7. [Ripple Transactions](#4-server-info)
     + [`GET  /api/v1/status`](#get-apiv1status)
-7. [Ripple Addresses](#4-server-info)
-    + [`GET  /api/v1/status`](#get-apiv1status)
+8. [Gateway Settings](#4-server-info)
+    + [`GET  /api/v1/settings`](#get-apiv1settings)
 
 
 
