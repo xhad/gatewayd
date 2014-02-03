@@ -45,15 +45,11 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }),
       ctrls['withdrawals'].create);
 
-    app.post('/api/v1/withdrawals/pending',
+    app.get('/api/v1/withdrawals/pending',
       passport.authenticate('basic', { session: false }),
-      ctrls['withdrawals'].create);
+      ctrls['withdrawals'].pending);
 
     app.post('/api/v1/withdrawals/:id/clear',
-      passport.authenticate('basic', { session: false }),
-      ctrls['withdrawals'].create);
-
-    app.get('/api/v1/external_transactions',
       passport.authenticate('basic', { session: false }),
       ctrls['withdrawals'].create);
 
@@ -61,19 +57,23 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }),
       ctrls['balances'].userIndex);
 
-    app.get('/api/v1/withdrawals/pending', 
-      passport.authenticate('basic', { session: false }),
-      ctrls['withdrawals'].pending);
-
     app.get('/api/v1/ripple_addresses', 
       passport.authenticate('basic', { session: false }),
-      ctrls['ripple_addresses'].userIndex);
+      ctrls['ripple_addresses'].index);
+
+    app.post('/api/v1/ripple_addresses', 
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_addresses'].create);
 
     app.get('/api/v1/ripple_transactions', 
       passport.authenticate('basic', { session: false }),
       ctrls['ripple_transactions'].index);
 
     app.post('/api/v1/ripple_transactions',
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_transactions'].create);
+
+    app.get('/api/v1/ripple_transactions/pending',
       passport.authenticate('basic', { session: false }),
       ctrls['ripple_transactions'].create);
 
