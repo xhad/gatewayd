@@ -21,9 +21,9 @@ The primary interface to the Ripple Gateway server is through HTTP REST with JSO
 
 3. Ripple REST API
 
-## Installation Instructions
+## Installation
 
-The gateway server software requires git, g++, nodejs, postgres, and many npm packages.
+The gateway server software requires git, g++, make, nodejs, postgres, and several npm modules.
 
 - Detailed [installation instructions](./doc/install.md) for Ubuntu 13.10
 
