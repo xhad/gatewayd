@@ -10,8 +10,10 @@ __This API is still in beta.__ Please open issues for any problems you encounter
 
 1. [Users](#1-users)
     + [`POST  /api/v1/users`](#post-apiv1users)
+    + [`GET  /api/v1/users`](#get-apiv1users)
 2. [External Accounts](#2-externalaccounts)
     + [`GET  /api/v1/users/:id/external_accounts`](#get-apiv1externalaccounts)
+    + [`POST  /api/v1/external_accounts`](#get-apiv1externalaccounts)
 3. [Deposits](#3-deposits)
     + [`POST  /api/v1/deposits/`](#post-deposits)
 4. [Withdrawals](#4-external_withdrawals)
