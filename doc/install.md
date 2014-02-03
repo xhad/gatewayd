@@ -2,7 +2,7 @@
 
 The following are for a clean build of Ubuntu 13.10. If you have any problems please create an issue.
 
-### [Node.js)(http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10)
+### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10)
 
     sudo apt-get install python-software-properties python g++ make
     sudo add-apt-repository ppa:chris-lea/node.js
@@ -26,6 +26,9 @@ create the database and set the environment
 
 ### Gateway API Server
 
+clone the project from github
+
+    sudo apt-get install git
     git clone https://github.com/stevenzeiler/ripple-gateway-api.git
     cd ripple-gateway-api
 
@@ -45,4 +48,5 @@ configure the initial gateway parameters
 start the gateway rest api server
 
     node server.js
+
 
