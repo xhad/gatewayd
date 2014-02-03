@@ -11,7 +11,7 @@ and running a Ripple gateway system.
 
 The primary interface to the Ripple Gateway server is through HTTP REST with JSON.
 
-[./doc/rest.md](REST Documentation) is available in the git repo.
+[REST Documenation](./doc/rest.md) is available in the git repo.
 
 ## Dependencies
 
