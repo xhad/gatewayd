@@ -2,6 +2,7 @@
 var program = require('commander');
 var RippleWallet = require('../lib/rippleAddress').RippleWallet;
 var GatewayClient = require('../lib/ripple').Gateway.Client;
+var User = require('../app/models/user.js');
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
 
@@ -171,6 +172,18 @@ program
   .description('start the gateway api server')
   .action(function(account, secret){
     console.log('start the gateway api server');
+  });
+
+program
+  .command('init')
+  .description('configure the gateway with initial parameters')
+  .action(function(account, secret){
+    console.log('create an admin user, set password');
+    User.createAdmin(function(err, adminConfig){
+      console.log('admin user created with KEY', adminConfig.password);
+      console.log('hot and cold wallets have been generated: ');
+      console.log(adminConfig.wallets);
+    });
   });
 
 program

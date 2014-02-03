@@ -8,7 +8,7 @@ var nconf = require('../config/nconf.js');
 
 
 var client = new RippleSimpleClient({
-  apiUrl: nconfg.get('RIPPLE_REST_API');
+  apiUrl: nconf.get('RIPPLE_REST_API')
 });
 
 
