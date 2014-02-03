@@ -26,30 +26,6 @@ The primary interface to the Ripple Gateway server is through HTTP REST with JSO
 The gateway server software requires git, g++, nodejs, postgres, and many npm packages.
 
 - Detailed [installation instructions](./doc/install.md) for Ubuntu 13.10
-Download the app repo
-
-    git clone git@github.com:stevenzeiler/ripple-gateway-api.git
-    cd ripple-gateway-api
-    npm install
-    npm install -g db-migrate
-
-Configure Postgres. Rememeber to append `?native=true` if connecting over SSL such as with Heroku:
-
-    export DATABASE_URL=postgres://user:pass@host:port/database?native=true
-
-Run the database migrations to build the schema: 
-
-    db-migrate up --migrations-dir=db/migrations/ --env development
-
-Configure the Ripple Simple REST Api
-
-    export RIPPLE_SIMPLE_API=https://ripple-simple-api.herokuapp.com/api/v1/
-
-Start the server
-
-    node server.js
-
-Once the server is started visit https://0.0.0.0:4000/
 
 ## Command Line Interface
 
