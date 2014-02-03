@@ -2,7 +2,7 @@ var nconf = require('nconf');
 
 nconf
   .env()
-  .file({ file: './gateway.json' });
+  .file({ file: './config/config.json' });
 
 nconf.defaults({
   'RIPPLE_REST_API': 'http://localhost:5990',
