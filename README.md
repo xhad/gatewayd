@@ -7,6 +7,12 @@ The Ripple Gateway appliance is a virtual machine image that
 is meant to serve as a standalone package for configuring
 and running a Ripple gateway system.
 
+## REST Api Docs
+
+The primary interface to the Ripple Gateway server is through HTTP REST with JSON.
+
+[./doc/rest.md](REST Documentation) is available in the git repo.
+
 ## Dependencies
 
 1. Node.js
