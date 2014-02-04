@@ -128,7 +128,6 @@ var User = db.define('user', {
       var user = this;
       async.parallel([
         function(complete) {
-          console.log('getting external withdrawals');
           var query = 'select SUM(cash_amount) as amount, currency from external_transactions ';
           query += 'join external_accounts on external_transactions.external_account_id = external_accounts.id ';
           query += 'where user_id = '+user.id+' and deposit = false group by currency;'
@@ -185,7 +184,6 @@ var User = db.define('user', {
           return account.id;
         });
         ExternalTransaction.findAll({ where: { external_account_id: externalAccountIds }, limit: 10, order: '"createdAt" DESC' }).complete(function(err, transactions) {
-          console.log(err);
           fn(err, transactions);
 
         });
@@ -266,8 +264,6 @@ var User = db.define('user', {
           if (!!user) {
             if (!user.admin) {
               RippleAddress.createHosted(user, function(err, address) {
-                console.log('created hosted address');
-                console.log(address);
                 callback(err, user);
               });
             } else {
