@@ -9,6 +9,11 @@ module.exports = (function(){
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
       next()
     })
+    app.use(function(req, res, next){
+      console.log('%s %s', req.method, req.url);
+      if (req.body) { console.log('%s', req.body); }
+      next();
+    });
     app.use(express.bodyParser())
     app.use(expressValidator());
     app.use(express.cookieParser())
