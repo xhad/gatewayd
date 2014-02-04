@@ -7,7 +7,7 @@ angular.module('publicApp')
     $scope.registerUser = function () {
       console.log('about to register user');
       console.log('passwords are the same.');
-      $http.post('/api/v1/gateway/users', $scope.user)
+      $http.post('/api/v1/users', $scope.user)
       .success(function(user){
         $user.login($scope.user.name, $scope.user.password);
       })

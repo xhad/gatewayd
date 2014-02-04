@@ -8,11 +8,11 @@ describe('creating a gateway user', function(){
     console.log(this.currentTest.title)
   })
 
-  before(function(){ 
+  before(function(){
     console.log()
     console.log("Creating a User")
     console.log("-------------------------------------------------------")
-    var url = baseUrl + '/api/v1/gateway/users'
+    var url = baseUrl + '/api/v1/users'
   })
   it('should require a name', function(done){
     request.post(baseUrl+'v1/gateway/users', {form:{}}, function(e,r,body) {
@@ -20,7 +20,7 @@ describe('creating a gateway user', function(){
       assert(resp.error)
       done()
     })
-  }) 
+  })
 
   it('should require a password', function(done){
     username = crypto.randomBytes(256).toString('hex')
@@ -31,7 +31,7 @@ describe('creating a gateway user', function(){
       assert(resp.error)
       done()
     })
-  }) 
+  })
 
   it('should create a user account with valid params', function(done){
     username = crypto.randomBytes(256).toString('hex')
@@ -42,7 +42,7 @@ describe('creating a gateway user', function(){
       assert.equal(user.name, username)
       done()
     })
-  }) 
+  })
 
   it('should not create a second user with the same name', function(done){
     username = crypto.randomBytes(256).toString('hex')
@@ -57,7 +57,7 @@ describe('creating a gateway user', function(){
         done()
       })
     })
-  }) 
+  })
 })
 
 describe("getting a user's account", function(){
