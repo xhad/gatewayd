@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var program = require('commander');
 var RippleWallet = require('../lib/rippleAddress').RippleWallet;
-var GatewayClient = require('../lib/ripple').Gateway.Client;
+var GatewayClient = require('../lib/http_client.js').Gateway.Client;
 var User = require('../app/models/user.js');
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
