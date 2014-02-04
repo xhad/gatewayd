@@ -5,6 +5,7 @@ var GatewayClient = require('../lib/http_client.js').Gateway.Client;
 var User = require('../app/models/user.js');
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
+var spawn = require('child_process').spawn;
 
 var client = new GatewayClient({
   api: 'http://localhost:4000',
@@ -171,6 +172,16 @@ program
   .command('start')
   .description('start the gateway api server')
   .action(function(account, secret){
+    var server = spawn('node', ['server.js']);
+    server.stdout.on('data', function(data) {
+      console.log(data.toString());
+    });
+    server.stderr.on('data', function(data) {
+      console.log(data.toString());
+    });
+    server.on('exit', function (code) {
+      console.log('server process exited with code ' + code);
+    });
     console.log('start the gateway api server');
   });
 
