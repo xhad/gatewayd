@@ -1,28 +1,65 @@
+var RippleGateway = require('../../lib/http_client.js').Gateway;
+var crypto = require('crypto');
+var assert = require('assert');
+
+function rand() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
 describe('Users', function() {
+  before(function(){
+    client = new RippleGateway.Client({
+      api: 'http://localhost:4000'
+    });
+  })
 
-  it.skip('should create a new user given a name and password', function(done){
+  it('should create a new user given a name and password', function(done){
     // POST /users
-    done();
+    client.name = rand();
+    client.secret = rand();
+    client.createUser({}, function(err, user) {
+      assert(user.id > 0);
+      done();
+    })
   });
 
-  it.skip("should verify a user's credentials given a name and password", function(done){
+  it("should verify a user's credentials given a name and password", function(done){
     // GET /users
-    done();
+    client.name = rand();
+    client.secret = rand();
+    client.createUser({}, function(err, user) {
+      var id = user.id;
+      client.getUser({}, function(err, user) {
+        assert(id == user.id);
+        done();
+      });
+    });
   });
 
-  it.skip('should not allow the creation of two users with the same name', function(done){
+  it('should not allow the creation of two users with the same name', function(done){
     // POST /users
-    done();
+    var name = rand();
+    client.name = name;
+    client.secret = rand();
+    client.createUser({}, function(err, user){
+      var id = user.id;
+      client.secret = rand();
+      client.createUser({}, function(err, user){
+        assert(typeof err != 'undefined');
+        assert(user == 'Unauthorized');
+        done();
+      });
+    });
   });
 
-  it.skip('should not allow the creation of a user with the name "admin"', function(done){
+  it('should not allow the creation of a user with the name "admin"', function(done){
     // POST /users
-    done();
-  });
-
-  it.skip('should allow the admin user to verify their credentials', function(done){
-    // GET /users
-    done();
+    client.name = 'admin';
+    client.secret = rand();
+    client.createUser({}, function(err, user){
+      assert(user == 'invalid admin key');
+      done();
+    });
   });
 
 });
