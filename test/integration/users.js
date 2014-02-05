@@ -1,90 +1,65 @@
-var request = require('request')
-var assert = require('assert')
-var crypto = require('crypto')
-baseUrl = 'http://127.0.0.1:4000/'
+var RippleGateway = require('../../lib/http_client.js').Gateway;
+var crypto = require('crypto');
+var assert = require('assert');
 
-describe('creating a gateway user', function(){
-  afterEach(function(){
-    console.log(this.currentTest.title)
-  })
+function rand() {
+  return crypto.randomBytes(32).toString('hex');
+}
 
-  before(function(){ 
-    console.log()
-    console.log("Creating a User")
-    console.log("-------------------------------------------------------")
-    var url = baseUrl + '/api/v1/gateway/users'
-  })
-  it('should require a name', function(done){
-    request.post(baseUrl+'v1/gateway/users', {form:{}}, function(e,r,body) {
-      resp = JSON.parse(body)
-      assert(resp.error)
-      done()
-    })
-  }) 
-
-  it('should require a password', function(done){
-    username = crypto.randomBytes(256).toString('hex')
-    request.post(baseUrl+'v1/gateway/users', {form:{
-      name: username
-    }}, function(e,r,body) {
-      resp = JSON.parse(body)
-      assert(resp.error)
-      done()
-    })
-  }) 
-
-  it('should create a user account with valid params', function(done){
-    username = crypto.randomBytes(256).toString('hex')
-    request.post(baseUrl+'v1/gateway/users', {form:{
-      name: username, password: username
-    }}, function(e,r,body) {
-      user = JSON.parse(body).user
-      assert.equal(user.name, username)
-      done()
-    })
-  }) 
-
-  it('should not create a second user with the same name', function(done){
-    username = crypto.randomBytes(256).toString('hex')
-    request.post(baseUrl+'v1/gateway/users', {form:{
-      name: username, password: username, rippleAddress: 'rHKueQebtVU9cEamhBbMV8AEViqKjXcB'
-    }}, function(e,r,body) {
-      request.post(baseUrl+'v1/gateway/users', {form:{
-        name: username, password: username
-      }}, function(e,r,body) {
-        resp = JSON.parse(body)
-        assert(!resp.success)
-        done()
-      })
-    })
-  }) 
-})
-
-describe("getting a user's account", function(){
+describe('Users', function() {
   before(function(){
-    console.log("")
-    console.log("Getting a user's account")
-    console.log("-------------------------------------------------------")
-    createUser = function(callback){
-      username = crypto.randomBytes(256).toString('hex')
-      request.post(baseUrl+'v1/gateway/users', {form:{
-        name: username, password: username
-      }}, callback)
-    }
+    client = new RippleGateway.Client({
+      api: 'http://localhost:4000'
+    });
   })
 
-  afterEach(function(){
-    console.log(this.currentTest.title)
-  })
-
-  it('should return empty if the user does not have an account', function(done){
-    createUser(function(e,r,body) {
-      user = JSON.parse(body)
-      request.get(baseUrl+'v1/gateway/users/'+user.id+'/gateway_account', function(e,r,body){
-        resp = JSON.parse(body)
-        assert(!resp.success)
-        done()
-      })
+  it('should create a new user given a name and password', function(done){
+    // POST /users
+    client.name = rand();
+    client.secret = rand();
+    client.createUser({}, function(err, user) {
+      assert(user.id > 0);
+      done();
     })
-  })
-})
+  });
+
+  it("should verify a user's credentials given a name and password", function(done){
+    // GET /users
+    client.name = rand();
+    client.secret = rand();
+    client.createUser({}, function(err, user) {
+      var id = user.id;
+      client.getUser({}, function(err, user) {
+        assert(id == user.id);
+        done();
+      });
+    });
+  });
+
+  it('should not allow the creation of two users with the same name', function(done){
+    // POST /users
+    var name = rand();
+    client.name = name;
+    client.secret = rand();
+    client.createUser({}, function(err, user){
+      var id = user.id;
+      client.secret = rand();
+      client.createUser({}, function(err, user){
+        assert(typeof err != 'undefined');
+        assert(user == 'Unauthorized');
+        done();
+      });
+    });
+  });
+
+  it('should not allow the creation of a user with the name "admin"', function(done){
+    // POST /users
+    client.name = 'admin';
+    client.secret = rand();
+    client.createUser({}, function(err, user){
+      assert(user == 'invalid admin key');
+      done();
+    });
+  });
+
+});

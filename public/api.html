@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>
   <title>API documentation</title>
-  
+
   <link type="text/css" rel="stylesheet" href="apidocs_files/bootstrap.min.css">
 <link type="text/css" rel="stylesheet" href="apidocs_files/prettify.css">
 <link type="text/css" rel="stylesheet" href="apidocs_files/bootstrap-responsive.min.css">
@@ -22,7 +22,7 @@
 <div><h1 class="page-header">Ripple Gateway Accounts API Reference</h1>
 <section style='padding:2em; border:1px solid #bbb;'>
   <h2 style='text-align:center'>Gateway</h2>
-  
+
   <h2>
     <a>
       Users
@@ -38,17 +38,17 @@
     </thead>
     <tbody>
           <tr>
-            <td><a href='/doc/users/create.html'>POST /api/v1/gateway/users</a></td>
+            <td><a href='/doc/users/create.html'>POST /api/v1/users</a></td>
             <td width="60%">Create a new user at this gateway.</td>
           </tr>
-            <form method='post' action='/api/v1/gateway/users'>
+            <form method='post' action='/api/v1/users'>
             <td>username <input name='name' /></td>
             <td>password <input name='password' />
               <input type='submit'>
             </td>
             </form>
           <tr>
-            <td><a href='/doc/users/show.html'>GET /api/v1/gateway/users/:userId/gateway_account</a></td>
+            <td><a href='/doc/users/show.html'>GET /api/v1/users/:userId/gateway_account</a></td>
             <td width="60%">Get the user's account.</td>
           </tr>
     </tbody>
@@ -109,7 +109,7 @@
     </thead>
     <tbody>
           <tr>
-            <td><a href='/doc/gateway_accounts/create.html'>POST /api/v1/gateway/users/:userId/gateway_accounts</a></td>
+            <td><a href='/doc/gateway_accounts/create.html'>POST /api/v1/users/:userId/gateway_accounts</a></td>
             <td width="60%">Create a new gateway account given a user id</td>
           </tr>
     </tbody>
@@ -159,7 +159,7 @@
     </tbody>
   </table>
   <h2>
-    <a> 
+    <a>
       Gateway Deposits
     </a><br>
     <small>List bank transactions made at this gateway</small>
@@ -262,7 +262,7 @@
     </tbody>
   </table>
   <h2>
-    <a> 
+    <a>
       Ripple Deposits
     </a><br>
     <small>Send funds into the gateway from outside the ripple network</small>
@@ -282,7 +282,7 @@
     </tbody>
   </table>
   <h2>
-    <a> 
+    <a>
       Ripple Withdrawals
     </a><br>
     <small>List Ripple Transaction Withdrawals</small>

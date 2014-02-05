@@ -1,33 +1,42 @@
-assert = require('assert')
-Ripple = require('../../lib/ripple')
+describe('RippleTransactions', function(){
+  
+  describe('on behalf of a user', function(){
 
-describe('withdrawing to ripple', function() {
-  before(function(){
-    client = new Ripple.Gateway.Client({
-      api: 'http://localhost:3000',
-      clientId: 'adminUsername',  
-      clientSecret: 'somethingSuperSecretAndRandom'
-    })
-  })
-  it('create a valid transaction record', function(done){
-    client.createRippleTransaction({ 
-      to_currency: 'XAG',
-      from_currency: 'XAG',
-      to_amount: '10',
-      from_amount: '10.01', 
-      to_issuer: 'someIssurRippleAddress',
-      from_issuer: 'someIssurRippleAddress',
-      to_address: 'someRippleAddress',
-      from_address: 'someRippleAddress',
-      ripple_address_id: '3',
-      send_tag: '10',
-      issuance: true
-    }, function(err, resp){
-      console.log(err);
-      console.log(resp);
-      assert.equal(resp.ripple_transaction.transaction_state, 'created') 
-      done()
-    })
-  })
+    it.skip('should create a payment to a ripple account', function(){
+      // POST /payments  
+      done();
+    });
 
-})
+    it.skip('should not be able to send a payment to the gateway', function(){
+      // POST /payments  
+      done();
+    });
+
+    it.skip('should list all payments made to or from a user', function(){
+      // GET /payments
+      done();
+    });
+
+  });
+
+  describe('on behalf of an admin', function(){
+
+    it.skip('should create payment to a ripple account', function(){
+      // POST /payments 
+      done();
+    });
+
+    it.skip('should list payments sent to or from a hosted wallet', function(){
+      // GET /payments
+      done();
+    });
+
+    it.skip('should list all payments made to or from all hosted wallets', function(){
+      // GET /payments
+      done();
+    });
+
+  }); 
+
+});
+

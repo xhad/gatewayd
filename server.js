@@ -7,12 +7,23 @@ var port = process.env.PORT || 4000;
 var app = express();
 var sequelize = require('./config/initializers/sequelize.js');
 var nconf = require('./config/nconf.js');
+var fs = require('fs');
+var https = require('https');
 
 middleware.configure(app);
 router.route(app);
 
+var sslOptions = {
+  key: fs.readFileSync('./certs/server.key'),
+  cert: fs.readFileSync('./certs/server.crt')
+};
+
 sequelize.sync().success(function(){
-  host ? app.listen(port, host) : app.listen(port);
+  if (host) {
+    https.createServer(sslOptions, app).listen(port, host);
+  } else {
+    https.createServer(sslOptions, app).listen(port);
+  }
 
   var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
 

@@ -23,7 +23,6 @@
   <li>
     <a href='/api/doc/1.0/buttons.html'>
       Buttons
-      
     </a>
     <span class='divider'>/</span>
   </li>
@@ -32,25 +31,19 @@
 
   <div class='page-header'>
     <h1>
-      POST /api/v1/gateway/users<br>
+      POST /api/v1/users<br>
       <small>Create a new user at this gateway.</small>
     </h1>
   </div>
 
 <div>
 
-  <p>Authenticated resource that creates a payment button, page, or iFrame to accept bitcoin on your website. This can be used to accept bitcoin for an individual item or to integrate with your existing shopping cart solution. For example, you could create a new payment button for each shopping cart on your website, setting the total and order number in the button at checkout.</p>
-
-<p>The <code>code</code> param returned in the response can be used to generate an embeddable <a href='/docs/merchant_tools/payment_buttons'>button</a>, <a href='/docs/merchant_tools/payment_pages'>payment page</a>, or <a href='/docs/merchant_tools/payment_iframes'>iFrame</a>. Coinbase stores the underlying model in the same way, so the <code>code</code> can be used to generate any of these payment methods. Click one of the links above to see sample code showing how the <code>code</code> parameter is used.</p>
-
-<p>You can set a variety of options on payment buttons. These correspond to the options used on the <a href='/merchant_tools'>button generator page</a>.</p>
-
-<p>These include <code>type</code>, <code>style</code>, <code>custom</code>, <code>variable_price</code>, <code>include_email</code>, <code>include_address</code>, custom redirect urls, and more. For a description of each of these see the documentation below.</p>
+  <p>Authenticated resources that allows you to create a user. Any credentials that do not belong to an existing user will be used to create a new user.</p>
 
     <h2>Examples</h2>
       <pre class="prettyprint">
 # Request
-POST /api/v1/buttons
+POST /api/v1/users
 {
     &quot;button&quot;: {
         &quot;name&quot;: &quot;test&quot;,

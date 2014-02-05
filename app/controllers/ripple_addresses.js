@@ -14,7 +14,7 @@ module.exports = (function(){
       res.send({ success: true, ripple_addresses: addresses });
     })
 	}
-  
+
   function create(req, res) {
 		req.checkBody('userId', 'Invalid bankAccountId')
 			.notEmpty().isInt();
@@ -24,7 +24,7 @@ module.exports = (function(){
 			.notEmpty().isFloat();
 
 		respondToValidationErrors(req, res);
-		
+
 		RippleAddress.create({
 			user_id: req.body.userId,
 			address: req.body.rippleAddress
@@ -36,7 +36,7 @@ module.exports = (function(){
 			res.send({ error: err });
 		});
 	}
- 
+
   function index(req,res) {
 		RippleAddress.findAll()
 		.success(function(addresses){

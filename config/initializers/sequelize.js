@@ -5,7 +5,6 @@ var nconf = require('./../nconf.js');
 var db;
 
 var databaseUrl = nconf.get('DATABASE_URL');
-console.log('sequelize', databaseUrl);
 if (databaseUrl) {
   var match = databaseUrl.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
   var db = new Sequelize(match[5], match[1], match[2], {
