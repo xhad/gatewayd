@@ -14,6 +14,14 @@ module.exports = (function(){
       if (req.body) { console.log('%s', req.body); }
       next();
     });
+    app.use(function(req, res, next){
+      req.validate = function(field, predicate) {
+        req.checkBody(field, field)[predicate](); 
+        var errors = req.validationErrors();
+        if (errors) { res.send(util.inspect(errors)); return }
+      }
+      next();
+    });
     app.use(express.bodyParser())
     app.use(expressValidator());
     app.use(express.cookieParser())
