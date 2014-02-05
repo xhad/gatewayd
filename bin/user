@@ -3,13 +3,17 @@
 var program = require('commander');
 var nconf = require('../config/nconf.js');
 
-var RippleClient = require('../lib/ripple.js');
-var client = new RippleClient();
+var GatewayClient = require('../lib/http_client.js').Gateway.Client;
+var client = new GatewayClient({
+  api: 'http://localhost:4000',
+  clientId: 'admin',
+  clientSecret: nconf.get('KEY')
+});
 
 program.version('0.0.1')
   .option('-u, --username', 'specify the username')
   .option('-p, --password', 'specify the password')
-  .option('-i, --issuer', 'specify the password')
+  .option('-i, --issuer', 'specify the password');
 
 program
   .command('withdrawals')
@@ -18,6 +22,15 @@ program
     console.log('username', username);
     console.log('password', password);
     console.log('list the user withdrawals');
+  });
+
+program
+  .command('get <id>')
+  .description('get the user record')
+  .action(function(id) {
+    client.getUser({ user_id: id }, function(err, user){
+      console.log(user);
+    });
   });
 
 program
