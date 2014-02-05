@@ -5,12 +5,22 @@ var User = require('../models/user'),
 module.exports = (function() {
   function index(req, res) {
     if (req.user.admin) {
-      req.validate('name', 'isAlphaNumeric');
-      User.find({ where: { name: req.body.name }}).complete(function(err, user) {
-        res.send(user);
-      })
+      User.findAll().complete(function(err, users){
+        res.send({ admin: true, users: users });
+      });
     } else {
-      res.send(req.user);
+      res.send({ user: req.user });
+    }
+  }
+
+  function show(req, res) {
+    if (req.user.admin || (req.user.id == req.params.user_id)) {
+      User.find(req.params.user_id).complete(function(err, user){
+        res.send({ user: user });
+      });  
+    } else {
+      res.status(401);
+      res.send('401: access denied');
     }
   }
 
@@ -32,6 +42,7 @@ module.exports = (function() {
   
   return {
     index: index,
-    create: create
+    create: create,
+    show: show
   }
 })();
