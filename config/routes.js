@@ -25,6 +25,10 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }), 
       ctrls['users'].index);
 
+    app.get('/api/v1/users/:user_id', 
+      passport.authenticate('basic', { session: false }), 
+      ctrls['users'].show);
+
     app.get('/api/v1/external_accounts', 
       passport.authenticate('basic', { session: false }),
       ctrls['external_accounts'].index);
