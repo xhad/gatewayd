@@ -1,2 +1,1 @@
-web: node server.js
-paymentd: node paymentd.js
+web: bin/gateway start
