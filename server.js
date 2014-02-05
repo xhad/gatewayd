@@ -19,12 +19,18 @@ var sslOptions = {
 };
 
 sequelize.sync().success(function(){
-  if (host) {
+  var ssl = nconf.get('SSL');
+  if (ssl == 'false') { ssl = false }
+  if (host && ssl) {
     https.createServer(sslOptions, app).listen(port, host);
-  } else {
+  } else if (ssl) {
     https.createServer(sslOptions, app).listen(port);
+  } else if (host) {
+    app.listen(port, host);
+  } else {
+    app.listen(port);
   }
-
+  
   var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
 
   incomingPaymentsMonitor.stdout.on('data', function(data){
@@ -46,6 +52,6 @@ sequelize.sync().success(function(){
     });
   },10000);
 
-  console.log('Serving HTTP on', (host || 'localhost')+":"+port);
+  console.log('Serving '+ (ssl ? 'HTTPS' : 'HTTP') +' on', (host || 'localhost')+":"+port);
 })
 
