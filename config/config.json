@@ -1,0 +1,14 @@
+{
+  "DATABASE_URL": "postgres://tijjyppdfivteg:7-tZdjicDfXFBjzhd5LfS1HYCP@ec2-54-197-241-64.compute-1.amazonaws.com:5432/db4okr1k6l0859?native=true",
+  "RIPPLE_REST_API": "https://ripple-simple-api.herokuapp.com",
+  "KEY": "adc7c1e4943a0413c51f1494beb71847c65641bc17219ecf2c5783a8c770178a",
+  "cli": {
+    "USERNAME": "stevenzeiler",
+    "PASSWORD": "password"
+  },
+  "processes": {
+    "server": 63451,
+    "incoming": 63453,
+    "outgoing": 63454
+  }
+}
