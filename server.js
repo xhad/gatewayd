@@ -13,14 +13,16 @@ var https = require('https');
 middleware.configure(app);
 router.route(app);
 
-var sslOptions = {
-  key: fs.readFileSync('./certs/server.key'),
-  cert: fs.readFileSync('./certs/server.crt')
-};
-
 sequelize.sync().success(function(){
   var ssl = nconf.get('SSL');
-  if (ssl == 'false') { ssl = false }
+  if (ssl == 'false') { 
+    ssl = false 
+  } else {
+    var sslOptions = {
+      key: fs.readFileSync('./certs/server.key'),
+      cert: fs.readFileSync('./certs/server.crt')
+    };
+  }
   if (host && ssl) {
     https.createServer(sslOptions, app).listen(port, host);
   } else if (ssl) {
