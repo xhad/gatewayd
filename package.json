@@ -17,18 +17,15 @@
     "passport-http":"",
     "sjcl":"1.0.0",
     "ripple-lib": "",
-    "request": "",
-    "async": "",
-    "cli":"",
+    "request": "2.3.0",
+    "async": "0.2.9",
     "nconf":"~0.6",
     "commander":"2.1.0"
   },
   "devDependencies": {
-    "request": "",
+    "request": "2.3.0",
     "mocha": "~1.14.0",
-    "sinon-chai": "~2.4.0",
-    "sinon":"~1.7.3",
 		"node-uuid":"",
-    "async":""
+    "async":"0.2.9"
   }
 }
