@@ -5,7 +5,7 @@ var nconf = require('../config/nconf.js');
 
 var GatewayClient = require('../lib/http_client.js').Gateway.Client;
 var client = new GatewayClient({
-  api: 'http://localhost:4000',
+  api: 'https://localhost:4000',
   clientId: 'admin',
   clientSecret: nconf.get('KEY')
 });
