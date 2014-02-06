@@ -14,13 +14,16 @@ angular.module('publicApp').service('UserService', ['$http','$location', 'Base64
     login: function(username, password) {
       $http.defaults.headers.common['Authorization'] = 'Basic ' + Base64.encode(username+':'+password)
 			$http.get('/api/v1/users').success(function(resp){
-        if (resp.success) {
-          user.isLogged = true
+        if (resp.admin) {
+          user.isLogged = true;
+          user.admin = true;
+          $location.path('/admin'); 
+        } else if (resp.user) {
+          user.isLogged = true;
           user.username = resp.user.name
           user.admin = resp.user.admin
           user.id = resp.user.id
           user.password = password
-
 					$location.path('/users/'+user.id);
 				} else {
 					$location.path('/register');
