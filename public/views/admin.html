@@ -1,5 +1,64 @@
-<h2>Gateway Admin</h2>
+<h2> Admin</h2>
 
-<p>hot wallet: {{ hotWallet }}</p>
-<p>cold wallet: {{ coldWallet }}</p>
+<div class='col-sm-12 well'>
+<ul class='col-sm-6'>
+  <p>Hot Wallet</p>
+  <li>address: {{ hotWallet.address }}</li>
+  <li>secret: {{ hotWallet.secret }}</li>
+</ul>
 
+<ul class='col-sm-6'>
+  <p>Cold Wallet</p>
+  <li>address: {{ coldWallet.address }}</li>
+  <li>secret: {{ coldWallet.secret }}</li>
+</ul>
+</div>
+
+<section class='col-sm-4' id='users'>
+  <ul>
+    <p>Users</p>
+    <li ng-repeat='user in users'></li>
+  </ul>
+</section>
+
+<section class='col-sm-4' id='externalAccounts'>
+  <ul>
+    <p>External Accounts</p>
+    <li ng-repeat='account in externalAccounts'></li>
+  </ul>
+</section>
+
+<section class='col-sm-4' id='deposits'>
+  <ul>
+    <p>Deposits</p>
+    <li ng-repeat='deposit in deposits'></li>
+  </ul>
+</section>
+
+<section class='col-sm-4' id='withdrawals'>
+  <ul>
+    <p>Withdrawals</p>
+    <li ng-repeat='withdrawal in withdrawals'></li>
+  </ul>
+</section>
+
+<section class-'col-sm-4' id='rippleAddresses'>
+  <ul>
+    <p>Ripple Addresses</p>
+    <li ng-repeat='address in rippleAddresses'></li>
+  </ul>
+</section>
+
+<section class='col-sm-4' id='payments'>
+  <ul>
+    <p>Payments</p>
+    <li ng-repeat='payment in payments'></li>
+  </ul>
+</section>
+
+<section class='col-sm-4' id='balances'>
+  <ul>
+    <p>Balances</p>
+    <li ng-repeat='balance in balances'></li>
+  </ul>
+</section>
