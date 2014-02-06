@@ -39,7 +39,7 @@ module.exports = (function(){
 
     app.get('/api/v1/external_transactions', 
       passport.authenticate('basic', { session: false }),
-      ctrls['external_transactions'].userIndex);
+      ctrls['external_transactions'].index);
 
     app.post('/api/v1/deposits',
       passport.authenticate('basic', { session: false }),
