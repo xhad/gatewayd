@@ -6,6 +6,7 @@ var User = require('../app/models/user.js');
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
+var fs = require('fs');
 
 var client = new GatewayClient({
   api: 'http://localhost:4000',
@@ -184,17 +185,16 @@ program
   .command('start')
   .description('start the gateway api server')
   .action(function(account, secret){
-    var server = spawn('nohup', ['node','server.js','&']);
-    server.stdout.on('data', function(data) {
-      console.log(data.toString());
+
+     var out = fs.openSync('./log/server.log', 'a');
+     var err = fs.openSync('./log/server.log', 'a');
+
+    var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
+      detached: true,
+      stdio: [ 'ignore', out, err ]
     });
-    server.stderr.on('data', function(data) {
-      console.log(data.toString());
-    });
-    server.on('exit', function (code) {
-      console.log('server process exited with code ' + code);
-    });
-    console.log('start the gateway api server');
+    console.log('Running the Ripple Gateway Api Server.');
+    server.unref();
   });
 
 program
