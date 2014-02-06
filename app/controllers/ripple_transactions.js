@@ -5,10 +5,8 @@ var util = require('util');
 
 module.exports = (function(){
   function index(req, res) {
-    User.find(req.params.id).complete(function(err, user) {
-      user.rippleTransactions(function(err, transactions) {
-        res.send({ ripple_transactions: (transactions || []) });
-      });
+    req.user.rippleTransactions(function(err, transactions) {
+      res.send({ ripple_transactions: (transactions || []) });
     });
   } 
   
