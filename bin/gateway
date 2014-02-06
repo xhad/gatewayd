@@ -169,10 +169,22 @@ program
   });
 
 program
+  .command('init')
+  .description('configure the gateway with initial parameters')
+  .action(function(account, secret){
+    console.log('create an admin user, set password');
+    User.createAdmin(function(err, adminConfig){
+      console.log('admin user created with KEY', adminConfig.password);
+      console.log('hot and cold wallets have been generated: ');
+      console.log(adminConfig.wallets);
+    });
+  });
+
+program
   .command('start')
   .description('start the gateway api server')
   .action(function(account, secret){
-    var server = spawn('node', ['server.js']);
+    var server = spawn('nohup', ['node','server.js','&']);
     server.stdout.on('data', function(data) {
       console.log(data.toString());
     });
@@ -186,22 +198,17 @@ program
   });
 
 program
-  .command('init')
-  .description('configure the gateway with initial parameters')
-  .action(function(account, secret){
-    console.log('create an admin user, set password');
-    User.createAdmin(function(err, adminConfig){
-      console.log('admin user created with KEY', adminConfig.password);
-      console.log('hot and cold wallets have been generated: ');
-      console.log(adminConfig.wallets);
-    });
-  });
-
-program
   .command('stop')
   .description('stop the gateway api server')
   .action(function(account, secret){
-    console.log('stop the gateway api server');
+    var processes = nconf.get('processes');
+    for (key in processes) {
+      if (processes.hasOwnProperty(key)) {
+        process.kill(processes[key]);
+      }
+    }
+    nconf.set("processes", {});
+    nconf.save();
   });
 
 program
