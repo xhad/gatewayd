@@ -1,14 +1,48 @@
 'use strict';
 
 angular.module('publicApp')
-  .controller('LoginCtrl', ['$scope', '$http', '$location', 'UserService', function ($scope, $http, $location, $user) {
+  .controller('AdminCtrl', ['$scope', '$http', '$location', 'UserService', function ($scope, $http, $location, $user) {
+    console.log($user);
+    if (!$user.isLogged) { $location.path('/login') };
     function checkAdminExists() {
       $http.get("/api/v1/settings").success(function(resp){
-        if (resp.success) {
-          $scope.adminExists = resp.settings.adminExists
-        }
+        console.log('settings', resp);
+        $scope.adminExists = resp.settings.adminExists
+        $scope.coldWallet = resp.settings.coldWallet;
+        $scope.hotWallet = resp.settings.hotWallet;
         $scope.loading = false
       })
+    }
+
+    $scope.users = [];
+    $scope.rippleAddresses = [];
+    $scope.payments = [];
+    $scope.balances = [];
+    $scope.deposits = [];
+    $scope.withdrawals = [];
+    $scope.externalAccounts = [];
+    $scope.users = [];
+
+    function getUsers() {
+
+    }
+    function getRippleAddresses(){
+
+    }
+    function getPayments(){
+
+    }
+    function getBalances(){
+
+    }
+    function getDeposits(){
+
+    }
+    function getWithdrawals(){
+
+    }
+    function getExternalAccounts(){
+
     }
 
     checkAdminExists()
