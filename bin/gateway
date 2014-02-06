@@ -189,15 +189,19 @@ program
     var running = (Object.keys(processes).length != 0);
 
     if (!running) {
-      var out = fs.openSync('./log/server.log', 'a');
-      var err = fs.openSync('./log/server.log', 'a');
+      if(nconf.get('PLATFORM') == 'heroku') {
+        var server = spawn('node', ['server.js']);
+      } else {
+        var out = fs.openSync('./log/server.log', 'a');
+        var err = fs.openSync('./log/server.log', 'a');
 
-      var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
-        detached: true,
-        stdio: [ 'ignore', out, err ]
-      });
-      console.log('Running Ripple Gateway.');
-      server.unref();
+        var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
+          detached: true,
+          stdio: [ 'ignore', out, err ]
+        });
+        console.log('Running Ripple Gateway.');
+        server.unref();
+      }
     } else {
       console.log('Ripple Gateway is already running');    
     }
