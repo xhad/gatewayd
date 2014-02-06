@@ -3,9 +3,15 @@ User = require('../models/user.js');
 
 module.exports = (function(){
   function index(req, res) {
-    ExternalTransaction.all().complete(function(err, transactions) {
-      res.send({ external_transactions: transactions, error: err });
-    });
+    if (req.user.admin) {
+      ExternalTransaction.all().complete(function(err, transactions) {
+        res.send({ external_transactions: transactions, error: err });
+      });
+    } else {
+      req.user.externalTransactions(function(err, transactions) {
+        res.send({ external_transactions: (transactions || []) });
+      });
+    }
   }
 
   function create(req, res) {
@@ -28,17 +34,8 @@ module.exports = (function(){
     });
   };
 
-  function userIndex(req, res) {
-    User.find(req.params.id).complete(function(err, user) {
-      user.externalTransactions(function(err, transactions) {
-        res.send({ external_transactions: (transactions || []) });
-      });
-    });
-  } 
-
   return {
 		index: index,
-    userIndex: userIndex,
     create: create
 	}
 })();
