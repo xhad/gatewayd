@@ -7,12 +7,16 @@ module.exports = (function() {
       if (err || !user) { res.send({ success: false }); return }
       RippleAddress.getHot(function(err, hotWallet) {
         RippleAddress.getCold(function(err, coldWallet) {
+          if (!user.admin) {
+            hotWallet = hotWallet.address; 
+            coldWallet = coldWallet.address;
+          }
           res.send({ 
             success: true, 
             settings: { 
-              adminExists: user.admin, 
-              hotWallet: hotWallet.address,
-              coldWallet: coldWallet.address
+              admin: user.admin, 
+              hotWallet: hotWallet,
+              coldWallet: coldWallet
             } 
           });
         });
