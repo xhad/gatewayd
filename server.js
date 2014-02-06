@@ -34,25 +34,29 @@ sequelize.sync().success(function(){
   }
   
   var incomingPaymentsMonitor = childProcess.spawn("node", ["workers/listener.js"]);
-
-  incomingPaymentsMonitor.stdout.on('data', function(data){
-    console.log(data.toString());
-  });
-
-  incomingPaymentsMonitor.stderr.on('data', function(data){  
-    console.log(data.toString());
-  });
-
-  setTimeout(function(){
-    var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
-    outgoingPaymentsMonitor.stdout.on('data', function(data) {
+  incomingPaymentsMonitor
+    .stdout.on('data', function(data){
+      console.log(data.toString());
+    })
+  incomingPaymentsMonitor
+    .stderr.on('data', function(data){  
       console.log(data.toString());
     });
 
-    outgoingPaymentsMonitor.stderr.on('data', function(data) {
-      console.log(data.toString());
-    });
-  },10000);
+  var outgoingPaymentsMonitor = childProcess.spawn("node", ["workers/outgoing_ripple_payments.js"]);
+  outgoingPaymentsMonitor.stdout.on('data', function(data) {
+    console.log(data.toString());
+  });
+
+  outgoingPaymentsMonitor.stderr.on('data', function(data) {
+    console.log(data.toString());
+  });
+
+  nconf.set('processes:server', process.pid);
+  nconf.set('processes:incoming', incomingPaymentsMonitor.pid);
+  nconf.set('processes:outgoing', outgoingPaymentsMonitor.pid);
+  nconf.save();
+
 
   console.log('Serving '+ (ssl ? 'HTTPS' : 'HTTP') +' on', (host || 'localhost')+":"+port);
 })
