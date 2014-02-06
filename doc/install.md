@@ -4,7 +4,7 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
 
 ### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10)
 
-    sudo apt-get install python-software-properties python g++ make
+    sudo apt-get install python-software-properties python g++ make libpg-dev
     sudo add-apt-repository ppa:chris-lea/node.js
     sudo apt-get update
     sudo apt-get install nodejs
@@ -35,6 +35,7 @@ clone the project from github
 install the package dependencies
 
     sudo npm install
+    sudo npm install -g pg
     sudo npm install -g db-migrate
 
 migrate the database to create gateway tables
@@ -47,6 +48,6 @@ configure the initial gateway parameters
 
 start the gateway rest api server
 
-    node server.js
+    bin/gateway start
 
 
