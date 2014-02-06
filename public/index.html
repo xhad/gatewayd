@@ -57,11 +57,6 @@
                   Account
                 </a>
               </li>
-              <li>
-                <a ng-href='/#/admin/settings'>
-                  Settings
-                </a>
-              </li>
               <li class='divider'></li>
               <li>
                 <a ng-click='userService.logout()'>
@@ -89,10 +84,10 @@
 				</ul>
 
 				<ul class="nav" ng-hide='userService.admin'>
-					<li><a ng-href="#/external/withdraw">External Withdrawal</a></li>
-					<li><a ng-href="#/external/deposit">External Deposit</a></li>
-					<li><a ng-href="#/ripple/withdraw/">Send to Ripple Wallet</a></li>
-					<li><a ng-href="#/ripple/deposit">Deposit From Ripple</a></li>
+					<li><a ng-href="#/external/withdraw">Withdrawals</a></li>
+					<li><a ng-href="#/external/deposit">Deposit</a></li>
+					<li><a ng-href="#/ripple/withdraw/">Send</a></li>
+					<li><a ng-href="#/ripple/deposit">Receive</a></li>
 				</ul>
         </span>
 			</div>
