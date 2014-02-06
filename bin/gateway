@@ -185,16 +185,36 @@ program
   .command('start')
   .description('start the gateway api server')
   .action(function(account, secret){
+    var processes = nconf.get('processes');
+    var running = (Object.keys(processes).length != 0);
 
-     var out = fs.openSync('./log/server.log', 'a');
-     var err = fs.openSync('./log/server.log', 'a');
+    if (!running) {
+      var out = fs.openSync('./log/server.log', 'a');
+      var err = fs.openSync('./log/server.log', 'a');
 
-    var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
-      detached: true,
-      stdio: [ 'ignore', out, err ]
-    });
-    console.log('Running the Ripple Gateway Api Server.');
-    server.unref();
+      var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
+        detached: true,
+        stdio: [ 'ignore', out, err ]
+      });
+      console.log('Running Ripple Gateway.');
+      server.unref();
+    } else {
+      console.log('Ripple Gateway is already running');    
+    }
+  });
+
+program
+  .command('status')
+  .description('get the status of the gateway api')
+  .action(function(){
+    var processes = nconf.get('processes');
+    var running = (Object.keys(processes).length != 0);
+    if (running) {
+      console.log('Ripple Gateway is running');
+      console.log(processes);
+    } else {
+      console.log('Ripple Gateway is not running');
+    }
   });
 
 program
@@ -209,6 +229,7 @@ program
     }
     nconf.set("processes", {});
     nconf.save();
+    console.log('Stopped running Ripple Gateway');
   });
 
 program
