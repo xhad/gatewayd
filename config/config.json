@@ -7,8 +7,5 @@
     "PASSWORD": "password"
   },
   "processes": {
-    "server": 63451,
-    "incoming": 63453,
-    "outgoing": 63454
   }
 }
