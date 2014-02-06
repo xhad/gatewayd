@@ -4,7 +4,11 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
 
 ### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10)
 
-    sudo apt-get install python-software-properties python g++ make libpg-dev
+    sudo apt-get install python-software-properties
+    sudo apt-get install python
+    sudo apt-get install g++
+    sudo apt-get install make
+    sudo apt-get install libpg-dev
     sudo add-apt-repository ppa:chris-lea/node.js
     sudo apt-get update
     sudo apt-get install nodejs
