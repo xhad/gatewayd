@@ -1,6 +1,6 @@
-<h2>Withdraw to a Ripple Wallet</h2>
+<h2>Send to Ripple Address</h2>
 
-<h5 ng-show='hotWallet'>Make sure to trust <b>{{ hotWallet }}</b> for the amount you wish to withdraw</h5>
+<h5 ng-show='hotWallet'>Make sure to trust <b>{{ coldWallet.address }}</b> for the amount you wish to send</h5>
 
 <div class='col-sm-6'>
   <form role='form' ng-submit='createRippleWithdrawal()'>
