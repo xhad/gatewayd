@@ -23,19 +23,19 @@ angular.module('publicApp')
     }
 
     function getExternalTransactions() {
-      $http.get('/api/v1/users/'+$user.id+'/external_transactions').success(function(resp){
+      $http.get('/api/v1/external_transactions').success(function(resp){
         $scope.user.external_transactions = resp.external_transactions;
       });
     }
 
     function getRippleTransactions() {
-      $http.get('/api/v1/users/'+$user.id+'/ripple_transactions').success(function(resp){
+      $http.get('/api/v1/ripple_transactions').success(function(resp){
         $scope.user.ripple_transactions = resp.ripple_transactions;
       });
     }
 
     function getBalances() {
-      $http.get('/api/v1/users/'+$user.id+'/balances').success(function(resp){
+      $http.get('/api/v1/balances').success(function(resp){
         $scope.user.balances = resp.balances;
       });
     }
