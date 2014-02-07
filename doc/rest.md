@@ -57,7 +57,44 @@ __________
 
 #### POST /api/v1/external_accounts
 
+Request
+```js
+{
+    name: 'Wells Fargo'
+}
+```
+
+Response
+```js
+{
+  "account": {
+    "name": "Wells Fargo",
+    "user_id": 2,
+    "updatedAt": "2014-02-08T05:55:02.510Z",
+    "createdAt": "2014-02-08T05:55:02.510Z",
+    "id": 55
+  }
+}
+```
+
+
 #### GET /api/v1/external_accounts
+
+Response
+```js
+{
+  "external_accounts": [
+    {
+      "id": 4,
+      "name": "Default",
+      "user_id": 2,
+      "createdAt": "2014-01-24T08:59:43.814Z",
+      "updatedAt": "2014-01-24T08:59:43.815Z"
+    }
+  ]
+}
+```
+
 __________
 
 ### 3. Deposits
