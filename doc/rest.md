@@ -38,8 +38,6 @@ __________
 
 Create a user with default hosted wallet using Basic Auth.
 
-__________
-
 #### GET /api/v1/users
 
 Get a user using their credentials in Basic Auth
@@ -63,34 +61,28 @@ Response:
     }
 }
 ```
-Or if there are no new notifications:
-
-(Note the `"type": "none"` and `"tx_state": "empty"` or `"tx_state": "pending"`)
-```js
-{
-    "success": true,
-    "notification": {
-        "address": "rKXCummUHnenhYudNb9UoJ4mGBR75vFcgz",
-        "type": "none",
-        "tx_direction": "",
-        "tx_state": "empty", // or "pending" if still waiting for outgoing transactions to clear
-        "tx_result": "",
-        "tx_ledger": "",
-        "tx_hash": "",
-        "tx_timestamp": ,
-        "tx_url": "",
-        "confirmation_token": ""
-    }
-}
-```
-
 __________
 
-### 2. Payments
-
-
+### 2. External Accounts
 __________
 
+### 3. Deposits
+__________
+
+### 4. Withdrawals
+__________
+
+### 5. Balances
+__________
+
+### 6. Ripple Addresses
+__________
+
+### 7. Ripple Payments
+__________
+
+### 8. Ripple Payments
+__________
 
 
 
