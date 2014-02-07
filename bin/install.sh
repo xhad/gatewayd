@@ -8,11 +8,9 @@ sudo apt-get -y update
 sudo apt-get -y install nodejs
 sudo apt-get -y install postgresql
 sudo apt-get -y install postgresql-client
-sudo apt-get -y install git
-sudo -u postgres psql postgres
-\password postgres
-\q
+sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
 sudo -u postgres createdb ripple_gateway
+export DATABASE_URL=postgres://postgres:password@localhost:4000/ripple_gateway
 git clone https://github.com/stevenzeiler/ripple-gateway-api.git
 cd ripple-gateway-api
 sudo npm install
