@@ -25,26 +25,20 @@ set the postgres password, create the database and set the environment
     \q
 
     sudo -u postgres createdb ripple_gateway
-    export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 
 ### Gateway API Server
 
-clone the project from github
+clone the project from github and install the package dependencies
 
-    sudo apt-get install git
     git clone https://github.com/stevenzeiler/ripple-gateway-api.git
     cd ripple-gateway-api
-
-install the package dependencies
-
     sudo npm install
     sudo npm install -g pg
     sudo npm install -g db-migrate
 
 migrate the database to create gateway tables
 
-    bin/gateway postgres:set 
-    db-migrate --config config/database.json --migrations-dir db/migrations
+    db-migrate up --config config/database.json --migrations-dir db/migrations
     
 configure the initial gateway parameters 
 
