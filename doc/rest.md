@@ -114,12 +114,37 @@ __________
 ### 5. Balances
 
 #### GET /api/v1/balances
+
+response
+
+```js
+{
+  "balances": [
+    {
+      "currency": "MXN",
+      "amount": "20819"
+    },
+    {
+      "currency": "USD",
+      "amount": "14.676"
+    },
+    {
+      "currency": "JPY",
+      "amount": "1870.89"
+    },
+    {
+      "currency": "XAG",
+      "amount": "300"
+    }
+  ]
+}
+```
 __________
 
 ### 6. Ripple Addresses
 
-#### GET /api/v1/balances
-#### POST /api/v1/balances
+#### GET /api/v1/ripple_addresses
+#### POST /api/v1/ripple_addresses
 __________
 
 ### 7. Ripple Payments
