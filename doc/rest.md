@@ -30,36 +30,36 @@ __This API is still in beta.__ Please open issues for any problems you encounter
 
 
 
-### 1. Notifications
+### 1. Users
 
 __________
 
-#### GET /api/v1/addresses/:address/next_notification
+#### POST /api/v1/users
 
-Get the most recent notification for a particular account. See next route details for response format.
-
+Create a user with default hosted wallet using Basic Auth.
 
 __________
 
-#### GET /api/v1/addresses/:address/next_notification/:prev_tx_hash
+#### GET /api/v1/users
 
-Get the next notification after the given `:prev_tx_hash` for a particular accounts.
+Get a user using their credentials in Basic Auth
 
 Response:
 ```js
 {
-    "success": true,
-    "notification": {
-        "address": "rKXCummUHnenhYudNb9UoJ4mGBR75vFcgz",
-        "type": "payment",
-        "tx_direction": "outgoing",
-        "tx_state": "confirmed",
-        "tx_result": "tesSUCCESS",
-        "tx_ledger": 4696959,
-        "tx_hash": "55BA3440B1AAFFB64E51F497EFDF2022C90EDB171BBD979F04685904E38A89B7",
-        "tx_timestamp": 1391025100000,
-        "tx_url": "http://ripple-simple.herokuapp.com/api/v1/addresses/rKXCummUHnenhYudNb9UoJ4mGBR75vFcgz/payments/55BA3440B1AAFFB64E51F497EFDF2022C90EDB171BBD979F04685904E38A89B7",
-        "confirmation_token": "55BA3440B1AAFFB64E51F497EFDF2022C90EDB171BBD979F04685904E38A89B7"
+    "user": {
+      "id": 2,
+      "name": "stevenzeiler",
+      "salt": "e22df1bb8cf08b97567a06ef24135de44bfd4bb595a2d832074de55d25c65376",
+      "federation_tag": null,
+      "admin": false,
+      "federation_name": null,
+      "password_hash": "70d68e466b7affe78010f29e7e875842ad3a6ca54747560c6b0c60a2d6920850",
+      "bank_account_id": null,
+      "kyc_id": null,
+      "createdAt": "2014-01-24T08:56:22.590Z",
+      "updatedAt": "2014-01-24T08:56:22.590Z",
+      "external_id": null
     }
 }
 ```
