@@ -59,7 +59,7 @@ module.exports = (function(){
 
     app.get('/api/v1/balances', 
       passport.authenticate('basic', { session: false }),
-      ctrls['balances'].userIndex);
+      ctrls['balances'].index);
 
     app.get('/api/v1/ripple_addresses', 
       passport.authenticate('basic', { session: false }),
