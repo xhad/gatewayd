@@ -1,12 +1,6 @@
-# Ripple Gateway REST API
+# Ripple Gateway HTTP API
 
-A simplified RESTful API for running a the [Ripple Network](http://ripple.com).
-
-## Bugs
-
-__This API is still in beta.__ Please open issues for any problems you encounter.
-
-## Available Resources
+A API for managing deposits, withdrawals, and hosted wallets at Ripple Gateways.
 
 1. [Users](#1-users)
     + [`POST  /api/v1/users`](#post-apiv1users)
@@ -28,11 +22,7 @@ __This API is still in beta.__ Please open issues for any problems you encounter
 8. [Gateway Settings](#8-settings)
     + [`GET  /api/v1/settings`](#get-apiv1settings)
 
-
-
 ### 1. Users
-
-__________
 
 #### POST /api/v1/users
 
@@ -64,25 +54,46 @@ Response:
 __________
 
 ### 2. External Accounts
+
+#### POST /api/v1/external_accounts
+
+#### GET /api/v1/external_accounts
 __________
 
 ### 3. Deposits
+
+#### POST /api/v1/deposits
+#### GET /api/v1/withdrawals
 __________
 
 ### 4. Withdrawals
+
+#### POST /api/v1/withdrawals
+#### GET /api/v1/withdrawals
+#### GET /api/v1/withdrawals/pending
+#### POST /api/v1/withdrawals/:id/clear
 __________
 
 ### 5. Balances
+
+#### GET /api/v1/balances
 __________
 
 ### 6. Ripple Addresses
+
+#### GET /api/v1/balances
+#### POST /api/v1/balances
 __________
 
 ### 7. Ripple Payments
+
+#### GET /api/v1/payments
+#### POST /api/v1/payments
+#### POST /api/v1/payments/:id
 __________
 
-### 8. Ripple Payments
+### 8. Gateway Settings
+
+#### GET /api/v1/settings
 __________
-
-
 
