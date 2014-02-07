@@ -14,6 +14,7 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
     sudo apt-get -y install nodejs
     sudo apt-get -y postgresql
     sudo apt-get -y install postgresql-client
+    sudo apt-get -y install git
 
 ### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)
 
