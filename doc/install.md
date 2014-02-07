@@ -2,28 +2,26 @@
 
 The following are for a clean build of Ubuntu 13.10. If you have any problems please create an issue.
 
-### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10)
+### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10) and packages.
 
-    sudo apt-get install python-software-properties
-    sudo apt-get install python
-    sudo apt-get install g++
-    sudo apt-get install make
-    sudo apt-get install libpg-dev
-    sudo add-apt-repository ppa:chris-lea/node.js
-    sudo apt-get update
-    sudo apt-get install nodejs
+    sudo apt-get -y install python-software-properties
+    sudo apt-get -y install python
+    sudo apt-get -y install g++
+    sudo apt-get -y install make
+    sudo apt-get -7 install libpg-dev
+    sudo add-apt-repository -y ppa:chris-lea/node.js
+    sudo apt-get -y update
+    sudo apt-get -y install nodejs
+    sudo apt-get -y postgresql
+    sudo apt-get -y install postgresql-client
 
-### [Postgres](https://help.ubuntu.com/community/PostgreSQL)
+### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)
 
-    sudo apt-get install postgresql-client
-    sudo apt-get install postgresql
-
-set the postgres password
+set the postgres password, create the database and set the environment
 
     sudo -u postgres psql postgres
     \password postgres
-
-create the database and set the environment
+    \q
 
     sudo -u postgres createdb ripple_gateway
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
@@ -44,6 +42,7 @@ install the package dependencies
 
 migrate the database to create gateway tables
 
+    bin/gateway postgres:set 
     db-migrate --config config/database.json --migrations-dir db/migrations
     
 configure the initial gateway parameters 
