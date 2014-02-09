@@ -3,4 +3,3 @@ node_modules/
 *.swo
 *.swp
 nohup.out
-config/config.json
