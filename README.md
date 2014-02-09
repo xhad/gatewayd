@@ -16,10 +16,8 @@ and running a Ripple gateway system.
 1. Node.js
 
 2. Postgres
-
-The easiest way to get started with Postgres is by launching a [free database hosted by Heroku](https://postgres.heroku.com/databases)
-
-For local development on Mac the simplest installation is via the [Postgres App](http://postgresapp.com/) by Heroku.
+  - The easiest way to get started with Postgres is by launching a [free database hosted by Heroku](https://postgres.heroku.com/databases)
+  - For local development on Mac the simplest installation is via the [Postgres App](http://postgresapp.com/) by Heroku.
 
 3. [Ripple REST API](https://github.com/ripple/ripple-rest.git)
 
