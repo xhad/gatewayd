@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var program = require('commander');
-var RippleWallet = require('../lib/rippleAddress').RippleWallet;
+var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayClient = require('../lib/http_client.js').Gateway.Client;
 var User = require('../app/models/user.js');
 var crypto = require('crypto');
@@ -228,7 +228,11 @@ program
     var processes = nconf.get('processes');
     for (key in processes) {
       if (processes.hasOwnProperty(key)) {
-        process.kill(processes[key]);
+        try {
+          process.kill(processes[key]);
+        } catch(e) {
+          nconf.set("processes:"+key,null);
+        }
       }
     }
     nconf.set("processes", {});
