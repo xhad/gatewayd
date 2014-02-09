@@ -4,6 +4,7 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
 
 ### [Node.js](http://stackoverflow.com/questions/16302436/install-nodejs-on-ubuntu-12-10) and packages.
 
+    sudo apt-get -y install git
     sudo apt-get -y install python-software-properties
     sudo apt-get -y install python
     sudo apt-get -y install g++
@@ -14,7 +15,6 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
     sudo apt-get -y install nodejs
     sudo apt-get -y postgresql
     sudo apt-get -y install postgresql-client
-    sudo apt-get -y install git
 
 ### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)
 
