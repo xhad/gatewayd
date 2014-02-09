@@ -10,6 +10,7 @@ The Ripple Gateway's features include:
   - widthdrawals
   - off-ledger accounting
   - payment monitoring
+  - issuing currency
   - sending and receiving
   - gateway administration
   - federation protocol
