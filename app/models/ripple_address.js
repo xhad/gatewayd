@@ -5,14 +5,14 @@ var RippleAddress = db.define('ripple_address', {
   id: { 
 		type: Sequelize.INTEGER, 
 		primaryKey: true,
-		autoIncrement: true,
+		autoIncrement: true
 	},
   user_id: { type: Sequelize.INTEGER, notNull: true },
   managed: { type: Sequelize.BOOLEAN, notNull: true, default: false },
   address: { type: Sequelize.STRING, notNull: true },
+  type: { type: Sequelize.STRING, notNull: true }, // hot, cold, hosted, independent
   secret: { type: Sequelize.STRING },
   tag: { type: Sequelize.STRING },
-  type: { type: Sequelize.STRING },
   previous_transaction_hash: { type: Sequelize.STRING }
 }, {
   classMethods: {
