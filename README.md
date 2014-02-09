@@ -1,4 +1,4 @@
-## Gateway REST API Server
+## Gateway API Server
 
 This software is a database-backed web server that serves as a
 back end for Ripple Gateway applications.
@@ -7,11 +7,11 @@ The Ripple Gateway appliance is a virtual machine image that
 is meant to serve as a standalone package for configuring
 and running a Ripple gateway system.
 
-## REST Api Docs
+## Api Docs
 
-The primary interface to the Ripple Gateway server is through HTTP REST with JSON.
+The primary interface to the Ripple Gateway server is via HTTP with JSON.
 
-[REST Documenation](./doc/rest.md) is available in the git repo.
+[API Documenation](./doc/rest.md) is available in the git repo.
 
 ## Dependencies
 
@@ -29,10 +29,10 @@ The gateway server software requires git, g++, make, nodejs, postgres, and sever
 
 ## HTTP Client Library
 
-A node.js http client library is provided that maps functions one-to-one to REST commands
+A node.js http client library is provided that maps functions one-to-one to HTTP API commands
 - [Client Library Docs](./doc/http_client.md)
 
 ## Command Line Interface
 
-A CLI tool is provided for interacting with the REST api and configuring the gateway as an admin
+A CLI tool is provided for interacting with the API and configuring the gateway as an admin
 - [CLI Docs](./doc/cli.md)
