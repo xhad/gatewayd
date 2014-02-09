@@ -14,14 +14,15 @@ and running a Ripple gateway system.
 ## Dependencies
 
 1. Node.js
+  - The express web module is used to serve HTTP/JSON endpoints
+  - A Basic Auth strategy is used for authentication of users, admin.
 
 2. Postgres
   - The easiest way to get started with Postgres is by launching a [free database hosted by Heroku](https://postgres.heroku.com/databases)
   - For local development on Mac the simplest installation is via the [Postgres App](http://postgresapp.com/) by Heroku.
 
 3. [Ripple REST API](https://github.com/ripple/ripple-rest.git)
-
-The Ripple REST API provides a simplified HTTP/JSON interface to all the Ripple protocol network operations, such as payments and other transactions.
+- The Ripple REST API provides a simplified HTTP/JSON interface to all the Ripple protocol network operations, such as payments and other transactions.
 
 ## Installation
 
