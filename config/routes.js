@@ -45,6 +45,10 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }),
       ctrls['deposits'].create);
 
+    app.get('/api/v1/deposits',
+      passport.authenticate('basic', { session: false }),
+      ctrls['deposits'].index);
+
     app.post('/api/v1/withdrawals',
       passport.authenticate('basic', { session: false }),
       ctrls['withdrawals'].create);
