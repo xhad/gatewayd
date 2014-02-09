@@ -145,6 +145,25 @@ __________
 ### 6. Ripple Addresses
 
 #### GET /api/v1/ripple_addresses
+```js
+{
+  "ripple_addresses": [
+    {
+      "id": 3,
+      "user_id": 2,
+      "managed": true,
+      "address": "rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a",
+      "type": "hosted",
+      "tag": "2",
+      "secret": null,
+      "previous_transaction_hash": null,
+      "createdAt": "2014-01-24T08:56:23.858Z",
+      "updatedAt": "2014-01-24T08:56:23.858Z"
+    }
+  ]
+}
+```
+
 #### POST /api/v1/ripple_addresses
 __________
 
