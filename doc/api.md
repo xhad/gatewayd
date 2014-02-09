@@ -165,6 +165,34 @@ __________
 ```
 
 #### POST /api/v1/ripple_addresses
+
+request
+```js
+{
+  "user_id":"2"
+  "address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+  "type":"independent",
+  "managed": false
+}
+```
+
+response
+```js
+{
+  "ripple_address": {
+    "user_id": 2,
+    "address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+    "tag": null,
+    "managed": false,
+    "type": "independent",
+    "updatedAt": "2014-02-09T23:25:02.748Z",
+    "createdAt": "2014-02-09T23:25:02.748Z",
+    "id": 181,
+    "secret": null,
+    "previous_transaction_hash": null
+  }
+}
+```
 __________
 
 ### 7. Ripple Payments
