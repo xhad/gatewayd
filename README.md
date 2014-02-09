@@ -16,6 +16,7 @@ and running a Ripple gateway system.
 1. Node.js
   - The express web module is used to serve HTTP/JSON endpoints
   - A Basic Auth strategy is used for authentication of users, admin.
+  - Important NPM modules include: passport, db-migrate, sequelize, ripple-lib, pg, nconf, commander, bignumber.js, validator, and mocha
 
 2. Postgres
   - The easiest way to get started with Postgres is by launching a [free database hosted by Heroku](https://postgres.heroku.com/databases)
