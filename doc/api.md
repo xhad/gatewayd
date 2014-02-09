@@ -16,10 +16,12 @@ A API for managing deposits, withdrawals, and hosted wallets at Ripple Gateways.
 5. [Balances](#5-balances)
     + [`GET  /api/v1/balances`](#get-apiv1balances)
 6. [Ripple Addresses](#6-ripple-addresses)
-    + [`GET  /api/v1/ripple_addresses`](#get-ripple-addresses)
-    + [`POST  /api/v1/ripple_addresses`](#post-ripple-addresses)
-7. [Ripple Transactions](#7-server-info)
-    + [`GET  /api/v1/ripple_transactions`](#get-apiv1status)
+    + [`GET  /api/v1/ripple_addresses`](#get-apiv1ripple_addresses)
+    + [`POST  /api/v1/ripple_addresses`](#post-apiv1ripple_addresses)
+7. [Ripple Payments](#7-server-info)
+    + [`GET  /api/v1/payments`](#get-apiv1payments)
+    + [`POST  /api/v1/payments`](#get-apiv1payments)
+    + [`PUT  /api/v1/payments/:id`](#put-apiv1paymentsid)
 8. [Gateway Settings](#8-settings)
     + [`GET  /api/v1/settings`](#get-apiv1settings)
 
@@ -199,7 +201,7 @@ __________
 
 #### GET /api/v1/payments
 #### POST /api/v1/payments
-#### POST /api/v1/payments/:id
+#### PUT /api/v1/payments/:id
 __________
 
 ### 8. Gateway Settings
