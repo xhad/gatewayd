@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scripts": { "test": "mocha test/integration/users.js" },    
   "bin" : { "gateway" : "./bin/gateway" },
   "dependencies" : {
@@ -20,7 +20,8 @@
     "request": "",
     "async": "",
     "nconf":"~0.6",
-    "commander":"2.1.0"
+    "commander":"2.1.0",
+    "ripple-wallet":""
   },
   "devDependencies": {
     "mocha": "~1.14.0",
