@@ -3,12 +3,21 @@ User = require('../models/user.js');
 
 module.exports = (function(){
   function index(req, res) {
-    ExternalTransaction.findAll({ where: { deposit: true }}).complete(function(err, transactions) {
-      res.send({ external_transactions: transactions, error: err });
-    });
+    if (req.user.admin) {
+      ExternalTransaction.findAll({ where: { deposit: true }})
+        .complete(function(err, transactions) {
+          res.send({ deposits: transactions });
+      });
+    } else {
+      ExternalTransaction.findAll({ where: { deposit: true, user_id: req.user.id }})
+        .complete(function(err, deposits){
+          res.send({ depsoits: deposits });
+      });
+    }
   }
 
   function create(req, res) {
+    console.log("in the deposits controller");
     req.checkBody('cash_amount', 'invalid cash_amount').notEmpty();
     req.checkBody('currency', 'invalid currency').notEmpty();
     req.checkBody('external_account_id', 'invalid external_account_id').notEmpty();
