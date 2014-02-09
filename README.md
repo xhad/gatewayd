@@ -1,15 +1,22 @@
 ## Gateway API Server
 
 This software is a database-backed web server that serves as a
-back end for Ripple Gateway applications.
+back end for Ripple Gateway applications. Server, Javascript Client, and CLI are provided as interfaces to a deployed gateway.
 
-The Ripple Gateway appliance is a virtual machine image that
-is meant to serve as a standalone package for configuring
-and running a Ripple gateway system.
+The Ripple Gateway's features include: 
+  - user registration 
+  - hosted wallets 
+  - deposits
+  - widthdrawals
+  - off-ledger accounting
+  - payment monitoring
+  - sending and receiving
+  - gateway administration
+  - federation protocol
 
 ## Api Docs
 
-[Application Programming Interface Docs](./doc/api.md) to the Ripple Gateway server with HTTP and JSON.
+See the [Application Programming Interface Docs](./doc/api.md) to the Ripple Gateway for usage.
 
 ## Dependencies
 
