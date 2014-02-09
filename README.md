@@ -20,6 +20,7 @@ and running a Ripple gateway system.
 2. Postgres
   - The easiest way to get started with Postgres is by launching a [free database hosted by Heroku](https://postgres.heroku.com/databases)
   - For local development on Mac the simplest installation is via the [Postgres App](http://postgresapp.com/) by Heroku.
+  - On Ubuntu, [install and configure Postgres](https://help.ubuntu.com/community/PostgreSQL) using the aptitude package manager and the psql tool.
 
 3. [Ripple REST API](https://github.com/ripple/ripple-rest.git)
   - The Ripple REST API provides a simplified HTTP/JSON interface to all the Ripple protocol network operations, such as payments and other transactions.
