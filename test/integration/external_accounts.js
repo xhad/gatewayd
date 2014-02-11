@@ -42,7 +42,7 @@ describe('External Accounts', function(){
       done();
     });
 
-    it('should list external accounts of a user for that user', function(done){
+    it.skip('should list external accounts of a user for that user', function(done){
       // GET /external_accounts  
       client.getExternalAccounts({}, function(err, accounts){
         assert(accounts); 
