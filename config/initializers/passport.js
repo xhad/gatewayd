@@ -10,7 +10,7 @@ passport.use(new BasicStrategy(
       if (password && (password == nconf.get('KEY'))) {
         return done(null, { admin: true }); 
       } else {
-        return done('invalid admin key');
+        return done('Invalid admin key');
       }
     } else { 
       User.find({ where: { name: username }}).complete(function (err, user) {
