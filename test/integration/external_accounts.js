@@ -10,11 +10,12 @@ describe('External Accounts', function(){
   before(function(done){
     user = {};
     client = new RippleGateway.Client({
-      api: 'http://localhost:4000'
+      api: 'https://localhost:4000'
     });
-    client.name = rand();
+    client.user = rand();
     client.secret = rand();
     client.createUser({}, function(err, resp){
+      if (err) { throw new Error(err); }
       user = resp;
       done();
     });
@@ -25,6 +26,9 @@ describe('External Accounts', function(){
     it('should create an external account on behalf of a user', function(done){
       // POST /external_accounts  
       client.createExternalAccount({ name: rand() }, function(err, externalAccount){
+        if (err) { throw new Error(err) };
+        assert(externalAccount.id > 0);
+        assert(externalAccount.user_id == user.id);
         done();
       })
     });

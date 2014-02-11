@@ -4,8 +4,12 @@ module.exports = (function(){
   
 	function index(req, res){
     var userId = req.user.admin ? req.body.user_id : req.user.id;
-    ExternalAccount.findAll({ where: { user_id: userId }}).complete(function(err, accounts) {
-      res.send({ external_accounts: accounts || [] });
+    ExternalAccount.findAll({ where: { user_id: userId }}).complete(function(err, externalAccounts) {
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ external_accounts: externalAccounts || [] });
+      }
     }); 
 	}
 
@@ -14,8 +18,12 @@ module.exports = (function(){
     ExternalAccount.create({
       name: req.body.name,
       user_id: userId
-    }).complete(function(err, account) {
-      res.send({ error: err, account: account });
+    }).complete(function(err, externalAccount) {
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ external_account: externalAccount });
+      }
     });
   }
 
