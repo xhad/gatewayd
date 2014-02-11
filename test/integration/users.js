@@ -60,8 +60,6 @@ describe('Users', function() {
     client.user = 'admin';
     client.secret = rand();
     client.createUser({}, function(err, user){
-      console.log(err);
-      console.log(user);
       assert(err);
       done();
     });
