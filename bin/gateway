@@ -8,11 +8,18 @@ var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 
-var client = new GatewayClient({
-  api: 'http://localhost:4000',
-  clientId: 'admin',
-  clientSecret: 'theApiKey'
-});
+function getAdminKey(fn) {
+	var key = nconf.get('KEY');
+  if (!key) {
+		key = crypto.randomBytes(32).toString('hex');
+		nconf.set('KEY', key);
+		nconf.save(function(err) {
+			fn(err, key);
+		});
+	} else {
+		fn(null, key);
+	}
+}
 
 program
   .version('0.0.1')
@@ -103,20 +110,15 @@ program
     });
   });
 
+
 program
   .command('key:get')
   .description('get the admin api key')
   .action(function(account, secret){
-    var key = nconf.get('KEY');
-    if (typeof key == 'undefined') {
-      key = crypto.randomBytes(32).toString('hex');
-      nconf.set('KEY', key);
-      nconf.save(function(err) {
-        console.log(nconf.get('KEY'));
-      })
-    } else {
-      console.log(nconf.get('KEY'));
-    }
+		getAdminKey(function(err, key){
+			console.log(err);
+			console.log(key);
+		});
   });
 
 program
@@ -247,6 +249,17 @@ program
     console.log('restart the gateway api server');
   });
 
-program
-  .parse(process.argv);
+getAdminKey(function(err, adminKey){
+	if (err) {
+		console.log('error', err);
+	} else {
+		var client = new GatewayClient({
+			api: 'http://localhost:4000',
+			user: 'admin',
+			secret: adminKey
+		});
+		program.parse(process.argv);
+	}
+});
+
 
