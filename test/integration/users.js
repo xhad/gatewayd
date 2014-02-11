@@ -29,6 +29,7 @@ describe('Users', function() {
 
   it("should verify a user's credentials given a name and password", function(done){
     // GET /users
+    client.user = rand();
     client.secret = rand();
     client.createUser({}, function(err, user) {
       var id = user.id;
@@ -43,12 +44,12 @@ describe('Users', function() {
     // POST /users
     client.user = rand();
     client.secret = rand();
-    client.createUser({}, function(err, user){
-      var id = user.id;
+    client.createUser({}, function(err, user1){
+      var id = user1.id;
       client.secret = rand();
-      client.createUser({}, function(err, user){
+      client.createUser({}, function(err, user2){
         assert(typeof err != 'undefined');
-        assert(user == 'Unauthorized');
+        assert(typeof user2 == 'undefined');
         done();
       });
     });
@@ -59,7 +60,9 @@ describe('Users', function() {
     client.user = 'admin';
     client.secret = rand();
     client.createUser({}, function(err, user){
-      assert(user == 'invalid admin key');
+      console.log(err);
+      console.log(user);
+      assert(err);
       done();
     });
   });
