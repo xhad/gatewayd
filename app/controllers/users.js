@@ -20,10 +20,14 @@ module.exports = (function() {
   function show(req, res) {
     if (req.user.admin || (req.user.id == req.params.user_id)) {
       User.find(req.params.user_id).complete(function(err, user){
-        res.send({ user: user });
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ user: user });
+        }
       });  
     } else {
-      res.status(401, { error: 'Access Denied' });
+      res.send(401, { error: 'Access Denied' });
     }
   }
 

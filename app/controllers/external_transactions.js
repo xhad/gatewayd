@@ -5,11 +5,19 @@ module.exports = (function(){
   function index(req, res) {
     if (req.user.admin) {
       ExternalTransaction.all().complete(function(err, transactions) {
-        res.send({ external_transactions: transactions, error: err });
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ external_transactions: transactions });
+        }
       });
     } else {
       req.user.externalTransactions(function(err, transactions) {
-        res.send({ external_transactions: (transactions || []) });
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ external_transactions: (transactions || []) });
+        }
       });
     }
   }
@@ -21,7 +29,7 @@ module.exports = (function(){
     req.checkBody('deposit', 'invalid deposit boolean').notEmpty();
     req.checkBody('user_id', 'invalid user_id').notEmpty();
     if (errors = req.validationErrors()) { 
-      res.send({ error: errors }); return;
+      res.send(500, { error: errors }); return;
     }
    
     ExternalTransaction.create({
@@ -30,7 +38,11 @@ module.exports = (function(){
       cash_amount: req.body.cash_amount,
       external_account_id: req.body.external_account_id,
     }).complete(function(err, transaction) {
-      res.send({ error: err, external_transaction: transaction });
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ external_transaction: transaction });
+      }
     });
   };
 

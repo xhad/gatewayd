@@ -4,7 +4,11 @@ var async = require("async");
 module.exports = (function(){
   function index(req, res) {
     req.user.balances(function(err, balances) {
-      res.send({ error: err, balances: balances });
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ balances: balances });
+      }
     });
   } 
 

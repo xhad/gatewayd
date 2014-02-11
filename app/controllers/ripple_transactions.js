@@ -18,7 +18,7 @@ module.exports = (function(){
     req.checkBody('txHash', 'Invalid txHash').notEmpty()
     req.checkBody('txState', 'Invalid txStatus').notEmpty()
     if (errors = req.validationErrors()) {
-			errorResponse(res)(util.inspect(errors));
+      res.send(500, { error: errors });
     }
     
     RippleTransaction.find(req.params.id).complete(function(err, payment){
@@ -62,7 +62,7 @@ module.exports = (function(){
     req.sanitize('issuance').toBoolean()
 
     var errors = req.validationErrors();
-    if (errors) { res.send(util.inspect(errors)); return }
+    if (errors) { res.send(500, util.inspect(errors)); return }
 
     RippleTransaction.create(req.body).complete(function(err, payment){
       if (err) {
