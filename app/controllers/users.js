@@ -6,7 +6,11 @@ module.exports = (function() {
   function index(req, res) {
     if (req.user.admin) {
       User.findAll().complete(function(err, users){
-        res.send({ admin: true, users: users });
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ admin: true, users: users });
+        }
       });
     } else {
       res.send({ user: req.user });
@@ -19,8 +23,7 @@ module.exports = (function() {
         res.send({ user: user });
       });  
     } else {
-      res.status(401);
-      res.send('401: access denied');
+      res.status(401, { error: 'Access Denied' });
     }
   }
 
@@ -30,13 +33,13 @@ module.exports = (function() {
       req.validate('password', 'isAlphaNumeric');
       User.createEncrypted({ name: req.body.name, password: req.body.password },function(err, user){
         if (err) { 
-          res.send(err)
+          req.send(500, { error: err });
         } else {
-          res.send(user);
+          res.send({ user: user });
         }
       })
     } else {
-      res.send(req.user);
+      res.send({ user: req.user });
     }
   }
   
