@@ -5,8 +5,12 @@ var util = require('util');
 
 module.exports = (function(){
   function index(req, res) {
-    req.user.rippleTransactions(function(err, transactions) {
-      res.send({ ripple_transactions: (transactions || []) });
+    req.user.rippleTransactions(function(err, payments) {
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ payments: (payments || []) });
+      }
     });
   } 
   
@@ -17,21 +21,30 @@ module.exports = (function(){
 			errorResponse(res)(util.inspect(errors));
     }
     
-    RippleTransaction.find(req.params.id).complete(function(err, tx){
-      if (err) { res.send({ success: false, error: err}); return false }
-      tx.txHash = req.body.txHash  
-      tx.txState = req.body.txState
-      tx.save().complete(function(err, tx){
-        if (err) { res.send({ success: false, error: err}); return false }
-        res.send({ success: true, transaction: tx })
-      })
+    RippleTransaction.find(req.params.id).complete(function(err, payment){
+      if (err) { 
+        res.send(500, { error: err}); 
+      } else {
+        payment.tx_hash = req.body.txHash  
+        payment.tx_state = req.body.txState
+        payment.save().complete(function(err, tx){
+          if (err) { 
+            res.send(500, { error: err});
+          } else {
+            res.send({ payment: payment });
+          }
+        })
+      }
     })
   }
 
   function show(req, res) {
     RippleTransaction.find(req.params.id).complete(function(err, tx){
-      if (err) { res.send({ success: false, error: err}); return false }
-      res.send({ success: true, transaction: tx })
+      if (err) { 
+        res.send(500, { error: err });
+      } else { 
+        res.send({ payment: payment })
+      }
     })
   }
 
@@ -51,8 +64,12 @@ module.exports = (function(){
     var errors = req.validationErrors();
     if (errors) { res.send(util.inspect(errors)); return }
 
-    RippleTransaction.create(req.body).complete(function(err, tx){
-      res.send({ ripple_transaction: tx, error: err })
+    RippleTransaction.create(req.body).complete(function(err, payment){
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        res.send({ payment: payment })
+      }
     })
   }
 
