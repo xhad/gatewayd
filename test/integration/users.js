@@ -9,15 +9,16 @@ function rand() {
 describe('Users', function() {
   before(function(){
     client = new RippleGateway.Client({
-      api: 'http://localhost:4000'
+      api: 'https://localhost:4000'
     });
   })
 
   it('should create a new user given a name and password', function(done){
     // POST /users
-    client.name = rand();
+    client.user = rand();
     client.secret = rand();
     client.createUser({}, function(err, user) {
+			console.log(err);
       assert(user.id > 0);
       done();
     })
@@ -25,7 +26,6 @@ describe('Users', function() {
 
   it("should verify a user's credentials given a name and password", function(done){
     // GET /users
-    client.name = rand();
     client.secret = rand();
     client.createUser({}, function(err, user) {
       var id = user.id;
@@ -38,8 +38,7 @@ describe('Users', function() {
 
   it('should not allow the creation of two users with the same name', function(done){
     // POST /users
-    var name = rand();
-    client.name = name;
+    client.user = rand();
     client.secret = rand();
     client.createUser({}, function(err, user){
       var id = user.id;
@@ -54,7 +53,7 @@ describe('Users', function() {
 
   it('should not allow the creation of a user with the name "admin"', function(done){
     // POST /users
-    client.name = 'admin';
+    client.user = 'admin';
     client.secret = rand();
     client.createUser({}, function(err, user){
       assert(user == 'invalid admin key');
