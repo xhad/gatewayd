@@ -1,3 +1,8 @@
+var RippleGateway = require('../../lib/http_client.js').Gateway;
+var crypto = require('crypto');
+var assert = require('assert');
+function rand() { return crypto.randomBytes(32).toString('hex'); }
+
 describe('RippleTransactions', function(){
   
   describe('on behalf of a user', function(){

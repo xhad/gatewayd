@@ -18,8 +18,11 @@ describe('Users', function() {
     client.user = rand();
     client.secret = rand();
     client.createUser({}, function(err, user) {
-			console.log(err);
-      assert(user.id > 0);
+      if (err) {
+        console.log('error', err);
+      } else {
+        assert(user.id > 0);
+      }
       done();
     })
   });
