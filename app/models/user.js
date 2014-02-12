@@ -20,12 +20,16 @@ var User = db.define('user', {
   admin: Sequelize.BOOLEAN,
   federation_name: Sequelize.STRING,
   kyc_id: Sequelize.INTEGER,
-  name: Sequelize.STRING,
+  name: { type: Sequelize.STRING, unique: true },
   salt: Sequelize.STRING,
   password_hash: Sequelize.STRING,
   external_id: Sequelize.STRING
 }, {
   instanceMethods: {
+    hostedAddress: function(fn) {
+      RippleAddress.find({ where: { user_id: this.id, type: 'hosted' }})
+        .complete(fn);
+    },
     defaultExternalAccount: function(fn) {
       ExternalAccount.find({ where: {
         user_id: this.id,
@@ -210,7 +214,7 @@ var User = db.define('user', {
           callback('admin already exists', null)
         } else {
           var password = crypto.randomBytes(32).toString('hex')
-          User.createEncrypted({
+          User.createWithSalt({
             name: 'admin',
             password: password,
             admin: true
@@ -247,7 +251,7 @@ var User = db.define('user', {
         }
       })
     },
-    createEncrypted: function(opts, callback) {
+    createWithSalt: function(opts, callback) {
       var salt = utils.generateSalt();
       var passwordHash = utils.saltPassword(opts.password, salt)
       var admin = opts.admin || false
