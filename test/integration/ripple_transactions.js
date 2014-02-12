@@ -22,11 +22,18 @@ describe('RippleTransactions', function(){
 
     it('should create a payment to a ripple account', function(done){
       var paymentOptions = {
-        to_account: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
-        from_account: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        to_address: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        from_address: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        to_amount: '1',
+        to_issuer: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        to_currency: 'USD',
+        from_amount: '1',
+        from_issuer: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        from_currency: 'USD',
         from_tag: '2',
         amount: '1',
-        currency: 'USD'
+        currency: 'USD',
+        ripple_address_id: 1
       };
       client.sendPayment(paymentOptions, function(err, payment){
         console.log(err, payment);
@@ -36,15 +43,16 @@ describe('RippleTransactions', function(){
       });
     });
 
-    it('should not be able to send a payment to the gateway', function(done){
-      // POST /payments  
-      assert(true);
+    it.skip('should not be able to send a payment to the gateway', function(done){
       done();
     });
 
-    it.skip('should list all payments made to or from a user', function(done){
-      // GET /payments
-      done();
+    it('should list all payments made to or from a user', function(done){
+      client.getPayments(function(err, payments){
+        console.log(err, payments);
+        assert(payments.length >= 0);
+        done();
+      });
     });
 
   });
