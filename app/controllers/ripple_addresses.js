@@ -1,13 +1,27 @@
 var RippleAddress = require('../models/ripple_address');
 
 module.exports = (function(){
+  function show(req, res) {
+    if (req.params.tag) {
+      var where = { address: req.params.account, tag: req.params.tag }; 
+    } else {
+      var where = { address: req.params.account, tag: null }; 
+    }
+    RippleAddress.find({ where: where }).complete(function(err, address){
+      if (err) {
+        res.send(500, { error: err });
+      } else {
+        if (!user.admin) { address.secret = null };
+        res.send({ ripple_address: address });
+      }
+    });
+  };
+
   function create(req, res) {
-    req.validate('ripple_address', 'isAlpha');
-		req.validate('cash_amount', 'isFloat');
-    var user;
+    req.assert('address', 'Invalid address').notNull();
 
     if (!req.user.admin) {
-      req.validate('user_id', 'isInt');
+      req.assert('user_id', 'Invalid user_id').isInt();
       userId = req.body.user_id;
     } else {
       userId = req.user.id;
@@ -15,7 +29,8 @@ module.exports = (function(){
 
     RippleAddress.create({
       user_id: userId,
-      address: req.body.ripple_address
+      address: req.body.ripple_address,
+      tag: req.body.tag
     }).complete(function(err, address){
       if (err) {
         res.send(500, { error: err });
@@ -48,6 +63,7 @@ module.exports = (function(){
 
   return {
 		create: create,
-		index: index
+		index: index,
+    show: show
   }
 })();
