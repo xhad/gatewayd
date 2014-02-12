@@ -69,6 +69,14 @@ module.exports = (function(){
       passport.authenticate('basic', { session: false }),
       ctrls['ripple_addresses'].index);
 
+    app.get('/api/v1/ripple_addresses/:account', 
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_addresses'].show);
+
+    app.get('/api/v1/ripple_addresses/:account/tag/:tag', 
+      passport.authenticate('basic', { session: false }),
+      ctrls['ripple_addresses'].show);
+
     app.post('/api/v1/ripple_addresses', 
       passport.authenticate('basic', { session: false }),
       ctrls['ripple_addresses'].create);
