@@ -181,13 +181,10 @@ program
   .action(function(account, secret){
     console.log('creating an admin user and key.');
     User.createAdmin(function(err, adminConfig){
-      if (err) {
-        console.log('error', adminConfig);
-      } else {
-        console.log('admin user created with KEY', adminConfig.password);
-        console.log('hot and cold wallets have been generated: ');
-        console.log(adminConfig.wallets);
-      }
+      if (err) { throw new Error(err) }
+      console.log('admin user created with KEY', adminConfig.password);
+      console.log('hot and cold wallets have been generated: ');
+      console.log(adminConfig.wallets);
     });
   });
 
