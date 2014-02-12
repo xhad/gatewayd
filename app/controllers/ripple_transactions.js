@@ -50,13 +50,14 @@ module.exports = (function(){
 
 	function create(req, res) {
     req.checkBody('to_address', 'Invalid to_address').notNull();
-    req.checkBody('to_amount', 'Invalid to_amount').notNull();
+    req.checkBody('to_amount', 'Invalid to_amount').isDecimal();
     req.checkBody('to_currency', 'Invalid to_currency').notNull();
-    req.checkBody('to_isser', 'Invalid to_issuer').notNull();
+    req.checkBody('to_issuer', 'Invalid to_issuer').notNull();
     req.checkBody('from_address', 'Invalid from_address').notNull();
-    req.checkBody('from_amount', 'Invalid from_amount').notNull();
+    req.checkBody('from_amount', 'Invalid from_amount').isDecimal();
     req.checkBody('from_currency', 'Invalid from_currency').notNull();
     req.checkBody('from_issuer', 'Invalid from_issuer').notNull();
+    req.checkBody('ripple_address_id', 'Invalid from_issuer').isInt();
 
     var errors = req.validationErrors();
     if (errors) { res.send(500, errors); return }
