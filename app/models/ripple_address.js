@@ -85,10 +85,10 @@ var RippleAddress = db.define('ripple_address', {
     sendPayment: function() {
       // send a payment from this ripple address
     },
-    receivePayment: function() {
+    recordReceivedPayment: function() {
       // record a payment received to this ripple address
     },
-    confirmPayment: function() {
+    updateSentPayment: function() {
       // confirm that a payment sent was processed  
     }
   }
