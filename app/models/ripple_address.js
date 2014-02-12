@@ -80,6 +80,17 @@ var RippleAddress = db.define('ripple_address', {
         } else { fn(err, null) }
       });
     }
+  },
+  instanceMethods: {
+    sendPayment: function() {
+      // send a payment from this ripple address
+    },
+    receivePayment: function() {
+      // record a payment received to this ripple address
+    },
+    confirmPayment: function() {
+      // confirm that a payment sent was processed  
+    }
   }
 });
 
