@@ -33,9 +33,12 @@ module.exports = (function() {
 
   function create(req, res) {
     if (req.user.admin) {
-      req.validate('name', 'isAlphaNumeric');
-      req.validate('password', 'isAlphaNumeric');
-      User.createEncrypted({ name: req.body.name, password: req.body.password },function(err, user){
+      req.checkBody('name', 'Invalid name').notNull();
+      req.checkBody('password', 'Invalid password').notNull();
+      if (errors = req.validationErrors()) {
+        res.send(500, { error: errors });
+      }
+      User.createWithSalt({ name: req.body.name, password: req.body.password },function(err, user){
         if (err) { 
           req.send(500, { error: err });
         } else {
