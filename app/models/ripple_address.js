@@ -1,5 +1,6 @@
 var db = require('../../config/initializers/sequelize');
 var Sequelize = require("sequelize");
+var RippleTransaction = require('./ripple_transaction');
 
 var RippleAddress = db.define('ripple_address', {
   id: { 
@@ -82,8 +83,12 @@ var RippleAddress = db.define('ripple_address', {
     }
   },
   instanceMethods: {
-    sendPayment: function() {
-      // send a payment from this ripple address
+    sendPayment: function(opts, fn) {
+      opts.from_address_id = this.id;
+      opts.from_amount = opts.to_amount;
+      opts.from_currency = opts.to_currency;
+      opts.from_issuer = opts.to_issuer;
+      RippleTransaction.create(opts).complete(fn);
     },
     recordReceivedPayment: function() {
       // record a payment received to this ripple address
