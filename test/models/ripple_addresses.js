@@ -18,7 +18,17 @@ describe('RippleAddress', function(){
     user.hostedAddress(function(err, address) {
       if (err) { throw new Error(err) };
       assert(typeof address.sendPayment == 'function');
-      done();
+      address.sendPayment({
+        to_amount: 1,
+        to_issuer: address.address,
+        to_currency: 'USD',
+        to_address_id: 1
+      }, function(err, payment) {
+        if (err) { throw new Error(err) };
+        assert(payment.id > 0);
+        assert(payment.from_address_id == address.id);
+        done();
+      });
     });
   }); 
 
