@@ -1,6 +1,7 @@
 var db = require('../../config/initializers/sequelize.js')
 var utils = require("../../lib/utils")
 var RippleAddress = require('./ripple_address.js')
+var ExternalAccount = require('./external_account.js')
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require("crypto")
 var sjcl = require('sjcl')
@@ -29,6 +30,9 @@ var User = db.define('user', {
     hostedAddress: function(fn) {
       RippleAddress.find({ where: { user_id: this.id, type: 'hosted' }})
         .complete(fn);
+    },
+    createExternalAccount: function(name, fn) {
+      ExternalAccount.create({ name: name, user_id: this.id }).complete(fn);
     },
     defaultExternalAccount: function(fn) {
       ExternalAccount.find({ where: {
