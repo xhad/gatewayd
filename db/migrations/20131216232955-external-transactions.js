@@ -4,9 +4,9 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable('external_transactions', { 
 		id: { type: 'int', primaryKey: true, autoIncrement: true },
-    deposit: { type: 'boolean', notNull: true },
+    amount: { type: 'decimal', notNull: true },
     currency: { type: 'string', notNull: true },
-    cash_amount: { type: 'decimal', notNull: true },
+    deposit: { type: 'boolean', notNull: true },
     external_account_id: { type: 'int', notNull: true },
     ripple_transaction_id: { type: 'int'},
     createdAt: { type: 'datetime', notNull: true },
