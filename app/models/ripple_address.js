@@ -13,7 +13,7 @@ var RippleAddress = db.define('ripple_address', {
   address: { type: Sequelize.STRING, notNull: true },
   type: { type: Sequelize.STRING, notNull: true }, // hot, cold, hosted, independent
   secret: { type: Sequelize.STRING },
-  tag: { type: Sequelize.STRING },
+  tag: { type: Sequelize.INTEGER },
   previous_transaction_hash: { type: Sequelize.STRING }
 }, {
   classMethods: {
