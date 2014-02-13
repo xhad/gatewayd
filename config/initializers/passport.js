@@ -19,7 +19,7 @@ passport.use(new BasicStrategy(
           if (!utils.verifyPassword(password, user.salt, user.password_hash)) { return done(null, false) }
           return done(null, user);
         } else {
-          User.createEncrypted({ name: username, password: password }, function(err, user) {
+          User.createWithSalt({ name: username, password: password }, function(err, user) {
             return done(err, user);
           });
         }
