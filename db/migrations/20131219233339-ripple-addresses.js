@@ -8,7 +8,7 @@ exports.up = function(db, callback) {
     managed: { type: 'boolean', default: false, notNull: true},
     address: { type: 'string', notNull: true },
     type: { type: 'string', notNull: true },
-    tag: { type: 'string' },
+    tag: { type: 'int' },
     secret: { type: 'string' },
     previous_transaction_hash: { type: 'string' },
     createdAt: { type: 'datetime' },
