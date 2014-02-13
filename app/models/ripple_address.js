@@ -9,7 +9,7 @@ var RippleAddress = db.define('ripple_address', {
 		autoIncrement: true
 	},
   user_id: { type: Sequelize.INTEGER, notNull: true },
-  managed: { type: Sequelize.BOOLEAN, notNull: true, default: false },
+  managed: { type: Sequelize.BOOLEAN, notNull: true, defaultValue: false },
   address: { type: Sequelize.STRING, notNull: true },
   type: { type: Sequelize.STRING, notNull: true }, // hot, cold, hosted, independent
   secret: { type: Sequelize.STRING },
