@@ -22,22 +22,17 @@ describe('RippleTransactions', function(){
 
     it('should create a payment to a ripple account', function(done){
       var paymentOptions = {
-        to_address: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
-        from_address: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
+        to_address_id: 2,
+        from_address_id: 3,
+        to_currency: 'USD',
         to_amount: '1',
         to_issuer: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
-        to_currency: 'USD',
+        from_currency: 'USD',
         from_amount: '1',
         from_issuer: 'rNeSkJhcxDaqzZCAvSfQrxwPJ2Kjddrj4a',
-        from_currency: 'USD',
-        from_tag: '2',
-        amount: '1',
-        currency: 'USD',
-        ripple_address_id: 1
       };
       client.sendPayment(paymentOptions, function(err, payment){
-        console.log(err, payment);
-        assert(!err);
+        if (err) { throw new Error(err) }
         assert(payment.id > 0);
         done();
       });
@@ -49,7 +44,7 @@ describe('RippleTransactions', function(){
 
     it('should list all payments made to or from a user', function(done){
       client.getPayments(function(err, payments){
-        console.log(err, payments);
+        if (err) { throw new Error(err) };
         assert(payments.length >= 0);
         done();
       });
