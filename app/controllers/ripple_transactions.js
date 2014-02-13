@@ -5,13 +5,23 @@ var util = require('util');
 
 module.exports = (function(){
   function index(req, res) {
-    req.user.rippleTransactions(function(err, payments) {
-      if (err) {
-        res.send(500, { error: err });
-      } else {
-        res.send({ payments: (payments || []) });
-      }
-    });
+    if (req.user.admin) {
+      RippleTransaction.all().complete(function(err, payments){
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ payments: (payments || []) });
+        }
+      });
+    } else {
+      req.user.rippleTransactions(function(err, payments) {
+        if (err) {
+          res.send(500, { error: err });
+        } else {
+          res.send({ payments: (payments || []) });
+        }
+      });
+    }
   } 
   
   function update(req, res){
@@ -49,18 +59,17 @@ module.exports = (function(){
   }
 
 	function create(req, res) {
-    req.checkBody('to_address', 'Invalid to_address').notNull();
+    req.checkBody('to_address_id', 'Invalid to_address').notNull();
     req.checkBody('to_amount', 'Invalid to_amount').isDecimal();
     req.checkBody('to_currency', 'Invalid to_currency').notNull();
     req.checkBody('to_issuer', 'Invalid to_issuer').notNull();
-    req.checkBody('from_address', 'Invalid from_address').notNull();
+    req.checkBody('from_address_id', 'Invalid from_address').notNull();
     req.checkBody('from_amount', 'Invalid from_amount').isDecimal();
     req.checkBody('from_currency', 'Invalid from_currency').notNull();
     req.checkBody('from_issuer', 'Invalid from_issuer').notNull();
-    req.checkBody('ripple_address_id', 'Invalid from_issuer').isInt();
 
     var errors = req.validationErrors();
-    if (errors) { res.send(500, errors); return }
+    if (errors) { res.send(500, { error: errors }); return }
 
     RippleTransaction.create(req.body).complete(function(err, payment){
       if (err) {
