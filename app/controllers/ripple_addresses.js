@@ -19,7 +19,11 @@ module.exports = (function(){
 
   function create(req, res) {
     req.assert('address', 'Invalid address').notNull();
-    req.assert('type', 'Invalid type.').isIn(['hot', 'cold', 'hosted', 'independent']);
+    req.assert('type', 'Invalid type. "type" must be in the set { hot cold hosted independent }').isIn(['hot', 'cold', 'hosted', 'independent']);
+
+    if (errors = req.validationErrors()) {
+      res.send(500, { error: errors });
+    }
 
     if (!req.user.admin) {
       req.assert('user_id', 'Invalid user_id').isInt();
@@ -30,7 +34,8 @@ module.exports = (function(){
 
     RippleAddress.create({
       user_id: userId,
-      address: req.body.ripple_address,
+      address: req.body.address,
+      type: req.body.type,
       tag: req.body.tag
     }).complete(function(err, address){
       if (err) {
