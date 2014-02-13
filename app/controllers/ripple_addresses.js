@@ -19,6 +19,7 @@ module.exports = (function(){
 
   function create(req, res) {
     req.assert('address', 'Invalid address').notNull();
+    req.assert('type', 'Invalid type.').isIn(['hot', 'cold', 'hosted', 'independent']);
 
     if (!req.user.admin) {
       req.assert('user_id', 'Invalid user_id').isInt();
