@@ -1,4 +1,5 @@
 var RippleGateway = require('../../lib/http_client.js').Gateway;
+var Ripple = require('ripple-wallet').Ripple;
 var crypto = require('crypto');
 var assert = require('assert');
 var admin = require('../../lib/admin.js');
@@ -6,7 +7,7 @@ function rand() { return crypto.randomBytes(32).toString('hex'); }
 
 describe('RippleAddresses', function(){
   
-  describe('user', function(){
+  describe('creating addresses', function(){
     before(function(done){
       client = new RippleGateway.Client({
         api: 'https://localhost:4000'
@@ -51,11 +52,15 @@ describe('RippleAddresses', function(){
       });
     });
 
-    it('should create a ripple_address and associate it with a given a user', function(done){
-
-      client.createRippleAddress({}, function(err, rippleAddress){
-        assert(!err);
-        assert(rippleAddress);
+    it('should create an independent ripple_address and associate it with a given a user', function(done){
+      var address = Ripple.Wallet.generate().address;
+      client.createRippleAddress({
+        address: address,
+        type: 'independent'
+      }, function(err, rippleAddress){
+        if (err) { throw new Error(err) };
+        assert(rippleAddress.address == address);
+        assert(rippleAddress.id > 0);
         done();
       });
     });
