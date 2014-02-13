@@ -26,14 +26,22 @@ var User = db.define('user', {
   password_hash: Sequelize.STRING,
   external_id: Sequelize.STRING
 }, {
+  hooks: {
+    afterCreate: function(user, fn) {
+      if (!(user.name == 'admin')) {
+        RippleAddress.createHosted(user, function(err, address) {
+          fn(err, user);
+        });
+      } else {
+        fn(null, user);
+      }
+    }
+  },
   instanceMethods: {
     hostedAddress: function(fn) {
-      console.log('user id', this.id);
-      RippleAddress.find({ where: { user_id: this.id, tag: this.id, type: 'hosted' }})
-        .complete(function(err, address) {
-          if (!err && !address) { err = true };
-          fn(err, address);
-      });
+      var user = this;
+      RippleAddress.find({ where: { user_id: user.id, tag: user.id, type: 'hosted' }})
+        .complete(fn);
     },
     createExternalAccount: function(name, fn) {
       ExternalAccount.create({ name: name, user_id: this.id }).complete(fn);
@@ -263,7 +271,7 @@ var User = db.define('user', {
         }
       })
     },
-    createWithSalt: function(opts, callback) {
+    createWithSalt: function(opts, fn) {
       var salt = utils.generateSalt();
       var passwordHash = utils.saltPassword(opts.password, salt)
       var admin = opts.admin || false
@@ -273,23 +281,7 @@ var User = db.define('user', {
         admin: admin,
         salt: salt,
         password_hash: passwordHash,
-      }).complete(function(err, user){
-        if (err) {
-          callback(err, null);
-        } else {
-          if (!!user) {
-            if (!user.admin) {
-              RippleAddress.createHosted(user, function(err, address) {
-                callback(err, user);
-              });
-            } else {
-              callback(null, user);
-            }
-          } else {
-             callback(err, user);
-          }
-        }
-      })
+      }).complete(fn);
     }
   }
 });
