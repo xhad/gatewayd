@@ -95,9 +95,8 @@ var RippleAddress = db.define('ripple_address', {
       });
     },
     createHosted: function(user, fn){
-      RippleAddress.find({ where: { type: 'hot' }}).complete(function(err, address) {
-        if (address) {
-          var hotWallet = address; 
+      RippleAddress.getHot(function(err, hotWallet) {
+        if (hotWallet) {
           RippleAddress.create({
             type: 'hosted',
             managed: true,
