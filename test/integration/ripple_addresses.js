@@ -54,8 +54,6 @@ describe('RippleAddresses', function(){
     it('should create a ripple_address and associate it with a given a user', function(done){
 
       client.createRippleAddress({}, function(err, rippleAddress){
-        console.log('rippleAddress', rippleAddress);
-        console.log('error', err);
         assert(!err);
         assert(rippleAddress);
         done();
