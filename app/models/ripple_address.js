@@ -8,13 +8,42 @@ var RippleAddress = db.define('ripple_address', {
 		primaryKey: true,
 		autoIncrement: true
 	},
-  user_id: { type: Sequelize.INTEGER, notNull: true },
-  managed: { type: Sequelize.BOOLEAN, notNull: true, defaultValue: false },
-  address: { type: Sequelize.STRING, notNull: true },
-  type: { type: Sequelize.STRING, notNull: true }, // hot, cold, hosted, independent
-  secret: { type: Sequelize.STRING },
-  tag: { type: Sequelize.INTEGER },
-  previous_transaction_hash: { type: Sequelize.STRING }
+  user_id: { 
+    type: Sequelize.INTEGER
+  },
+  managed: { 
+    type: Sequelize.BOOLEAN, 
+    notNull: true, 
+    defaultValue: false,
+    validate: { 
+      notNull: true 
+    }
+  },
+  address: { 
+    type: Sequelize.STRING,
+    notNull: true,
+    validate: { 
+      notNull: true,
+      len: [20, 35]
+    }
+  },
+  type: { 
+    type: Sequelize.STRING, 
+    notNull: true,
+    validate: { 
+      notNull: true,
+      isIn: [['hot','cold','hosted','independent']]
+    }
+  },
+  secret: { 
+    type: Sequelize.STRING,
+  },
+  tag: { 
+    type: Sequelize.INTEGER,
+  },
+  previous_transaction_hash: { 
+    type: Sequelize.STRING,
+  }
 }, {
   classMethods: {
     getHot: function(fn){
