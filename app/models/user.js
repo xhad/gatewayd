@@ -28,8 +28,12 @@ var User = db.define('user', {
 }, {
   instanceMethods: {
     hostedAddress: function(fn) {
-      RippleAddress.find({ where: { user_id: this.id, type: 'hosted' }})
-        .complete(fn);
+      console.log('user id', this.id);
+      RippleAddress.find({ where: { user_id: this.id, tag: this.id, type: 'hosted' }})
+        .complete(function(err, address) {
+          if (!err && !address) { err = true };
+          fn(err, address);
+      });
     },
     createExternalAccount: function(name, fn) {
       ExternalAccount.create({ name: name, user_id: this.id }).complete(fn);
@@ -205,9 +209,13 @@ var User = db.define('user', {
         rippleAddressIds = addresses.map(function(address){
           return address.id;
         });
-        RippleTransaction.findAll({ order: '"createdAt" DESC', limit: 10, where: { ripple_address_id: rippleAddressIds }}).complete(function(err, transactions) {
-          fn(err, transactions);
-        });
+        if (rippleAddressIds) {
+          RippleTransaction.findAll({ order: '"createdAt" DESC', limit: 10, where: { ripple_address_id: rippleAddressIds }}).complete(function(err, transactions) {
+            fn(err, transactions);
+          });
+        } else {
+          fn(err, []);
+        }
       });
     }
   },
