@@ -9,7 +9,7 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
     sudo apt-get -y install python
     sudo apt-get -y install g++
     sudo apt-get -y install make
-    sudo apt-get -y install libpg-dev
+    sudo apt-get -y install libpq-dev
     sudo add-apt-repository -y ppa:chris-lea/node.js
     sudo apt-get -y update
     sudo apt-get -y install nodejs
@@ -38,6 +38,7 @@ clone the project from github and install the package dependencies
 
 migrate the database to create gateway tables
 
+    export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
     db-migrate up --config config/database.json --migrations-dir db/migrations
     
 configure the initial gateway parameters 
