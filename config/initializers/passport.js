@@ -20,7 +20,8 @@ passport.use(new BasicStrategy(
           return done(null, user);
         } else {
           User.createWithSalt({ name: username, password: password }, function(err, user) {
-            return done(err, user);
+            // if there are no errors, allow addtional logic to be executed
+            return err ? done(err, user) : done(null, user);
           });
         }
       })
