@@ -38,7 +38,7 @@ module.exports = (function() {
       if (errors = req.validationErrors()) {
         res.send(500, { error: errors });
       }
-      User.createWithSalt({ name: req.body.name, password: req.body.password },function(err, user){
+      User.createWithSalt(req.body,function(err, user){
         if (err) { 
           req.send(500, { error: err });
         } else {
@@ -46,7 +46,17 @@ module.exports = (function() {
         }
       })
     } else {
-      res.send({ user: req.user });
+
+      // if there are any parameters in the request, respect them and update the just-created user
+      if (req.body) {
+        req.user.updateUser(req.body, function(updatedUser) {
+          res.send({ user: req.user });  
+        });
+
+      // if there were no additional parameters, the user object in the request is the newly created user, so return it
+      } else {
+        res.send({ user: req.user });
+      }
     }
   }
   
