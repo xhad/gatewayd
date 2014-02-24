@@ -226,6 +226,9 @@ var User = db.define('user', {
           fn(err, []);
         }
       });
+    },
+    updateUser: function(opts, fn) {
+      this.updateAttributes(opts).success(fn);
     }
   },
   classMethods: {
