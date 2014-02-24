@@ -1,3 +1,5 @@
+sudo apt-get -y update
+sudo apt-get -y git
 sudo apt-get -y install python-software-properties
 sudo apt-get -y install python
 sudo apt-get -y install g++
