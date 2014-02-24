@@ -21,7 +21,8 @@
     "async": "",
     "nconf":"~0.6",
     "commander":"2.1.0",
-    "ripple-wallet":""
+    "ripple-wallet":"",
+    "require-all":""
   },
   "devDependencies": {
     "mocha": "~1.14.0",
