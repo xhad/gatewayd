@@ -1,9 +1,6 @@
 var requireAll = require('../lib/require-all');
 var passport = require('./initializers/passport.js');
-var ctrls = requireAll({
-  dirname: __dirname + '/../app/controllers',
-  filter: /(.+)\.js(on)?$/
-})
+var ctrls = require('../app/controllers/index.js');
 
 module.exports = (function(){
   function configure(app) {
