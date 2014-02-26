@@ -1,41 +1,23 @@
 var express = require('express');
-var childProcess = require('child_process');
-var middleware = require('./config/initializers/middleware.js');
-var router = require('./config/routes.js');
-var host = process.env.HOST;
-var port = process.env.PORT || 4000;
-var app = express();
-var sequelize = require('./config/initializers/sequelize.js');
 var nconf = require('./config/nconf.js');
 var fs = require('fs');
 var https = require('https');
+var http = require('http');
 
-middleware.configure(app);
-router.route(app);
+var SequelizeAdapter = require('ripple-gateway-data-sequelize-adapter');
+var GatewayExpress = require("ripple-gateway-express");
+var passport = require('./config/initializers/passport.js');
+var adapter = new SequelizeAdapter();
 
-sequelize.sync().success(function(){
-  var ssl = nconf.get('SSL');
-  if (ssl == 'false') { 
-    ssl = false 
-  } else {
-    var sslOptions = {
-      key: fs.readFileSync('./certs/server.key'),
-      cert: fs.readFileSync('./certs/server.crt')
-    };
-  }
-  if (host && ssl) {
-    https.createServer(sslOptions, app).listen(port, host);
-  } else if (ssl) {
-    https.createServer(sslOptions, app).listen(port);
-  } else if (host) {
-    app.listen(port, host);
-  } else {
-    app.listen(port);
-  }
-  
-  nconf.set('processes:server', process.pid);
-  nconf.save();
+app = new GatewayExpress(express(), passport, adapter);
 
-  console.log('Serving '+ (ssl ? 'HTTPS' : 'HTTP') +' on', (host || 'localhost')+":"+port);
-})
+if (nconf.get('SSL')) {
+  app = https.createServer({
+    key: fs.readFileSync('./certs/server.key'),
+    cert: fs.readFileSync('./certs/server.crt')
+  }, app);
+}
 
+app.listen(nconf.get('PORT'), nconf.get('HOST'));
+
+console.log('Serving '+ (nconf.get('SSL') ? 'HTTPS' : 'HTTP') +' on', (nconf.get('HOST') || 'localhost')+":"+nconf.get('PORT'));
