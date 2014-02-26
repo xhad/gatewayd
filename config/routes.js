@@ -1,4 +1,4 @@
-var requireAll = require('../lib/require-all');
+var requireAll = require('require-all');
 var passport = require('./initializers/passport.js');
 var ctrls = require('../app/controllers/index.js');
 

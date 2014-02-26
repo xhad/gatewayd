@@ -3,3 +3,5 @@ node_modules/
 *.swo
 *.swp
 nohup.out
+log/server.log
+config.json
