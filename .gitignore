@@ -4,3 +4,4 @@ node_modules/
 *.swp
 nohup.out
 log/server.log
+config.json
