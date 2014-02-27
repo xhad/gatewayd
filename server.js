@@ -4,8 +4,8 @@ var fs = require('fs');
 var https = require('https');
 var http = require('http');
 
-var SequelizeAdapter = require('ripple-gateway-data-sequelize-adapter');
-var GatewayExpress = require("ripple-gateway-express");
+var SequelizeAdapter = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
+var GatewayExpress = require(nconf.get('RIPPLE_EXPRESS_GATEWAY'));
 var passport = require('./config/passport.js');
 var adapter = new SequelizeAdapter();
 
