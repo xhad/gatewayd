@@ -27,7 +27,8 @@
     "commander": "2.1.0",
     "ripple-wallet": "",
     "pg-hstore": "~1.0.4",
-    "require-all":""
+    "require-all":"",
+    "ripple-gateway-express": "0.4.1"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
