@@ -2,7 +2,6 @@
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayClient = require('../lib/http_client.js').Gateway.Client;
-var User = require('../app/models/user.js');
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
@@ -120,8 +119,11 @@ program
   .description('get the admin api key')
   .action(function(account, secret){
 		getAdminKey(function(err, key){
-			console.log(err);
-			console.log(key);
+      if (err) {
+        console.log({ error: err });
+      } else {
+        console.log(key);
+      }
 		});
   });
 
@@ -180,7 +182,7 @@ program
   .description('configure the gateway with initial parameters')
   .action(function(account, secret){
     console.log('creating an admin user and key.');
-    User.createAdmin(function(err, adminConfig){
+    adapter.createAdmin(function(err, adminConfig){
       if (err) { throw new Error(err) }
       console.log('admin user created with KEY', adminConfig.password);
       console.log('hot and cold wallets have been generated: ');
