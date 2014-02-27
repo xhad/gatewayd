@@ -1,8 +1,9 @@
 var passport = require('passport');
 var BasicStrategy = require("passport-http").BasicStrategy;
-var User = require("../../app/models/user");
-var utils = require("../../lib/utils");
-var nconf = require('../../config/nconf.js');
+var utils = require("../lib/utils");
+var nconf = require('./nconf.js');
+var Adapter = require('ripple-gateway-data-sequelize-adapter');
+var adapter = new Adapter();
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
@@ -13,13 +14,13 @@ passport.use(new BasicStrategy(
         return done('Invalid admin key');
       }
     } else { 
-      User.find({ where: { name: username }}).complete(function (err, user) {
+      adapter.getUser({ name: username }, function(err, user) { 
         if (err) { return done(err) }
         if (user) { 
           if (!utils.verifyPassword(password, user.salt, user.password_hash)) { return done(null, false) }
           return done(null, user);
         } else {
-          User.createWithSalt({ name: username, password: password }, function(err, user) {
+          adapter.createUser({ name: username, password: password }, function(err, user) {
             // if there are no errors, allow addtional logic to be executed
             return err ? done(err, user) : done(null, user);
           });
