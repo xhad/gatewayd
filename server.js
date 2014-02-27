@@ -6,7 +6,7 @@ var http = require('http');
 
 var SequelizeAdapter = require('ripple-gateway-data-sequelize-adapter');
 var GatewayExpress = require("ripple-gateway-express");
-var passport = require('./config/initializers/passport.js');
+var passport = require('./config/passport.js');
 var adapter = new SequelizeAdapter();
 
 app = new GatewayExpress(express(), passport, adapter);

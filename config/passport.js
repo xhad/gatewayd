@@ -1,7 +1,7 @@
 var passport = require('passport');
 var BasicStrategy = require("passport-http").BasicStrategy;
-var utils = require("../../lib/utils");
-var nconf = require('../../config/nconf.js');
+var utils = require("../lib/utils");
+var nconf = require('./nconf.js');
 var Adapter = require('ripple-gateway-data-sequelize-adapter');
 var adapter = new Adapter();
 
