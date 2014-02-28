@@ -28,8 +28,8 @@
     "ripple-wallet": "",
     "pg-hstore": "~1.0.4",
     "require-all":"",
-    "ripple-gateway-express": "0.4.3",
-    "ripple-gateway-data-sequelize-adapter": "0.4.1"
+    "ripple-gateway-express": "0.4.4",
+    "ripple-gateway-data-sequelize-adapter": "0.4.2"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
