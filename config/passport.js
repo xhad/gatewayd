@@ -21,10 +21,7 @@ passport.use(new BasicStrategy(
           if (!utils.verifyPassword(password, user.salt, user.password_hash)) { return done(null, false) }
           return done(null, user);
         } else {
-          adapter.createUser({ name: username, password: password }, function(err, user) {
-            // if there are no errors, allow addtional logic to be executed
-            return err ? done(err, user) : done(null, user);
-          });
+          return done('invalid credentials');
         }
       })
     }
