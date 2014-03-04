@@ -6,6 +6,7 @@ var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
+var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'))();
 
 function getAdminKey(fn) {
 	var key = nconf.get('KEY');
