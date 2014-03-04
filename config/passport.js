@@ -3,8 +3,7 @@ var BasicStrategy = require("passport-http").BasicStrategy;
 var utils = require("../lib/utils");
 var nconf = require('./nconf.js');
 
-var Adapter = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
-var adapter = new Adapter();
+var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'))();
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
@@ -14,11 +13,15 @@ passport.use(new BasicStrategy(
       } else {
         return done('Invalid admin key');
       }
-    } else { 
+    } else {
       adapter.getUser({ name: username }, function(err, user) { 
-        if (err) { return done(err) }
+        if (err) {
+          return done(err) 
+        }
         if (user) { 
-          if (!utils.verifyPassword(password, user.salt, user.password_hash)) { return done(null, false) }
+          if (!utils.verifyPassword(password, user.salt, user.password_hash)) { 
+            return done(null, false) 
+          }
           return done(null, user);
         } else {
           return done('invalid credentials');
