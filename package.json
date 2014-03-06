@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "scripts": {
     "test": "mocha test/integration/"
   },
@@ -29,7 +29,8 @@
     "pg-hstore": "~1.0.4",
     "require-all":"",
     "ripple-gateway-express": "0.5.0",
-    "ripple-gateway-data-sequelize-adapter": "0.4.4"
+    "ripple-gateway-data-sequelize-adapter": "0.4.4",
+    "ripple-rest-client": "1.0.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
