@@ -2,7 +2,6 @@ var express = require('express');
 var nconf = require('./config/nconf.js');
 var fs = require('fs');
 var https = require('https');
-var http = require('http');
 
 var adapter = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var GatewayExpress = require(nconf.get('RIPPLE_EXPRESS_GATEWAY'));
