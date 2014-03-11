@@ -4,9 +4,9 @@ var fs = require('fs');
 var https = require('https');
 var http = require('http');
 
-var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'))();
+var adapter = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var GatewayExpress = require(nconf.get('RIPPLE_EXPRESS_GATEWAY'));
-var passport = require('./config/passport.js');
+var passport = require('./config/passport')(adapter);
 
 app = new GatewayExpress(express(), passport, adapter);
 
