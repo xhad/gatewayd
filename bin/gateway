@@ -8,19 +8,6 @@ var spawn = require('child_process').spawn;
 var fs = require('fs');
 var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'))();
 
-function getAdminKey(fn) {
-	var key = nconf.get('KEY');
-  if (!key) {
-		key = crypto.randomBytes(32).toString('hex');
-		nconf.set('KEY', key);
-		nconf.save(function(err) {
-			fn(err, key);
-		});
-	} else {
-		fn(null, key);
-	}
-}
-
 program
   .version('0.0.1')
   .option('-i, --issuer', 'specify an issuer other than the cold wallet')
@@ -190,10 +177,22 @@ program
   });
 
 program
-  .command('currencies:add <currency> --issuer')
+  .command('currencies:add <currency>')
   .description('add support for a currency') 
-  .action(function(account, secret){
-    console.log('add support for a currency');
+  .action(function(currency){
+    key = 'gateway_currencies';
+    currency = currency.toUpperCase();
+    var currencies = nconf.get(key);
+    if (!currencies) {
+      currencies = {};
+    }
+    if (!currencies[currency]) {
+      currencies[currency] = 0;  
+    }
+    nconf.set(key, currencies);
+    nconf.save(function(){
+      console.log(nconf.get(key));
+    });
   });
 
 program
@@ -204,10 +203,18 @@ program
   });
 
 program
-  .command('currencies:get')
+  .command('currencies:list')
   .description('list currencies supported by the gateway')
-  .action(function(account, secret){
-    console.log('list all currencies supported');
+  .action(function(){
+    var key = 'gateway_currencies';
+    var currencies = nconf.get(key);
+    if (currencies) {
+      console.log('supported currencies: ');
+      console.log(currencies);
+    } else {
+      console.log('no currencies supported yet.')
+      console.log('use `bin/gateway currencies:add <currency_code>`.');
+    }
   });
 
 program
