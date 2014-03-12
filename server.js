@@ -11,6 +11,11 @@ app = new GatewayExpress(express(), passport, adapter);
 
 app.use("/", express.static(__dirname + "/app"));
 
+app.get('/ripple.txt', function(req, res) {
+  res.set({ 'Content-Type': 'text/plain' });
+  res.send("[accounts]\n"+nconf.get('gateway_cold_wallet'));
+});
+
 if (nconf.get('SSL')) {
   app = https.createServer({
     key: fs.readFileSync('./certs/server.key'),
