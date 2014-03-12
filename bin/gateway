@@ -63,10 +63,38 @@ program
   });
 
 program
-  .command('wallet:set:hot <account> <secret>')
+  .command('wallet:set:hot <address> <secret>')
   .description('set the gateway hot wallet')
-  .action(function(account, secret){
-    console.log('set the hot wallet');
+  .action(function(address, secret){
+    var key = 'gateway_hot_wallet';
+    var key = 'gateway_hot_wallet';
+    var hot_wallet = nconf.get(key);
+    if (hot_wallet) {
+      console.log('hot wallet address already set:', cold_wallet);
+    } else {
+      nconf.set(key, {
+        address: address,
+        secret: secret
+      });
+      nconf.save(function(){
+        hot_wallet = nconf.get(key);
+        console.log('set the hot wallet:', hot_wallet);
+      });
+    }
+  });
+
+program
+  .command('wallet:get:hot')
+  .description('get the gateway hot wallet')
+  .action(function(){
+    var key = 'gateway_hot_wallet';
+    var hot_wallet = nconf.get(key);
+    if (hot_wallet) {
+      console.log(hot_wallet);
+    } else {
+      console.log('hot wallet not yet set');
+      console.log('use npm gateway wallet:set:hot <address> <secret>');
+    }
   });
 
 program
@@ -84,16 +112,6 @@ program
         console.log('set the hot wallet:', cold_wallet);
       });
     }
-  });
-
-program
-  .command('wallet:get:hot')
-  .description('get the gateway hot wallet')
-  .action(function(){
-    client.getSettings(function(err, settings) {
-      var wallet = settings.hotWallet;
-      console.log({ account: wallet.address, secret: wallet.secret });
-    });
   });
 
 program
