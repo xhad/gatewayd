@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
-var GatewayClient = require('../lib/http_client.js').Gateway.Client;
 var crypto = require('crypto');
 var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
@@ -70,10 +70,20 @@ program
   });
 
 program
-  .command('wallet:set:cold <type> <account> <secret>')
+  .command('wallet:set:cold <account>')
   .description('set the gateway hot wallet')
-  .action(function(account, secret){
-    console.log('set the hot wallet');
+  .action(function(account){
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = nconf.get(key);
+    if (cold_wallet) {
+      console.log('cold wallet address already set:', cold_wallet);
+    } else {
+      nconf.set(key, account);
+      nconf.save(function(){
+        cold_wallet = nconf.get(key);
+        console.log('set the hot wallet:', cold_wallet);
+      });
+    }
   });
 
 program
@@ -90,10 +100,14 @@ program
   .command('wallet:get:cold')
   .description('get the gateway cold wallet')
   .action(function(){
-    client.getSettings(function(err, settings){
-      var wallet = settings.coldWallet;
-      console.log({ account: wallet.address, secret: wallet.secret });
-    }); 
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = nconf.get(key);
+    if (cold_wallet) {
+      console.log(cold_wallet);
+    } else {
+      console.log('cold wallet not yet set');
+      console.log('use npm gateway wallet:set:cold <address>');
+    }
   });
 
 program
@@ -257,17 +271,5 @@ program
     console.log('restart the gateway api server');
   });
 
-getAdminKey(function(err, adminKey){
-	if (err) {
-		console.log('error', err);
-	} else {
-		client = new GatewayClient({
-			api: 'https://localhost:4000',
-			user: 'admin',
-			secret: adminKey
-		});
-		program.parse(process.argv);
-	}
-});
-
+program.parse(process.argv);
 
