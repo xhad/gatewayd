@@ -10,6 +10,8 @@ var passport = require('./config/passport.js');
 
 app = new GatewayExpress(express(), passport, adapter);
 
+app.use("/", express.static(__dirname + "/app"));
+
 if (nconf.get('SSL')) {
   app = https.createServer({
     key: fs.readFileSync('./certs/server.key'),
