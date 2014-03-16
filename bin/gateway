@@ -1,12 +1,13 @@
 #!/usr/bin/env node
+var nconf = require('../config/nconf.js');
+process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require('crypto');
-var nconf = require('../config/nconf.js');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
-var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'))();
+var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 
 program
   .version('0.0.1')
@@ -55,19 +56,14 @@ program
   .action(function(address, secret){
     var key = 'gateway_hot_wallet';
     var key = 'gateway_hot_wallet';
-    var hot_wallet = nconf.get(key);
-    if (hot_wallet) {
-      console.log('hot wallet address already set:', cold_wallet);
-    } else {
-      nconf.set(key, {
-        address: address,
-        secret: secret
-      });
-      nconf.save(function(){
-        hot_wallet = nconf.get(key);
-        console.log('set the hot wallet:', hot_wallet);
-      });
-    }
+    nconf.set(key, {
+      address: address,
+      secret: secret
+    });
+    nconf.save(function(){
+      hot_wallet = nconf.get(key);
+      console.log('set the hot wallet:', hot_wallet);
+    });
   });
 
 program
@@ -96,7 +92,7 @@ program
       nconf.set(key, account);
       nconf.save(function(){
         cold_wallet = nconf.get(key);
-        console.log('set the hot wallet:', cold_wallet);
+        console.log('set the cold wallet:', cold_wallet);
       });
     }
   });
@@ -287,6 +283,48 @@ program
     nconf.set("processes", {});
     nconf.save();
     console.log('Stopped running Ripple Gateway');
+  });
+
+program
+  .command('deposit <username> <amount> <currency>')
+  .description('process a deposit by sending to ripple address')
+  .action(function(username, amount, currency) {
+    var hotwallet = nconf.get('gateway_hot_wallet');
+    api.readUser({ username: username }, function(err, user){
+      if (err) {
+        console.log('error: cannot find user', err); 
+      } else {
+        api.readRippleAddress({ user_id: user.id }, function(err, address){
+          if (err) {
+            console.log("error: cannot get user's ripple address", err); 
+          } else {
+            api.createRippleTransaction({ 
+              to_address_id: address.id, 
+              from_address_id: hot_wallet.id,
+              amount: "",
+              currency: "",
+              issuer: ""
+            }); 
+          }
+        });
+      } 
+    });
+    api.createRippleTransaction({ amount: amount, currency: currency})
+  });
+
+program
+  .command('createuser <username> <password> <ripple_address>')
+  .description('create a user with a ripple address')
+  .action(function(username, password, ripple_addrress){
+    api.createUser({ username: username, password: password }, function(err, user){
+      console.log('created user', user);
+      api.createRippleAddress({ address: ripple_address, type: 'independent' }, function(err, address){
+        console.log('created ripple address', address);
+        api.createExternalAccount({ user_id: user.id, name: 'default' }, function(err, account){
+          console.log('created external account', account);
+        });    
+      }); 
+    }); 
   });
 
 program
