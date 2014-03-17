@@ -8,6 +8,8 @@ var crypto = require('crypto');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
+var ripple = require('../lib/remote');
+var Amount = require('ripple-lib').Amount;
 
 program
   .version('0.0.1')
@@ -172,10 +174,7 @@ program
     console.log('deposit from an external account');
   });
 
-program
-  .command('currencies:add <currency>')
-  .description('add support for a currency') 
-  .action(function(currency){
+function setCurrencyInNconf(currency, amount) {
     key = 'gateway_currencies';
     currency = currency.toUpperCase();
     var currencies = nconf.get(key);
@@ -183,12 +182,144 @@ program
       currencies = {};
     }
     if (!currencies[currency]) {
-      currencies[currency] = 0;  
+      currencies[currency] = amount;  
     }
     nconf.set(key, currencies);
     nconf.save(function(){
       console.log(nconf.get(key));
     });
+
+}
+
+function issueCurrency(amount, currency, secret, fn) {
+  var human = amount+currency.toUpperCase();
+  var hotWallet = nconf.get('gateway_hot_wallet');
+  var coldWallet = nconf.get('gateway_cold_wallet');
+  ripple.set_secret(coldWallet, secret);
+
+  ripple.connect(function(){
+    var amount = Amount.from_human(human);
+    amount.set_issuer(coldWallet);
+
+    var transaction = ripple.transaction();
+    console.log(hotWallet);
+
+    transaction.payment({
+      from: coldWallet, 
+      to: hotWallet.address,
+      amount: amount
+    });
+
+    transaction.submit(fn);
+  });
+}
+
+program
+  .command('hot_wallet:fund <amount> <currency> <secret>')
+  .description('issue funds from cold wallet to hot wallet') 
+  .action(function(amount, currency, secret){
+    issueCurrency(amount, currency, secret, function(err, resp){
+      if (err || (resp.engine_result != 'tesSUCCESS')) {
+        console.log('error', err);
+      } else {
+        console.log('success!');
+      }
+    });
+  });
+
+function setTrustLine(currency, amount, fn) {
+  var hotWallet = nconf.get('gateway_hot_wallet');
+  ripple.connect(function(){
+    var amount = Amount.from_human('1CAD');
+    ripple.set_secret(hotWallet.address, hotWallet.secret);
+
+    var transaction = ripple.transaction();
+
+    transaction.trustSet({
+      from: hotWallet.address, 
+      to: nconf.get('gateway_cold_wallet'), 
+      amount: '1/CAD'+nconf.get('gateway_cold_wallet')
+    });
+
+    transaction.submit(fn);
+  });
+}
+
+program
+  .command('trust:set <currency> <amount>')
+  .description('set level of trust from hot to cold wallet') 
+  .action(function(currency, amount){
+    setTrustLine(currency, amount, function(err, resp){
+      console.log(err, resp);
+    });
+  });
+
+function setCurrency(currency, amount) {
+  var currency = currency.toUpperCase();
+  lookupRippleBalance(currency, function(err, balance) {
+    if (err) { fn(err, null); return; };
+    var currentAmount = balance.balance.toFloat();
+    var targetAmount = amount.toFloat();
+    if (currentAmount == targetAmount) { 
+      console.log('do nothing, trust is the same');
+    };
+    if (currentAmount > targetAmount) { 
+      console.log('decrease trust to '+targetAmount);
+    };
+    if (currentAmount < targetAmount) { 
+      console.log('increase trust to '+targetAmount);
+    };
+  });
+}
+
+function lookupRippleBalance(currency, fn){
+  lookupRippleBalances(nconf.get('gateway_hot_wallet').address,
+    nconf.get('gateway_cold_wallet'),
+    function(err, balances) {
+      if (err) { fn(err, null); return; };
+      fn(null, balances[currency.toUpperCase()]);
+    }
+  );
+};
+
+/*
+lookupRippleBalance('btc', function(err, balance) {
+  console.log(err, balance);
+});
+*/
+
+function lookupRippleBalances(hotWalletAddress, coldWalletAddress, fn) {
+  ripple.connect(function(){
+    ripple.request_account_lines(hotWalletAddress, function(err, resp) { 
+      if (err) { fn(err, null); return; };
+      var lines = {};
+      for (var i=0; i < resp.lines.length; i++){
+        if (resp.lines[i].account == coldWalletAddress) {
+          lines[resp.lines[i].currency] = {
+            balance: resp.lines[i].balance,
+            limit: resp.lines[i].limit
+          };
+        }
+      };
+      fn(null, lines);
+    });
+  });
+}
+
+function verifyColdAndHotWallets() {
+  var hotWallet = nconf.get('gateway_hot_wallet');
+  var coldWallet = nconf.get('gateway_cold_wallet');
+  return hotWallet && coldWallet;
+}
+
+function get() {
+  return nconf.get();
+}
+
+program
+  .command('currencies:set <currency> <amount>')
+  .description('add support for a currency') 
+  .action(function(currency){
   });
 
 program
