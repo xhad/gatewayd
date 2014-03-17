@@ -18,7 +18,6 @@ api.users.register = function(opts, fn) {
     name: opts.name,
     password: opts.password
   };
-  console.log(userOpts);
   api.users.create(userOpts, function(err, user) {
     if (err) { fn(err, null); return; }
     var addressOpts = {
@@ -28,7 +27,6 @@ api.users.register = function(opts, fn) {
       type: "independent"
     };
     api.rippleAddresses.create(addressOpts, function(err, ripple_address) {
-      console.log('address', ripple_address);
       if (err) { fn(err, null); return; }
       api.externalAccounts.create({ name: "default", user_id: user.id }, function(err, account){
         if (err) { fn(err, null); return; }
@@ -69,7 +67,10 @@ app.post('/api/v1/users', function(req, res){
 
 app.get('/ripple.txt', function(req, res) {
   res.set({ 'Content-Type': 'text/plain' });
-  res.send("[accounts]\n"+nconf.get('gateway_cold_wallet'));
+  res.send(
+    "[accounts]\n"+nconf.get('gateway_cold_wallet')+"\n\n"+
+    "[hotwallets]\n"+nconf.get('gateway_hot_wallet').address
+  );
 });
 
 var ssl = (nconf.get('SSL') && (nconf.get('SSL') != 'false'));
