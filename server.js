@@ -5,14 +5,28 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 
-var adapter = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
+var api = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var GatewayExpress = require(nconf.get('RIPPLE_EXPRESS_GATEWAY'));
-var passport = require('./config/passport')(adapter);
+var passport = require('./config/passport')(api);
 
-app = express(); //new GatewayExpress(express(), passport, adapter);
-
+app = express(); //new GatewayExpress(express(), passport, api);
 
 app.use("/", express.static(__dirname + "/app"));
+app.use(express.bodyParser());
+
+app.post('/api/v1/users', function(req, res){
+  var opts = {
+    name: req.body.name,
+    password: req.body.password
+  };
+  api.users.create(opts, function(err, user){
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ user: user.toJSON() });
+    }
+  });
+});
 
 app.get('/ripple.txt', function(req, res) {
   res.set({ 'Content-Type': 'text/plain' });
