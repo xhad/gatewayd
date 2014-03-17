@@ -3,7 +3,7 @@ lock '3.1.0'
 
 set :application, 'ripple_gateway'
 set :repo_url, 'https://github.com/ripple/ripple-gateway.git'
-set :branch, "master"
+set :branch, "staging"
 
 set :deploy_to, '/var/www/ripple_gateway'
 set :scm, :git
@@ -23,12 +23,12 @@ set :ssh_options, {
 
 set :user, 'ubuntu'
 
-role :app, "ubuntu@ec2-54-198-23-155.compute-1.amazonaws.com"
+role :app, "ubuntu@ec2-174-129-121-83.compute-1.amazonaws.com"
 
 namespace :deploy do
   task :npm_install, [:roles] => :app do
     on roles(:app) do
-      execute "cd #{release_path} && npm install"
+      execute "cd #{release_path} && sudo npm install"
     end
   end
 
@@ -38,22 +38,35 @@ namespace :deploy do
     end
   end
 
-  task :start, :roles => :app do
-    run "sudo restart #{application} || sudo start #{application}"
+  task :start do
+    on roles(:app) do
+      execute "sudo restart #{fetch(:application)} || sudo start #{fetch(:application)}"
+    end
   end
  
-  task :stop, :roles => :app do
-    run "sudo stop #{application}"
+  task :stop do
+    on roles(:app) do
+      execute "sudo stop #{fetch(:application)}"
+    end
   end
  
-  task :restart, :roles => :app do
-    start
+  task :restart do
+    on roles(:app) do
+      execute "sudo restart #{fetch(:application)} || sudo start #{fetch(:application)}"
+    end
+  end
+
+  task :customcleanup do
+    count = fetch(:keep_releases, 5).to_i
+    on roles(:app) do
+      execute "ls -1dt #{releases_path}/* | tail -n +#{count + 1} | sudo xargs rm -rf"
+    end
   end
 
 end
 
-after "deploy:updated", "deploy:cleanup"
-after "deploy:cleanup", "deploy:copy_config"
+after "deploy:updated", "deploy:customcleanup"
+after "deploy:customcleanup", "deploy:copy_config"
 after "deploy:finished", "deploy:npm_install"
 after "deploy:npm_install", "deploy:restart"
 
