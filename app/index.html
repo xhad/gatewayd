@@ -339,8 +339,8 @@
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Sign Up</h4>
         </div>
-        <div class="modal-body">
-          <form action="signup.htm" role="form">
+        <div class="modal-body" id='registerModal'>
+          <form id='registrationForm' role="form">
             <h5>Account Information</h5>
             <div class="form-group">
               <label class="sr-only" for="signup-email">Ripple address</label>
@@ -422,5 +422,36 @@
 
 <!--Custom scripts mainly used to trigger libraries --> 
 <script src="theme/js/script.min.js"></script>
+
+<script type='text/javascript'>
+  $(function(){
+    function register(name, password, address, fn) {
+      $.ajax('/api/v1/register', {
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          name: name,
+          password: password,
+          ripple_address: address
+        },
+        success: fn,
+        error: function(err){
+          console.log('error', err);
+        } 
+      })
+    }
+
+
+    $('#registrationForm').on('submit', function(event) {
+      event.preventDefault();
+      var name = $("#signup-email").val();
+      var password = $("#signup-password").val();
+      var ripple_address = $("#signup-ripple-address").val();
+      register(name, password, ripple_address, function(resp) {
+        $('#registerModal').html('Successfully registered your ripple address with a new gateway account!');
+      });
+    });
+  });
+</script>
 </body>
 </html>
