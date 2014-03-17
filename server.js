@@ -6,13 +6,51 @@ var fs = require('fs');
 var https = require('https');
 
 var api = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
-var GatewayExpress = require(nconf.get('RIPPLE_EXPRESS_GATEWAY'));
 var passport = require('./config/passport')(api);
 
-app = express(); //new GatewayExpress(express(), passport, api);
+app = express();
 
 app.use("/", express.static(__dirname + "/app"));
 app.use(express.bodyParser());
+
+api.users.register = function(opts, fn) {
+  var userOpts = {
+    name: opts.name,
+    password: opts.password
+  };
+  console.log(userOpts);
+  api.users.create(userOpts, function(err, user) {
+    if (err) { fn(err, null); return; }
+    var addressOpts = {
+      user_id: user.id,
+      address: opts.ripple_address,
+      managed: false,
+      type: "independent"
+    };
+    api.rippleAddresses.create(addressOpts, function(err, ripple_address) {
+      console.log('address', ripple_address);
+      if (err) { fn(err, null); return; }
+      api.externalAccounts.create({ name: "default", user_id: user.id }, function(err, account){
+        if (err) { fn(err, null); return; }
+        console.log('account', account);
+        var response = user.toJSON();
+        response.ripple_address = ripple_address;
+        response.external_account = account;
+        fn(err, response);
+      });
+    });
+  });
+};
+
+app.post('/api/v1/register', function(req, res) {
+  api.users.register(req.body, function(err, user){
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ user: user });
+    }
+  })
+});
 
 app.post('/api/v1/users', function(req, res){
   var opts = {
@@ -20,6 +58,7 @@ app.post('/api/v1/users', function(req, res){
     password: req.body.password
   };
   api.users.create(opts, function(err, user){
+    console.log(err, user);
     if (err) {
       res.send(500, { error: err });
     } else {
