@@ -3,7 +3,7 @@ lock '3.1.0'
 
 set :application, 'ripple_gateway'
 set :repo_url, 'https://github.com/ripple/ripple-gateway.git'
-set :branch, "production"
+set :branch, "master"
 
 set :deploy_to, '/var/www/ripple_gateway'
 set :scm, :git
