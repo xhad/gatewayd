@@ -24,7 +24,7 @@
     "ripple-wallet": "",
     "require-all":"",
     "ripple-gateway-express": "0.6.2",
-    "ripple-gateway-data-sequelize-adapter": "0.5.3",
+    "ripple-gateway-data-sequelize-adapter": "0.5.4",
     "ripple-rest-client": "1.0.0",
     "node-uuid": "1.4.1"
   },
