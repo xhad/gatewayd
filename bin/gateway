@@ -10,6 +10,8 @@ var fs = require('fs');
 var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var ripple = require('../lib/remote');
 var Amount = require('ripple-lib').Amount;
+var api = require("ripple-gateway-data-sequelize-adapter");
+var abstract = require("../lib/abstract.js");
 
 program
   .version('0.0.1')
@@ -421,26 +423,24 @@ program
   .description('process a deposit by sending to ripple address')
   .action(function(username, amount, currency) {
     var hotwallet = nconf.get('gateway_hot_wallet');
-    api.readUser({ username: username }, function(err, user){
-      if (err) {
-        console.log('error: cannot find user', err); 
-      } else {
-        api.readRippleAddress({ user_id: user.id }, function(err, address){
-          if (err) {
-            console.log("error: cannot get user's ripple address", err); 
-          } else {
-            api.createRippleTransaction({ 
-              to_address_id: address.id, 
-              from_address_id: hot_wallet.id,
-              amount: "",
-              currency: "",
-              issuer: ""
-            }); 
-          }
-        });
-      } 
+    var coldWallet = nconf.get('gateway_cold_wallet');
+    abstract.getUserExternalAccount(username, function(err, account) {
+      abstract.getUserRippleAddress(username, function(err, address) {
+        api.rippleTransactions.create({ 
+          to_address_id: address.id, 
+          from_address_id: 0,
+          to_amount: amount,
+          to_currency: currency,
+          to_issuer: coldWallet,
+          from_amount: amount,
+          from_currency: currency,
+          from_issuer: coldWallet,
+          transaction_state: 'queued'
+        }, function(err, transaction) {
+          console.log(err, transaction);
+        }); 
+      });
     });
-    api.createRippleTransaction({ amount: amount, currency: currency})
   });
 
 program
