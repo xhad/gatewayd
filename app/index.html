@@ -46,11 +46,21 @@
 <link rel="apple-touch-icon-precomposed" href="theme/img/icons/default.png">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300|Rambla|Calligraffitti' rel='stylesheet' type='text/css'>
 
+<style>
+  .throbber {
+    text-align:center;
+    -webkit-animation: spin 0.7s infinite linear;
+    -moz-animation: spin 0.7s infinite linear;
+    -o-animation: spin 0.7s infinite linear;
+    -ms-animation: spin 0.7s infinite linear;
+  }
+</style>
+
 <!--Retina.js plugin - @see: http://retinajs.com/-->
 <script src="theme/plugins/retina/js/retina-1.1.0.min.js"></script>
 </head>
 
-<body class="page page-index">
+<body class="page page-index" ng-controller="MainCtrl">
 <a href="#content" class="sr-only">Skip to content</a>
 <div id="navigation" class="wrapper">
   <div class="navbar-static-top"> 
@@ -82,7 +92,7 @@
         <div class="row">
           <div class="col-md-8"> 
             <!--branding/logo--> 
-            <a class="navbar-brand" href="theme/index.htm" title="Home">
+            <a class="navbar-brand" ng-href="/" title="Home">
             <h1><span>Ripple</span>LatAm<span></span></h1>
             </a>
             <div class="slogan">The grooviest Brazillian gateway</div>
@@ -128,7 +138,6 @@
     </div>
   </div>
 </div>
-<div ng-view=""></div>
 <div id="highlighted"> 
   <!--
       Showshow - Slider Revolution
@@ -261,32 +270,8 @@
     <!--end of tp-banner--> 
   </div>
 </div>
-<div id="content">
-  <div class="container"> 
-    <!-- Services -->
-    <div class="block features">
-      <div class="row">
-        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-1.png" alt="Feature 1" class="img-responsive" /></a>
-          <h3 class="title"><a href="theme/features.htm">Free & <span class="de-em">Open-Source</span></a></h3>
-          <p>Ripple Labs is dedicated to provided 100% free, open-source software for partners to build valuable Gateway currency software and tools</p>
-        </div>
-        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-2.png" alt="Feature 2" class="img-responsive" /></a>
-          <h3 class="title"><a href="theme/features.htm">Gateway Setup <span class="de-em">Wizard</span></a></h3>
-          <p>When you launch your Ripple Gateway you will be guided through the entire setup process from generating keys to configuring currencies to managing users.</p>
-        </div>
-        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-3.png" alt="Feature 3" class="img-responsive" /></a>
-          <h3 class="title"><a href="theme/features.htm">Intuitive <span class="de-em">User Interface</span></a></h3>
-          <p>A driving motivation behind the Ripple Gateway software is to abstract the complicated parts of the Ripple network protocol from both the user and administrators in a concise visual experience.</p>
-        </div>
-        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-4.png" alt="Feature 4" class="img-responsive" /></a>
-          <h3 class="title"><a href="theme/features.htm">JSON <span class="de-em">REST API</span></a></h3>
-          <p>Build automated integrations with your banking partners and software using the Ripple Gateway REST API endpoints and open your Gateway up to your developers' imaginations.</p>
-        </div>
-      </div>
-    </div>
-    
-  </div>
-</div>
+
+<div id="content" ng-view=""></div>
 
 <!-- FOOTER -->
 <footer id="footer">
@@ -441,7 +426,40 @@
 <script src="theme/js/script.min.js"></script>
 
 <script>
-  var rippleGatewayApp = angular.module('rippleGatewayApp', []);
+  var rippleGatewayApp = angular.module('rippleGatewayApp', [
+    'ngRoute'
+  ]);
+
+  rippleGatewayApp.controller('HomeCtrl', ['$scope', function($scope){
+    $scope.isHome = true;
+    $('#highlighted').show();
+  }]);
+
+  rippleGatewayApp.controller('AdminCtrl', ['$scope', function($scope){
+    $('#highlighted').hide();
+  }]);
+
+
+  rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', function($scope, $location) {
+
+  }]);
+
+  rippleGatewayApp.config(['$routeProvider',
+    function($routeProvider) {
+      $routeProvider.
+        when('/', {
+          controller: 'HomeCtrl',
+          templateUrl: 'partials/home.html'
+        }).
+        when('/admin', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin.html'
+        }).
+        otherwise({
+          redirectTo: '/'
+        });
+      }]);
+  
 </script>
 </body>
 </html>
