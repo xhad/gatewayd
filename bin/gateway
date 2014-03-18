@@ -169,13 +169,6 @@ program
     console.log('clear a pending withdrawal');
   });
 
-program
-  .command('deposit <external_account_id> <amount> <currency>')
-  .description('deposit from an external account')
-  .action(function(account, secret){
-    console.log('deposit from an external account');
-  });
-
 function setCurrencyInNconf(currency, amount) {
     key = 'gateway_currencies';
     currency = currency.toUpperCase();
