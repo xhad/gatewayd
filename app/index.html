@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="rippleGatewayApp">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
@@ -128,6 +128,7 @@
     </div>
   </div>
 </div>
+<div ng-view=""></div>
 <div id="highlighted"> 
   <!--
       Showshow - Slider Revolution
@@ -418,6 +419,8 @@
 </div>
 
 <!--Scripts --> 
+<script src="/bower_components/angular/angular.min.js"></script>
+<script src="/bower_components/angular-route/angular-route.min.js"></script>
 <script src="theme/js/jquery.min.js"></script> 
 <script src="theme/js/jquery-migrate-1.2.1.min.js"></script> <!--Legacy jQuery support for quicksand plugin--> 
 
@@ -434,40 +437,11 @@
 <script src="theme/plugins/jRespond/js/jRespond.js"></script> 
 <script src="theme/plugins/quicksand/jquery.quicksand.js"></script> 
 
-<script src="bower_components/angular/angular.min.js"></script>
-
 <!--Custom scripts mainly used to trigger libraries --> 
 <script src="theme/js/script.min.js"></script>
 
-<script type='text/javascript'>
-  $(function(){
-    function register(name, password, address, fn) {
-      $.ajax('/api/v1/register', {
-        method: 'POST',
-        dataType: 'json',
-        data: {
-          name: name,
-          password: password,
-          ripple_address: address
-        },
-        success: fn,
-        error: function(err){
-          console.log('error', err);
-        } 
-      })
-    }
-
-
-    $('#registrationForm').on('submit', function(event) {
-      event.preventDefault();
-      var name = $("#signup-email").val();
-      var password = $("#signup-password").val();
-      var ripple_address = $("#signup-ripple-address").val();
-      register(name, password, ripple_address, function(resp) {
-        $('#registerModal').html('Successfully registered your ripple address with a new gateway account!');
-      });
-    });
-  });
+<script>
+  var rippleGatewayApp = angular.module('rippleGatewayApp', []);
 </script>
 </body>
 </html>
