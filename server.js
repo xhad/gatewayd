@@ -83,6 +83,16 @@ app.get('/api/v1/users/:name', function(req, res) {
   });
 });
 
+app.get('/api/v1/users/:name/withdraw', function(req, res) {
+  abstract.getUserExternalAccount(req.params.name, function(err, account) {
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ ripple_address: nconf.get("gateway_cold_wallet")+"?dt="+account.id });
+    }
+  });
+});
+
 app.post('/api/v1/users', function(req, res){
   var opts = {
     name: req.body.name,
