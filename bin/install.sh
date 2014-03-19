@@ -18,6 +18,7 @@ cd ripple-gateway-api
 sudo npm install
 sudo npm install -g pg
 sudo npm install -g db-migrate
+cd node_modules/ripple-gateway-data-sequelize-adapter
 db-migrate up --config config/database.json --migrations-dir db/migrations
-bin/gateway init
-bin/gateway start
+cd ../..
+node server.js
