@@ -1,4 +1,3 @@
-web: bin/gateway start
+web: node server.js
 incoming: node workers/incoming.js
-outgoing: node workers/outgoing.js
-
+incoming: node workers/outgoing.js
