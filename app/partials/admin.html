@@ -1,3 +1,58 @@
-<div class='span12' style='text-align:center; margin: 0 auto'>
+<div class='container'>
+<div style='text-align:center; margin: 0 auto'>
   <img class='throbber' src='/images/ripple_throbber.png'/>
+</div>
+
+<div class='col-sm-6'>
+<h4 class="margin-top-large">Pending Withdrawals</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>External Account</th>
+        <th>Currency</th>
+        <th>Amount</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="withdrawal in pendingWithdrawals">
+        <td>{{ withdrawal.id }}</td>
+        <td>{{ withdrawal.external_account_id }}</td>
+        <td>{{ withdrawal.currency }}</td>
+        <td>{{ withdrawal.amount }}</td>
+        <td><button class='clearWithdrawal'>Clear</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style='text-align:right' class='col-sm-6'>
+  <h4 class='margin-top-large'>Make Deposit</h4>
+  <hr/>
+  <form>
+    <p>
+      <label for='username'>Username: </label>
+      <input type='text' name='username'></input>
+    </p>
+    <p>
+      <label for='currency'>Currency: </label>
+      <select name='currency'>
+        <option ng-repeat='currency in currencies' 
+                value='{{currency}}'
+                style='width:155px'>
+          {{ currency }}
+        </option>
+      </select>
+    </p>
+    <p>
+      <label for='amount'>Amount: </label>
+      <input name='amount' type='number'></input>
+    </p>
+    <p>
+      <input type='submit' value='Submit'/>
+    </p>
+  </form>
+</div>
+
 </div>
