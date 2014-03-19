@@ -436,19 +436,59 @@ program
     });
   });
 
+
+// assumes the issuer and the recipient is the gateway cold wallet address
 program
-  .command('createuser <username> <password> <ripple_address>')
+  .command('payments:incoming:create <destination_tag> <currency> <amount>')
+  .description('simpulate a ripple payment coming in to the cold wallet for withdrawal')
+  .action(function(destinationTag, currency, amount) {
+    console.log('look up address with destination tag:', destinationTag);
+    abstract.getHostedAddress(destinationTag, function(err, address) {
+      if (err) { console.log("error", err); return; };
+      console.log('hot hosted address');
+      api.rippleTransactions.create({ 
+          to_amount: amount,
+          to_currency: currency,
+          to_issuer: 'coldWallet',
+          to_amount: amount,
+          to_currency: currency,
+          to_issuer: 'coldWallet',
+          to_address_id: address.id,
+          from_address_id: '0'
+        }, function(err, rippleTransaction) {
+        if (err) { console.log("error", err); return; };
+        api.externalTransactions.create({
+          deposit: false,
+          amount: amount,
+          currency: currency,
+          status: 'pending',
+          ripple_transaction_id: rippleTransaction.id,
+          external_account_id: destinationTag  
+        }, function(err, withdrawal) {
+          if (err) { console.log("error", err); return; };
+          console.log({
+            ripple_transaction: rippleTransaction,
+            withdrawal: withdrawal
+          });
+        });
+      });   
+    });
+  });
+  
+
+
+program
+  .command('registeruser <username> <password> <ripple_address>')
   .description('create a user with a ripple address')
-  .action(function(username, password, ripple_addrress){
-    api.createUser({ username: username, password: password }, function(err, user){
-      console.log('created user', user);
-      api.createRippleAddress({ address: ripple_address, type: 'independent' }, function(err, address){
-        console.log('created ripple address', address);
-        api.createExternalAccount({ user_id: user.id, name: 'default' }, function(err, account){
-          console.log('created external account', account);
-        });    
-      }); 
-    }); 
+  .action(function(username, password, ripple_address){
+    var userParams = { 
+      name: username,
+      password: password,
+      ripple_address: ripple_address
+    };
+    abstract.registerUser(userParams, function(err, user) {
+      console.log(err, user);  
+    });
   });
 
 program
