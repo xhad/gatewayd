@@ -435,13 +435,32 @@
     $('#highlighted').show();
   }]);
 
-  rippleGatewayApp.controller('AdminCtrl', ['$scope', function($scope){
+  rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
     $('#highlighted').hide();
+    $scope.pendingWithdrawals = [];
+    $scope.currencies = ['USD', 'DOG', 'XAG'];
+    $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
+    .success(function(response, status, headers, config) {
+      $(".throbber").hide(); 
+      $scope.pendingWithdrawals = response.withdrawals;
+    })
+    .error(function(data, status, headers, config) {
+      $(".throbber").hide(); 
+    });
   }]);
 
 
   rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', function($scope, $location) {
+    $scope.login = function() {
+      var name = ''; 
+      var password = '';
 
+      if (name == 'admin') {
+        // verify admin credentials and redirect  
+      } else {
+        
+      }
+    };
   }]);
 
   rippleGatewayApp.config(['$routeProvider',
