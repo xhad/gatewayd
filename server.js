@@ -14,36 +14,8 @@ app = express();
 app.use("/", express.static(__dirname + "/app"));
 app.use(express.bodyParser());
 
-
-api.users.register = function(opts, fn) {
-  var userOpts = {
-    name: opts.name,
-    password: opts.password
-  };
-  api.users.create(userOpts, function(err, user) {
-    if (err) { fn(err, null); return; }
-    var addressOpts = {
-      user_id: user.id,
-      address: opts.ripple_address,
-      managed: false,
-      type: "independent"
-    };
-    api.rippleAddresses.create(addressOpts, function(err, ripple_address) {
-      if (err) { fn(err, null); return; }
-      api.externalAccounts.create({ name: "default", user_id: user.id }, function(err, account){
-        if (err) { fn(err, null); return; }
-        console.log('account', account);
-        var response = user.toJSON();
-        response.ripple_address = ripple_address;
-        response.external_account = account;
-        fn(err, response);
-      });
-    });
-  });
-};
-
 app.post('/api/v1/register', function(req, res) {
-  api.users.register(req.body, function(err, user){
+  abstract.registerUser(req.body, function(err, user){
     if (err) {
       res.send(500, { error: err });
     } else {
@@ -164,6 +136,42 @@ app.get('/api/v1/users', function(req, res) {
     res.send({ users: users });
   });
 });
+
+app.get('/api/v1/withdrawals/pending', function(req, res) {
+  api.externalTransactions.readAllPending(function(err, withdrawals){
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ withdrawals: withdrawals });
+  });
+});
+
+app.get('/api/v1/ripple_addresses', function(req, res) {
+  api.rippleAddresses.readAll({}, function(err, addresses) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ ripple_addresses: addresses });
+  });
+});
+
+app.get('/api/v1/users/:id/external_accounts', function(req, res) {
+  api.externalAccounts.readAll({ user_id: req.params.id }, function(err, accounts) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ ripple_accounts: accounts });
+  });
+})
+
+app.get('/api/v1/users/:id/ripple_addresses', function(req, res) {
+  api.rippleAddresses.readAll({ user_id: req.params.id }, function(err, accounts) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ ripple_accounts: accounts });
+  });
+})
+
+app.get('/api/v1/external_accounts', function(req, res) {
+  api.externalAccounts.readAll({}, function(err, accounts) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ ripple_accounts: accounts });
+  });
+});
+
 
 var ssl = (nconf.get('SSL') && (nconf.get('SSL') != 'false'));
 
