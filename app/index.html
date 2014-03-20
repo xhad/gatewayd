@@ -452,7 +452,6 @@
 <script type='text/javascript'>
   $(function(){
     $('#registrationForm').on('submit', function(event){
-      alert('submitted');
       event.preventDefault();
       event.stopPropagation();
       var opts = {
@@ -469,7 +468,6 @@
           if (resp.user) {
             document.location.href = '/app#/users';
           }
-          console.log(resp);
         },
         error: function(err) {
           console.log(resp);
