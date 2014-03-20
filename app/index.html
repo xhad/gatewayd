@@ -436,11 +436,13 @@
   }]);
 
   rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.loading = true;
     $('#highlighted').hide();
     $scope.pendingWithdrawals = [];
     $scope.currencies = ['USD', 'DOG', 'XAG'];
     $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
     .success(function(response, status, headers, config) {
+      $scope.loading = false;
       $(".throbber").hide(); 
       $scope.pendingWithdrawals = response.withdrawals;
     })
