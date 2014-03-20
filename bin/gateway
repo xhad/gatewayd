@@ -312,31 +312,43 @@ function get() {
 }
 
 program
-  .command('currencies:set <currency> <amount>')
+  .command('currencies:list')
   .description('add support for a currency') 
   .action(function(currency){
-  });
-
-program
-  .command('currencies:remove <currency> --issuer')
-  .description('remove support for a currency')
-  .action(function(account, secret){
-    console.log('add a curreny');
-  });
-
-program
-  .command('currencies:list')
-  .description('list currencies supported by the gateway')
-  .action(function(){
-    var key = 'gateway_currencies';
-    var currencies = nconf.get(key);
-    if (currencies) {
-      console.log('supported currencies: ');
-      console.log(currencies);
-    } else {
-      console.log('no currencies supported yet.')
-      console.log('use `bin/gateway currencies:add <currency_code>`.');
+    var currencies = nconf.get('currencies') || {};
+    for (c in currencies) {
+      console.log(c);
     }
+  });
+
+program
+  .command('currencies:add <currency>')
+  .description('add support for a currency') 
+  .action(function(currency){
+    var currencies = nconf.get('currencies') || {};
+    if (!(currency in currencies)) {
+      currencies[currency] = 0;
+    }
+    nconf.set('currencies', currencies);
+    nconf.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
+  });
+
+program
+  .command('currencies:remove <currency>')
+  .description('remove support for a currency')
+  .action(function(currency){
+    var currencies = nconf.get('currencies') || {};
+    delete currencies[currency];
+    nconf.set('currencies', currencies);
+    nconf.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
   });
 
 program
