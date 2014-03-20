@@ -438,14 +438,12 @@
   function makeDeposit($scope, $http) {
     console.log(makeDeposit);
     $scope.loading = true;
-    //$(".throbber").show(); 
-    //$("form").clear();
+    $(".throbber").show(); 
     var opts = { 
       name: $scope.deposit.username, 
       amount: $scope.deposit.amount,
       currency: $scope.deposit.currency
     };
-    console.log('opts', opts);
 
     $http.post('/api/v1/deposits', opts)
     .success(function(response, status, headers, config) {
@@ -455,7 +453,7 @@
     })
     .error(function(data, status, headers, config) {
       $scope.loading = false;
-      //$(".throbber").hide(); 
+      $(".throbber").hide(); 
     });
   }
 
@@ -482,6 +480,9 @@
 
 
   rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.makeDeposit = function() {
+      makeDeposit($scope, $http);
+    };
     $scope.loading = true;
     $scope.isHome = false;
     $('#highlighted').hide();
