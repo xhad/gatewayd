@@ -435,8 +435,26 @@
     $('#highlighted').show();
   }]);
 
+  rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.loading = true;
+    $scope.isHome = false;
+    $('#highlighted').hide();
+    $scope.users = [];
+    $scope.currencies = ['USD', 'DOG', 'XAG'];
+    $http({ method: 'GET', url: '/api/v1/users' })
+    .success(function(response, status, headers, config) {
+      $scope.loading = false;
+      $(".throbber").hide(); 
+      $scope.users = response.users;
+    })
+    .error(function(data, status, headers, config) {
+      $(".throbber").hide(); 
+    });
+  }]);
+
   rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.loading = true;
+    $scope.isHome = false;
     $('#highlighted').hide();
     $scope.pendingWithdrawals = [];
     $scope.currencies = ['USD', 'DOG', 'XAG'];
@@ -471,6 +489,10 @@
         when('/', {
           controller: 'HomeCtrl',
           templateUrl: 'partials/home.html'
+        }).
+        when('/users', {
+          controller: 'UsersCtrl',
+          templateUrl: 'partials/users.html'
         }).
         when('/admin', {
           controller: 'AdminCtrl',

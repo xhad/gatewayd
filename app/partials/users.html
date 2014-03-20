@@ -1,0 +1,56 @@
+<div class='container'>
+<div style='text-align:center; margin: 0 auto'>
+  <img class='throbber' src='/images/ripple_throbber.png'/>
+</div>
+
+<div class='col-sm-9' ng-hide='loading'>
+<h4 class="margin-top-large">Users</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Withdraw Address</th>
+        <th>Independent Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.withdraw_address }}</td>
+        <td>{{ user.independent_address }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style='text-align:right' class='col-sm-3' ng-hide='loading'>
+  <h4 class='margin-top-large'>Make Deposit</h4>
+  <hr/>
+  <form>
+    <p>
+      <label for='username'>Name: </label>
+      <input type='text' name='username'></input>
+    </p>
+    <p>
+      <label for='currency'>Currency: </label>
+      <select name='currency'>
+        <option ng-repeat='currency in currencies' 
+                value='{{currency}}'
+                style='width:155px'>
+          {{ currency }}
+        </option>
+      </select>
+    </p>
+    <p>
+      <label for='amount'>Amount: </label>
+      <input name='amount' type='number'></input>
+    </p>
+    <p>
+      <input type='submit' value='Submit'/>
+    </p>
+  </form>
+</div>
+
+</div>
