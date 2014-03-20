@@ -27,32 +27,4 @@
   </table>
 </div>
 
-<div style='text-align:right' class='col-sm-6' ng-hide='loading'>
-  <h4 class='margin-top-large'>Make Deposit</h4>
-  <hr/>
-  <form ng-submit="makeDeposit()>
-    <p>
-      <label for='username'>Username: </label>
-      <input type='text' name='username' ng-model="deposit.username"></input>
-    </p>
-    <p>
-      <label for='currency'>Currency: </label>
-      <select name='currency' ng-model="deposit.currency">
-        <option ng-repeat='currency in currencies' 
-                value='{{currency}}'
-                style='width:155px'>
-          {{ currency }}
-        </option>
-      </select>
-    </p>
-    <p>
-      <label for='amount'>Amount: </label>
-      <input name='amount' type='number' ng-model="deposit.amount"></input>
-    </p>
-    <p>
-      <input type='submit' value='Submit'/>
-    </p>
-  </form>
-</div>
-
 </div>
