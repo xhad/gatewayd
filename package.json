@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "scripts": {
     "test": "mocha test/integration/"
   },
@@ -24,7 +24,7 @@
     "ripple-wallet": "",
     "require-all":"",
     "ripple-gateway-express": "0.6.2",
-    "ripple-gateway-data-sequelize-adapter": "0.5.6",
+    "ripple-gateway-data-sequelize-adapter": "0.5.7",
     "ripple-rest-client": "1.0.0",
     "node-uuid": "1.4.1"
   },
