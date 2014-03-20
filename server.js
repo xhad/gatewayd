@@ -87,39 +87,19 @@ app.post('/api/v1/users', function(req, res){
 });
 
 app.post('/api/v1/deposits', function(req, res) {
-  api.users.read({ name: req.body.name }, function(err, user){
-    console.log(err, user);
-    if (err) { res.send(500, { error: err }); return; };
-    api.externalAccounts.readAll({ user_id: user.id, name: 'default' }, function(err, accounts) {
-      if (err) { res.send(500, { error: err }); return; };
-      var account = accounts[0];
-      if (account) {
-        console.log('account', account);
-        api.rippleAddresses.readAll({ user_id: user.id }, function(err, addresses){
-          if (err) { res.send(500, { error: err }); return; };
-          var address = addresses[0];
-          api.externalTransactions.create({ }, function(err, externalTransaction){
-            if (err) { res.send(500, { error: err }); return; };
-            api.rippleTransactions.create({ }, function(err, rippleTransaction){
-              if (err) { res.send(500, { error: err }); return; };
-              res.send({
-                deposit: externalTransaction,
-                ripplePayment: rippleTransaction
-              });
-            });
-          });
-        });
-      } else { 
-        res.send(500, { error: "no external account found for user" });
-      }
-    });
-    res.send({ user: user.toJSON() });
+
+  abstract.deposit(req.body.name, req.body.amount, req.body.currency, function(err, deposit) {
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ deposit:  deposit });
+    }
   });
+
 });
 
 app.get('/api/v1/ripple_transactions/queued', function(req, res) {
   api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
-    console.log(err, transactions);
     if (err) {
       res.send(500, { error: err });
     } else {
