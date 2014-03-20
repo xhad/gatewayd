@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="rippleGatewayApp">
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
@@ -60,7 +60,7 @@
 <script src="theme/plugins/retina/js/retina-1.1.0.min.js"></script>
 </head>
 
-<body class="page page-index" ng-controller="MainCtrl">
+<body class="page page-index">
 <a href="#content" class="sr-only">Skip to content</a>
 <div id="navigation" class="wrapper">
   <div class="navbar-static-top"> 
@@ -92,7 +92,7 @@
         <div class="row">
           <div class="col-md-8"> 
             <!--branding/logo--> 
-            <a class="navbar-brand" ng-href="/" title="Home">
+            <a class="navbar-brand" href="/" title="Home">
             <h1><span>Ripple</span>LatAm<span></span></h1>
             </a>
             <div class="slogan">The grooviest Brazillian gateway</div>
@@ -430,8 +430,6 @@
 </div>
 
 <!--Scripts --> 
-<script src="/bower_components/angular/angular.min.js"></script>
-<script src="/bower_components/angular-route/angular-route.min.js"></script>
 <script src="theme/js/jquery.min.js"></script> 
 <script src="theme/js/jquery-migrate-1.2.1.min.js"></script> <!--Legacy jQuery support for quicksand plugin--> 
 
@@ -450,6 +448,36 @@
 
 <!--Custom scripts mainly used to trigger libraries --> 
 <script src="theme/js/script.min.js"></script>
+
+<script type='text/javascript'>
+  $(function(){
+    $('#registrationForm').on('submit', function(event){
+      alert('submitted');
+      event.preventDefault();
+      event.stopPropagation();
+      var opts = {
+        name: $("#signup-email").val(),
+        password: $("#signup-password").val(),
+        ripple_address: $("#signup-ripple-address").val()
+      };
+      $.ajax({
+        url: '/api/v1/register',
+        dataType: 'json',
+        method: "POST",
+        data: opts,
+        success: function(resp) {
+          if (resp.user) {
+            document.location.href = '/app#/users';
+          }
+          console.log(resp);
+        },
+        error: function(err) {
+          console.log(resp);
+        } 
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
