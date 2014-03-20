@@ -1,52 +1,38 @@
-var request = require('request');
-var nconf = require('../config/nconf.js');
-var rippleRest = nconf.get('RIPPLE_REST_API');
+var api = require('ripple-gateway-data-sequelize-adapter');
+var send = require("../test/make_payment");
+var nconf = require("../config/nconf");
 
-function popCreatedRippleTransaction() {
+process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 
-  adapter.getQueuedRippleTransactions(function(err, transactions) {
+function workJob() {
+
+  api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
     if (!err) {
-      for (transaction in transactions) {
-        var payment = {
-          src_address: hotWallet.address,
-          dst_address: transaction.to_address,
-          dst_amount: {
-            currency: transaction.to_currency,
-            value: transaction.to_amount,
-            issuer: transaction.to_issuer
-          },
-          secret: hotWallet.secret
-        };
-      }
+      var transaction = transactions[0];
       if (transaction) {
-        var params = {
-          url: rippleRest+'/api/v1/addresses/'+hotWallet.address+'/payments',
-          form: payment,
-          json: true
-        };
-
-        request.post(params, function(err,resp,body){
-          adapter.updateRippleTransaction({ id: transaction.id }, {
-            transaction_state: 'submitted',
-            transaction_hash: body.confirmation_token
-          }, function(err, transaction) {
-            setTimeout(popCreatedRippleTransaction, 1000);
+        api.rippleAddresses.read(transaction.to_address_id, function(err, address) {
+          console.log(address.address, transaction.to_currency + transaction.to_issuer)
+          send(address.address, transaction.to_amount, transaction.to_currency, null, function(err, resp){
+            if (err) { setTimeout(workJob, 500); return }
+            var payment = JSON.parse(resp);
+            if (payment.success) {
+              transaction.transaction_state = 'sent';
+              transaction.save().complete(function(){
+                setTimeout(workJob, 500);
+              });
+            } else {
+              setTimeout(workJob, 500);
+            }
           });
         });
       } else {
-        setTimeout(popCreatedRippleTransaction, 1000);
+        setTimeout(workJob, 500);
       }
+    } else {
+      setTimeout(workJob, 500);
     }
   });
-  });
+
 }
 
-function getHotWallet(fn) {
-  adapter.getHotWallet(fn);
-}
-
-getHotWallet(function(err, wallet) {
-  hotWallet = wallet;
-  popCreatedRippleTransaction();
-});
-
+workJob();
