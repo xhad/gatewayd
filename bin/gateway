@@ -415,24 +415,8 @@ program
   .command('deposit <username> <amount> <currency>')
   .description('process a deposit by sending to ripple address')
   .action(function(username, amount, currency) {
-    var hotwallet = nconf.get('gateway_hot_wallet');
-    var coldWallet = nconf.get('gateway_cold_wallet');
-    abstract.getUserExternalAccount(username, function(err, account) {
-      abstract.getUserRippleAddress(username, function(err, address) {
-        api.rippleTransactions.create({ 
-          to_address_id: address.id, 
-          from_address_id: 0,
-          to_amount: amount,
-          to_currency: currency,
-          to_issuer: coldWallet,
-          from_amount: amount,
-          from_currency: currency,
-          from_issuer: coldWallet,
-          transaction_state: 'queued'
-        }, function(err, transaction) {
-          console.log(err, transaction);
-        }); 
-      });
+    abstract.deposit(username, amount, currency, function(err, deposit) {
+      console.log(err, deposit); 
     });
   });
 
