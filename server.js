@@ -14,6 +14,12 @@ app = express();
 app.use("/", express.static(__dirname + "/app"));
 app.use(express.bodyParser());
 
+app.get('/app', function(req, res) {
+  fs.readFile(__dirname + '/app/app.html', 'utf8', function(err, text){
+      res.send(text);
+  });
+});
+
 app.post('/api/v1/register', function(req, res) {
   abstract.registerUser(req.body, function(err, user){
     if (err) {
