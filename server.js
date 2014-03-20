@@ -110,10 +110,23 @@ app.get('/api/v1/ripple_transactions/queued', function(req, res) {
 
 app.get('/ripple.txt', function(req, res) {
   res.set({ 'Content-Type': 'text/plain' });
-  res.send(
-    "[accounts]\n"+nconf.get('gateway_cold_wallet')+"\n\n"+
-    "[hotwallets]\n"+nconf.get('gateway_hot_wallet').address
-  );
+  var rippleTxt = "[accounts]\n"+nconf.get('gateway_cold_wallet')+"\n\n"+
+  "[hotwallets]\n"+nconf.get('gateway_hot_wallet').address+
+  "\n\n[currencies]\n";
+
+  var currencies = nconf.get('currencies');
+  for (currency in nconf.get('currencies')) {
+    rippleTxt += (currency+"\n");
+  };
+  res.send(rippleTxt);
+});
+
+app.get('/api/v1/currencies', function(req, res) {
+  var currencies = [];
+  for (currency in nconf.get('currencies')) {
+    currencies.push(currency);
+  };
+  res.send({ currencies: currencies });
 });
 
 app.get('/api/v1/users', function(req, res) {
