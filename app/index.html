@@ -138,7 +138,7 @@
     </div>
   </div>
 </div>
-<div id="highlighted" style='display:none'> 
+<div id="highlighted" > 
   <!--
       Showshow - Slider Revolution
       see: plugins/slider-revolution/examples&sources for help
@@ -271,7 +271,33 @@
   </div>
 </div>
 
-<div id="content" ng-view=""></div>
+<div id="content">
+  <div class="container"> 
+    <!-- Services -->
+    <div class="block features">
+      <div class="row">
+        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-1.png" alt="Feature 1" class="img-responsive" /></a>
+          <h3 class="title"><a href="theme/features.htm">Free & <span class="de-em">Open-Source</span></a></h3>
+          <p>Ripple Labs is dedicated to provided 100% free, open-source software for partners to build valuable Gateway currency software and tools</p>
+        </div>
+        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-2.png" alt="Feature 2" class="img-responsive" /></a>
+          <h3 class="title"><a href="theme/features.htm">Gateway Setup <span class="de-em">Wizard</span></a></h3>
+          <p>When you launch your Ripple Gateway you will be guided through the entire setup process from generating keys to configuring currencies to managing users.</p>
+        </div>
+        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-3.png" alt="Feature 3" class="img-responsive" /></a>
+          <h3 class="title"><a href="theme/features.htm">Intuitive <span class="de-em">User Interface</span></a></h3>
+          <p>A driving motivation behind the Ripple Gateway software is to abstract the complicated parts of the Ripple network protocol from both the user and administrators in a concise visual experience.</p>
+        </div>
+        <div class="feature col-sm-6 col-md-3"> <a href="theme/features.htm"><img src="theme/img/features/feature-4.png" alt="Feature 4" class="img-responsive" /></a>
+          <h3 class="title"><a href="theme/features.htm">JSON <span class="de-em">REST API</span></a></h3>
+          <p>Build automated integrations with your banking partners and software using the Ripple Gateway REST API endpoints and open your Gateway up to your developers' imaginations.</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
 
 <!-- FOOTER -->
 <footer id="footer">
@@ -425,84 +451,5 @@
 <!--Custom scripts mainly used to trigger libraries --> 
 <script src="theme/js/script.min.js"></script>
 
-<script>
-  var rippleGatewayApp = angular.module('rippleGatewayApp', [
-    'ngRoute'
-  ]);
-
-  rippleGatewayApp.controller('HomeCtrl', ['$scope', function($scope){
-    $scope.isHome = true;
-    $('#highlighted').show();
-  }]);
-
-  rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http', function($scope, $http){
-    $scope.loading = true;
-    $scope.isHome = false;
-    $('#highlighted').hide();
-    $scope.users = [];
-    $scope.currencies = ['USD', 'DOG', 'XAG'];
-    $http({ method: 'GET', url: '/api/v1/users' })
-    .success(function(response, status, headers, config) {
-      $scope.loading = false;
-      $(".throbber").hide(); 
-      $scope.users = response.users;
-    })
-    .error(function(data, status, headers, config) {
-      $(".throbber").hide(); 
-    });
-  }]);
-
-  rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
-    $scope.loading = true;
-    $scope.isHome = false;
-    $('#highlighted').hide();
-    $scope.pendingWithdrawals = [];
-    $scope.currencies = ['USD', 'DOG', 'XAG'];
-    $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
-    .success(function(response, status, headers, config) {
-      $scope.loading = false;
-      $(".throbber").hide(); 
-      $scope.pendingWithdrawals = response.withdrawals;
-    })
-    .error(function(data, status, headers, config) {
-      $(".throbber").hide(); 
-    });
-  }]);
-
-
-  rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', function($scope, $location) {
-    $scope.login = function() {
-      var name = ''; 
-      var password = '';
-
-      if (name == 'admin') {
-        // verify admin credentials and redirect  
-      } else {
-        
-      }
-    };
-  }]);
-
-  rippleGatewayApp.config(['$routeProvider',
-    function($routeProvider) {
-      $routeProvider.
-        when('/', {
-          controller: 'HomeCtrl',
-          templateUrl: 'partials/home.html'
-        }).
-        when('/users', {
-          controller: 'UsersCtrl',
-          templateUrl: 'partials/users.html'
-        }).
-        when('/admin', {
-          controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
-        }).
-        otherwise({
-          redirectTo: '/'
-        });
-      }]);
-  
-</script>
 </body>
 </html>
