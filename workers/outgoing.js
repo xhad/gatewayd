@@ -1,5 +1,5 @@
 var api = require('ripple-gateway-data-sequelize-adapter');
-var send = require("../test/make_payment");
+var send = require("../lib/send_payment");
 var nconf = require("../config/nconf");
 
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
