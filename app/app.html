@@ -116,7 +116,9 @@
         <a class="navbar-btn" data-toggle="jpanel-menu" data-target=".navbar-collapse"> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> </a> 
         
         <!--user menu-->
-        <div class="btn-group user-menu pull-right"> <a href="#signup-modal" class="btn btn-primary signup" data-toggle="modal">Deposit</a> <a href="#login-modal" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
+        <div class="btn-group user-menu pull-right"> <a href="#login-modal" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
+        <a ng-href="/app#/users" style='float:right;padding-top:18px;padding-right:30px;'>Users</a>
+        <a ng-href="/app#/withdrawals" style='float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a>
         
         <!--everything within this div is collapsed on mobile-->
         <div class="navbar-collapse collapse"> 
@@ -466,7 +468,10 @@
     $scope.isHome = false;
     $('#highlighted').hide();
     $scope.users = [];
-    $scope.currencies = ['USD', 'DOG', 'XAG'];
+    $scope.currencies = [];
+    getCurrencies($http, function(err, currencies) {
+      $scope.currencies = currencies; 
+    });
     $http({ method: 'GET', url: '/api/v1/users' })
     .success(function(response, status, headers, config) {
       $scope.loading = false;
@@ -529,6 +534,10 @@
     function($routeProvider) {
       $routeProvider.
         when('/', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin.html'
+        }).
+        when('/withdrawals', {
           controller: 'AdminCtrl',
           templateUrl: 'partials/admin.html'
         }).
