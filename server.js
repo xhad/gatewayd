@@ -131,7 +131,7 @@ app.get('/ripple.txt', function(req, res) {
 });
 
 app.get('/api/v1/users', function(req, res) {
-  api.users.readAll(function(err, users) {
+  abstract.getUserAccounts(function(err, users) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ users: users });
   });
