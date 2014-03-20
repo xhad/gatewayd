@@ -435,7 +435,35 @@
     $('#highlighted').show();
   }]);
 
+  function makeDeposit($scope, $http) {
+    console.log(makeDeposit);
+    $scope.loading = true;
+    //$(".throbber").show(); 
+    //$("form").clear();
+    var opts = { 
+      name: $scope.deposit.username, 
+      amount: $scope.deposit.amount,
+      currency: $scope.deposit.currency
+    };
+    console.log('opts', opts);
+
+    $http.post('/api/v1/deposits', opts)
+    .success(function(response, status, headers, config) {
+      $scope.loading = false;
+      $(".throbber").hide(); 
+      $scope.deposit = response.deposit;
+    })
+    .error(function(data, status, headers, config) {
+      $scope.loading = false;
+      //$(".throbber").hide(); 
+    });
+  }
+
   rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http', function($scope, $http){
+    $scope.makeDeposit = function() {
+      makeDeposit($scope, $http);
+    };
+    $scope.deposit = {};
     $scope.loading = true;
     $scope.isHome = false;
     $('#highlighted').hide();
@@ -451,6 +479,7 @@
       $(".throbber").hide(); 
     });
   }]);
+
 
   rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.loading = true;
