@@ -478,6 +478,15 @@
     });
   }]);
 
+  function getCurrencies($http, fn) {
+    $http.get('/api/v1/currencies')
+    .success(function(resp, status, headers, config) {
+      fn(null, resp.currencies);
+    })
+    .error(function(data, stats, headers, config) {
+      fn(data, null);
+    });
+  }
 
   rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
     $scope.makeDeposit = function() {
@@ -487,7 +496,10 @@
     $scope.isHome = false;
     $('#highlighted').hide();
     $scope.pendingWithdrawals = [];
-    $scope.currencies = ['USD', 'DOG', 'XAG'];
+    $scope.currencies = [];
+    getCurrencies($http, function(err, currencies) {
+      $scope.currencies = currencies; 
+    });
     $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
     .success(function(response, status, headers, config) {
       $scope.loading = false;
