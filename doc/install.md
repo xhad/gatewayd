@@ -39,14 +39,10 @@ clone the project from github and install the package dependencies
 migrate the database to create gateway tables
 
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
-    db-migrate up --config config/database.json --migrations-dir db/migrations
+    cd node_modules/ripple-gateway-data-sequelize-adapter && db-migrate up
     
-configure the initial gateway parameters 
-
-    bin/gateway init
-
 start the gateway rest api server
 
-    bin/gateway start
+    node server.js
 
 
