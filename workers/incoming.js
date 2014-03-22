@@ -1,21 +1,14 @@
-var Ripple = require('ripple-lib')
-var request = require('request')
+var Listener = require('../lib/listener.js');
 var nconf = require('../config/nconf.js');
 
-var client = new RippleSimpleClient({
-  apiUrl: nconf.get('RIPPLE_REST_API')
-});
+var listener = new Listener();
 
-// Proposed!!
-/*
-client.listener.on('payment:inbound', function(payment) {
-  // create a new ripple transaction
-});
+listener.onPayment = function(payment) {
+  
+  // do what you want with the payment here
+  console.log(payment);
 
-client.listener.on('payment:outbound', function(payment) {
-  // update an existing ripple transaction
-});
+};
 
-client.listener.start();
+listener.start(nconf.get('last_payment_hash'));
 
-*/
