@@ -407,7 +407,7 @@
           <h4 class="modal-title">Login</h4>
         </div>
         <div class="modal-body">
-          <form action="login.htm" role="form">
+          <form id="loginForm" action="login.htm" role="form">
             <div class="form-group">
               <label class="sr-only" for="login-email">Email</label>
               <input type="email" id="login-email" class="form-control email" placeholder="Email">
@@ -416,7 +416,7 @@
               <label class="sr-only" for="login-password">Password</label>
               <input type="password" id="login-password" class="form-control password" placeholder="Password">
             </div>
-            <button type="button" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary">Login</button>
           </form>
         </div>
         <div class="modal-footer"> <small>Not a member? <a href="#" class="signup">Sign up now!</a></small><br />
@@ -451,6 +451,12 @@
 
 <script type='text/javascript'>
   $(function(){
+    $('#loginForm').on('submit', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.location.href = '/app#/users';
+    });
+
     $('#registrationForm').on('submit', function(event){
       event.preventDefault();
       event.stopPropagation();
