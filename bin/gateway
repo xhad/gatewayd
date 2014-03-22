@@ -352,78 +352,6 @@ program
   });
 
 program
-  .command('init')
-  .description('configure the gateway with initial parameters')
-  .action(function(account, secret){
-    console.log('creating an admin user and key.');
-    adapter.createAdmin(function(err, adminConfig){
-      if (err) { throw new Error(err) }
-      console.log('admin user created with KEY', adminConfig.password);
-      console.log('hot and cold wallets have been generated: ');
-      console.log(adminConfig.wallets);
-    });
-  });
-
-program
-  .command('start')
-  .description('start the gateway api server')
-  .action(function(account, secret){
-    var processes = nconf.get('processes');
-    var running = (Object.keys(processes).length != 0);
-
-    if (!running) {
-      if(nconf.get('PLATFORM') == 'heroku') {
-        var server = spawn('node', ['server.js']);
-      } else {
-        var out = fs.openSync('./log/server.log', 'a');
-        var err = fs.openSync('./log/server.log', 'a');
-
-        var server = spawn('nohup', ['node','server.js','&', '>', 'log/server'], {
-          detached: true,
-          stdio: [ 'ignore', out, err ]
-        });
-        console.log('Running Ripple Gateway.');
-        server.unref();
-      }
-    } else {
-      console.log('Ripple Gateway is already running');    
-    }
-  });
-
-program
-  .command('status')
-  .description('get the status of the gateway api')
-  .action(function(){
-    var processes = nconf.get('processes');
-    var running = (Object.keys(processes).length != 0);
-    if (running) {
-      console.log('Ripple Gateway is running');
-      console.log(processes);
-    } else {
-      console.log('Ripple Gateway is not running');
-    }
-  });
-
-program
-  .command('stop')
-  .description('stop the gateway api server')
-  .action(function(account, secret){
-    var processes = nconf.get('processes');
-    for (key in processes) {
-      if (processes.hasOwnProperty(key)) {
-        try {
-          process.kill(processes[key]);
-        } catch(e) {
-          nconf.set("processes:"+key,null);
-        }
-      }
-    }
-    nconf.set("processes", {});
-    nconf.save();
-    console.log('Stopped running Ripple Gateway');
-  });
-
-program
   .command('deposit <username> <amount> <currency>')
   .description('process a deposit by sending to ripple address')
   .action(function(username, amount, currency) {
@@ -472,6 +400,22 @@ program
   });
   
 
+program
+  .command('users:list')
+  .description('list registered users')
+  .action(function(){
+    api.users.readAll(function(err, users){
+      if (err) {
+        console.log('error:', err);
+        return;
+      }
+      formatted = { users: [] };
+      for (var i=0;i<users.length;i++) {
+        formatted.users.push(users[i].name);
+        console.log(users[i].name);
+      } 
+    });
+  });
 
 program
   .command('registeruser <username> <password> <ripple_address>')
