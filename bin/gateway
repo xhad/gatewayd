@@ -432,6 +432,23 @@ program
   });
 
 program
+  .command('setlastpaymenthash <hash>')
+  .description('set the last encountered payment hash for incoming processing.')
+  .action(function(hash) {
+    nconf.set('last_payment_hash', hash);
+    nconf.save(function(){
+      console.log('set the last payment hash to', hash);
+    });
+  });
+
+program
+  .command('getlastpaymenthash')
+  .description('get the last encountered payment hash for incoming processing.')
+  .action(function() {
+    console.log(nconf.get('last_payment_hash'));
+  });
+
+program
   .command('restart')
   .description('restart the gateway api server after update')
   .action(function(account, secret){
