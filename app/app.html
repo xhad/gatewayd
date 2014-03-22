@@ -104,10 +104,10 @@
     </div>
     
     <!--Change order for full width navbar
-  <div class="navbar"> 
-    <div class="container" data-toggle="clingify">-->
-    <div class="container" data-toggle="clingify">
-      <div class="navbar"> 
+  <div class="navbar" style='background-color:#00ADBB'> 
+    <div class="container" data-toggle="clingify" style='background-color:#00ADBB'>-->
+    <div class="container" data-toggle="clingify" style='background-color:#00ADBB'>
+      <div class="navbar" style='background-color:#00ADBB'> 
         <!--
       mobile collapse menu button
       - data-toggle="toggle" = default BS menu
@@ -116,9 +116,7 @@
         <a class="navbar-btn" data-toggle="jpanel-menu" data-target=".navbar-collapse"> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> </a> 
         
         <!--user menu-->
-        <div class="btn-group user-menu pull-right"> <a href="#login-modal" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
-        <a ng-href="/app#/users" style='float:right;padding-top:18px;padding-right:30px;'>Users</a>
-        <a ng-href="/app#/withdrawals" style='float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a>
+        <div class="btn-group user-menu pull-right"> <a href="/" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
         
         <!--everything within this div is collapsed on mobile-->
         <div class="navbar-collapse collapse"> 
@@ -133,6 +131,8 @@
                 <li role="presentation"><a role="menuitem" href="theme/contact.htm" tabindex="-1" class="menu-item">Contact</a></li>
               </ul>
             </li>
+            <li><a ng-href="/app#/users" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
+            <li><a ng-href="/app#/withdrawals" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
           </ul>
         </div>
         <!--/.navbar-collapse --> 
@@ -333,78 +333,6 @@
   </div>
 </footer>
 
-<!--Hidden elements - excluded from jPanel Menu on mobile-->
-<div class="hidden-elements jpanel-menu-exclude"> 
-  <!--@modal - signup modal-->
-  <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Sign Up</h4>
-        </div>
-        <div class="modal-body" id='registerModal'>
-          <form id='registrationForm' role="form">
-            <h5>Account Information</h5>
-            <div class="form-group">
-              <label class="sr-only" for="signup-email">Ripple address</label>
-              <input type="text" class="form-control" id="signup-ripple-address" placeholder="Ripple address">
-            </div>
-            <div class="form-group">
-              <label class="sr-only" for="signup-email">Email address</label>
-              <input type="email" class="form-control" id="signup-email" placeholder="Email address">
-            </div>
-            <div class="form-group">
-              <label class="sr-only" for="signup-password">Password</label>
-              <input type="password" class="form-control" id="signup-password" placeholder="Password">
-            </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" value="term">
-                I agree with the Terms and Conditions. </label>
-            </div>
-            <button class="btn btn-primary" type="submit">Sign up</button>
-          </form>
-        </div>
-        <div class="modal-footer"> <small>Already signed up? <a href="theme/login.htm">Login here</a>.</small> </div>
-      </div>
-      <!-- /.modal-content --> 
-    </div>
-    <!-- /.modal-dialog --> 
-  </div>
-  <!-- /.modal --> 
-  
-  <!--@modal - login modal-->
-  <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Login</h4>
-        </div>
-        <div class="modal-body">
-          <form action="login.htm" role="form">
-            <div class="form-group">
-              <label class="sr-only" for="login-email">Email</label>
-              <input type="email" id="login-email" class="form-control email" placeholder="Email">
-            </div>
-            <div class="form-group">
-              <label class="sr-only" for="login-password">Password</label>
-              <input type="password" id="login-password" class="form-control password" placeholder="Password">
-            </div>
-            <button type="button" class="btn btn-primary">Login</button>
-          </form>
-        </div>
-        <div class="modal-footer"> <small>Not a member? <a href="#" class="signup">Sign up now!</a></small><br />
-          <small><a href="#">Forgotten password?</a></small> </div>
-      </div>
-      <!-- /.modal-content --> 
-    </div>
-    <!-- /.modal-dialog --> 
-  </div>
-  <!-- /.modal --> 
-</div>
-
 <!--Scripts --> 
 <script src="/bower_components/angular/angular.min.js"></script>
 <script src="/bower_components/angular-route/angular-route.min.js"></script>
@@ -544,6 +472,10 @@
         when('/users', {
           controller: 'UsersCtrl',
           templateUrl: 'partials/users.html'
+        }).
+        when('/users/:id', {
+          controller: 'UserCtrl',
+          templateUrl: 'partials/user.html'
         }).
         when('/admin', {
           controller: 'AdminCtrl',
