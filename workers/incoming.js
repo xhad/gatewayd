@@ -14,7 +14,7 @@ listener.onPayment = function(payment) {
       if (issuer == nconf.get('gateway_cold_wallet')) {
 
         abstract.recordIncomingPayment(dt, currency, amount, function(err, record) {
-          consle.log(err, record.toJSON()); 
+          console.log(err, record.toJSON()); 
         });
 
       }
