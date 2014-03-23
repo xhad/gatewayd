@@ -54,6 +54,11 @@
     -o-animation: spin 0.7s infinite linear;
     -ms-animation: spin 0.7s infinite linear;
   }
+  a.active {
+    color: #EBEBE8;
+    background-color: #353535;
+    border-color: transparent;
+  }
 </style>
 
 <!--Retina.js plugin - @see: http://retinajs.com/-->
@@ -131,8 +136,8 @@
                 <li role="presentation"><a role="menuitem" href="theme/contact.htm" tabindex="-1" class="menu-item">Contact</a></li>
               </ul>
             </li>
-            <li><a ng-href="/app#/users" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
-            <li><a ng-href="/app#/withdrawals" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
+            <li><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
+            <li><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
           </ul>
         </div>
         <!--/.navbar-collapse --> 
@@ -361,6 +366,9 @@
   ]);
 
   rippleGatewayApp.controller('HomeCtrl', ['$scope', function($scope){
+    $scope.path = $location.path();
+    $scope.location = $location;
+    console.log($location.path());
     $scope.isHome = true;
     $('#highlighted').show();
   }]);
@@ -387,7 +395,8 @@
     });
   }
 
-  rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http', function($scope, $http){
+  rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http','$location', function($scope, $http, $location){
+    $scope.path = $location.path();
     $scope.makeDeposit = function() {
       makeDeposit($scope, $http);
     };
@@ -421,10 +430,25 @@
     });
   }
 
-  rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', function($scope, $http){
+  rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', '$location', function($scope, $http, $location){
+    $scope.path = function() {$location.path() };
     $scope.makeDeposit = function() {
       makeDeposit($scope, $http);
     };
+
+    $scope.clearWithdrawal = function(id) {
+      $('.throbber').show();
+      $http({ method: "POST", url: '/api/v1/withdrawals/'+id+'/clear' })
+      .success(function(response, status, headers, config) {
+        getPendingWithdrawals();
+        $('.throbber').hide();
+      })
+      .error(function(data, status, headers, config) {
+        console.log('error:', data); 
+        $('.throbber').hide();
+      });
+    };
+
     $scope.loading = true;
     $scope.isHome = false;
     $('#highlighted').hide();
@@ -433,19 +457,25 @@
     getCurrencies($http, function(err, currencies) {
       $scope.currencies = currencies; 
     });
-    $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
-    .success(function(response, status, headers, config) {
-      $scope.loading = false;
-      $(".throbber").hide(); 
-      $scope.pendingWithdrawals = response.withdrawals;
-    })
-    .error(function(data, status, headers, config) {
-      $(".throbber").hide(); 
-    });
+
+    function getPendingWithdrawals() {
+      $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
+      .success(function(response, status, headers, config) {
+        $scope.loading = false;
+        $(".throbber").hide(); 
+        $scope.pendingWithdrawals = response.withdrawals;
+      })
+      .error(function(data, status, headers, config) {
+        $(".throbber").hide(); 
+      });
+    }
+
+    getPendingWithdrawals();
   }]);
 
 
   rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', function($scope, $location) {
+    $scope.location = $location;
     $scope.login = function() {
       var name = ''; 
       var password = '';
