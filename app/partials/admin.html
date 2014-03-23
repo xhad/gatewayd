@@ -21,7 +21,7 @@
         <td>{{ withdrawal.external_account_id }}</td>
         <td>{{ withdrawal.currency }}</td>
         <td>{{ withdrawal.amount }}</td>
-        <td><button class='clearWithdrawal'>Clear</button></td>
+        <td><button ng-click="clearWithdrawal(withdrawal.id)" class='clearWithdrawal'>Clear Withdrawal</button></td>
       </tr>
     </tbody>
   </table>
