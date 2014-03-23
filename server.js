@@ -87,7 +87,6 @@ app.post('/api/v1/users', function(req, res){
 });
 
 app.post('/api/v1/deposits', function(req, res) {
-
   abstract.deposit(req.body.name, req.body.amount, req.body.currency, function(err, deposit) {
     if (err) {
       res.send(500, { error: err });
@@ -95,7 +94,6 @@ app.post('/api/v1/deposits', function(req, res) {
       res.send({ deposit:  deposit });
     }
   });
-
 });
 
 app.get('/api/v1/ripple_transactions/queued', function(req, res) {
@@ -140,6 +138,17 @@ app.get('/api/v1/withdrawals/pending', function(req, res) {
   api.externalTransactions.readAllPending(function(err, withdrawals){
     if (err) { res.send(500, { error: err }); return; }
     res.send({ withdrawals: withdrawals });
+  });
+});
+
+app.post('/api/v1/withdrawals/:id/clear', function(req, res) {
+  var opts = {
+    id: req.params.id,
+    status: "cleared"
+  };
+  api.externalTransactions.update(opts, function(err, withdrawal) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send({ withdrawal: withdrawal });
   });
 });
 
