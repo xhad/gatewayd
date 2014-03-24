@@ -12,7 +12,8 @@ var passport = require('./config/passport')(api);
 app = express();
 
 app.use("/", express.static(__dirname + "/app"));
-app.use(express.bodyParser());
+app.use(express.json());
+app.use(express.urlencoded());
 
 app.get('/app', function(req, res) {
   fs.readFile(__dirname + '/app/app.html', 'utf8', function(err, text){
