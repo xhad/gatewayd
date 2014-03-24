@@ -457,9 +457,7 @@
       document.location.href = '/app#/users';
     });
 
-    $('#registrationForm').on('submit', function(event){
-      event.preventDefault();
-      event.stopPropagation();
+    function register(fn){
       var opts = {
         name: $("#signup-email").val(),
         password: $("#signup-password").val(),
@@ -471,13 +469,19 @@
         method: "POST",
         data: opts,
         success: function(resp) {
-          if (resp.user) {
-            document.location.href = '/app#/users';
-          }
+          fn(null, resp.user);
         },
         error: function(err) {
-          console.log(resp);
+          fn(err, null);
         } 
+      });
+    };
+
+    $('#registrationForm').on('submit', function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      register(function(err, user) {
+        document.location.href = '/app#/users/'+user.id;
       });
     });
   });
