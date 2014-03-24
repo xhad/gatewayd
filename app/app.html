@@ -126,7 +126,9 @@
         <a class="navbar-btn" data-toggle="jpanel-menu" data-target=".navbar-collapse"> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> <span class="bar"></span> </a> 
         
         <!--user menu-->
-        <div class="btn-group user-menu pull-right"> <a href="/" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
+        <div ng-show='user.isLogged' class="btn-group user-menu pull-right"> <a ng-click="user.logout()" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
+        <div ng-hide='user.isLogged' class="btn-group user-menu pull-right"> <a ng-href="/app#/login" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Login</a> </div>
+        <div ng-hide='user.isLogged' class="btn-group user-menu pull-right"> <a ng-href="/app#/register" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Register</a> </div>
         
         <!--everything within this div is collapsed on mobile-->
         <div class="navbar-collapse collapse"> 
@@ -141,8 +143,11 @@
                 <li role="presentation"><a role="menuitem" href="theme/contact.htm" tabindex="-1" class="menu-item">Contact</a></li>
               </ul>
             </li>
-            <li><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
-            <li><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
+            <li ng-show="user.isAdmin"><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
+            <li ng-show="user.isAdmin"><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
+            <li ng-hide="user.isAdmin"><a ng-href="/app#/withdraw" ng-class="{active: location.path() == '/withdraw'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdraw</a></li>
+            <li ng-hide="user.isAdmin"><a ng-href="/app#/deposit" ng-class="{active: location.path() == '/deposit'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Deposit</a></li>
+            <li ng-hide="user.isAdmin"><a ng-href="/app#/account" ng-class="{active: location.path() == '/account'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Account</a></li>
           </ul>
         </div>
         <!--/.navbar-collapse --> 
@@ -366,6 +371,7 @@
 <script src="theme/js/script.min.js"></script>
 
 <script>
+
   var rippleGatewayApp = angular.module('rippleGatewayApp', [
     'ngRoute'
   ]);
@@ -460,7 +466,30 @@
     });
   }
 
-  rippleGatewayApp.controller('AdminCtrl', ['$scope', '$http', '$location', function($scope, $http, $location){
+  rippleGatewayApp.service('UserService', ['$http', '$location', function($http, $location) {
+    var user = { 
+      name: "username",
+      password: "password",
+      id: "23",
+      isLogged: false,
+      isAdmin: false,
+      login: function(name, password, fn) {
+        alert('log in the user here');
+      },
+      logout: function(fn) {
+        $location.path("/");
+      }
+    };
+    return user;
+  }]);
+
+  rippleGatewayApp.controller('AdminCtrl', [
+    '$scope', 
+    '$http', 
+    '$location', 
+    'UserService', function($scope, $http, $location, $user){
+    console.log('user service');
+    console.log($user);
     $scope.path = function() {$location.path() };
     $scope.makeDeposit = function() {
       makeDeposit($scope, $http);
@@ -503,9 +532,23 @@
     getPendingWithdrawals();
   }]);
 
+  rippleGatewayApp.controller('NavigationCtrl', ['$scope', function($scope) {
+    $scope.logout = "Loogoot";
+    console.log('navigation ctrl');
+    console.log(NavigationCtrl);
+  }]);
 
-  rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', function($scope, $location) {
+  rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', 'UserService', function($scope, $location, $user) {
+
+    $scope.$on('$routeChangeStart', function(next, current) { 
+      if (!$user.isLogged && $location.path() != '/register') {
+        $location.path("/login");
+      };
+    });
+
     $scope.location = $location;
+    $scope.user = $user;
+    $scope.logout = "Logout";
     $scope.login = function() {
       var name = ''; 
       var password = '';
@@ -521,6 +564,26 @@
   rippleGatewayApp.config(['$routeProvider',
     function($routeProvider) {
       $routeProvider.
+        when('/account', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin.html'
+        }).
+        when('/login', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/login.html'
+        }).
+        when('/register', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/register.html'
+        }).
+        when('/withdraw', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin.html'
+        }).
+        when('/deposit', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin.html'
+        }).
         when('/', {
           controller: 'AdminCtrl',
           templateUrl: 'partials/admin.html'
@@ -545,6 +608,10 @@
           redirectTo: '/'
         });
       }]);
+
+
+  console.log('the user', user);
+  
   
 </script>
 </body>
