@@ -71,6 +71,16 @@ app.get('/api/v1/users/:name/withdraw', function(req, res) {
   });
 });
 
+app.get('/api/v1/users/:id/external_transactions', function(req, res) {
+  abstract.readAllUserExternalTransactions(req.params.id, function(err, transactions) {
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ external_transactions: transactions });
+    }
+  });    
+});
+
 app.post('/api/v1/users', function(req, res){
   var opts = {
     name: req.body.name,
