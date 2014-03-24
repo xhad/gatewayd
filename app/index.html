@@ -451,10 +451,29 @@
 
 <script type='text/javascript'>
   $(function(){
+
+    function login(name, password, fn) {
+      $.ajax({
+        url: '/api/v1/users/login',
+        dataType: 'json',
+        method: "POST",
+        data: { name: name, password: password },
+        success: function(resp) {
+          fn(null, resp.user);
+        },
+        error: function(err) {
+          fn(err, null);
+        } 
+      });
+    }
     $('#loginForm').on('submit', function(event) {
       event.preventDefault();
       event.stopPropagation();
-      document.location.href = '/app#/users';
+      var email = $("#login-email").val();
+      var password = $("#login-password").val();
+      login(email, password, function(err, user) {
+        document.location.href = '/app#/users/'+user.id;
+      });
     });
 
     function register(fn){
