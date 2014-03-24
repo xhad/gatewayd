@@ -145,8 +145,8 @@ app.get('/api/v1/users', function(req, res) {
   });
 });
 
-app.post('/api/v1/users/:id', function(req, res) {
-  api.users.read({ id: req.params.id }, function(err, user) {
+app.post('/api/v1/users/login', function(req, res) {
+  api.users.read({ name: req.body.name }, function(err, user) {
     if (err) { res.send(500, { error: err }); return }
     var verified = api.users.verifyPassword(req.body.password, user.salt, user.password_hash);
     if (verified) {
