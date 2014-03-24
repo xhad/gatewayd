@@ -145,6 +145,18 @@ app.get('/api/v1/users', function(req, res) {
   });
 });
 
+app.post('/api/v1/users/:id', function(req, res) {
+  api.users.read({ id: req.params.id }, function(err, user) {
+    if (err) { res.send(500, { error: err }); return }
+    var verified = api.users.verifyPassword(req.body.password, user.salt, user.password_hash);
+    if (verified) {
+      res.send({ user: user });
+    } else {
+      res.send(401);
+    }
+  });
+});
+
 app.get('/api/v1/withdrawals/pending', function(req, res) {
   api.externalTransactions.readAllPending(function(err, withdrawals){
     if (err) { res.send(500, { error: err }); return; }
