@@ -1,0 +1,30 @@
+<div class='container'>
+<div style='text-align:center; margin: 0 auto'>
+  <img class='throbber' ng-show='loading' src='/images/ripple_throbber.png'/>
+</div>
+
+<div class='col-sm-12' ng-hide='loading'>
+<h4 class="margin-top-large">Deposits & Withdrawals</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>currency</th>
+        <th>amount</th>
+        <th>deposit</th>
+        <th>status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="transaction in externalTransactions">
+        <td>{{ transaction.id }}</td>
+        <td>{{ transaction.currency }}</td>
+        <td>{{ transaction.amount }}</td>
+        <td>{{ transaction.deposit }}</td>
+        <td>{{ transaction.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
