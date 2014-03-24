@@ -395,6 +395,26 @@
     });
   }
 
+  function getUserExternalTransactions(http, userId, fn) {
+    http.get('/api/v1/users/'+userId+'/external_transactions')
+    .success(function(response, status, headers, config) {
+      fn(null, response.external_transactions);
+    })
+    .error(function(data, status, headers, config) {
+      fn(data, null);
+    });
+  }
+
+  rippleGatewayApp.controller('UserCtrl', ['$scope', '$http','$location', function($scope, $http, $location){
+    var userId = 23;
+    $scope.loading = true;  
+    $scope.externalTransactions = [];
+    getUserExternalTransactions($http, userId, function(err, transactions) {
+      $scope.loading = false;
+      $scope.externalTransactions = transactions;
+    });
+  }]);
+
   rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http','$location', function($scope, $http, $location){
     $scope.path = $location.path();
     $scope.makeDeposit = function() {
