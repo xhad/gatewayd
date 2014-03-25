@@ -30,8 +30,8 @@ set the postgres password, create the database and set the environment
 
 clone the project from github and install the package dependencies
 
-    git clone https://github.com/stevenzeiler/ripple-gateway-api.git
-    cd ripple-gateway-api
+    git clone https://github.com/ripple/ripple-gateway
+    cd ripple-gateway
     sudo npm install
     sudo npm install -g pg
     sudo npm install -g db-migrate
@@ -39,10 +39,12 @@ clone the project from github and install the package dependencies
 migrate the database to create gateway tables
 
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
-    cd node_modules/ripple-gateway-data-sequelize-adapter && db-migrate up
+    cd node_modules/ripple-gateway-data-sequelize-adapter
+    db-migrate up
+    cd ../..
     
 start the gateway rest api server
 
-    node server.js
+    node processes/webapp.js
 
 
