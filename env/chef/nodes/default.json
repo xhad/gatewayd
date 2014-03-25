@@ -6,7 +6,7 @@
     "recipe[apt]",
     "recipe[postgres]",
     "recipe[upstart]",
-    "recipe[rest]",
+    "recipe[ripple_rest]",
     "recipe[ripple_gateway]"
   ],
   "postgresql": {}
