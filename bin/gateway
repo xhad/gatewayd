@@ -360,18 +360,6 @@ program
     });
   });
 
-
-// assumes the issuer and the recipient is the gateway cold wallet address
-program
-  .command('payments:incoming:create <destination_tag> <currency> <amount>')
-  .description('simpulate a ripple payment coming in to the cold wallet for withdrawal')
-  .action(function(destinationTag, currency, amount) {
-    abstract.recordIncomingPayment(destinationTag, currency, amount, function(err, payment){
-      console.log(err, payment); 
-    });
-  });
-  
-
 program
   .command('users:list')
   .description('list registered users')
