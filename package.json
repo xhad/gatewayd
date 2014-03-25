@@ -27,7 +27,8 @@
     "ripple-gateway-data-sequelize-adapter": "0.5.7",
     "ripple-rest-client": "1.1.0",
     "node-uuid": "1.4.1",
-    "ejs": ""
+    "ejs": "",
+    "cli-table": "0.3.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",

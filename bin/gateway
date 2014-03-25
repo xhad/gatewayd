@@ -12,6 +12,7 @@ var ripple = require('../lib/remote');
 var Amount = require('ripple-lib').Amount;
 var api = require("ripple-gateway-data-sequelize-adapter");
 var abstract = require("../lib/abstract.js");
+var Table = require("cli-table");
 
 program
   .version('0.0.1')
@@ -30,52 +31,73 @@ program
   });
 
 program
-  .command('get_postgres_url')
-  .description('get the url of the postgres database')
-  .action(function(cmd){
-    console.log(nconf.get('DATABASE_URL'));
+  .command('read_ripple_payments_queue')
+  .description('list the outgoing ripple payments.')
+  .action(function(){
+    var table = new Table({
+      head: ['#', 'Created', 'Amount', 'Currency', 'Recipient'],
+      colWidths: [4, 30, 10, 10, 30]
+    });
+    api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
+      if (err) {
+        console.log({ error: err });
+      } else {
+        for (var i=0; i<transactions.length; i++){
+          var tx = transactions[i];
+          table.push([tx.id, tx.createdAt, tx.to_amount, tx.to_currency]);
+        }
+        console.log(table.toString());
+      }
+    });
   });
 
-program
-  .command('set_ripple_rest_url <url>')
-  .description('set the url of the ripple rest api')
-  .action(function(url){
-    nconf.set('RIPPLE_REST_API', url);
-    nconf.save(function(err) {
-      console.log('set the ripple rest api url');
+  program
+    .command('get_postgres_url')
+    .description('get the url of the postgres database')
+    .action(function(cmd){
+      console.log(nconf.get('DATABASE_URL'));
+    });
+
+  program
+    .command('set_ripple_rest_url <url>')
+    .description('set the url of the ripple rest api')
+    .action(function(url){
+      nconf.set('RIPPLE_REST_API', url);
+      nconf.save(function(err) {
+        console.log('set the ripple rest api url');
+        console.log(nconf.get('RIPPLE_REST_API'));
+      });
+    });
+
+  program
+    .command('get_ripple_rest_url')
+    .description('get the url of the ripple rest api')
+    .action(function(cmd){
       console.log(nconf.get('RIPPLE_REST_API'));
     });
-  });
 
-program
-  .command('get_ripple_rest_url')
-  .description('get the url of the ripple rest api')
-  .action(function(cmd){
-    console.log(nconf.get('RIPPLE_REST_API'));
-  });
-
-program
-  .command('set_hot_wallet <address> <secret>')
-  .description('set the gateway hot wallet')
-  .action(function(address, secret){
-    var key = 'gateway_hot_wallet';
-    var key = 'gateway_hot_wallet';
-    nconf.set(key, {
-      address: address,
-      secret: secret
+  program
+    .command('set_hot_wallet <address> <secret>')
+    .description('set the gateway hot wallet')
+    .action(function(address, secret){
+      var key = 'gateway_hot_wallet';
+      var key = 'gateway_hot_wallet';
+      nconf.set(key, {
+        address: address,
+        secret: secret
+      });
+      nconf.save(function(){
+        hot_wallet = nconf.get(key);
+        console.log('set the hot wallet:', hot_wallet);
+      });
     });
-    nconf.save(function(){
-      hot_wallet = nconf.get(key);
-      console.log('set the hot wallet:', hot_wallet);
-    });
-  });
 
-program
-  .command('get_hot_wallet')
-  .description('get the gateway hot wallet')
-  .action(function(){
-    var key = 'gateway_hot_wallet';
-    var hot_wallet = nconf.get(key);
+  program
+    .command('get_hot_wallet')
+    .description('get the gateway hot wallet')
+    .action(function(){
+      var key = 'gateway_hot_wallet';
+      var hot_wallet = nconf.get(key);
     if (hot_wallet) {
       console.log(hot_wallet);
     } else {
