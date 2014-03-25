@@ -203,7 +203,7 @@
                   data-y="220"
                   data-speed="400"
                   data-start="1600"
-                  data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
+                data-customin="x:0;y:0;z:0;rotationX:0;rotationY:0;rotationZ:0;scaleX:0;scaleY:0;skewX:0;skewY:0;opacity:0;transformPerspective:600;transformOrigin:50% 50%;"
                   data-easing="Back.easeOut"
                   data-endspeed="400"
                   data-endeasing="Back.easeIn">Process deposits to and withdrawals from Ripple.</p>
@@ -318,7 +318,7 @@
           <h3>Newsletter</h3>
           <p>Stay up to date with our latest news and product releases by signing up to our newsletter.</p>
           <!--@todo: replace with mailchimp code-->
-          <form role="form">
+          <form role="form" id='newsletterForm'>
             <div class="input-group input-group-sm">
               <label class="sr-only" for="email-field">Email</label>
               <input type="text" class="form-control" id="email-field" placeholder="Email">
@@ -426,6 +426,28 @@
     });
   }]);
 
+  rippleGatewayApp.controller('RegistrationCtrl', ['$scope', 'UserService', '$location', function($scope, $user, $location) {
+    $scope.newUser = {
+      name: '',
+      password: '',
+      ripple_address: ''
+    }; 
+    $scope.register = function() {
+      $user.register($scope.newUser, function(err, user){
+        if (err) {
+          console.log('error registering user:', err);
+        } else { 
+          console.log('registered a new user:', user);
+          $location.path('/app#/users/35');
+        }
+      });
+    };
+  }]);
+
+  rippleGatewayApp.controller('LoginCtrl', ['$scope', 'UserService', '$location', function($scope, $user, $location) {
+    console.log('login controller');
+  }]);
+
   rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http','$location', function($scope, $http, $location){
     $scope.navigateToUser = function(id) { 
       $scope.loading = true;
@@ -467,17 +489,34 @@
   }
 
   rippleGatewayApp.service('UserService', ['$http', '$location', function($http, $location) {
+    function registerUser(opts, fn) {
+      $http({ method: "POST", url: '/api/v1/register/', data: opts })
+      .success(function(response, status, headers, config) {
+        fn(null, response.user);
+      })
+      .error(function(data, status, headers, config) {
+        fn(data, null);
+      });
+    }
+
     var user = { 
       name: "username",
       password: "password",
       id: "23",
-      isLogged: false,
-      isAdmin: false,
+      isLogged: true,
+      isAdmin: true,
       login: function(name, password, fn) {
         alert('log in the user here');
       },
       logout: function(fn) {
         $location.path("/");
+      },
+      register: function(opts, fn){
+        registerUser({
+          name: opts.name,
+          password: opts.password,
+          ripple_address: opts.ripple_address
+        }, fn);
       }
     };
     return user;
@@ -488,8 +527,6 @@
     '$http', 
     '$location', 
     'UserService', function($scope, $http, $location, $user){
-    console.log('user service');
-    console.log($user);
     $scope.path = function() {$location.path() };
     $scope.makeDeposit = function() {
       makeDeposit($scope, $http);
@@ -532,33 +569,14 @@
     getPendingWithdrawals();
   }]);
 
-  rippleGatewayApp.controller('NavigationCtrl', ['$scope', function($scope) {
-    $scope.logout = "Loogoot";
-    console.log('navigation ctrl');
-    console.log(NavigationCtrl);
-  }]);
-
   rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', 'UserService', function($scope, $location, $user) {
-
     $scope.$on('$routeChangeStart', function(next, current) { 
       if (!$user.isLogged && $location.path() != '/register') {
         $location.path("/login");
       };
     });
 
-    $scope.location = $location;
     $scope.user = $user;
-    $scope.logout = "Logout";
-    $scope.login = function() {
-      var name = ''; 
-      var password = '';
-
-      if (name == 'admin') {
-        // verify admin credentials and redirect  
-      } else {
-        
-      }
-    };
   }]);
 
   rippleGatewayApp.config(['$routeProvider',
@@ -569,11 +587,11 @@
           templateUrl: 'partials/admin.html'
         }).
         when('/login', {
-          controller: 'AdminCtrl',
+          controller: 'LoginCtrl',
           templateUrl: 'partials/login.html'
         }).
         when('/register', {
-          controller: 'AdminCtrl',
+          controller: 'RegistrationCtrl',
           templateUrl: 'partials/register.html'
         }).
         when('/withdraw', {
@@ -609,10 +627,6 @@
         });
       }]);
 
-
-  console.log('the user', user);
-  
-  
 </script>
 </body>
 </html>
