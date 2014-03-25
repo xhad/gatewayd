@@ -1,13 +1,13 @@
-var nconf = require('./config/nconf.js');
+var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 
 var express = require('express');
 var fs = require('fs');
 var https = require('https');
-var abstract = require("./lib/abstract.js");
+var abstract = require("../lib/abstract.js");
 
 var api = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
-var passport = require('./config/passport')(api);
+var passport = require('../config/passport')(api);
 
 app = express();
 
@@ -208,8 +208,8 @@ var ssl = (nconf.get('SSL') && (nconf.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.crt')
+    key: fs.readFileSync('../certs/server.key'),
+    cert: fs.readFileSync('../certs/server.crt')
   }, app);
 }
 
