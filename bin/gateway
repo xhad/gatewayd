@@ -19,7 +19,7 @@ program
   .option('-e, --env', 'specify the environment');
 
 program
-  .command('postgres:set <url>')
+  .command('set_postgres_url <url>')
   .description('set the url of the postgres database')
   .action(function(url){
     nconf.set('DATABASE_URL', url);
@@ -30,14 +30,14 @@ program
   });
 
 program
-  .command('postgres:get')
+  .command('get_postgres_url')
   .description('get the url of the postgres database')
   .action(function(cmd){
     console.log(nconf.get('DATABASE_URL'));
   });
 
 program
-  .command('ripple:rest:set <url>')
+  .command('set_ripple_rest_url <url>')
   .description('set the url of the ripple rest api')
   .action(function(url){
     nconf.set('RIPPLE_REST_API', url);
@@ -48,14 +48,14 @@ program
   });
 
 program
-  .command('ripple:rest:get')
+  .command('get_ripple_rest_url')
   .description('get the url of the ripple rest api')
   .action(function(cmd){
     console.log(nconf.get('RIPPLE_REST_API'));
   });
 
 program
-  .command('wallet:set:hot <address> <secret>')
+  .command('set_hot_wallet <address> <secret>')
   .description('set the gateway hot wallet')
   .action(function(address, secret){
     var key = 'gateway_hot_wallet';
@@ -71,7 +71,7 @@ program
   });
 
 program
-  .command('wallet:get:hot')
+  .command('get_hot_wallet')
   .description('get the gateway hot wallet')
   .action(function(){
     var key = 'gateway_hot_wallet';
@@ -85,7 +85,7 @@ program
   });
 
 program
-  .command('wallet:set:cold <account>')
+  .command('set_cold_wallet <account>')
   .description('set the gateway hot wallet')
   .action(function(account){
     var key = 'gateway_cold_wallet';
@@ -102,7 +102,7 @@ program
   });
 
 program
-  .command('wallet:get:cold')
+  .command('get_cold_wallet')
   .description('get the gateway cold wallet')
   .action(function(){
     var key = 'gateway_cold_wallet';
@@ -116,14 +116,14 @@ program
   });
 
 program
-  .command('wallet:generate')
+  .command('generate_wallet')
   .description('generate a random ripple wallet')
   .action(function(account, secret){
     console.log(RippleWallet.generate());
   });
 
 program
-  .command('key:set')
+  .command('set_key')
   .description('set the admin api key')
   .action(function(account, secret){
     var password = crypto.randomBytes(32).toString('hex');
@@ -135,7 +135,7 @@ program
 
 
 program
-  .command('key:get')
+  .command('get_key')
   .description('get the admin api key')
   .action(function(account, secret){
 		getAdminKey(function(err, key){
@@ -148,7 +148,7 @@ program
   });
 
 program
-  .command('key:generate')
+  .command('generate_key')
   .description('get the admin password')
   .action(function(account, secret){
     var password = crypto.randomBytes(32).toString('hex');
@@ -156,14 +156,14 @@ program
   });
 
 program
-  .command('withdrawals:get')
+  .command('list_withdrawals')
   .description('get pending withdrawals to external accounts')
   .action(function(account, secret){
     console.log('get pending withdrawals');
   });
 
 program
-  .command('withdrawals:clear <external_transaction_id>')
+  .command('clear_withdrawals <external_transaction_id>')
   .description('clear pending withdrawal to external account')
   .action(function(account, secret){
     console.log('clear a pending withdrawal');
@@ -210,7 +210,7 @@ function issueCurrency(amount, currency, secret, fn) {
 }
 
 program
-  .command('hot_wallet:fund <amount> <currency> <secret>')
+  .command('fund_hot_wallet <amount> <currency> <secret>')
   .description('issue funds from cold wallet to hot wallet') 
   .action(function(amount, currency, secret){
     issueCurrency(amount, currency, secret, function(err, resp){
@@ -241,7 +241,7 @@ function setTrustLine(currency, amount, fn) {
 }
 
 program
-  .command('trust:set <currency> <amount>')
+  .command('set_trust <currency> <amount>')
   .description('set level of trust from hot to cold wallet') 
   .action(function(currency, amount){
     setTrustLine(currency, amount, function(err, resp){
@@ -312,7 +312,7 @@ function get() {
 }
 
 program
-  .command('currencies:list')
+  .command('list_currencies')
   .description('add support for a currency') 
   .action(function(currency){
     var currencies = nconf.get('currencies') || {};
@@ -322,7 +322,7 @@ program
   });
 
 program
-  .command('currencies:add <currency>')
+  .command('add_currencies <currency>')
   .description('add support for a currency') 
   .action(function(currency){
     var currencies = nconf.get('currencies') || {};
@@ -338,7 +338,7 @@ program
   });
 
 program
-  .command('currencies:remove <currency>')
+  .command('remove_currencies <currency>')
   .description('remove support for a currency')
   .action(function(currency){
     var currencies = nconf.get('currencies') || {};
@@ -361,7 +361,7 @@ program
   });
 
 program
-  .command('users:list')
+  .command('list_users')
   .description('list registered users')
   .action(function(){
     api.users.readAll(function(err, users){
@@ -378,7 +378,7 @@ program
   });
 
 program
-  .command('registeruser <username> <password> <ripple_address>')
+  .command('register_user <username> <password> <ripple_address>')
   .description('create a user with a ripple address')
   .action(function(username, password, ripple_address){
     var userParams = { 
@@ -392,7 +392,7 @@ program
   });
 
 program
-  .command('setlastpaymenthash <hash>')
+  .command('set_last_payment_hash <hash>')
   .description('set the last encountered payment hash for incoming processing.')
   .action(function(hash) {
     nconf.set('last_payment_hash', hash);
@@ -402,7 +402,7 @@ program
   });
 
 program
-  .command('getlastpaymenthash')
+  .command('get_last_payment_hash')
   .description('get the last encountered payment hash for incoming processing.')
   .action(function() {
     console.log(nconf.get('last_payment_hash'));
