@@ -40,11 +40,6 @@ The gateway server software requires git, g++, make, nodejs, postgres, and sever
 
 - Detailed [installation instructions](./doc/install.md) for Ubuntu 13.10
 
-## HTTP Client Library
-
-A node.js http client library is provided that maps functions one-to-one to HTTP API commands
-- [Client Library Docs](./doc/http_client.md)
-
 ## Command Line Interface
 
 A CLI tool is provided for interacting with the API and configuring the gateway as an admin
