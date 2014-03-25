@@ -181,14 +181,33 @@ program
   .command('list_withdrawals')
   .description('get pending withdrawals to external accounts')
   .action(function(account, secret){
-    console.log('get pending withdrawals');
+    api.externalTransactions.readAllPending(function(err, withdrawals) {
+      var table = new Table({
+        head: ['#', 'Created', 'Amount', 'Currency', 'Account Id'],
+        colWidths: [4, 30, 10, 10, 15]
+      });
+      for (var i=0; i<withdrawals.length; i++){
+        var withdrawal = withdrawals[i];
+        table.push([ 
+          withdrawal.id, 
+          withdrawal.createdAt, 
+          withdrawal.amount, 
+          withdrawal.currency, 
+          withdrawal.external_account_id
+        ]);
+      }
+      console.log(table.toString());
+    });
   });
 
 program
-  .command('clear_withdrawals <external_transaction_id>')
+  .command('clear_withdrawal <external_transaction_id>')
   .description('clear pending withdrawal to external account')
-  .action(function(account, secret){
-    console.log('clear a pending withdrawal');
+  .action(function(id){
+    abstract.clearWithdrawal(id, function(err, withdrawal) {
+      if (err) { console.log('failed'); return }
+      console.log('success');
+    }); 
   });
 
 function setCurrencyInNconf(currency, amount) {
