@@ -338,7 +338,7 @@ function get() {
 
 program
   .command('list_currencies')
-  .description('add support for a currency') 
+  .description('List all currencies supported by the gateway')
   .action(function(currency){
     var currencies = nconf.get('currencies') || {};
     for (c in currencies) {
