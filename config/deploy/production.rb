@@ -23,12 +23,18 @@ set :ssh_options, {
 
 set :user, 'ubuntu'
 
-role :app, "ubuntu@ec2-174-129-121-83.compute-1.amazonaws.com"
+role :app, "ubuntu@ec2-54-198-92-106.compute-1.amazonaws.com"
 
 namespace :deploy do
   task :npm_install, [:roles] => :app do
     on roles(:app) do
       execute "cd #{release_path} && sudo npm install"
+    end
+  end
+
+  task :export_upstart do
+    on roles(:app) do
+      run "cd #{release_path} && sudo foreman export upstart /etc/init -a #{fetch(:application)} -u ubuntu -l #{release_path}/node.log"
     end
   end
 
