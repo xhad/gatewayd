@@ -125,8 +125,13 @@ app.get('/ripple.txt', function(req, res) {
 
   var currencies = nconf.get('currencies');
   for (currency in nconf.get('currencies')) {
-    rippleTxt += (currency+"\n");
+    rippleTxt += (currency+"\n\n");
   };
+
+  var domain = nconf.get('domain');
+  if (domain) {
+    rippleTxt += ('[domain]\n'+domain+'\n\n');
+  }
   res.send(rippleTxt);
 });
 
