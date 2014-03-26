@@ -246,6 +246,7 @@ function issueCurrency(amount, currency, secret, fn) {
   var human = amount+currency.toUpperCase();
   var hotWallet = nconf.get('gateway_hot_wallet');
   var coldWallet = nconf.get('gateway_cold_wallet');
+  
   ripple.set_secret(coldWallet, secret);
 
   ripple.connect(function(){
@@ -253,7 +254,6 @@ function issueCurrency(amount, currency, secret, fn) {
     amount.set_issuer(coldWallet);
 
     var transaction = ripple.transaction();
-    console.log(hotWallet);
 
     transaction.payment({
       from: coldWallet, 
@@ -261,7 +261,15 @@ function issueCurrency(amount, currency, secret, fn) {
       amount: amount
     });
 
-    transaction.submit(fn);
+    transaction.submit();
+    transaction.on('success', function(tx){
+      fn(null, tx);
+      ripple.disconnect();
+    }
+    transaction.on('error', function(err) {
+      fn(err, null);
+      ripple.disconnect();
+    }
   });
 }
 
