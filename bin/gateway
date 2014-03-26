@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
+var trust = require('../lib/trust');
 
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
@@ -247,21 +248,13 @@ program
   });
 
 function setTrustLine(currency, amount, fn) {
-  var hotWallet = nconf.get('gateway_hot_wallet');
-  ripple.connect(function(){
-    var amount = Amount.from_human('1CAD');
-    ripple.set_secret(hotWallet.address, hotWallet.secret);
-
-    var transaction = ripple.transaction();
-
-    transaction.trustSet({
-      from: hotWallet.address, 
-      to: nconf.get('gateway_cold_wallet'), 
-      amount: '1/CAD'+nconf.get('gateway_cold_wallet')
-    });
-
-    transaction.submit(fn);
-  });
+  trust({
+    currency: currency.toUpperCase(),
+    amount: amount,
+    issuer: nconf.get('gateway_cold_wallet'),
+    account: nconf.get('gateway_hot_wallet').address,
+    secret: nconf.get('gateway_hot_wallet').secret
+  }, fn);
 }
 
 program
@@ -272,6 +265,14 @@ program
       console.log(err, resp);
     });
   });
+
+program
+  .command('get_trust_lines <account>')
+  .description('get the trust lines from an account to cold wallet')
+  .action(function(account) {
+    
+  });
+
 
 function setCurrency(currency, amount) {
   var currency = currency.toUpperCase();
