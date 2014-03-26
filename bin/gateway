@@ -40,6 +40,23 @@ program
     });
 
   program
+    .command('set_domain <domain>')
+    .description('set the domain name of the gateway')
+    .action(function(domain){
+      nconf.set('domain', domain);
+      nconf.save(function() {
+        console.log(nconf.get('domain'));
+      });
+    });
+
+  program
+    .command('get_domain')
+    .description('get the domain name of the gateway')
+    .action(function(){
+      console.log(nconf.get('domain'));
+    });
+
+  program
     .command('set_ripple_rest_url <url>')
     .description('set the url of the ripple rest api')
     .action(function(url){
