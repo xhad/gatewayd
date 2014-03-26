@@ -30,26 +30,6 @@ program
     });
   });
 
-program
-  .command('read_ripple_payments_queue')
-  .description('list the outgoing ripple payments.')
-  .action(function(){
-    var table = new Table({
-      head: ['#', 'Created', 'Amount', 'Currency', 'Recipient'],
-      colWidths: [4, 30, 10, 10, 30]
-    });
-    api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
-      if (err) {
-        console.log({ error: err });
-      } else {
-        for (var i=0; i<transactions.length; i++){
-          var tx = transactions[i];
-          table.push([tx.id, tx.createdAt, tx.to_amount, tx.to_currency]);
-        }
-        console.log(table.toString());
-      }
-    });
-  });
 
   program
     .command('get_postgres_url')
@@ -160,13 +140,16 @@ program
   .command('get_key')
   .description('get the admin api key')
   .action(function(account, secret){
-		getAdminKey(function(err, key){
-      if (err) {
-        console.log({ error: err });
-      } else {
-        console.log(key);
-      }
-		});
+    key = nconf.get('KEY'); 
+    if (key) {
+      console.log(nconf.get('KEY'));
+    } else {
+      var password = crypto.randomBytes(32).toString('hex');
+      nconf.set('KEY', password);
+      nconf.save(function(err){
+        console.log(nconf.get('KEY'));
+      });
+    }
   });
 
 program
@@ -398,6 +381,27 @@ program
   .action(function(username, amount, currency) {
     abstract.deposit(username, amount, currency, function(err, deposit) {
       console.log(err, deposit); 
+    });
+  });
+
+program
+  .command('read_ripple_payments_queue')
+  .description('list the outgoing ripple payments.')
+  .action(function(){
+    var table = new Table({
+      head: ['#', 'Created', 'Amount', 'Currency', 'Recipient'],
+      colWidths: [4, 30, 10, 10, 30]
+    });
+    api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
+      if (err) {
+        console.log({ error: err });
+      } else {
+        for (var i=0; i<transactions.length; i++){
+          var tx = transactions[i];
+          table.push([tx.id, tx.createdAt, tx.to_amount, tx.to_currency]);
+        }
+        console.log(table.toString());
+      }
     });
   });
 
