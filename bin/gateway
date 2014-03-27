@@ -244,22 +244,27 @@ function setCurrencyInNconf(currency, amount) {
 
 }
 
-function issueCurrency(amount, currency, secret, fn) {
-  var human = amount+currency.toUpperCase();
-  var hotWallet = nconf.get('gateway_hot_wallet');
-  var coldWallet = nconf.get('gateway_cold_wallet');
-  
-  ripple.set_secret(coldWallet, secret);
+function sendCurrency(opts, fn) {
+  var amount = opts.amount;
+  var currency = opts.currency;
+  var issuer = opts.issuer
+  var to_account = opts.to_account;
+  var from_account = opts.from_account;
+  var secret = opts.secret;
+
+  var human = amount+currency;
+
+  ripple.set_secret(from_account, secret);
 
   ripple.connect(function(){
     var amount = Amount.from_human(human);
-    amount.set_issuer(coldWallet);
+    amount.set_issuer(issuer);
 
     var transaction = ripple.transaction();
 
     transaction.payment({
-      from: coldWallet, 
-      to: hotWallet.address,
+      from: from_account, 
+      to: to_account,
       amount: amount
     });
 
@@ -274,6 +279,34 @@ function issueCurrency(amount, currency, secret, fn) {
     });
   });
 }
+
+function issueCurrency(amount, currency, secret, fn) {
+  var opts = {
+    to_account: nconf.get('gateway_hot_wallet').address,
+    from_account: nconf.get('gateway_cold_wallet'),
+    amount: amount,
+    currency: currency,
+    issuer: nconf.get('gateway_cold_wallet'),
+    secret: secret
+  }
+
+  sendCurrency(opts, fn);
+}
+
+program
+  .command('refund_cold_wallet <amount> <currency>')
+  .description('send back funds from the hot wallet to cold wallet')
+  .action(function(amount, currency) {
+    var opts = {
+      to_account: nconf.get('gateway_cold_wallet'),
+      from_account: nconf.get('gateway_hot_wallet').address,
+      amount: amount,
+      currency: currency,
+      issuer: nconf.get('gateway_cold_wallet'),
+      secret: nconf.get('gateway_hot_wallet').secret
+    }
+    sendCurrency(opts, get_and_print_trust_lines);
+  });
 
 program
   .command('fund_hot_wallet <amount> <currency> <secret>')
