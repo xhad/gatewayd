@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
-var trust = require('../lib/trust');
+var trust = require('../lib/trust.js');
+var getTrustLines = require('../lib/lines.js');
+var _ = require('underscore-node');
 
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
@@ -265,11 +267,11 @@ function issueCurrency(amount, currency, secret, fn) {
     transaction.on('success', function(tx){
       fn(null, tx);
       ripple.disconnect();
-    }
+    })
     transaction.on('error', function(err) {
       fn(err, null);
       ripple.disconnect();
-    }
+    });
   });
 }
 
@@ -279,9 +281,10 @@ program
   .action(function(amount, currency, secret){
     issueCurrency(amount, currency, secret, function(err, resp){
       if (err || (resp.engine_result != 'tesSUCCESS')) {
-        console.log('error', err);
+        console.log('error', err.engine_result);
+        get_and_print_trust_lines();
       } else {
-        console.log('success!');
+        get_and_print_trust_lines();
       }
     });
   });
@@ -305,11 +308,35 @@ program
     });
   });
 
+function get_and_print_trust_lines() {
+  var hotWallet = nconf.get('gateway_hot_wallet').address;
+  var coldWallet = nconf.get('gateway_cold_wallet');
+  var opts = {
+    fromAccount: hotWallet,
+    toAccount: coldWallet 
+  };
+  getTrustLines(opts, function(err, lines) {
+    var table = new Table({
+      head: ['Account', 'Currency', 'Limit', 'Balance'],
+      colWidths: [40, 10, 20, 20]
+    });
+    _.each(lines, function(line) {
+      table.push([ 
+        line.account, 
+        line.currency, 
+        line.limit, 
+        line.balance
+      ]);
+    });
+    console.log(table.toString());
+  });
+}
+
 program
-  .command('get_trust_lines <account>')
-  .description('get the trust lines from an account to cold wallet')
-  .action(function(account) {
-    
+  .command('get_trust_lines')
+  .description('get the trust lines from hot wallet to cold wallet')
+  .action(function() {
+    get_and_print_trust_lines();
   });
 
 
