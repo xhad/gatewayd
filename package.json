@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "scripts": {
     "test": "mocha test/integration/"
   },
@@ -28,7 +28,8 @@
     "ripple-rest-client": "1.1.1",
     "node-uuid": "1.4.1",
     "ejs": "",
-    "cli-table": "0.3.0"
+    "cli-table": "0.3.0",
+    "underscore-node": "0.1.2"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
