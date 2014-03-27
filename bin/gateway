@@ -304,7 +304,7 @@ program
   .description('set level of trust from hot to cold wallet') 
   .action(function(currency, amount){
     setTrustLine(currency, amount, function(err, resp){
-      console.log(err, resp);
+      get_and_print_trust_lines();
     });
   });
 
