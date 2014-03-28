@@ -223,7 +223,7 @@ program
     api.externalTransactions.readAllPending(function(err, withdrawals) {
       var table = new Table({
         head: ['#', 'Created', 'Amount', 'Currency', 'Account Id'],
-        colWidths: [4, 30, 10, 10, 15]
+        colWidths: [10, 30, 10, 10, 15]
       });
       for (var i=0; i<withdrawals.length; i++){
         var withdrawal = withdrawals[i];
