@@ -97,5 +97,19 @@ describe('payments', function() {
 
   });
 
+  it('should list incoming payments', function(fn) {
+
+    gateway.payments.listIncoming(function(err, payments) {
+      assert(!err);
+      assert(Array.isArray(payments));
+      if (payments[0]) {
+        assert(payments[0].transaction_state == 'incoming');
+      }
+      fn();
+
+    });
+
+  });
+
 });
 
