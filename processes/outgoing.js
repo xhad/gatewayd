@@ -53,5 +53,5 @@ function workJob() {
 
 workJob();
 
-console.log('Sending outgoing ripple payments from the queue.');
+console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
 

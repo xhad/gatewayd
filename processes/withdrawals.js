@@ -63,5 +63,5 @@ queue.on('payment:withdrawal', function(payment) {
 
 queue.work();
 
-console.log('Processing withdrawal payments from the queue.');
+console.log('Processing withdrawals from the inbound ripple payment queue.');
 

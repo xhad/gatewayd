@@ -41,5 +41,5 @@ listener.onPayment = function(payment) {
 
 listener.start(config.get('last_payment_hash'));
 
-console.log('Listening for incoming ripple payments for withdrawal');
+console.log('Listening for incoming ripple payments from Ripple REST.');
 
