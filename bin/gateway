@@ -364,9 +364,9 @@ function setTrustLine(currency, amount, fn) {
 }
 
 program
-  .command('set_trust <currency> <amount>')
+  .command('set_trust <amount> <currency>')
   .description('set level of trust from hot to cold wallet') 
-  .action(function(currency, amount){
+  .action(function(amount, currency){
     setTrustLine(currency, amount, function(err, resp){
       get_and_print_trust_lines();
     });
@@ -529,14 +529,14 @@ program
   });
 
 program
-  .command('read_ripple_payments_queue')
+  .command('list_outgoing_payments')
   .description('list the outgoing ripple payments.')
   .action(function(){
     var table = new Table({
       head: ['#', 'Created', 'Amount', 'Currency', 'Recipient'],
       colWidths: [4, 30, 10, 10, 30]
     });
-    api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
+    gateway.payments.listOutgoing(function(err, transactions) {
       if (err) {
         console.log({ error: err });
       } else {
