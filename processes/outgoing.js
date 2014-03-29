@@ -9,6 +9,7 @@ process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 function workJob() {
 
   gateway.payments.listOutgoing(function(err, transactions) {
+    console.log(transactions[0])
     if (!err) {
       var transaction = transactions[0];
       if (transaction) {
@@ -18,34 +19,41 @@ function workJob() {
               currency = transaction.to_currency;
 
           build_payment(address, amount, currency, function(err, payment) {
+            console.log('built payment');
 
             if (err) { 
-              transaction.transaction_state = 'error';
-              transaction.save().complete(function(){
-                setTimeout(workJob, 500);
-              });
-              return;
+              console.log(err);
+              if (err == 'No paths found') { 
+                transaction.transaction_state = 'no_path_found';
+                transaction.save().complete(function(){
+                  setTimeout(workJob, 1000);
+                });
+                return;
+              } else {
+                setTimeout(workJob, 1000);
+                return;
+              }
             }
             send(payment, function(err, payment){
 
-              if (err) { setTimeout(workJob, 500); return }
+              if (err) { setTimeout(workJob, 1000); return }
 
               if (payment.success) {
                 transaction.transaction_state = 'sent';
                 transaction.save().complete(function(){
-                  setTimeout(workJob, 500);
+                  setTimeout(workJob, 1000);
                 });
               } else {
-                setTimeout(workJob, 500);
+                setTimeout(workJob, 1000);
               }
             });
           });          
         });
       } else {
-        setTimeout(workJob, 500);
+        setTimeout(workJob, 1000);
       }
     } else {
-      setTimeout(workJob, 500);
+      setTimeout(workJob, 1000);
     }
   });
 
