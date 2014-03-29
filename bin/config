@@ -1,0 +1,282 @@
+#!/usr/bin/env node
+var nconf = require('../config/nconf.js');
+process.env.DATABASE_URL = nconf.get('DATABASE_URL');
+var trust = require('../lib/trust.js');
+var getTrustLines = require('../lib/lines.js');
+var _ = require('underscore-node');
+
+var program = require('commander');
+var RippleWallet = require('ripple-wallet').Ripple.Wallet;
+var crypto = require('crypto');
+var spawn = require('child_process').spawn;
+var fs = require('fs');
+var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
+var ripple = require('../lib/remote');
+var Amount = require('ripple-lib').Amount;
+var api = require("ripple-gateway-data-sequelize-adapter");
+var abstract = require("../lib/abstract.js");
+var Table = require("cli-table");
+var gateway = require('../lib/gateway');
+
+program
+  .version('0.0.1')
+  .option('-i, --issuer', 'specify an issuer other than the cold wallet')
+  .option('-e, --env', 'specify the environment');
+
+program
+  .command('set_postgres_url <url>')
+  .description('set the url of the postgres database')
+  .action(function(url){
+    nconf.set('DATABASE_URL', url);
+    nconf.save(function (err) {
+      console.log('set DATABASE_URL to:');
+      console.log(nconf.get('DATABASE_URL'));
+    });
+  });
+
+  program
+    .command('get_postgres_url')
+    .description('get the url of the postgres database')
+    .action(function(cmd){
+      console.log(nconf.get('DATABASE_URL'));
+    });
+
+  program
+    .command('set_ripple_rest_url <url>')
+    .description('set the url of the ripple rest api')
+    .action(function(url){
+      nconf.set('RIPPLE_REST_API', url);
+      nconf.save(function(err) {
+        console.log('set the ripple rest api url');
+        console.log(nconf.get('RIPPLE_REST_API'));
+      });
+    });
+
+  program
+    .command('get_ripple_rest_url')
+    .description('get the url of the ripple rest api')
+    .action(function(cmd){
+      console.log(nconf.get('RIPPLE_REST_API'));
+    });
+
+  program
+    .command('set_domain <domain>')
+    .description('set the domain name of the gateway')
+    .action(function(domain){
+      nconf.set('domain', domain);
+      nconf.save(function() {
+        console.log(nconf.get('domain'));
+      });
+    });
+
+  program
+    .command('get_domain')
+    .description('get the domain name of the gateway')
+    .action(function(){
+      console.log(nconf.get('domain'));
+    });
+
+  program
+    .command('generate_wallet')
+    .description('generate a random ripple wallet')
+    .action(function(account, secret){
+      console.log(RippleWallet.generate());
+    });
+
+  program
+    .command('set_hot_wallet <address> <secret>')
+    .description('set the gateway hot wallet')
+    .action(function(address, secret){
+      var key = 'gateway_hot_wallet';
+      var key = 'gateway_hot_wallet';
+      nconf.set(key, {
+        address: address,
+        secret: secret
+      });
+      nconf.save(function(){
+        hot_wallet = nconf.get(key);
+        console.log('set the hot wallet:', hot_wallet);
+      });
+    });
+
+  program
+    .command('get_hot_wallet')
+    .description('get the address of the gateway hot wallet')
+    .action(function(){
+      var key = 'gateway_hot_wallet';
+      var hot_wallet = nconf.get(key);
+      if (hot_wallet) {
+        console.log(hot_wallet.address);
+      } else {
+        console.log('hot wallet not yet set');
+        console.log('use npm gateway wallet:set:hot <address> <secret>');
+      }
+    });
+
+  program
+    .command('get_hot_wallet_secret')
+    .description('get the secret of the gateway hot wallet')
+    .action(function(){
+      var key = 'gateway_hot_wallet';
+      var hot_wallet = nconf.get(key);
+      if (hot_wallet) {
+        console.log(hot_wallet.secret);
+      } else {
+        console.log('hot wallet not yet set');
+        console.log('use npm gateway wallet:set:hot <address> <secret>');
+      }
+    });
+
+program
+  .command('set_cold_wallet <account>')
+  .description('set the gateway hot wallet')
+  .action(function(account){
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = nconf.get(key);
+    if (cold_wallet) {
+      console.log('cold wallet address already set:', cold_wallet);
+    } else {
+      nconf.set(key, account);
+      nconf.save(function(){
+        cold_wallet = nconf.get(key);
+        console.log('set the cold wallet:', cold_wallet);
+      });
+    }
+  });
+
+program
+  .command('get_cold_wallet')
+  .description('get the gateway cold wallet')
+  .action(function(){
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = nconf.get(key);
+    if (cold_wallet) {
+      console.log(cold_wallet);
+    } else {
+      console.log('cold wallet not yet set');
+      console.log('use npm gateway wallet:set:cold <address>');
+    }
+  });
+
+program
+  .command('set_key')
+  .description('set the admin api key')
+  .action(function(account, secret){
+    var password = crypto.randomBytes(32).toString('hex');
+    nconf.set('KEY', password);
+    nconf.save(function(err){
+      console.log(nconf.get('KEY'));
+    });
+  });
+
+
+program
+  .command('get_key')
+  .description('get the admin api key')
+  .action(function(account, secret){
+    key = nconf.get('KEY'); 
+    if (key) {
+      console.log(nconf.get('KEY'));
+    } else {
+      var password = crypto.randomBytes(32).toString('hex');
+      nconf.set('KEY', password);
+      nconf.save(function(err){
+        console.log(nconf.get('KEY'));
+      });
+    }
+  });
+
+function setCurrencyInNconf(currency, amount) {
+    key = 'gateway_currencies';
+    currency = currency.toUpperCase();
+    var currencies = nconf.get(key);
+    if (!currencies) {
+      currencies = {};
+    }
+    if (!currencies[currency]) {
+      currencies[currency] = amount;  
+    }
+    nconf.set(key, currencies);
+    nconf.save(function(){
+      console.log(nconf.get(key));
+    });
+
+}
+
+function setCurrency(currency, amount) {
+  var currency = currency.toUpperCase();
+  lookupRippleBalance(currency, function(err, balance) {
+    if (err) { fn(err, null); return; };
+    var currentAmount = balance.balance.toFloat();
+    var targetAmount = amount.toFloat();
+    if (currentAmount == targetAmount) { 
+      console.log('do nothing, trust is the same');
+    };
+    if (currentAmount > targetAmount) { 
+      console.log('decrease trust to '+targetAmount);
+    };
+    if (currentAmount < targetAmount) { 
+      console.log('increase trust to '+targetAmount);
+    };
+  });
+}
+
+program
+  .command('list_currencies')
+  .description('List all currencies supported by the gateway')
+  .action(function(currency){
+    var currencies = nconf.get('currencies') || {};
+    for (c in currencies) {
+      console.log(c);
+    }
+  });
+
+program
+  .command('add_currency <currency>')
+  .description('add support for a currency') 
+  .action(function(currency){
+    var currencies = nconf.get('currencies') || {};
+    if (!(currency in currencies)) {
+      currencies[currency] = 0;
+    }
+    nconf.set('currencies', currencies);
+    nconf.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
+  });
+
+program
+  .command('remove_currency <currency>')
+  .description('remove support for a currency')
+  .action(function(currency){
+    var currencies = nconf.get('currencies') || {};
+    delete currencies[currency];
+    nconf.set('currencies', currencies);
+    nconf.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
+  });
+
+program
+  .command('set_last_payment_hash <hash>')
+  .description('set the last encountered payment hash for incoming processing.')
+  .action(function(hash) {
+    nconf.set('last_payment_hash', hash);
+    nconf.save(function(){
+      console.log('set the last payment hash to', hash);
+    });
+  });
+
+program
+  .command('get_last_payment_hash')
+  .description('get the last encountered payment hash for incoming processing.')
+  .action(function() {
+    console.log(nconf.get('last_payment_hash'));
+  });
+
+program.parse(process.argv);
+
