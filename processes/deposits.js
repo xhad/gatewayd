@@ -8,10 +8,54 @@ var gateway = require('../lib/gateway.js');
 
 queue.on('deposit', function(deposit) {
 
-  console.log('read a deposit from the queue');
-  console.log(deposit.toJSON());
+  sql.transaction(function(t) {
 
+    abstract.getExternalAccountRippleAddress(deposit.external_account_id, function(err, address) {
+      if (err) {
+
+        tx.rollback();
+        return;
+      }
+
+      var opts = {
+        to_address_id: address.id,
+        amount: deposit.amount,
+        currency: deposit.currency,
+      };
+
+      gateway.payments.enqueueOutgoing(opts, function(err, payment) {
+        if (err) {
+
+          t.rollback();
+          return;
+        }
+
+        if (payment) {
+          var opts = {
+            id: deposit.id,
+            ripple_address_id: payment.id
+          };
+
+          gateway.deposits.finalize(opts, function(err, deposit) {
+            if (err) {
+
+              t.rollback();
+              return;
+            }
+
+            t.commit();
+            console.log(deposit.toJSON());
+
+          });
+        } else {
+          t.rollback();
+          return;
+        };
+      });
+    });
+  });
 });
+
 
 queue.work();
 
