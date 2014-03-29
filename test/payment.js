@@ -9,12 +9,13 @@ describe('payments', function() {
     
     var opts = {
       to_address_id: 1,
-      to_amount: 2.5,
-      to_currency: 'XAG'
+      amount: 2.5,
+      currency: 'XAG'
     }
 
     gateway.payments.enqueueOutgoing(opts, function(err, payment) {
 
+      console.log(err, payment);
       assert(!err);
       assert(payment.to_address_id == 1);
       assert(payment.to_amount == 2.5);
@@ -73,8 +74,8 @@ describe('payments', function() {
   it('should update a notified outgoing payment', function(fn) {
     var opts = {
       to_address_id: 1,
-      to_amount: 2.5,
-      to_currency: 'XAG'
+      amount: 2.5,
+      currency: 'XAG'
     };
 
     gateway.payments.enqueueOutgoing(opts, function(err, payment) {
