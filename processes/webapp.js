@@ -218,7 +218,12 @@ if (ssl) {
   }, app);
 }
 
-var host = nconf.get('HOST');
+var host = nconf.get('HOST') || 'localhost';
 var port = nconf.get('PORT');
+var protocol = ssl ? 'https' : 'http'
 
 app.listen(port, host);
+
+
+
+console.log('Serving REST API and Angular WebApp at '+protocol+'://'+host+':'+port);

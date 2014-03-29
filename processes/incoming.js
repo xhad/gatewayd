@@ -41,5 +41,5 @@ listener.onPayment = function(payment) {
 
 listener.start(config.get('last_payment_hash'));
 
-console.log('listening for payments to '+config.get('gateway_cold_wallet')+' with destination tag');
+console.log('Listening for incoming ripple payments for withdrawal');
 

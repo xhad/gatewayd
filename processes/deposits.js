@@ -59,5 +59,5 @@ queue.on('deposit', function(deposit) {
 
 queue.work();
 
-console.log('Pulling deposits from the queue for processing');
+console.log('Processing deposits from the inbound asset deposit queue.');
 
