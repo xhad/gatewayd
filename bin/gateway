@@ -23,25 +23,48 @@ program
   .option('-i, --issuer', 'specify an issuer other than the cold wallet')
   .option('-e, --env', 'specify the environment');
 
+function printPaymentsTable(payments) {
+  var table = new Table({
+    head: ['#', 'Address Id', 'Amount', 'Currency'],
+    colWidths: [8, 8, 10, 10]
+  });
+  for (var i=0; i<payments.length; i++){
+    var payment = payments[i];
+    table.push([ 
+      payment.id, 
+      payment.to_address_id, 
+      payment.to_amount, 
+      payment.to_currency, 
+    ]);
+  }
+  console.log(table.toString());
+}
+
+function printExternalTransactionsTable(transactions) {
+  var table = new Table({
+    head: ['#', 'Created', 'Amount', 'Currency', 'Account Id'],
+    colWidths: [10, 30, 10, 10, 15]
+  });
+  for (var i=0; i<transactions.length; i++){
+    var transaction = transactions[i];
+    table.push([ 
+      transaction.id, 
+      transaction.createdAt, 
+      transaction.amount, 
+      transaction.currency, 
+      transaction.external_account_id
+    ]);
+  }
+  console.log(table.toString());
+}
+
+
 program
   .command('list_incoming_payments')
   .description('list unprocesses incoming ripple payments')
   .action(function(){
     gateway.payments.listIncoming(function(err, payments){
-      var table = new Table({
-        head: ['#', 'Address Id', 'Amount', 'Currency'],
-        colWidths: [8, 8, 10, 10]
-      });
-      for (var i=0; i<payments.length; i++){
-        var payment = payments[i];
-        table.push([ 
-          payment.id, 
-          payment.to_address_id, 
-          payment.to_amount, 
-          payment.to_currency, 
-        ]);
-      }
-      console.log(table.toString());
+      printPaymentsTable(payments);
     }); 
   });
 
@@ -221,21 +244,7 @@ program
   .description('get pending withdrawals to external accounts')
   .action(function(account, secret){
     api.externalTransactions.readAllPending(function(err, withdrawals) {
-      var table = new Table({
-        head: ['#', 'Created', 'Amount', 'Currency', 'Account Id'],
-        colWidths: [10, 30, 10, 10, 15]
-      });
-      for (var i=0; i<withdrawals.length; i++){
-        var withdrawal = withdrawals[i];
-        table.push([ 
-          withdrawal.id, 
-          withdrawal.createdAt, 
-          withdrawal.amount, 
-          withdrawal.currency, 
-          withdrawal.external_account_id
-        ]);
-      }
-      console.log(table.toString());
+      printExternalTransactionsTable(withdrawals);
     });
   });
 
@@ -498,11 +507,24 @@ program
   });
 
 program
-  .command('deposit <username> <amount> <currency>')
-  .description('process a deposit by sending to ripple address')
-  .action(function(username, amount, currency) {
-    abstract.deposit(username, amount, currency, function(err, deposit) {
+  .command('record_deposit <amount> <currency> <external_account_id>')
+  .description('record a deposit in the deposit processing queue')
+  .action(function(amount, currency, external_account_id) {
+    gateway.deposits.record({
+      currency: currency,
+      amount: amount,
+      external_account_id: external_account_id
+    }, function(err, deposit) {
       console.log(err, deposit); 
+    });
+  });
+
+program
+  .command('list_deposits')
+  .description('list deposits in the deposit processing queue')
+  .action(function() {
+    gateway.deposits.listQueued(function(err, deposits) {
+      printExternalTransactionsTable(deposits);
     });
   });
 
