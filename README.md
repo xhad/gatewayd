@@ -1,19 +1,66 @@
 ## Gateway API Server
 
 This software is a database-backed web server that serves as a
-back end for Ripple Gateway applications. Server, Javascript Client, and CLI are provided as interfaces to a deployed gateway.
+back end for Ripple Gateway applications. A HTTP/JSON erver, Javascript library, and CLI are provided as interfaces to a deployed gateway.
 
 The Ripple Gateway's features include: 
   - user registration 
-  - hosted wallets 
-  - deposits
-  - widthdrawals
-  - off-ledger accounting
-  - payment monitoring
+  - deposits and withdrawals
   - issuing currency
-  - sending and receiving
+  - ripple payment sending and monitoring
   - gateway administration
-  - federation protocol
+
+## Command Line Interface
+
+    Usage: gateway [options] [command]
+  
+    Commands:
+  
+      list_incoming_payments  list unprocesses incoming ripple payments
+      list_withdrawals       get pending withdrawals to external accounts
+      clear_withdrawal <external_transaction_id> clear pending withdrawal to external account
+      refund_cold_wallet <amount> <currency> send back funds from the hot wallet to cold wallet
+      fund_hot_wallet <amount> <currency> issue funds from cold wallet to hot wallet
+      set_trust <amount> <currency> set level of trust from hot to cold wallet
+      get_trust_lines        get the trust lines from hot wallet to cold wallet
+      record_deposit <amount> <currency> <external_account_id> record a deposit in the deposit processing queue
+      list_deposits          list deposits in the deposit processing queue
+      list_outgoing_payments  list the outgoing ripple payments.
+      list_users             list registered users
+      register_user <username> <password> <ripple_address> create a user with a ripple address
+      
+    Usage: config [options] [command]
+    
+    Options:
+  
+      -h, --help     output usage information
+
+    Commands:
+  
+      set_postgres_url <url> set the url of the postgres database
+      get_postgres_url       get the url of the postgres database
+      set_ripple_rest_url <url> set the url of the ripple rest api
+      get_ripple_rest_url    get the url of the ripple rest api
+      set_domain <domain>    set the domain name of the gateway
+      get_domain             get the domain name of the gateway
+      generate_wallet        generate a random ripple wallet
+      set_hot_wallet <address> <secret> set the gateway hot wallet
+      get_hot_wallet         get the address of the gateway hot wallet
+      get_hot_wallet_secret  get the secret of the gateway hot wallet
+      set_cold_wallet <account> set the gateway hot wallet
+      get_cold_wallet        get the gateway cold wallet
+      set_key                set the admin api key
+      get_key                get the admin api key
+      list_currencies        List all currencies supported by the gateway
+      add_currency <currency> add support for a currency
+      remove_currency <currency> remove support for a currency
+      set_last_payment_hash <hash> set the last encountered payment hash for incoming processing.
+      get_last_payment_hash  get the last encountered payment hash for incoming processing.
+  
+    Options:
+  
+      -h, --help     output usage information
+    
 
 ![Ripple Gateway Process Diagram](https://s3.amazonaws.com/imagesz/ripple_gateway_diagram.jpg)
 
@@ -82,7 +129,3 @@ The gateway server software requires git, g++, make, nodejs, postgres, and sever
 
 - Detailed [installation instructions](./doc/install.md) for Ubuntu 13.10
 
-## Command Line Interface
-
-A CLI tool is provided for interacting with the API and configuring the gateway as an admin
-- [CLI Docs](./doc/cli.md)
