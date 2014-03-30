@@ -112,6 +112,26 @@ app.post('/api/v1/deposits', function(req, res) {
   });
 });
 
+app.get('/api/v1/deposits', function(req, res) {
+  gateway.deposits.listQueued(function(err, deposits) {
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ deposits:  deposits });
+    }
+  });
+});
+
+app.get('/api/v1/payments/outgoing', function(req, res) {
+  gateway.payments.listOutgoing(function(err, payments) {
+    if (err) {
+      res.send(500, { error: err });
+    } else {
+      res.send({ payments: payments });
+    }
+  });
+});
+
 app.get('/api/v1/ripple_transactions/queued', function(req, res) {
   api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
     if (err) {
@@ -233,8 +253,8 @@ if (ssl) {
   }, app);
 }
 
-var host = nconf.get('HOST') || 'localhost';
-var port = nconf.get('PORT');
+var host = nconf.get('HOST');
+var port = nconf.get('PORT'); 
 var protocol = ssl ? 'https' : 'http'
 
 app.listen(port, host);
