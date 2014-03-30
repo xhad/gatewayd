@@ -142,26 +142,6 @@ app.get('/api/v1/payments/incoming', function(req, res) {
   });
 });
 
-app.get('/api/v1/ripple_transactions/queued', function(req, res) {
-  api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
-    if (err) {
-      res.send(500, { error: err });
-    } else {
-      res.send({ ripple_transactions:  transactions || [] });
-    }
-  }); 
-});
-
-app.get('/api/v1/ripple_transactions/queued', function(req, res) {
-  api.rippleTransactions.readAll({ transaction_state: "queued" }, function(err, transactions) {
-    if (err) {
-      res.send(500, { error: err });
-    } else {
-      res.send({ ripple_transactions:  transactions || [] });
-    }
-  }); 
-});
-
 app.get('/ripple.txt', function(req, res) {
   res.set({ 'Content-Type': 'text/plain' });
   var rippleTxt = "";
@@ -218,7 +198,7 @@ app.post('/api/v1/users/login', function(req, res) {
 });
 
 app.get('/api/v1/withdrawals', function(req, res) {
-  api.externalTransactions.readAllPending(function(err, withdrawals){
+  gateway.withdrawals.listPending(function(err, withdrawals){
     if (err) { res.send(500, { error: err }); return; }
     res.send({ withdrawals: withdrawals });
   });
