@@ -5,6 +5,7 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 var abstract = require("../lib/abstract.js");
+var gateway = require('../lib/gateway.js');
 
 var api = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var passport = require('../config/passport')(api);
@@ -98,7 +99,11 @@ app.post('/api/v1/users', function(req, res){
 });
 
 app.post('/api/v1/deposits', function(req, res) {
-  abstract.deposit(req.body.name, req.body.amount, req.body.currency, function(err, deposit) {
+  gateway.deposits.record({
+    currency: req.body.currency,
+    amount: req.body.amount,
+    external_account_id: req.body.external_account_id
+  }, function(err, deposit) {
     if (err) {
       res.send(500, { error: err });
     } else {
