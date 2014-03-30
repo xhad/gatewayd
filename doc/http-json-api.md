@@ -83,3 +83,63 @@
         }
       ]
     }
+
+## List Incoming Payment Processing Queue
+
+    curl -k http://localhost:5000/api/v1/payments/incoming
+    {
+      "payments": [
+        {
+          "id": 195,
+          "to_address_id": 0,
+          "from_address_id": 2,
+          "transaction_state": "incoming",
+          "transaction_hash": "F7A679B94549C468F8E2251780F3A3968972F1FF952BAA6EAD59C8DE87212A73",
+          "to_amount": "1.234567",
+          "to_currency": "USD",
+          "to_issuer": "coldWallet",
+          "from_amount": "1.234567",
+          "from_currency": "USD",
+          "from_issuer": "coldWallet",
+          "createdAt": "2014-03-31T06:08:47.922Z",
+          "updatedAt": "2014-03-31T06:08:47.922Z"
+        }
+      ]
+    }
+
+## List Pending Withdrawals
+
+    curl -k http://localhost:5000/api/v1/withdrawals
+    {
+      "withdrawals": [
+        {
+          "id": 162,
+          "amount": "14.85",
+          "currency": "USD",
+          "deposit": false,
+          "external_account_id": 1,
+          "status": "pending",
+          "ripple_transaction_id": 193,
+          "createdAt": "2014-03-31T05:52:38.578Z",
+          "updatedAt": "2014-03-31T05:52:38.578Z"
+        }
+      ]
+    }
+
+## Clear Pending Withdrawal
+
+    curl -k -X POST http://localhost:5000/api/v1/withdrawals/162/clear
+    {
+      "withdrawal": {
+        "id": 162,
+        "amount": "14.85",
+        "currency": "USD",
+        "deposit": false,
+        "external_account_id": 1,
+        "status": "cleared",
+        "ripple_transaction_id": 193,
+        "createdAt": "2014-03-31T12:52:38.578Z",
+        "updatedAt": "2014-03-31T05:55:49.425Z"
+      }
+    }
+
