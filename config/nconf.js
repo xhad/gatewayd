@@ -10,7 +10,8 @@ nconf.defaults({
   'RIPPLE_DATAMODEL_ADAPTER': 'ripple-gateway-data-sequelize-adapter',
   'RIPPLE_EXPRESS_GATEWAY': 'ripple-gateway-express',
   'SSL': false,
-  'PORT': 3000
+  'PORT': 5000,
+  'HOST': 'localhost'
 });
 
 module.exports = nconf;
