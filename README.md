@@ -60,13 +60,14 @@ The Ripple Gateway's features include:
     Options:
   
       -h, --help     output usage information
-    
-
-![Ripple Gateway Process Diagram](https://s3.amazonaws.com/imagesz/ripple_gateway_diagram.jpg)
+  
+## Ripple Gateway Processes
 
 The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 
 
-In the diagram above each process is represented by a circle, and should be designed to scale horizontally, that is enable N processes of each type all operating on the same queues.
+![Ripple Gateway Process Diagram](https://s3.amazonaws.com/imagesz/ripple_gateway_diagram.jpg)
+
+In the diagram above each process is represented by a circle, and should be designed to scale horizontally, that is enable N processes of each type all operating on the same queues. Queues, represented by rectangles are actually SQL database tables maintained by the gateway data store.
 
 ## Process Flow of a Gateway Deposit
 
