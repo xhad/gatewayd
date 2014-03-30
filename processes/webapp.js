@@ -119,19 +119,29 @@ app.get('/api/v1/ripple_transactions/queued', function(req, res) {
 
 app.get('/ripple.txt', function(req, res) {
   res.set({ 'Content-Type': 'text/plain' });
-  var rippleTxt = "[accounts]\n"+nconf.get('gateway_cold_wallet')+"\n\n"+
-  "[hotwallets]\n"+nconf.get('gateway_hot_wallet').address+
-  "\n\n[currencies]\n";
+  var rippleTxt = "";
+
+  if (nconf.get('gateway_cold_wallet')) {
+    rippleTxt += "[accounts]\n"+nconf.get('gateway_cold_wallet')+"\n\n";
+  }
+
+  if (nconf.get('gateway_hot_wallet') && nconf.get('gateway_hot_wallet').address) {
+    rippleTxt += "[hotwallets]\n"+nconf.get('gateway_hot_wallet').address;
+  }
 
   var currencies = nconf.get('currencies');
-  for (currency in nconf.get('currencies')) {
-    rippleTxt += (currency+"\n\n");
-  };
+  if (currencies) {
+    rippleTxt += "\n\n[currencies]\n";
+    for (currency in nconf.get('currencies')) {
+      rippleTxt += (currency+"\n\n");
+    };
+  }
 
   var domain = nconf.get('domain');
   if (domain) {
     rippleTxt += ('[domain]\n'+domain+'\n\n');
   }
+
   res.send(rippleTxt);
 });
 
