@@ -12,7 +12,7 @@ The Ripple Gateway's features include:
 
 ## Command Line Interface
 
-    Usage: gateway [options] [command]
+    Usage: bin/gateway [options] [command]
   
     Commands:
   
@@ -26,7 +26,7 @@ The Ripple Gateway's features include:
       list_users             list registered users
       register_user <username> <password> <ripple_address> create a user with a ripple address
       
-    Usage: config [options] [command]
+    Usage: bin/config [options] [command]
     
     Options:
   
