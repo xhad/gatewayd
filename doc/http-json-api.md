@@ -1,4 +1,4 @@
-## HTTP / JSON API examples
+## Core HTTP/JSON API Calls
 
 ### Record Deposit
 
@@ -15,6 +15,7 @@
         "id": 157,
         "ripple_transaction_id": null
       }
+    }
 
 ### List Deposit Processing Queue
 
