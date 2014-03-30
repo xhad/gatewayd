@@ -15,7 +15,7 @@ The Ripple Gateway's features include:
   - gateway administration
   - federation protocol
 
-![](https://31.media.tumblr.com/8c2fb9e5a7ff0234c23718541c0ce0e0/tumblr_inline_n38fjucJcV1r3a3c5.jpg)
+![Ripple Gateway Process Diagram](https://s3.amazonaws.com/imagesz/ripple_gateway_diagram.jpg)
 
 The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 
 
