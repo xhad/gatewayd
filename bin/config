@@ -128,8 +128,8 @@ program
     });
 
 program
-  .command('set_cold_wallet <account>')
-  .description('set the gateway hot wallet')
+  .command('set_cold_wallet <address>')
+  .description('set the gateway cold wallet')
   .action(function(account){
     var key = 'gateway_cold_wallet';
     var cold_wallet = nconf.get(key);
