@@ -19,10 +19,7 @@ The Ripple Gateway's features include:
       list_incoming_payments  list unprocesses incoming ripple payments
       list_withdrawals       get pending withdrawals to external accounts
       clear_withdrawal <external_transaction_id> clear pending withdrawal to external account
-      refund_cold_wallet <amount> <currency> send back funds from the hot wallet to cold wallet
       fund_hot_wallet <amount> <currency> issue funds from cold wallet to hot wallet
-      set_trust <amount> <currency> set level of trust from hot to cold wallet
-      get_trust_lines        get the trust lines from hot wallet to cold wallet
       record_deposit <amount> <currency> <external_account_id> record a deposit in the deposit processing queue
       list_deposits          list deposits in the deposit processing queue
       list_outgoing_payments  list the outgoing ripple payments.
@@ -36,7 +33,7 @@ The Ripple Gateway's features include:
       -h, --help     output usage information
 
     Commands:
-  
+
       set_postgres_url <url> set the url of the postgres database
       get_postgres_url       get the url of the postgres database
       set_ripple_rest_url <url> set the url of the ripple rest api
@@ -54,9 +51,12 @@ The Ripple Gateway's features include:
       list_currencies        List all currencies supported by the gateway
       add_currency <currency> add support for a currency
       remove_currency <currency> remove support for a currency
+      set_trust <amount> <currency> set level of trust from hot to cold wallet
+      get_trust_lines        get the trust lines from hot wallet to cold wallet
       set_last_payment_hash <hash> set the last encountered payment hash for incoming processing.
       get_last_payment_hash  get the last encountered payment hash for incoming processing.
-  
+      refund_cold_wallet <amount> <currency> send back funds from the hot wallet to cold wallet
+    
     Options:
   
       -h, --help     output usage information

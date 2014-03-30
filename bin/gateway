@@ -137,21 +137,6 @@ function issueCurrency(amount, currency, secret, fn) {
 }
 
 program
-  .command('refund_cold_wallet <amount> <currency>')
-  .description('send back funds from the hot wallet to cold wallet')
-  .action(function(amount, currency) {
-    var opts = {
-      to_account: nconf.get('gateway_cold_wallet'),
-      from_account: nconf.get('gateway_hot_wallet').address,
-      amount: amount,
-      currency: currency,
-      issuer: nconf.get('gateway_cold_wallet'),
-      secret: nconf.get('gateway_hot_wallet').secret
-    }
-    sendCurrency(opts, get_and_print_trust_lines);
-  });
-
-program
   .command('fund_hot_wallet <amount> <currency>')
   .description('issue funds from cold wallet to hot wallet') 
   .action(function(amount, currency){
@@ -166,56 +151,6 @@ program
         }
       });
     });
-  });
-
-function setTrustLine(currency, amount, fn) {
-  trust({
-    currency: currency.toUpperCase(),
-    amount: amount,
-    issuer: nconf.get('gateway_cold_wallet'),
-    account: nconf.get('gateway_hot_wallet').address,
-    secret: nconf.get('gateway_hot_wallet').secret
-  }, fn);
-}
-
-program
-  .command('set_trust <amount> <currency>')
-  .description('set level of trust from hot to cold wallet') 
-  .action(function(amount, currency){
-    setTrustLine(currency, amount, function(err, resp){
-      get_and_print_trust_lines();
-    });
-  });
-
-function get_and_print_trust_lines() {
-  var hotWallet = nconf.get('gateway_hot_wallet').address;
-  var coldWallet = nconf.get('gateway_cold_wallet');
-  var opts = {
-    fromAccount: hotWallet,
-    toAccount: coldWallet 
-  };
-  getTrustLines(opts, function(err, lines) {
-    var table = new Table({
-      head: ['Account', 'Currency', 'Limit', 'Balance'],
-      colWidths: [40, 10, 20, 20]
-    });
-    _.each(lines, function(line) {
-      table.push([ 
-        line.account, 
-        line.currency, 
-        line.limit, 
-        line.balance
-      ]);
-    });
-    console.log(table.toString());
-  });
-}
-
-program
-  .command('get_trust_lines')
-  .description('get the trust lines from hot wallet to cold wallet')
-  .action(function() {
-    get_and_print_trust_lines();
   });
 
 
