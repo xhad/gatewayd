@@ -188,11 +188,9 @@ app.get('/api/v1/users', function(req, res) {
 app.post('/api/v1/users/login', function(req, res) {
   var name = req.body.name;
   var password = req.body.password;
+  var adminEmail = 'admin@' + nconf.get('domain');
 
-  if  (name == 'admin') {
-
-    console.log('password:', password);
-    console.log('key:', nconf.get('KEY'));
+  if  (name == adminEmail) {
 
     if (password == nconf.get('KEY')) {
       var user = {
