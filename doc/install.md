@@ -32,9 +32,10 @@ clone the project from github and install the package dependencies
 
     git clone https://github.com/ripple/ripple-gateway
     cd ripple-gateway
-    sudo npm install
     sudo npm install -g pg
     sudo npm install -g db-migrate
+    sudo npm install
+
 
 migrate the database to create gateway tables
 
