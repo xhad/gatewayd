@@ -78,12 +78,16 @@ A banking API integration or manual human gateway operator receives the deposit 
 API calls: record_deposit
 
 - Process 2: Deposit Business Logic
+    
+    node processes/deposits.js
 
 A newly recorded deposit is handed to the business logic, which performs some function, ultimately en-queuing a corresponding ripple payment. This process is designed to be modified and customized.
 
 API calls: list_deposits, enqueue_payment
 
 -  Process 3: Send Outgoing Ripple Payments
+
+    node processes/outgoing.js
 
 A payment record resulting from the deposit business logic process is sent to the Ripple REST server, ultimately propagating to the network. This process is standard and should not be modified.
 
@@ -93,11 +97,15 @@ API calls: send_payment
 
 - Process 1: Record inbound Ripple payments
 
+    node processes/incoming.js
+
 Poll the Ripple REST server for new payment notifications to the gateway, and record the incoming payments in the ripple gateway data store. This process is standard and should not be modified.
 
 API calls: get_payment_notification, record_payment
 
 - Process 2: Withdrawal Business Logic
+
+    node processes/withdrawals.js
 
 A newly recorded incoming ripple payment is handed to the business logic, which performs some function, ultimately en-queuing a corresponding asset withdrawal record. This process is designed to be modified and customized.
 
