@@ -97,9 +97,9 @@ API calls: send_payment
 
 - Process 1: Record inbound Ripple payments
 
-    node processes/incoming.js
-
 Poll the Ripple REST server for new payment notifications to the gateway, and record the incoming payments in the ripple gateway data store. This process is standard and should not be modified.
+
+    node processes/incoming.js
 
 API calls: get_payment_notification, record_payment
 
