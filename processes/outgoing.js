@@ -9,7 +9,6 @@ process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 function workJob() {
 
   gateway.payments.listOutgoing(function(err, transactions) {
-    console.log(transactions[0])
     if (!err) {
       var transaction = transactions[0];
       if (transaction) {
@@ -19,7 +18,6 @@ function workJob() {
               currency = transaction.to_currency;
 
           build_payment(address, amount, currency, function(err, payment) {
-            console.log('built payment');
 
             if (err) { 
               console.log(err);
