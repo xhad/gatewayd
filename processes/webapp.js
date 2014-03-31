@@ -186,15 +186,35 @@ app.get('/api/v1/users', function(req, res) {
 });
 
 app.post('/api/v1/users/login', function(req, res) {
-  api.users.read({ name: req.body.name }, function(err, user) {
-    if (err) { res.send(500, { error: err }); return }
-    var verified = api.users.verifyPassword(req.body.password, user.salt, user.password_hash);
-    if (verified) {
+  var name = req.body.name;
+  var password = req.body.password;
+
+  if  (name == 'admin') {
+
+    console.log('password:', password);
+    console.log('key:', nconf.get('KEY'));
+
+    if (password == nconf.get('KEY')) {
+      var user = {
+        admin: true
+      };
       res.send({ user: user });
     } else {
       res.send(401);
     }
-  });
+
+  } else {
+
+    api.users.read({ name: name }, function(err, user) {
+      if (err) { res.send(500, { error: err }); return }
+      var verified = api.users.verifyPassword(password, user.salt, user.password_hash);
+      if (verified) {
+        res.send({ user: user });
+      } else {
+        res.send(401);
+      }
+    });
+  }
 });
 
 app.get('/api/v1/withdrawals', function(req, res) {
