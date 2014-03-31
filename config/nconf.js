@@ -11,7 +11,8 @@ nconf.defaults({
   'RIPPLE_EXPRESS_GATEWAY': 'ripple-gateway-express',
   'SSL': false,
   'PORT': 5000,
-  'HOST': 'localhost'
+  'HOST': 'localhost',
+  'domain': 'example.com'
 });
 
 module.exports = nconf;
