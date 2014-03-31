@@ -1,0 +1,34 @@
+
+<div class='container'>
+<h1>Ripple Gateway Admin</h1>
+<hr/>
+
+<div class='row' col-md-12'>
+
+  <div class='col-md-3'>
+    <h4><a ng-href='/app#/deposits'>Deposit Processing Queue</a></h4>
+    <hr/>
+
+    <P>See deposit records recently made that will be soon handled by the deposit process.</p>
+    
+  </div>
+  <div class='col-md-3'>
+    <h4><a ng-href='/app#/payments/outgoing'>Outgoing Payment Sending Queue</a></h4>
+
+    <P>See ripple payments corresponding to recent asset deposits that are soon to be send to the Ripple network via Ripple REST.</p>
+
+  <hr/>
+  </div>
+  <div class='col-md-3'>
+    <h4><a ng-href='/app#/payments/incoming'>Incoming Payments Processing Queue</a></h4>
+    <p>See ripple payments coming from users to the gateway, to be processed for withdrawal of the corresponding asset.
+  <hr/>
+  </div>
+  <div class='col-md-3'>
+    <h4><a ng-href='/app#/withdrawals'>Withdrawals Processing Queue</a></h4>
+    <p>See a list of asset withdrawal requests, and clear the withdrawal once it is procces by your system.</p>
+  <hr/>
+  </div>
+
+</div>
+</div>
