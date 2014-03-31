@@ -260,7 +260,7 @@ program
       amount: amount,
       external_account_id: external_account_id
     }, function(err, deposit) {
-      console.log(err, deposit); 
+      printExternalTransactionsTable([deposit]);
     });
   });
 
