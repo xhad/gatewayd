@@ -127,6 +127,7 @@
         
         <!--user menu-->
         <div ng-show='user.isLogged' class="btn-group user-menu pull-right"> <a ng-click="user.logout()" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Logout</a> </div>
+        <div ng-show="user.isLogged && !user.isAdmin"><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Welcome, {{ user.name }}</a></div>
         <div ng-hide='user.isLogged' class="btn-group user-menu pull-right"> <a ng-href="/app#/login" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Login</a> </div>
         <div ng-hide='user.isLogged' class="btn-group user-menu pull-right"> <a ng-href="/app#/register" class="btn btn-primary dropdown-toggle login" data-toggle="modal">Register</a> </div>
         
@@ -143,11 +144,11 @@
                 <li role="presentation"><a role="menuitem" href="theme/contact.htm" tabindex="-1" class="menu-item">Contact</a></li>
               </ul>
             </li>
-            <li ng-show="user.isAdmin"><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
-            <li ng-show="user.isAdmin"><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
-            <li ng-hide="user.isAdmin"><a ng-href="/app#/withdraw" ng-class="{active: location.path() == '/withdraw'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdraw</a></li>
-            <li ng-hide="user.isAdmin"><a ng-href="/app#/deposit" ng-class="{active: location.path() == '/deposit'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Deposit</a></li>
-            <li ng-hide="user.isAdmin"><a ng-href="/app#/account" ng-class="{active: location.path() == '/account'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Account</a></li>
+            <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
+            <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/deposits" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Deposits</a></li>
+            <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
+            <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/payments/outgoing" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Outgoing Payments</a></li>
+            <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/payments/incoming" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Incoming Payments</a></li>
           </ul>
         </div>
         <!--/.navbar-collapse --> 
@@ -445,7 +446,32 @@
   }]);
 
   rippleGatewayApp.controller('LoginCtrl', ['$scope', 'UserService', '$location', function($scope, $user, $location) {
-    console.log('login controller');
+
+    $scope.login = function() {
+      var password = $scope.user.password;
+      var name = $scope.user.name;
+      $user.login(name, password, function(err, user) {
+        
+        if (err) {
+          console.log('error');
+        } else {
+          if (user) {
+            $user.isLogged = true; 
+            $user.password = password;
+            if (user.admin) {
+              $user.name = 'admin';
+              $user.isAdmin = true;
+              $location.path('/admin');
+            } else {
+              $user.name = user.name;
+              $user.id = user.id;
+              $user.isAdmin = false;
+              $location.path('/users/'+id);
+            }
+          }
+        } 
+      });
+    }
   }]);
 
   rippleGatewayApp.controller('UsersCtrl', ['$scope', '$http','$location', function($scope, $http, $location){
@@ -499,17 +525,32 @@
       });
     }
 
+    function loginUser(opts, fn) {
+      $http({ method: "POST", url: '/api/v1/users/login', data: opts })
+      .success(function(response, status, headers, config) {
+        fn(null, response.user);
+      })
+      .error(function(data, status, headers, config) {
+        fn(data, null);
+      });
+    }
+
     var user = { 
-      name: "username",
-      password: "password",
-      id: "23",
-      isLogged: true,
-      isAdmin: true,
+      name: "",
+      password: "",
+      id: "",
+      isLogged: false,
+      isAdmin: false,
       login: function(name, password, fn) {
-        alert('log in the user here');
+        loginUser({ name: name, password: password }, fn);
       },
       logout: function(fn) {
-        $location.path("/");
+        user.name = "";
+        user.password = "";
+        user.id = "";
+        user.isLogged = false;
+        user.isAdmin = false;
+        $location.path("/login");
       },
       register: function(opts, fn){
         registerUser({
@@ -527,6 +568,10 @@
     '$http', 
     '$location', 
     'UserService', function($scope, $http, $location, $user){
+
+
+    if (!$user.isAdmin) {  $location.path('/login') };
+
     $scope.path = function() {$location.path() };
     $scope.makeDeposit = function() {
       makeDeposit($scope, $http);
@@ -555,7 +600,7 @@
     });
 
     function getPendingWithdrawals() {
-      $http({method: 'GET', url: '/api/v1/withdrawals/pending'})
+      $http({method: 'GET', url: '/api/v1/withdrawals'})
       .success(function(response, status, headers, config) {
         $scope.loading = false;
         $(".throbber").hide(); 
@@ -582,6 +627,10 @@
   rippleGatewayApp.config(['$routeProvider',
     function($routeProvider) {
       $routeProvider.
+        when('/admin', {
+          controller: 'AdminCtrl',
+          templateUrl: 'partials/admin/index.html'
+        }).
         when('/account', {
           controller: 'AdminCtrl',
           templateUrl: 'partials/admin.html'
@@ -594,21 +643,21 @@
           controller: 'RegistrationCtrl',
           templateUrl: 'partials/register.html'
         }).
-        when('/withdraw', {
+        when('/deposits', {
           controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
+          templateUrl: 'partials/admin/deposits.html'
         }).
-        when('/deposit', {
+        when('/payments/outgoing', {
           controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
+          templateUrl: 'partials/admin/outgoing_payments.html'
         }).
-        when('/', {
+        when('/payments/incoming', {
           controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
+          templateUrl: 'partials/admin/incoming_payments.html'
         }).
         when('/withdrawals', {
           controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
+          templateUrl: 'partials/admin/withdrawals.html'
         }).
         when('/users', {
           controller: 'UsersCtrl',
@@ -618,12 +667,8 @@
           controller: 'UserCtrl',
           templateUrl: 'partials/user.html'
         }).
-        when('/admin', {
-          controller: 'AdminCtrl',
-          templateUrl: 'partials/admin.html'
-        }).
         otherwise({
-          redirectTo: '/'
+          redirectTo: '/login'
         });
       }]);
 
