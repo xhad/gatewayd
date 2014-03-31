@@ -79,17 +79,17 @@ API calls: record_deposit
 
 - Process 2: Deposit Business Logic
     
-    node processes/deposits.js
-
 A newly recorded deposit is handed to the business logic, which performs some function, ultimately en-queuing a corresponding ripple payment. This process is designed to be modified and customized.
+
+    node processes/deposits.js
 
 API calls: list_deposits, enqueue_payment
 
 -  Process 3: Send Outgoing Ripple Payments
 
-    node processes/outgoing.js
-
 A payment record resulting from the deposit business logic process is sent to the Ripple REST server, ultimately propagating to the network. This process is standard and should not be modified.
+
+    node processes/outgoing.js
 
 API calls: send_payment
 
@@ -105,9 +105,9 @@ API calls: get_payment_notification, record_payment
 
 - Process 2: Withdrawal Business Logic
 
-    node processes/withdrawals.js
-
 A newly recorded incoming ripple payment is handed to the business logic, which performs some function, ultimately en-queuing a corresponding asset withdrawal record. This process is designed to be modified and customized.
+
+    node processes/withdrawals.js
 
 API calls: enqueue_withdrawal
 
