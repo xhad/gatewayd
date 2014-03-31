@@ -594,6 +594,8 @@
     $scope.isHome = false;
     $('#highlighted').hide();
     $scope.pendingWithdrawals = [];
+    $scope.outgoingPayments = [];
+    $scope.queuedDeposits = [];
     $scope.currencies = [];
     getCurrencies($http, function(err, currencies) {
       $scope.currencies = currencies; 
@@ -611,7 +613,46 @@
       });
     }
 
+    function getOutgoingPayments() {
+      $http({method: 'GET', url: '/api/v1/payments/outgoing'})
+      .success(function(response, status, headers, config) {
+        $scope.loading = false;
+        $(".throbber").hide(); 
+        $scope.outgoingPayments = response.payments;
+      })
+      .error(function(data, status, headers, config) {
+        $(".throbber").hide(); 
+      });
+    }
+
+    function getQueuedDeposits() {
+      $http({method: 'GET', url: '/api/v1/deposits'})
+      .success(function(response, status, headers, config) {
+        $scope.loading = false;
+        $(".throbber").hide(); 
+        $scope.queuedDeposits = response.deposits;
+      })
+      .error(function(data, status, headers, config) {
+        $(".throbber").hide(); 
+      });
+    }
+
+    function getIncomingPayments() {
+      $http({method: 'GET', url: '/api/v1/payments/incoming'})
+      .success(function(response, status, headers, config) {
+        $scope.loading = false;
+        $(".throbber").hide(); 
+        $scope.incomingPayments = response.payments;
+      })
+      .error(function(data, status, headers, config) {
+        $(".throbber").hide(); 
+      });
+    }
+
+    getIncomingPayments();
     getPendingWithdrawals();
+    getOutgoingPayments();
+    getQueuedDeposits();
   }]);
 
   rippleGatewayApp.controller('MainCtrl', ['$scope', '$location', 'UserService', function($scope, $location, $user) {
