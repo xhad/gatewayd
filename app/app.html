@@ -144,6 +144,9 @@
                 <li role="presentation"><a role="menuitem" href="theme/contact.htm" tabindex="-1" class="menu-item">Contact</a></li>
               </ul>
             </li>
+            <li ng-show="user.isLogged && !user.isAdmin"><a ng-href="/app#/account" ng-class="{active: path == '/account'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Account</a></li>
+            <li ng-show="user.isLogged && !user.isAdmin"><a ng-href="/app#/deposit" ng-class="{active: path == '/deposit'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Deposit</a></li>
+            <li ng-show="user.isLogged && !user.isAdmin"><a ng-href="/app#/withdraw" ng-class="{active: path == '/withdraw'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdraw</a></li>
             <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/users" ng-class="{active: path == '/users'}"style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Users</a></li>
             <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/deposits" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Deposits</a></li>
             <li ng-show="user.isLogged && user.isAdmin"><a ng-href="/app#/withdrawals" ng-class="{active: location.path() == '/withdrawals'}" style='color:#ffffff; float:right;padding-top:18px;padding-right:30px;'>Withdrawals</a></li>
@@ -466,7 +469,7 @@
               $user.name = user.name;
               $user.id = user.id;
               $user.isAdmin = false;
-              $location.path('/users/'+id);
+              $location.path('/users/'+user.id);
             }
           }
         } 
@@ -561,6 +564,25 @@
       }
     };
     return user;
+  }]);
+
+  rippleGatewayApp.controller('AccountCtrl', [
+    '$scope', 
+    '$http', 
+    '$location', 
+    'UserService', function($scope, $http, $location, $user){
+    
+    if (!$user.isLogged) {  $location.path('/login') };
+    if ($user.isAdmin) {  $location.path('/admin') };
+
+    var userId = $user.id;
+    $scope.loading = true;  
+    $scope.externalTransactions = [];
+    getUserExternalTransactions($http, userId, function(err, transactions) {
+      $scope.loading = false;
+      $scope.externalTransactions = transactions;
+    });
+
   }]);
 
   rippleGatewayApp.controller('AdminCtrl', [
@@ -707,6 +729,18 @@
         when('/users/:id', {
           controller: 'UserCtrl',
           templateUrl: 'partials/user.html'
+        }).
+        when('/account', {
+          controller: 'AccountCtrl',
+          templateUrl: 'partials/user.html'
+        }).
+        when('/deposit', {
+          controller: 'AccountCtrl',
+          templateUrl: 'partials/user/deposit.html'
+        }).
+        when('/withdraw', {
+          controller: 'AccountCtrl',
+          templateUrl: 'partials/user/withdraw.html'
         }).
         otherwise({
           redirectTo: '/login'
