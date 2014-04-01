@@ -1,3 +1,39 @@
 <div class="container">
-  Withdrawal Address: {{ withdrawAddress }}
+
+  <div class="row">
+
+    <div class="col-sm-12">
+
+      <p style='font-size:130%'>
+        To withdraw funds from Ripple through the Gateway, send Gateway currencies to your custom destination tag at the Gateway Ripple address
+      </p>
+
+      <table>
+
+        <tr>
+          <td></td>
+          <td></td></tr>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <div class="col-sm-3">
+        <h4>Address</h4>
+        <h4>Destination Tag</h4>
+
+      </div>
+
+      <div class="col-sm-9">
+
+        <h4>{{ withdrawAddress.address }}<h4>
+        <h4>{{ withdrawAddress.tag }}<h4>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
