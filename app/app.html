@@ -595,7 +595,7 @@
             var address = rippleAddresses[i];
             console.log(address);
             if (!hostedAddress && address.type == "hosted") {
-              hostedAddress = address.address+'?dt='+address.tag;
+              hostedAddress = address;
             }
           }
           fn(null, hostedAddress);
