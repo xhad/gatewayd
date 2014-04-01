@@ -239,21 +239,21 @@ app.get('/api/v1/ripple_addresses', function(req, res) {
 app.get('/api/v1/users/:id/external_accounts', function(req, res) {
   api.externalAccounts.readAll({ user_id: req.params.id }, function(err, accounts) {
     if (err) { res.send(500, { error: err }); return; }
-    res.send({ ripple_accounts: accounts });
+    res.send({ external_accounts: accounts });
   });
 })
 
 app.get('/api/v1/users/:id/ripple_addresses', function(req, res) {
-  api.rippleAddresses.readAll({ user_id: req.params.id }, function(err, accounts) {
+  api.rippleAddresses.readAll({ user_id: req.params.id }, function(err, addresses) {
     if (err) { res.send(500, { error: err }); return; }
-    res.send({ ripple_accounts: accounts });
+    res.send({ ripple_addresses: addresses });
   });
 })
 
 app.get('/api/v1/external_accounts', function(req, res) {
   api.externalAccounts.readAll({}, function(err, accounts) {
     if (err) { res.send(500, { error: err }); return; }
-    res.send({ ripple_accounts: accounts });
+    res.send({ external_accounts: accounts });
   });
 });
 
