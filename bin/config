@@ -8,15 +8,9 @@ var _ = require('underscore-node');
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require('crypto');
-var spawn = require('child_process').spawn;
-var fs = require('fs');
-var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
 var ripple = require('../lib/remote');
-var Amount = require('ripple-lib').Amount;
-var api = require("ripple-gateway-data-sequelize-adapter");
-var abstract = require("../lib/abstract.js");
-var Table = require("cli-table");
 var gateway = require('../lib/gateway');
+var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
 program
   .version('0.0.1')
@@ -288,19 +282,7 @@ function get_and_print_trust_lines() {
     toAccount: coldWallet 
   };
   getTrustLines(opts, function(err, lines) {
-    var table = new Table({
-      head: ['Account', 'Currency', 'Limit', 'Balance'],
-      colWidths: [40, 10, 20, 20]
-    });
-    _.each(lines, function(line) {
-      table.push([ 
-        line.account, 
-        line.currency, 
-        line.limit, 
-        line.balance
-      ]);
-    });
-    console.log(table.toString());
+    PrettyPrintTable.trustLines(lines);
   });
 }
 
