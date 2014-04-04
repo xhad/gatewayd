@@ -1,20 +1,7 @@
 #!/usr/bin/env node
-var nconf = require('../config/nconf.js');
-process.env.DATABASE_URL = nconf.get('DATABASE_URL');
-var trust = require('../lib/trust.js');
-var _ = require('underscore-node');
 
 var program = require('commander');
-var RippleWallet = require('ripple-wallet').Ripple.Wallet;
-var crypto = require('crypto');
-var spawn = require('child_process').spawn;
-var fs = require('fs');
-var adapter = new require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
-var ripple = require('../lib/remote');
-var Amount = require('ripple-lib').Amount;
-var api = require("ripple-gateway-data-sequelize-adapter");
 var abstract = require("../lib/abstract.js");
-var Table = require("cli-table");
 var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
@@ -27,22 +14,13 @@ program
 
 program
   .command('list_incoming_payments')
-  .description('list unprocesses incoming ripple payments')
-  .action(function(){
-    gateway.payments.listIncoming(function(err, payments){
-      PrettyPrintTable.payments(payments || []);
-    }); 
-  });
+  .description('list incoming ripple payments in the queue to be processed')
+  .action(cli.listIncomingPayments);
 
 program
   .command('list_withdrawals')
   .description('get pending withdrawals to external accounts')
-  .action(function(account, secret){
-    api.externalTransactions.readAllPending(function(err, withdrawals) {
-      if (err) { console.log('failed'); return }
-      PrettyPrintTable.externalTransactions(withdrawals);
-    });
-  });
+  .action(cli.listWithdrawals);
 
 program
   .command('clear_withdrawal <external_transaction_id>')
@@ -58,52 +36,6 @@ program
   .command('fund_hot_wallet <amount> <currency> <secret>')
   .description('issue funds from cold wallet to hot wallet') 
   .action(cli.fundHotWallet);
-
-function setCurrency(currency, amount) {
-  var currency = currency.toUpperCase();
-  lookupRippleBalance(currency, function(err, balance) {
-    if (err) { fn(err, null); return; };
-    var currentAmount = balance.balance.toFloat();
-    var targetAmount = amount.toFloat();
-    if (currentAmount == targetAmount) { 
-      console.log('do nothing, trust is the same');
-    };
-    if (currentAmount > targetAmount) { 
-      console.log('decrease trust to '+targetAmount);
-    };
-    if (currentAmount < targetAmount) { 
-      console.log('increase trust to '+targetAmount);
-    };
-  });
-}
-
-function lookupRippleBalance(currency, fn){
-  lookupRippleBalances(nconf.get('gateway_hot_wallet').address,
-    nconf.get('gateway_cold_wallet'),
-    function(err, balances) {
-      if (err) { fn(err, null); return; };
-      fn(null, balances[currency.toUpperCase()]);
-    }
-  );
-};
-
-function lookupRippleBalances(hotWalletAddress, coldWalletAddress, fn) {
-  ripple.connect(function(){
-    ripple.request_account_lines(hotWalletAddress, function(err, resp) { 
-      if (err) { fn(err, null); return; };
-      var lines = {};
-      for (var i=0; i < resp.lines.length; i++){
-        if (resp.lines[i].account == coldWalletAddress) {
-          lines[resp.lines[i].currency] = {
-            balance: resp.lines[i].balance,
-            limit: resp.lines[i].limit
-          };
-        }
-      };
-      fn(null, lines);
-    });
-  });
-}
 
 program
   .command('record_deposit <amount> <currency> <external_account_id>')
