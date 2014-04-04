@@ -10,6 +10,13 @@ The Ripple Gateway's features include:
   - ripple payment sending and monitoring
   - gateway administration
 
+## Running the Ripple Gateway
+
+After installation, start the gateway processes by running the command:
+
+    bin/gateway start
+
+
 ## Command Line Interface
 
     Usage: bin/gateway [options] [command]

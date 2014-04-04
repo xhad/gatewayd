@@ -8,6 +8,7 @@ var clearWithdrawal = require('./clear_withdrawal');
 var recordDeposit = require('./record_deposit');
 var listDeposits = require('./list_deposits');
 var listOutgoingPayments = require('./list_outgoing_payments');
+var startGateway = require('./start_gateway');
 
 module.exports = {
   registerUser: registerUser,
@@ -18,6 +19,7 @@ module.exports = {
   clearWithdrawal: clearWithdrawal,
   recordDeposit: recordDeposit,
   listDeposits: listDeposits,
-  listOutgoingPayments: listOutgoingPayments
+  listOutgoingPayments: listOutgoingPayments,
+  startGateway: startGateway
 };
 

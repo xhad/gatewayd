@@ -51,5 +51,10 @@ program
   .description('create a user with a ripple address')
   .action(cli.registerUser);
 
+program
+  .command('start') 
+  .description('start the gateway and related processes')
+  .action(cli.startGateway);
+
 program.parse(process.argv);
 
