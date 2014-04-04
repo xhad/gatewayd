@@ -1,15 +1,10 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var gateway = require('../lib/gateway');
-var PrettyPrintTable = require('../lib/pretty_print_tables.js');
-
-var cli = require('../cli/index.js');
+var cli = require('../cli');
 
 program
-  .version('0.0.1')
-  .option('-i, --issuer', 'specify an issuer other than the cold wallet')
-  .option('-e, --env', 'specify the environment');
+  .version('0.1.0')
 
 program
   .command('list_incoming_payments')
@@ -39,20 +34,12 @@ program
 program
   .command('list_deposits')
   .description('list deposits in the deposit processing queue')
-  .action(function() {
-    gateway.deposits.listQueued(function(err, deposits) {
-      PrettyPrintTable.externalTransactions(deposits);
-    });
-  });
+  .action(cli.listDeposits);
 
 program
   .command('list_outgoing_payments')
   .description('list the outgoing ripple payments.')
-  .action(function(){
-    gateway.payments.listOutgoing(function(err, transactions) {
-      PrettyPrintTable.payments(transactions);
-    });
-  });
+  .action(cli.listOutgoingPayments);
 
 program
   .command('list_users')

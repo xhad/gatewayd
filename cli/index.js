@@ -6,6 +6,8 @@ var listIncomingPayments = require('./list_incoming_payments');
 var listWithdrawals = require('./list_withdrawals');
 var clearWithdrawal = require('./clear_withdrawal');
 var recordDeposit = require('./record_deposit');
+var listDeposits = require('./list_deposits');
+var listOutgoingPayments = require('./list_outgoing_payments');
 
 module.exports = {
   registerUser: registerUser,
@@ -14,6 +16,8 @@ module.exports = {
   listIncomingPayments: listIncomingPayments,
   listWithdrawals: listWithdrawals,
   clearWithdrawal: clearWithdrawal,
-  recordDeposit: recordDeposit
-}
+  recordDeposit: recordDeposit,
+  listDeposits: listDeposits,
+  listOutgoingPayments: listOutgoingPayments
+};
 
