@@ -2,7 +2,6 @@
 var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 var trust = require('../lib/trust.js');
-var getTrustLines = require('../lib/lines.js');
 var _ = require('underscore-node');
 
 var program = require('commander');
@@ -18,6 +17,7 @@ var abstract = require("../lib/abstract.js");
 var Table = require("cli-table");
 var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
+
 var cli = require('../cli/index.js');
 
 program
@@ -54,73 +54,10 @@ program
     }); 
   });
 
-function sendCurrency(opts, fn) {
-  var amount = opts.amount;
-  var currency = opts.currency;
-  var issuer = opts.issuer
-  var to_account = opts.to_account;
-  var from_account = opts.from_account;
-  var secret = opts.secret;
-
-  var human = amount+currency;
-
-  ripple.set_secret(from_account, secret);
-
-  ripple.connect(function(){
-    var amount = Amount.from_human(human);
-    amount.set_issuer(issuer);
-
-    var transaction = ripple.transaction();
-
-    transaction.payment({
-      from: from_account, 
-      to: to_account,
-      amount: amount
-    });
-
-    transaction.submit();
-    transaction.on('success', function(tx){
-      fn(null, tx);
-      ripple.disconnect();
-    })
-    transaction.on('error', function(err) {
-      fn(err, null);
-      ripple.disconnect();
-    });
-  });
-}
-
-function issueCurrency(amount, currency, secret, fn) {
-  var opts = {
-    to_account: nconf.get('gateway_hot_wallet').address,
-    from_account: nconf.get('gateway_cold_wallet'),
-    amount: amount,
-    currency: currency,
-    issuer: nconf.get('gateway_cold_wallet'),
-    secret: secret
-  }
-
-  sendCurrency(opts, fn);
-}
-
 program
-  .command('fund_hot_wallet <amount> <currency>')
+  .command('fund_hot_wallet <amount> <currency> <secret>')
   .description('issue funds from cold wallet to hot wallet') 
-  .action(function(amount, currency){
-    program.password('Cold Wallet Secret: ', function(secret){
-      process.stdin.destroy();
-
-      issueCurrency(amount, currency, secret, function(err, resp){
-        if (err || (resp.engine_result != 'tesSUCCESS')) {
-          console.log('error', err.engine_result);
-          get_and_print_trust_lines();
-        } else {
-          get_and_print_trust_lines();
-        }
-      });
-    });
-  });
-
+  .action(cli.fundHotWallet);
 
 function setCurrency(currency, amount) {
   var currency = currency.toUpperCase();
