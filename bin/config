@@ -2,7 +2,6 @@
 var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 var trust = require('../lib/trust.js');
-var getTrustLines = require('../lib/lines.js');
 var _ = require('underscore-node');
 
 var program = require('commander');
@@ -11,11 +10,16 @@ var crypto = require('crypto');
 var ripple = require('../lib/remote');
 var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
+var cli = require('../cli');
+
+var rippleAbstract = require('../lib/ripple_abstract');
+
 
 program
   .version('0.0.1')
   .option('-i, --issuer', 'specify an issuer other than the cold wallet')
   .option('-e, --env', 'specify the environment');
+
 
 program
   .command('set_postgres_url <url>')
@@ -106,6 +110,11 @@ program
         console.log('use npm gateway wallet:set:hot <address> <secret>');
       }
     });
+
+  program
+    .command('fund_hot_wallet <amount> <currency> <secret>')
+    .description('issue funds from cold wallet to hot wallet') 
+    .action(cli.fundHotWallet);
 
   program
     .command('get_hot_wallet_secret')
@@ -281,7 +290,7 @@ function get_and_print_trust_lines() {
     fromAccount: hotWallet,
     toAccount: coldWallet 
   };
-  getTrustLines(opts, function(err, lines) {
+  rippleAbstract.getTrustLines(opts, function(err, lines) {
     PrettyPrintTable.trustLines(lines);
   });
 }
