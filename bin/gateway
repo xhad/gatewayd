@@ -19,6 +19,8 @@ var Table = require("cli-table");
 var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
+var cli = require('../cli/index.js');
+
 program
   .version('0.0.1')
   .option('-i, --issuer', 'specify an issuer other than the cold wallet')
@@ -108,6 +110,7 @@ program
   .action(function(amount, currency){
     program.password('Cold Wallet Secret: ', function(secret){
       process.stdin.destroy();
+
       issueCurrency(amount, currency, secret, function(err, resp){
         if (err || (resp.engine_result != 'tesSUCCESS')) {
           console.log('error', err.engine_result);
@@ -213,23 +216,7 @@ program
 program
   .command('register_user <username> <password> <ripple_address>')
   .description('create a user with a ripple address')
-  .action(function(username, password, ripple_address){
-    var userParams = { 
-      name: username,
-      password: password,
-      ripple_address: ripple_address
-    };
-    abstract.registerUser(userParams, function(err, user) {
-      console.log();
-      console.log("### CREATED USER ###");
-      PrettyPrintTable.users([user]);
-      console.log("### CREATED RIPPLE ADDRESSES ###");
-      PrettyPrintTable.rippleAddresses([user.hosted_address, user.ripple_address]);
-      console.log("### CREATED EXTERNAL ACCOUNT ###");
-      PrettyPrintTable.externalAccounts([user.external_account]);
-      console.log();
-    });
-  });
+  .action(cli.registerUser);
 
 program.parse(process.argv);
 
