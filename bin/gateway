@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var abstract = require("../lib/abstract.js");
 var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
@@ -25,12 +24,7 @@ program
 program
   .command('clear_withdrawal <external_transaction_id>')
   .description('clear pending withdrawal to external account')
-  .action(function(id){
-    abstract.clearWithdrawal(id, function(err, withdrawal) {
-      if (err) { console.log('failed'); return }
-      PrettyPrintTable.externalTransactions([withdrawal]);
-    }); 
-  });
+  .action(cli.clearWithdrawal);
 
 program
   .command('fund_hot_wallet <amount> <currency> <secret>')
@@ -40,15 +34,7 @@ program
 program
   .command('record_deposit <amount> <currency> <external_account_id>')
   .description('record a deposit in the deposit processing queue')
-  .action(function(amount, currency, external_account_id) {
-    gateway.deposits.record({
-      currency: currency,
-      amount: amount,
-      external_account_id: external_account_id
-    }, function(err, deposit) {
-      PrettyPrintTable.externalTransactions([deposit]);
-    });
-  });
+  .action(cli.recordDeposit);
 
 program
   .command('list_deposits')
