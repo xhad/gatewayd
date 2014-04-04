@@ -50,8 +50,8 @@ var ssl = (nconf.get('SSL') && (nconf.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
-    key: fs.readFileSync('../certs/server.key'),
-    cert: fs.readFileSync('../certs/server.crt')
+    key: fs.readFileSync('./certs/server.key'),
+    cert: fs.readFileSync('./certs/server.crt')
   }, app);
 }
 

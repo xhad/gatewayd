@@ -1,6 +1,7 @@
 var abstract = require('./../../../lib/abstract');
 var nconf = require('./../../../config/nconf');
 var fs = require('fs');
+var api = require('ripple-gateway-data-sequelize-adapter');
 
 function registerUser(req, res) {
   abstract.registerUser(req.body, function(err, user){

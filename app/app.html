@@ -588,7 +588,7 @@
       console.log('getUserWithdrawalAddress');
       $http({ method: 'GET', url: "/api/v1/users/"+$user.id+"/ripple_addresses" })  
       .success(function(response, status, headers, config) {
-        var rippleAddresses = response.ripple_addresses;
+        var rippleAddresses = response.rippleAddresses;
         if (rippleAddresses) {
           var hostedAddress = null;  
           for (var i=0; i<rippleAddresses.length; i++) {

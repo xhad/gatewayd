@@ -20,9 +20,6 @@ function registerUser(username, password, rippleAddress){
     rippleAddress: rippleAddress
   };
 
-  console.log(username, password, rippleAddress);
-  console.log(gateway.users.register);
-
   gateway.users.register(opts, function(err, user) {
     console.log(err, user);
     console.log("### CREATED USER ###");

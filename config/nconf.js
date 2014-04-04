@@ -9,7 +9,7 @@ nconf.defaults({
   'DATABASE_URL': 'postgres://postgres:password@localhost:5432/ripple_gateway',
   'RIPPLE_DATAMODEL_ADAPTER': 'ripple-gateway-data-sequelize-adapter',
   'RIPPLE_EXPRESS_GATEWAY': 'ripple-gateway-express',
-  'SSL': false,
+  'SSL': true,
   'PORT': 5000,
   'HOST': 'localhost',
   'domain': 'example.com'

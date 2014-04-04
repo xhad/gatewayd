@@ -1,5 +1,7 @@
 
 var api = require('ripple-gateway-data-sequelize-adapter');
+var abstract = require('./../../../lib/abstract');
+var gateway = require('./../../../lib/gateway');
 
 function rippleAddresses(req, res) {
   api.rippleAddresses.readAll({}, function(err, addresses) {
