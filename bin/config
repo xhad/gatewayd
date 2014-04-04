@@ -12,6 +12,8 @@ var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 var cli = require('../cli');
 
+var api = require('ripple-gateway-data-sequelize-adapter');
+
 var rippleAbstract = require('../lib/ripple_abstract');
 
 
@@ -84,17 +86,37 @@ program
   program
     .command('set_hot_wallet <address> <secret>')
     .description('set the gateway hot wallet')
-    .action(function(address, secret){
-      var key = 'gateway_hot_wallet';
-      var key = 'gateway_hot_wallet';
-      nconf.set(key, {
-        address: address,
-        secret: secret
+    .action(function(rippleAddress, secret){
+
+      function setHotWallet(address) {
+        var key = 'gateway_hot_wallet';
+        nconf.set(key, {
+          address: address.address,
+          secret: secret,
+          id: address.id
+        });
+        nconf.save(function(){
+          hot_wallet = nconf.get(key);
+          console.log('set the hot wallet:', hot_wallet);
+        });
+      }
+
+      api.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
+        if (err) {
+          console.log(err, address);
+          api.rippleAddresses.create({
+            type: 'hot',
+            managed: true,
+            address: rippleAddress
+          }, function(err, address) {
+            console.log(err, address);
+            setHotWallet(address); 
+          });
+        } else {
+          setHotWallet(address); 
+        }
       });
-      nconf.save(function(){
-        hot_wallet = nconf.get(key);
-        console.log('set the hot wallet:', hot_wallet);
-      });
+
     });
 
   program
