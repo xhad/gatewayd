@@ -6,7 +6,8 @@ var processes = {
   deposits: 'processes/deposits',
   outgoing: 'processes/outgoing',
   incoming: 'processes/incoming',
-  withdrawals: 'processes/withdrawals'
+  withdrawals: 'processes/withdrawals',
+  ripple_rest: 'processes/ripple_rest'
 };
 
 function startGateway() {
