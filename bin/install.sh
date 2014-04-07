@@ -10,15 +10,15 @@ sudo apt-get -y update
 sudo apt-get -y install nodejs
 sudo apt-get -y install postgresql
 sudo apt-get -y install postgresql-client
+
 sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
 sudo -u postgres createdb ripple_gateway
 export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
-git clone https://github.com/stevenzeiler/ripple-gateway-api.git
-cd ripple-gateway-api
-sudo npm install
+
 sudo npm install -g pg
-sudo npm install -g db-migrate
+sudo npm install
 cd node_modules/ripple-gateway-data-sequelize-adapter
-db-migrate up --config config/database.json --migrations-dir db/migrations
+../db-migrate/bin/db-migrate up
 cd ../..
-node server.js
+bin/gateway start
+
