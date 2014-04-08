@@ -5,6 +5,8 @@ var coldWalletAddress = nconf.get('gateway_cold_wallet');
 var hot_wallet = nconf.get('gateway_hot_wallet');
 var sql = require('./node_modules/ripple-gateway-data-sequelize-adapter/lib/sequelize.js');
 
+var startGateway = require('./cli/start_gateway.js');
+
 /**
 * List Users
 *
@@ -317,6 +319,7 @@ function getHostedAddress(tag, fn) {
 module.exports = {
   data: api,
   config: nconf,
+  start: startGateway,
   users: {
     register: registerUser,
     list: listUsers,
