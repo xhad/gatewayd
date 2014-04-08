@@ -1,8 +1,6 @@
-var queue = require('../lib/withdrawal_payments_queue.js');
+var gateway = require('../');
 
-var config = require('../config/nconf.js');
-var abstract = require('../lib/abstract.js');
-var api = require("ripple-gateway-data-sequelize-adapter");
+var queue = require('../lib/withdrawal_payments_queue.js');
 var sql = require('../node_modules/ripple-gateway-data-sequelize-adapter/lib/sequelize.js');
 
 queue.on('payment:withdrawal', function(payment) {
@@ -11,7 +9,7 @@ queue.on('payment:withdrawal', function(payment) {
   console.log(payment.toJSON());
 
   
-  api.rippleAddresses.read(payment.from_address_id, function(err, address) {
+  gateway.data.rippleAddresses.read(payment.from_address_id, function(err, address) {
     
     if (err || !address) {
       console.log('no address found');
@@ -22,7 +20,7 @@ queue.on('payment:withdrawal', function(payment) {
       
     sql.transaction(function(t) {
 
-      api.externalTransactions.create({
+      gateway.data.externalTransactions.create({
         deposit: false,
         amount: payment.to_amount * 0.99,
         currency: payment.to_currency,
@@ -38,7 +36,7 @@ queue.on('payment:withdrawal', function(payment) {
           return;
         } 
         
-        api.rippleTransactions.update({
+        gateway.data.rippleTransactions.update({
           id: payment.id,
           transaction_state: 'tesSUCCESS'
         }, function(err, rippleTransaction) {

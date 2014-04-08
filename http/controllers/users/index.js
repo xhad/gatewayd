@@ -1,4 +1,4 @@
-var gateway = require('./../../../lib/gateway');
+var gateway = require('./../../../');
 
 function externalAccounts (req, res) {
   gateway.data.externalAccounts.readAll({ user_id: req.params.id }, function(err, accounts) {

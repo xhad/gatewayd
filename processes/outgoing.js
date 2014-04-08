@@ -1,16 +1,15 @@
+var gateway = require('../');
 
-var api = require('ripple-gateway-data-sequelize-adapter');
-var send = require("../lib/send_payment");
-var nconf = require("../config/nconf");
-var build_payment = require('../lib/build_payment');
-var gateway = require('../lib/gateway');
 var Client = require('ripple-rest-client');
 
-process.env.DATABASE_URL = nconf.get('DATABASE_URL');
+var send = require("../lib/send_payment");
+var build_payment = require('../lib/build_payment');
+
+process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 var client = new Client({
-    api: nconf.get('RIPPLE_REST_URL'),
-    account: nconf.get('gateway_hot_wallet').address,
+    api: gateway.config.get('RIPPLE_REST_URL'),
+    account: gateway.config.get('gateway_hot_wallet').address,
     secret: ''
 });
 
@@ -20,7 +19,7 @@ function processOutgoingPayment(callback) {
     if (!err) {
       var transaction = transactions[0];
       if (transaction) {
-        api.rippleAddresses.read(transaction.to_address_id, function(err, address) {
+        gateway.data.rippleAddresses.read(transaction.to_address_id, function(err, address) {
           var address = address.address,
               amount = transaction.to_amount,
               currency = transaction.to_currency;

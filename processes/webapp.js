@@ -1,14 +1,9 @@
-var nconf = require('../config/nconf.js');
-process.env.DATABASE_URL = nconf.get('DATABASE_URL');
+var gateway = require('../');
+process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 var express = require('express');
 var fs = require('fs');
 var https = require('https');
-var abstract = require("../lib/abstract.js");
-var gateway = require('../lib/gateway.js');
-
-var api = require(nconf.get('RIPPLE_DATAMODEL_ADAPTER'));
-var passport = require('../config/passport')(api);
 
 var userCtrl = require('../http/controllers/users');
 var adminCtrl = require('../http/controllers/admin');
@@ -46,7 +41,7 @@ app.get('/api/v1/payments/incoming', adminCtrl.incomingRipplePayments);
 app.post('/api/v1/withdrawals/:id/clear', adminCtrl.clearPendingWithdrawal);
 app.post('/api/v1/deposits', adminCtrl.recordDeposit);
 
-var ssl = (nconf.get('SSL') && (nconf.get('SSL') != 'false'));
+var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
@@ -55,10 +50,11 @@ if (ssl) {
   }, app);
 }
 
-var host = nconf.get('HOST');
-var port = nconf.get('PORT'); 
+var host = gateway.config.get('HOST');
+var port = gateway.config.get('PORT'); 
 var protocol = ssl ? 'https' : 'http'
 
 app.listen(port, host);
 
 console.log('Serving REST API and Angular WebApp at '+protocol+'://'+host+':'+port);
+

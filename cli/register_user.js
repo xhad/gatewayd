@@ -1,4 +1,4 @@
-var gateway = require("../lib/gateway.js");
+var gateway = require("../");
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
 /**

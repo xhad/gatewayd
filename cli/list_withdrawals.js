@@ -1,5 +1,4 @@
-var gateway = require("../lib/gateway.js");
-var api = require('ripple-gateway-data-sequelize-adapter');
+var gateway = require("../");
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 
 /**
@@ -9,7 +8,7 @@ var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 */
 
 function listWithdrawals(account, secret){
-  api.externalTransactions.readAllPending(function(err, withdrawals) {
+  gateway.data.externalTransactions.readAllPending(function(err, withdrawals) {
     if (err) { console.log('failed'); return }
     PrettyPrintTable.externalTransactions(withdrawals);
   });

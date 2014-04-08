@@ -1,18 +1,17 @@
-var queue = require('../lib/deposit_queue.js');
+var gateway = require('../');
 
-var config = require('../config/nconf.js');
-var api = require("ripple-gateway-data-sequelize-adapter");
+var queue = require('../lib/deposit_queue.js');
 var sql = require('../node_modules/ripple-gateway-data-sequelize-adapter/lib/sequelize.js');
-var gateway = require('../lib/gateway.js');
+
 
 queue.on('deposit', function(deposit) {
 
   sql.transaction(function(t) {
 
-    api.externalAccounts.read({ id: externalAccountId }, function(err, account) {
+    gateway.data.externalAccounts.read({ id: externalAccountId }, function(err, account) {
       if (err) { fn(err, null); return; };
 
-      api.rippleAddresses.read({ user_id: account.user_id }, function(err, addresses){
+      gateway.data.rippleAddresses.read({ user_id: account.user_id }, function(err, addresses){
         if (err && addresses[0]) {
 
           tx.rollback();

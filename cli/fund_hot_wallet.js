@@ -1,10 +1,10 @@
 var ripple = require('../lib/ripple_abstract/index.js');
-var nconf = require('../config/nconf.js');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
+var gateway = require('../');
 
 function get_and_print_trust_lines() {
-  var hotWallet = nconf.get('gateway_hot_wallet').address;
-  var coldWallet = nconf.get('gateway_cold_wallet');
+  var hotWallet = gateway.config.get('gateway_hot_wallet').address;
+  var coldWallet = gateway.config.get('gateway_cold_wallet');
   var opts = {
     fromAccount: hotWallet,
     toAccount: coldWallet
@@ -16,11 +16,11 @@ function get_and_print_trust_lines() {
 
 function issueCurrency(amount, currency, secret, fn) {
   var opts = {
-    to_account: nconf.get('gateway_hot_wallet').address,
-    from_account: nconf.get('gateway_cold_wallet'),
+    to_account: gateway.config.get('gateway_hot_wallet').address,
+    from_account: gateway.config.get('gateway_cold_wallet'),
     amount: amount,
     currency: currency,
-    issuer: nconf.get('gateway_cold_wallet'),
+    issuer: gateway.config.get('gateway_cold_wallet'),
     secret: secret
   }
 

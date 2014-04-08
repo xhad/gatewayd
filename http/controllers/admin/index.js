@@ -1,17 +1,14 @@
-
-var api = require('ripple-gateway-data-sequelize-adapter');
-var abstract = require('./../../../lib/abstract');
-var gateway = require('./../../../lib/gateway');
+var gateway = require('./../../../');
 
 function rippleAddresses(req, res) {
-  api.rippleAddresses.readAll({}, function(err, addresses) {
+  gateway.data.rippleAddresses.readAll({}, function(err, addresses) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ ripple_addresses: addresses });
   });
 };
 
 function externalAccounts(req, res) {
-  api.externalAccounts.readAll({}, function(err, accounts) {
+  gateway.data.externalAccounts.readAll({}, function(err, accounts) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ external_accounts: accounts });
   });
