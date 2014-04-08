@@ -2,20 +2,15 @@
 var nconf = require('../config/nconf.js');
 process.env.DATABASE_URL = nconf.get('DATABASE_URL');
 var trust = require('../lib/trust.js');
-var _ = require('underscore-node');
 
 var program = require('commander');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require('crypto');
-var ripple = require('../lib/remote');
-var gateway = require('../lib/gateway');
 var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 var cli = require('../cli');
-
-var api = require('ripple-gateway-data-sequelize-adapter');
-
 var rippleAbstract = require('../lib/ripple_abstract');
 
+var gateway = require('../lib/gateway');
 
 program
   .version('0.0.1')
@@ -101,10 +96,10 @@ program
         });
       }
 
-      api.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
+      gateway.data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
         if (err) {
           console.log(err, address);
-          api.rippleAddresses.create({
+          gateway.data.rippleAddresses.create({
             type: 'hot',
             managed: true,
             address: rippleAddress
