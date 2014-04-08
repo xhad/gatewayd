@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-var nconf = require('../config/nconf.js');
-process.env.DATABASE_URL = nconf.get('DATABASE_URL');
+process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 var trust = require('../lib/trust.js');
 
 var program = require('commander');
@@ -22,10 +21,10 @@ program
   .command('set_postgres_url <url>')
   .description('set the url of the postgres database')
   .action(function(url){
-    nconf.set('DATABASE_URL', url);
-    nconf.save(function (err) {
+    gateway.config.set('DATABASE_URL', url);
+    gateway.config.save(function (err) {
       console.log('set DATABASE_URL to:');
-      console.log(nconf.get('DATABASE_URL'));
+      console.log(gateway.config.get('DATABASE_URL'));
     });
   });
 
@@ -33,17 +32,17 @@ program
     .command('get_postgres_url')
     .description('get the url of the postgres database')
     .action(function(cmd){
-      console.log(nconf.get('DATABASE_URL'));
+      console.log(gateway.config.get('DATABASE_URL'));
     });
 
   program
     .command('set_ripple_rest_url <url>')
     .description('set the url of the ripple rest api')
     .action(function(url){
-      nconf.set('RIPPLE_REST_API', url);
-      nconf.save(function(err) {
+      gateway.config.set('RIPPLE_REST_API', url);
+      gateway.config.save(function(err) {
         console.log('set the ripple rest api url');
-        console.log(nconf.get('RIPPLE_REST_API'));
+        console.log(gateway.config.get('RIPPLE_REST_API'));
       });
     });
 
@@ -51,16 +50,16 @@ program
     .command('get_ripple_rest_url')
     .description('get the url of the ripple rest api')
     .action(function(cmd){
-      console.log(nconf.get('RIPPLE_REST_API'));
+      console.log(gateway.config.get('RIPPLE_REST_API'));
     });
 
   program
     .command('set_domain <domain>')
     .description('set the domain name of the gateway')
     .action(function(domain){
-      nconf.set('domain', domain);
-      nconf.save(function() {
-        console.log(nconf.get('domain'));
+      gateway.config.set('domain', domain);
+      gateway.config.save(function() {
+        console.log(gateway.config.get('domain'));
       });
     });
 
@@ -68,7 +67,7 @@ program
     .command('get_domain')
     .description('get the domain name of the gateway')
     .action(function(){
-      console.log(nconf.get('domain'));
+      console.log(gateway.config.get('domain'));
     });
 
   program
@@ -85,13 +84,13 @@ program
 
       function setHotWallet(address) {
         var key = 'gateway_hot_wallet';
-        nconf.set(key, {
+        gateway.config.set(key, {
           address: address.address,
           secret: secret,
           id: address.id
         });
-        nconf.save(function(){
-          hot_wallet = nconf.get(key);
+        gateway.config.save(function(){
+          hot_wallet = gateway.config.get(key);
           console.log('set the hot wallet:', hot_wallet);
         });
       }
@@ -119,7 +118,7 @@ program
     .description('get the address of the gateway hot wallet')
     .action(function(){
       var key = 'gateway_hot_wallet';
-      var hot_wallet = nconf.get(key);
+      var hot_wallet = gateway.config.get(key);
       if (hot_wallet) {
         console.log(hot_wallet.address);
       } else {
@@ -138,7 +137,7 @@ program
     .description('get the secret of the gateway hot wallet')
     .action(function(){
       var key = 'gateway_hot_wallet';
-      var hot_wallet = nconf.get(key);
+      var hot_wallet = gateway.config.get(key);
       if (hot_wallet) {
         console.log(hot_wallet.secret);
       } else {
@@ -152,13 +151,13 @@ program
   .description('set the gateway cold wallet')
   .action(function(account){
     var key = 'gateway_cold_wallet';
-    var cold_wallet = nconf.get(key);
+    var cold_wallet = gateway.config.get(key);
     if (cold_wallet) {
       console.log('cold wallet address already set:', cold_wallet);
     } else {
-      nconf.set(key, account);
-      nconf.save(function(){
-        cold_wallet = nconf.get(key);
+      gateway.config.set(key, account);
+      gateway.config.save(function(){
+        cold_wallet = gateway.config.get(key);
         console.log('set the cold wallet:', cold_wallet);
       });
     }
@@ -169,7 +168,7 @@ program
   .description('get the gateway cold wallet')
   .action(function(){
     var key = 'gateway_cold_wallet';
-    var cold_wallet = nconf.get(key);
+    var cold_wallet = gateway.config.get(key);
     if (cold_wallet) {
       console.log(cold_wallet);
     } else {
@@ -183,9 +182,9 @@ program
   .description('set the admin api key')
   .action(function(account, secret){
     var password = crypto.randomBytes(32).toString('hex');
-    nconf.set('KEY', password);
-    nconf.save(function(err){
-      console.log(nconf.get('KEY'));
+    gateway.config.set('KEY', password);
+    gateway.config.save(function(err){
+      console.log(gateway.config.get('KEY'));
     });
   });
 
@@ -194,14 +193,14 @@ program
   .command('get_key')
   .description('get the admin api key')
   .action(function(account, secret){
-    key = nconf.get('KEY'); 
+    key = gateway.config.get('KEY'); 
     if (key) {
-      console.log(nconf.get('KEY'));
+      console.log(gateway.config.get('KEY'));
     } else {
       var password = crypto.randomBytes(32).toString('hex');
-      nconf.set('KEY', password);
-      nconf.save(function(err){
-        console.log(nconf.get('KEY'));
+      gateway.config.set('KEY', password);
+      gateway.config.save(function(err){
+        console.log(gateway.config.get('KEY'));
       });
     }
   });
@@ -209,16 +208,16 @@ program
 function setCurrencyInNconf(currency, amount) {
     key = 'gateway_currencies';
     currency = currency.toUpperCase();
-    var currencies = nconf.get(key);
+    var currencies = gateway.config.get(key);
     if (!currencies) {
       currencies = {};
     }
     if (!currencies[currency]) {
       currencies[currency] = amount;  
     }
-    nconf.set(key, currencies);
-    nconf.save(function(){
-      console.log(nconf.get(key));
+    gateway.config.set(key, currencies);
+    gateway.config.save(function(){
+      console.log(gateway.config.get(key));
     });
 
 }
@@ -245,7 +244,7 @@ program
   .command('list_currencies')
   .description('List all currencies supported by the gateway')
   .action(function(currency){
-    var currencies = nconf.get('currencies') || {};
+    var currencies = gateway.config.get('currencies') || {};
     for (c in currencies) {
       console.log(c);
     }
@@ -255,12 +254,12 @@ program
   .command('add_currency <currency>')
   .description('add support for a currency') 
   .action(function(currency){
-    var currencies = nconf.get('currencies') || {};
+    var currencies = gateway.config.get('currencies') || {};
     if (!(currency in currencies)) {
       currencies[currency] = 0;
     }
-    nconf.set('currencies', currencies);
-    nconf.save(function(){
+    gateway.config.set('currencies', currencies);
+    gateway.config.save(function(){
       for (c in currencies) {
         console.log(c);
       }
@@ -271,10 +270,10 @@ program
   .command('remove_currency <currency>')
   .description('remove support for a currency')
   .action(function(currency){
-    var currencies = nconf.get('currencies') || {};
+    var currencies = gateway.config.get('currencies') || {};
     delete currencies[currency];
-    nconf.set('currencies', currencies);
-    nconf.save(function(){
+    gateway.config.set('currencies', currencies);
+    gateway.config.save(function(){
       for (c in currencies) {
         console.log(c);
       }
@@ -285,9 +284,9 @@ function setTrustLine(currency, amount, fn) {
   trust({
     currency: currency.toUpperCase(),
     amount: amount,
-    issuer: nconf.get('gateway_cold_wallet'),
-    account: nconf.get('gateway_hot_wallet').address,
-    secret: nconf.get('gateway_hot_wallet').secret
+    issuer: gateway.config.get('gateway_cold_wallet'),
+    account: gateway.config.get('gateway_hot_wallet').address,
+    secret: gateway.config.get('gateway_hot_wallet').secret
   }, fn);
 }
 
@@ -301,8 +300,8 @@ program
   });
 
 function get_and_print_trust_lines() {
-  var hotWallet = nconf.get('gateway_hot_wallet').address;
-  var coldWallet = nconf.get('gateway_cold_wallet');
+  var hotWallet = gateway.config.get('gateway_hot_wallet').address;
+  var coldWallet = gateway.config.get('gateway_cold_wallet');
   var opts = {
     fromAccount: hotWallet,
     toAccount: coldWallet 
@@ -324,8 +323,8 @@ program
   .command('set_last_payment_hash <hash>')
   .description('set the last encountered payment hash for incoming processing.')
   .action(function(hash) {
-    nconf.set('last_payment_hash', hash);
-    nconf.save(function(){
+    gateway.config.set('last_payment_hash', hash);
+    gateway.config.save(function(){
       console.log('set the last payment hash to', hash);
     });
   });
@@ -334,7 +333,7 @@ program
   .command('get_last_payment_hash')
   .description('get the last encountered payment hash for incoming processing.')
   .action(function() {
-    console.log(nconf.get('last_payment_hash'));
+    console.log(gateway.config.get('last_payment_hash'));
   });
 
 program
@@ -342,12 +341,12 @@ program
   .description('send back funds from the hot wallet to cold wallet')
   .action(function(amount, currency) {
     var opts = {
-      to_account: nconf.get('gateway_cold_wallet'),
-      from_account: nconf.get('gateway_hot_wallet').address,
+      to_account: gateway.config.get('gateway_cold_wallet'),
+      from_account: gateway.config.get('gateway_hot_wallet').address,
       amount: amount,
       currency: currency,
-      issuer: nconf.get('gateway_cold_wallet'),
-      secret: nconf.get('gateway_hot_wallet').secret
+      issuer: gateway.config.get('gateway_cold_wallet'),
+      secret: gateway.config.get('gateway_hot_wallet').secret
     }
     sendCurrency(opts, get_and_print_trust_lines);
   });
