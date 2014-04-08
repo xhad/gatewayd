@@ -2,10 +2,8 @@
   "name": "ripple-gateway",
   "version": "1.1.0",
   "scripts": {
-    "test": "mocha test/integration/"
-  },
-  "bin": {
-    "gateway": "./bin/gateway"
+    "test": "mocha test/integration/",
+    "start": "./bin/gateway start"
   },
   "dependencies": {
     "express": "3.x",
@@ -22,7 +20,7 @@
     "nconf": "~0.6",
     "commander": "2.1.0",
     "ripple-wallet": "",
-    "require-all":"",
+    "require-all": "",
     "ripple-gateway-express": "0.6.2",
     "ripple-gateway-data-sequelize-adapter": "0.5.8",
     "ripple-rest-client": "1.2.0",
@@ -31,7 +29,8 @@
     "cli-table": "0.3.0",
     "underscore-node": "0.1.2",
     "jbuilder": "",
-    "ripple-rest": "0.0.2"
+    "ripple-rest": "0.0.2",
+    "foreman": "^0.2.1"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
