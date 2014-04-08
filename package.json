@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "scripts": {
     "test": "mocha test/integration/",
     "start": "./bin/gateway start"
