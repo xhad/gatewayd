@@ -25,14 +25,14 @@ function pendingWithdrawals(req, res) {
 }
 
 function clearPendingWithdrawal(req, res) {
-  abstract.clearWithdrawal(req.params.id, function(err, withdrawal) {
+  gateway.withdrawals.clear(req.params.id, function(err, withdrawal) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ withdrawal: withdrawal });
   });
 }
 
 function users(req, res) {
-  abstract.getUserAccounts(function(err, users) {
+  gateway.users.listAccounts(function(err, users) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ users: users });
   });
