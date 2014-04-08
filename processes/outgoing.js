@@ -1,3 +1,4 @@
+
 var api = require('ripple-gateway-data-sequelize-adapter');
 var send = require("../lib/send_payment");
 var nconf = require("../config/nconf");
@@ -13,12 +14,6 @@ var client = new Client({
     secret: ''
 });
 
-function timeoutAndLoop() {
-  setTimeout(function(){ 
-    processOutgoingPayment(processOutgoingPayment);
-  }, 1000);
-}
-
 function processOutgoingPayment(callback) {
 
   gateway.payments.listOutgoing(function(err, transactions) {
@@ -30,60 +25,68 @@ function processOutgoingPayment(callback) {
               amount = transaction.to_amount,
               currency = transaction.to_currency;
 
-          console.log(address);
-          console.log(amount);
-          console.log(currency);
           build_payment(address, amount, currency, function(err, payment) {
 
             if (err) {
               console.log(err);
               if (err == 'No paths found') {
                 transaction.transaction_state = 'no_path_found';
-                timeoutAndLoop();
-                return;
+                setTimeout(function(){ 
+                  processOutgoingPayment(processOutgoingPayment);
+                }, 1000);
               } else {
-                timeoutAndLoop();
-                return;
+                setTimeout(function(){ 
+                  processOutgoingPayment(processOutgoingPayment);
+                }, 1000);
               }
-            }
-            send(payment, function(err, payment){
-                console.log('ERROR', err);
-              if (err) { 
-                timeoutAndLoop();
-                return;
-
-                if (payment.success) {
-                  transaction.transaction_state = 'sent';
-                  transaction.save().complete(function(){
-                    client.confimPayment(payment.client_resource_id, function(err, payment){
-
-                          if(err){
-                            console.log('error:', err);
-                            timeoutAndLoop();
-                            return;
-                          } else {
-                            transaction.transaction_hash = payment.hash;
-                            transaction.save();
-                            timeoutAndLoop();
-                              return
-                          }
-
-                      });
-                  });
+            } else {
+              send(payment, function(err, payment){
+                if (err) { 
+                  setTimeout(function(){ 
+                    processOutgoingPayment(processOutgoingPayment);
+                  }, 1000);
                 } else {
-                  timeoutAndLoop();
-                  return;
+
+                  if (payment.success) {
+                    transaction.transaction_state = 'sent';
+                    transaction.save().complete(function(){
+                      console.log(transaction);
+                      client.confirmPayment(payment.client_resource_id, function(err, payment){
+                            console.log(err, payment);
+                            if(err){
+                              console.log('error:', err);
+                              setTimeout(function(){ 
+                                processOutgoingPayment(processOutgoingPayment);
+                              }, 1000);
+                            } else {
+                              transaction.transaction_hash = payment.hash;
+                              transaction.save();
+                              setTimeout(function(){ 
+                                processOutgoingPayment(processOutgoingPayment);
+                              }, 1000);
+                            }
+
+                        });
+                    });
+                  } else {
+                    setTimeout(function(){ 
+                      processOutgoingPayment(processOutgoingPayment);
+                    }, 1000);
+                  }
                 }
-              }
-            });
-          
+              });
+            }
           });
         });
       } else {
-        timeoutAndLoop();
+        setTimeout(function(){ 
+          processOutgoingPayment(processOutgoingPayment);
+        }, 1000);
       }
     } else {
-      timeoutAndLoop();
+      setTimeout(function(){ 
+        processOutgoingPayment(processOutgoingPayment);
+      }, 1000);
     }
   });
 
@@ -92,4 +95,5 @@ function processOutgoingPayment(callback) {
 processOutgoingPayment(processOutgoingPayment);
 
 console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
+
 
