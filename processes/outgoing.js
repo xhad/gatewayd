@@ -8,7 +8,7 @@ var build_payment = require('../lib/build_payment');
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 var client = new Client({
-    api: gateway.config.get('RIPPLE_REST_URL'),
+    api: gateway.config.get('RIPPLE_REST_API'),
     account: gateway.config.get('gateway_hot_wallet').address,
     secret: ''
 });
