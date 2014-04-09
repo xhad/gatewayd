@@ -1,3 +1,4 @@
+
 var gateway = require('../');
 
 var Client = require('ripple-rest-client');
@@ -50,22 +51,9 @@ function processOutgoingPayment(callback) {
                     transaction.transaction_state = 'sent';
                     transaction.save().complete(function(){
                       console.log(transaction);
-                      client.confirmPayment(payment.client_resource_id, function(err, payment){
-                            console.log(err, payment);
-                            if(err){
-                              console.log('error:', err);
-                              setTimeout(function(){ 
-                                processOutgoingPayment(processOutgoingPayment);
-                              }, 1000);
-                            } else {
-                              transaction.transaction_hash = payment.hash;
-                              transaction.save();
-                              setTimeout(function(){ 
-                                processOutgoingPayment(processOutgoingPayment);
-                              }, 1000);
-                            }
-
-                        });
+                      setTimeout(function(){ 
+                        processOutgoingPayment(processOutgoingPayment);
+                      }, 1000);
                     });
                   } else {
                     setTimeout(function(){ 
@@ -91,8 +79,14 @@ function processOutgoingPayment(callback) {
 
 }
 
-processOutgoingPayment(processOutgoingPayment);
+setTimeout(function(){
+
+
+  processOutgoingPayment(processOutgoingPayment);
+
+}, 10000);
 
 console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
+
 
 
