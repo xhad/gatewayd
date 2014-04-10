@@ -1,5 +1,5 @@
-var gateway = require("../lib/gateway.js");
-var PrettyPrintTable = require('../lib/pretty_print_tables.js');
+var gateway = require(__dirname+'/../lib/gateway.js');
+var PrettyPrintTable = require(__dirname+'/../lib/pretty_print_tables.js');
 
 /**
 * List Users
