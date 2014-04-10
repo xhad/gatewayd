@@ -1,5 +1,5 @@
 
-var GatewayProcessManager = require("../lib/process_manager.js");
+var GatewayProcessManager = require(__dirname+'/../lib/process_manager.js');
 
 function startGateway() {
   

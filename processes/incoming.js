@@ -1,6 +1,6 @@
-var gateway = require('../');
+var gateway = require(__dirname+'/../');
 
-var Listener = require('../lib/listener.js');
+var Listener = require(__dirname+'/../lib/listener.js');
 
 var listener = new Listener();
 
