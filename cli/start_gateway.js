@@ -1,11 +1,10 @@
 
-var exec = require('child_process').exec;
+var GatewayProcessManager = require(__dirname+'/../lib/process_manager.js');
 
 function startGateway() {
-
-  foreman = exec('./node_modules/foreman/nf.js start');
-
-  foreman.stdout.on('data', console.log);
+  
+  processManager = new GatewayProcessManager();
+  processManager.start();
 
 }
 

@@ -26,7 +26,7 @@
 
 /************************************************/
 
-var DepositProcessor = require('../lib/deposit_processor.js');
+var DepositProcessor = require(__dirname+'/../lib/deposit_processor.js');
 
 depositProcessor = new DepositProcessor(function(deposit, fn) {
 
