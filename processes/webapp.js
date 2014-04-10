@@ -1,13 +1,13 @@
-var gateway = require('../');
+var gateway = require(__dirname + '/../');
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 var express = require('express');
 var fs = require('fs');
 var https = require('https');
 
-var userCtrl = require('../http/controllers/users');
-var adminCtrl = require('../http/controllers/admin');
-var publicCtrl = require('../http/controllers/public');
+var userCtrl = require(__dirname + '/../http/controllers/users');
+var adminCtrl = require(__dirname + '/../http/controllers/admin');
+var publicCtrl = require(__dirname + '/../http/controllers/public');
 
 app = express();
 
@@ -45,8 +45,8 @@ var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
-    key: fs.readFileSync('./certs/server.key'),
-    cert: fs.readFileSync('./certs/server.crt')
+    key: fs.readFileSync(__dirname + '/../certs/server.key'),
+    cert: fs.readFileSync(__dirname + '/../certs/server.crt')
   }, app);
 }
 

@@ -6,7 +6,11 @@ var databaseUrl = process.env.DATABASE_URL;
 
 process.env.DATABASE_URL = null;
 
-exec('cd ./node_modules/ripple-rest/ && node server.js', function(err, stdout, stderr) {
+var serverPath = __dirname + '/../node_modules/ripple-rest/';
+
+var command = 'cd '+ serverPath + ' && node server.js';
+
+exec(command, function(err, stdout, stderr) {
   if (err) {
     console.log(err);
   } else {
