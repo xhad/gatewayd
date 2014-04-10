@@ -1,6 +1,6 @@
 var ripple = require(__dirname+'/../lib/ripple_abstract/index.js');
 var PrettyPrintTable = require(__dirname+'/../lib/pretty_print_tables.js');
-var gateway = require(__dirname'/../');
+var gateway = require(__dirname+'/../');
 
 function get_and_print_trust_lines() {
   var hotWallet = gateway.config.get('gateway_hot_wallet').address;
