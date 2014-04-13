@@ -5,6 +5,11 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 
+var passportAuth = require(__dirname + '/../lib/passport_auth');
+var passport = require('passport');
+passport.use(passportAuth.adminBasic);
+passport.use(passportAuth.userBasic);
+
 var userCtrl = require(__dirname + '/../http/controllers/users');
 var adminCtrl = require(__dirname + '/../http/controllers/admin');
 var publicCtrl = require(__dirname + '/../http/controllers/public');
@@ -25,21 +30,29 @@ app.post('/api/v1/users/login', publicCtrl.loginUser);
 
 // USER
 
-app.get('/api/v1/users/:id/external_accounts', userCtrl.externalAccounts);
-app.get('/api/v1/users/:id/external_transactions', userCtrl.externalTransactions);
-app.get('/api/v1/users/:id/ripple_addresses', userCtrl.rippleAddresses);
+function userAuth() {
+  return passport.authenticate('userBasic', {session: false });
+}
+
+app.get('/api/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
+app.get('/api/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
+app.get('/api/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
 
 // ADMIN
 
-app.get('/api/v1/users', adminCtrl.users);
-app.get('/api/v1/ripple_addresses', adminCtrl.rippleAddresses);
-app.get('/api/v1/external_accounts', adminCtrl.externalAccounts);
-app.get('/api/v1/withdrawals', adminCtrl.pendingWithdrawals);
-app.get('/api/v1/deposits', adminCtrl.pendingDeposits);
-app.get('/api/v1/payments/outgoing', adminCtrl.outgoingRipplePayments);
-app.get('/api/v1/payments/incoming', adminCtrl.incomingRipplePayments);
-app.post('/api/v1/withdrawals/:id/clear', adminCtrl.clearPendingWithdrawal);
-app.post('/api/v1/deposits', adminCtrl.recordDeposit);
+function adminAuth() {
+  return passport.authenticate('adminBasic', {session: false });
+}
+
+app.get('/api/v1/users', adminAuth(), adminCtrl.users);
+app.get('/api/v1/ripple_addresses', adminAuth(), adminCtrl.rippleAddresses);
+app.get('/api/v1/external_accounts', adminAuth(), adminCtrl.externalAccounts);
+app.get('/api/v1/withdrawals', adminAuth(), adminCtrl.pendingWithdrawals);
+app.get('/api/v1/deposits', adminAuth(), adminCtrl.pendingDeposits);
+app.get('/api/v1/payments/outgoing', adminAuth(), adminCtrl.outgoingRipplePayments);
+app.get('/api/v1/payments/incoming', adminAuth(), adminCtrl.incomingRipplePayments);
+app.post('/api/v1/withdrawals/:id/clear', adminAuth(), adminCtrl.clearPendingWithdrawal);
+app.post('/api/v1/deposits', adminAuth(), adminCtrl.recordDeposit);
 
 var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
