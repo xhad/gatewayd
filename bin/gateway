@@ -1,7 +1,15 @@
 #!/usr/bin/env node
+var gateway = require('../');
+
+process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
+var trust = require('../lib/trust.js');
 
 var program = require('commander');
+var RippleWallet = require('ripple-wallet').Ripple.Wallet;
+var crypto = require('crypto');
+var PrettyPrintTable = require('../lib/pretty_print_tables.js');
 var cli = require('../cli');
+var rippleAbstract = require('../lib/ripple_abstract');
 
 program
   .version('0.1.0')
@@ -55,6 +63,340 @@ program
   .command('start') 
   .description('start the gateway and related processes')
   .action(cli.startGateway);
+
+program
+  .command('set_postgres_url <url>')
+  .description('set the url of the postgres database')
+  .action(function(url){
+    gateway.config.set('DATABASE_URL', url);
+    gateway.config.save(function (err) {
+      console.log('set DATABASE_URL to:');
+      console.log(gateway.config.get('DATABASE_URL'));
+    });
+  });
+
+  program
+    .command('get_postgres_url')
+    .description('get the url of the postgres database')
+    .action(function(cmd){
+      console.log(gateway.config.get('DATABASE_URL'));
+    });
+
+  program
+    .command('set_ripple_rest_url <url>')
+    .description('set the url of the ripple rest api')
+    .action(function(url){
+      gateway.config.set('RIPPLE_REST_API', url);
+      gateway.config.save(function(err) {
+        console.log('set the ripple rest api url');
+        console.log(gateway.config.get('RIPPLE_REST_API'));
+      });
+    });
+
+  program
+    .command('get_ripple_rest_url')
+    .description('get the url of the ripple rest api')
+    .action(function(cmd){
+      console.log(gateway.config.get('RIPPLE_REST_API'));
+    });
+
+  program
+    .command('set_domain <domain>')
+    .description('set the domain name of the gateway')
+    .action(function(domain){
+      gateway.config.set('domain', domain);
+      gateway.config.save(function() {
+        console.log(gateway.config.get('domain'));
+      });
+    });
+
+  program
+    .command('get_domain')
+    .description('get the domain name of the gateway')
+    .action(function(){
+      console.log(gateway.config.get('domain'));
+    });
+
+  program
+    .command('generate_wallet')
+    .description('generate a random ripple wallet')
+    .action(function(account, secret){
+      console.log(RippleWallet.generate());
+    });
+
+  program
+    .command('set_hot_wallet <address> <secret>')
+    .description('set the gateway hot wallet')
+    .action(function(rippleAddress, secret){
+
+      function setHotWallet(address) {
+        var key = 'gateway_hot_wallet';
+        gateway.config.set(key, {
+          address: address.address,
+          secret: secret,
+          id: address.id
+        });
+        gateway.config.save(function(){
+          hot_wallet = gateway.config.get(key);
+          console.log('set the hot wallet:', hot_wallet);
+        });
+      }
+
+      gateway.data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
+        if (err) {
+          console.log(err, address);
+          gateway.data.rippleAddresses.create({
+            type: 'hot',
+            managed: true,
+            address: rippleAddress
+          }, function(err, address) {
+            console.log(err, address);
+            setHotWallet(address); 
+          });
+        } else {
+          setHotWallet(address); 
+        }
+      });
+
+    });
+
+  program
+    .command('get_hot_wallet')
+    .description('get the address of the gateway hot wallet')
+    .action(function(){
+      var key = 'gateway_hot_wallet';
+      var hot_wallet = gateway.config.get(key);
+      if (hot_wallet) {
+        console.log(hot_wallet.address);
+      } else {
+        console.log('hot wallet not yet set');
+        console.log('use npm gateway wallet:set:hot <address> <secret>');
+      }
+    });
+
+  program
+    .command('fund_hot_wallet <amount> <currency> <secret>')
+    .description('issue funds from cold wallet to hot wallet') 
+    .action(cli.fundHotWallet);
+
+  program
+    .command('get_hot_wallet_secret')
+    .description('get the secret of the gateway hot wallet')
+    .action(function(){
+      var key = 'gateway_hot_wallet';
+      var hot_wallet = gateway.config.get(key);
+      if (hot_wallet) {
+        console.log(hot_wallet.secret);
+      } else {
+        console.log('hot wallet not yet set');
+        console.log('use npm gateway wallet:set:hot <address> <secret>');
+      }
+    });
+
+program
+  .command('set_cold_wallet <address>')
+  .description('set the gateway cold wallet')
+  .action(function(account){
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = gateway.config.get(key);
+    if (cold_wallet) {
+      console.log('cold wallet address already set:', cold_wallet);
+    } else {
+      gateway.config.set(key, account);
+      gateway.config.save(function(){
+        cold_wallet = gateway.config.get(key);
+        console.log('set the cold wallet:', cold_wallet);
+      });
+    }
+  });
+
+program
+  .command('get_cold_wallet')
+  .description('get the gateway cold wallet')
+  .action(function(){
+    var key = 'gateway_cold_wallet';
+    var cold_wallet = gateway.config.get(key);
+    if (cold_wallet) {
+      console.log(cold_wallet);
+    } else {
+      console.log('cold wallet not yet set');
+      console.log('use npm gateway wallet:set:cold <address>');
+    }
+  });
+
+program
+  .command('set_key')
+  .description('set the admin api key')
+  .action(function(account, secret){
+    var password = crypto.randomBytes(32).toString('hex');
+    gateway.config.set('KEY', password);
+    gateway.config.save(function(err){
+      console.log(gateway.config.get('KEY'));
+    });
+  });
+
+
+program
+  .command('get_key')
+  .description('get the admin api key')
+  .action(function(account, secret){
+    key = gateway.config.get('KEY'); 
+    if (key) {
+      console.log(gateway.config.get('KEY'));
+    } else {
+      var password = crypto.randomBytes(32).toString('hex');
+      gateway.config.set('KEY', password);
+      gateway.config.save(function(err){
+        console.log(gateway.config.get('KEY'));
+      });
+    }
+  });
+
+function setCurrencyInNconf(currency, amount) {
+    key = 'gateway_currencies';
+    currency = currency.toUpperCase();
+    var currencies = gateway.config.get(key);
+    if (!currencies) {
+      currencies = {};
+    }
+    if (!currencies[currency]) {
+      currencies[currency] = amount;  
+    }
+    gateway.config.set(key, currencies);
+    gateway.config.save(function(){
+      console.log(gateway.config.get(key));
+    });
+
+}
+
+function setCurrency(currency, amount) {
+  var currency = currency.toUpperCase();
+  lookupRippleBalance(currency, function(err, balance) {
+    if (err) { fn(err, null); return; };
+    var currentAmount = balance.balance.toFloat();
+    var targetAmount = amount.toFloat();
+    if (currentAmount == targetAmount) { 
+      console.log('do nothing, trust is the same');
+    };
+    if (currentAmount > targetAmount) { 
+      console.log('decrease trust to '+targetAmount);
+    };
+    if (currentAmount < targetAmount) { 
+      console.log('increase trust to '+targetAmount);
+    };
+  });
+}
+
+program
+  .command('list_currencies')
+  .description('List all currencies supported by the gateway')
+  .action(function(currency){
+    var currencies = gateway.config.get('currencies') || {};
+    for (c in currencies) {
+      console.log(c);
+    }
+  });
+
+program
+  .command('add_currency <currency>')
+  .description('add support for a currency') 
+  .action(function(currency){
+    var currencies = gateway.config.get('currencies') || {};
+    if (!(currency in currencies)) {
+      currencies[currency] = 0;
+    }
+    gateway.config.set('currencies', currencies);
+    gateway.config.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
+  });
+
+program
+  .command('remove_currency <currency>')
+  .description('remove support for a currency')
+  .action(function(currency){
+    var currencies = gateway.config.get('currencies') || {};
+    delete currencies[currency];
+    gateway.config.set('currencies', currencies);
+    gateway.config.save(function(){
+      for (c in currencies) {
+        console.log(c);
+      }
+    });
+  });
+
+function setTrustLine(currency, amount, fn) {
+  trust({
+    currency: currency.toUpperCase(),
+    amount: amount,
+    issuer: gateway.config.get('gateway_cold_wallet'),
+    account: gateway.config.get('gateway_hot_wallet').address,
+    secret: gateway.config.get('gateway_hot_wallet').secret
+  }, fn);
+}
+
+program
+  .command('set_trust <amount> <currency>')
+  .description('set level of trust from hot to cold wallet') 
+  .action(function(amount, currency){
+    setTrustLine(currency, amount, function(err, resp){
+      get_and_print_trust_lines();
+    });
+  });
+
+function get_and_print_trust_lines() {
+  var hotWallet = gateway.config.get('gateway_hot_wallet').address;
+  var coldWallet = gateway.config.get('gateway_cold_wallet');
+  var opts = {
+    fromAccount: hotWallet,
+    toAccount: coldWallet 
+  };
+  rippleAbstract.getTrustLines(opts, function(err, lines) {
+    PrettyPrintTable.trustLines(lines);
+  });
+}
+
+program
+  .command('get_trust_lines')
+  .description('get the trust lines from hot wallet to cold wallet')
+  .action(function() {
+    get_and_print_trust_lines();
+  });
+
+
+program
+  .command('set_last_payment_hash <hash>')
+  .description('set the last encountered payment hash for incoming processing.')
+  .action(function(hash) {
+    gateway.config.set('last_payment_hash', hash);
+    gateway.config.save(function(){
+      console.log('set the last payment hash to', hash);
+    });
+  });
+
+program
+  .command('get_last_payment_hash')
+  .description('get the last encountered payment hash for incoming processing.')
+  .action(function() {
+    console.log(gateway.config.get('last_payment_hash'));
+  });
+
+program
+  .command('refund_cold_wallet <amount> <currency>')
+  .description('send back funds from the hot wallet to cold wallet')
+  .action(function(amount, currency) {
+    var opts = {
+      to_account: gateway.config.get('gateway_cold_wallet'),
+      from_account: gateway.config.get('gateway_hot_wallet').address,
+      amount: amount,
+      currency: currency,
+      issuer: gateway.config.get('gateway_cold_wallet'),
+      secret: gateway.config.get('gateway_hot_wallet').secret
+    }
+    sendCurrency(opts, get_and_print_trust_lines);
+  });
 
 program.parse(process.argv);
 
