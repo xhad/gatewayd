@@ -1,6 +1,8 @@
 var gateway = require('./../../../');
 
 function externalAccounts (req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
+
   gateway.data.externalAccounts.readAll({ user_id: req.params.id }, function(err, accounts) {
     if (err) { res.send(500, { error: err }); return; }
     res.send({ externalAccounts: accounts });
@@ -8,6 +10,8 @@ function externalAccounts (req, res) {
 };
 
 function externalTransactions(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
+
   gateway.data.externalTransactions.forUser(req.params.id, function(err, transactions) {
     if (err) {
       res.send(500, { error: err });
@@ -18,6 +22,7 @@ function externalTransactions(req, res) {
 }
 
 function rippleAddresses(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
   gateway.data.rippleAddresses.readAll({ user_id: req.params.id }, function(err, addresses) {
     if (err) { res.send(500, { error: err }); return; }
@@ -27,22 +32,27 @@ function rippleAddresses(req, res) {
 };
 
 function ripplePayments(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
 }
 
 function pendingDeposits(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
 }
 
 function pendingWithdrawals(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
 }
 
 function completedDeposits(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
 }
 
 function completedWithdrawals(req, res) {
+  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
 }
 
