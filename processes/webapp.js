@@ -5,6 +5,11 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 
+var passportAuth = require(__dirname + '/../lib/passport_auth');
+var passport = require('passport');
+passport.use(passportAuth.adminBasic);
+passport.use(passportAuth.userBasic);
+
 var userCtrl = require(__dirname + '/../http/controllers/users');
 var adminCtrl = require(__dirname + '/../http/controllers/admin');
 var publicCtrl = require(__dirname + '/../http/controllers/public');
@@ -31,7 +36,11 @@ app.get('/api/v1/users/:id/ripple_addresses', userCtrl.rippleAddresses);
 
 // ADMIN
 
-app.get('/api/v1/users', adminCtrl.users);
+function adminAuth() {
+  return passport.authenticate('adminBasic', {session: false });
+}
+
+app.get('/api/v1/users', adminAuth(), adminCtrl.users);
 app.get('/api/v1/ripple_addresses', adminCtrl.rippleAddresses);
 app.get('/api/v1/external_accounts', adminCtrl.externalAccounts);
 app.get('/api/v1/withdrawals', adminCtrl.pendingWithdrawals);
