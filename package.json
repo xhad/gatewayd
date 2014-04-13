@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "scripts": {
     "start": "./bin/gateway start"
   },
@@ -28,9 +28,8 @@
     "cli-table": "0.3.0",
     "underscore-node": "0.1.2",
     "jbuilder": "",
-    "ripple-rest": "0.0.2",
-    "foreman": "^0.2.1",
-    "db-migrate": "^0.6.4"
+    "db-migrate": "^0.6.4",
+    "forever": ""
   },
   "devDependencies": {
     "mocha": "~1.14.0",
