@@ -28,17 +28,31 @@
 
 var DepositProcessor = require(__dirname+'/../lib/deposit_processor.js');
 
-depositProcessor = new DepositProcessor(function(deposit, fn) {
+var depositMiddleware;
 
-  var amount = deposit.amount * 0.98; // 2% deposit fee
-  
-  fn(null, {
-    to_address_id: deposit.to_address_id,
-    amount: amount,
-    currency: deposit.currency
-  });
-  
-});
+var middlewarePath = process.env.DEPOSIT_MIDDLEWARE;
+
+if (middlewarePath) {
+
+  depositMiddleware = require(middlewarePath);
+
+} else {
+
+  depositMiddleware = function(deposit, fn) {
+
+    var amount = deposit.amount * 0.98; // 2% deposit fee
+
+    fn(null, {
+      to_address_id: deposit.to_address_id,
+      amount: amount,
+      currency: deposit.currency
+    });
+
+  };
+
+}
+
+depositProcessor = new DepositProcessor(depositMiddleware);
 
 depositProcessor.start();
 
