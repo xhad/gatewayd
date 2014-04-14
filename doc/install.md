@@ -13,7 +13,7 @@ The following are for a clean build of Ubuntu 13.10. If you have any problems pl
     sudo add-apt-repository -y ppa:chris-lea/node.js
     sudo apt-get -y update
     sudo apt-get -y install nodejs
-    sudo apt-get -y postgresql
+    sudo apt-get -y install postgresql
     sudo apt-get -y install postgresql-client
 
 ### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)
@@ -44,8 +44,8 @@ migrate the database to create gateway tables
     db-migrate up
     cd ../..
     
-start the gateway rest api server
+start the gateway rest api server. The executable is located at ripple-gateway/bin/gateway:
 
-    node processes/webapp.js
+    bin/gateway start
 
 

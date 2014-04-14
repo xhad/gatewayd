@@ -1,5 +1,5 @@
 sudo apt-get -y update
-sudo apt-get -y git
+sudo apt-get -y install git
 sudo apt-get -y install python-software-properties
 sudo apt-get -y install python
 sudo apt-get -y install g++
@@ -15,10 +15,13 @@ sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with passw
 sudo -u postgres createdb ripple_gateway
 export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 
-sudo npm install -g pg
-sudo npm install
+sudo chown -R $USER /usr/lib/node_modules/
+npm install -g pg
+npm install
+npm install -g db-migrate
 cd node_modules/ripple-gateway-data-sequelize-adapter
-../db-migrate/bin/db-migrate up
-cd ../..
+db-migrate up
+cd ../../
+
 bin/gateway start
 
