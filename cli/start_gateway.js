@@ -1,10 +1,10 @@
 
 var GatewayProcessManager = require(__dirname+'/../lib/process_manager.js');
 
-function startGateway() {
+function startGateway(opts) {
   
   processManager = new GatewayProcessManager();
-  processManager.start();
+  processManager.start(opts);
 
 }
 
