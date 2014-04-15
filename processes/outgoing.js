@@ -12,6 +12,25 @@ var client = new Client({
     secret: ''
 });
 
+var middleware;
+var middlewarePath = process.env.PAYMENT_SENT_MIDDLEWARE;
+
+if (middlewarePath) {
+
+  middleware = require(middlewarePath);
+
+} else {
+
+  middleware = function(payment, fn){
+
+    console.log('payment sent');
+    console.log(payment.to_amount, payment.to_currency);
+    fn();
+
+  };
+
+};
+
 function processOutgoingPayment(callback) {
 
   gateway.payments.listOutgoing(function(err, transactions) {
@@ -48,10 +67,15 @@ function processOutgoingPayment(callback) {
                   if (payment.success) {
                     transaction.transaction_state = 'sent';
                     transaction.save().complete(function(){
-                      console.log(transaction);
-                      setTimeout(function(){ 
-                        processOutgoingPayment(processOutgoingPayment);
-                      }, 1000);
+
+                      middleware(payment, function() {
+
+                        console.log(transaction);
+                        setTimeout(function(){ 
+                          processOutgoingPayment(processOutgoingPayment);
+                        }, 1000);
+                      
+                      });
                     });
                   } else {
                     setTimeout(function(){ 
