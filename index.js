@@ -1,9 +1,9 @@
 var nconf = require(__dirname + '/config/config.js');
-var api = require("ripple-gateway-data-sequelize-adapter");
+var api = require("ripple-gateway-data-sequelize");
 
 var coldWalletAddress = nconf.get('gateway_cold_wallet');
 var hot_wallet = nconf.get('gateway_hot_wallet');
-var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize-adapter/lib/sequelize.js');
+var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
 
 var startGateway = require(__dirname +'/cli/start_gateway.js');
 

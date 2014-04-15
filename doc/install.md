@@ -32,15 +32,18 @@ clone the project from github and install the package dependencies
 
     git clone https://github.com/ripple/ripple-gateway
     cd ripple-gateway
-    sudo npm install -g pg
-    sudo npm install -g db-migrate
-    sudo npm install
 
+    npm install -g pg
+
+    sudo npm install -g db-migrate
+    sudo npm install -g forever
+
+    npm install
 
 migrate the database to create gateway tables
 
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
-    cd node_modules/ripple-gateway-data-sequelize-adapter
+    cd node_modules/ripple-gateway-data-sequelize
     db-migrate up
     cd ../..
     
