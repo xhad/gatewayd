@@ -16,12 +16,15 @@ sudo -u postgres createdb ripple_gateway
 export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 
 sudo chown -R $USER /usr/lib/node_modules/
+
 npm install -g pg
-npm install
 npm install -g db-migrate
-cd node_modules/ripple-gateway-data-sequelize-adapter
+npm install -g forever
+
+npm install
+
+cd node_modules/ripple-gateway-data-sequelize
 db-migrate up
 cd ../../
 
 bin/gateway start
-
