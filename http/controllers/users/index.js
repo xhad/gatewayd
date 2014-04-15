@@ -31,45 +31,21 @@ function rippleAddresses(req, res) {
 
 };
 
-function ripplePayments(req, res) {
+function rippleTransactions(req, res) {
   if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
 
-}
-
-function pendingDeposits(req, res) {
-  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
-
-}
-
-function pendingWithdrawals(req, res) {
-  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
+  gateway.data.rippleTransactions.forUser(req.user.id, function(err, rippleTransactions) {
+    if (err) { res.send(500, { error: err }); return; }
+    res.send(200, { rippleTransactions: rippleTransactions });
+  });
 
 }
-
-function completedDeposits(req, res) {
-  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
-
-}
-
-function completedWithdrawals(req, res) {
-  if (parseInt(req.params.id) != parseInt(req.user.id)) { res.send(401); return; }
-
-}
-
 
 var controller = {
-  external_payments: {
-
-  }, 
-  ripple_payments: {
-
-  },
   externalAccounts: externalAccounts,
   externalTransactions: externalTransactions,
   rippleAddresses: rippleAddresses,
-  user: {
-
-  } 
+  rippleTransactions: rippleTransactions
 };
 
 module.exports = controller;

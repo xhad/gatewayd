@@ -413,9 +413,21 @@
   function getUserExternalTransactions(http, userId, fn) {
     http.get('/api/v1/users/'+userId+'/external_transactions')
     .success(function(response, status, headers, config) {
-      fn(null, response.external_transactions);
+      fn(null, response.externalTransactions);
     })
     .error(function(data, status, headers, config) {
+      fn(data, null);
+    });
+  }
+
+  function getUserRippleTransactions(http, userId, fn) {
+    http.get('/api/v1/users/'+userId+'/ripple_transactions')
+    .success(function(response, status, headers, config) {
+      console.log(response);
+      fn(null, response.rippleTransactions);
+    })
+    .error(function(data, status, headers, config) {
+      console.log(data);
       fn(data, null);
     });
   }
@@ -427,6 +439,11 @@
     getUserExternalTransactions($http, userId, function(err, transactions) {
       $scope.loading = false;
       $scope.externalTransactions = transactions;
+    });
+
+    getUserRippleTransactions($http, userId, function(err, transactions) {
+      $scope.loading = false;
+      $scope.rippleTransactions = transactions;
     });
   }]);
 
@@ -578,9 +595,15 @@
     var userId = $user.id;
     $scope.loading = true;  
     $scope.externalTransactions = [];
+    $scope.rippleTransactions = [];
     getUserExternalTransactions($http, userId, function(err, transactions) {
       $scope.loading = false;
       $scope.externalTransactions = transactions;
+    });
+
+    getUserRippleTransactions($http, userId, function(err, transactions) {
+      $scope.loading = false;
+      $scope.rippleTransactions = transactions;
     });
 
     $scope.withdrawAddress = [];

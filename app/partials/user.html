@@ -3,8 +3,8 @@
   <img class='throbber' ng-show='loading' src='/images/ripple_throbber.png'/>
 </div>
 
-<div class='col-sm-12' ng-hide='loading'>
-<h4 class="margin-top-large">Deposits & Withdrawals</h4>
+<div class='col-sm-6' ng-hide='loading'>
+<h4 class="margin-top-large">External Transactions</h4>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -22,6 +22,28 @@
         <td>{{ transaction.amount }}</td>
         <td>{{ transaction.deposit }}</td>
         <td>{{ transaction.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class='col-sm-6' ng-hide='loading'>
+<h4 class="margin-top-large">Ripple Transactions</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>currency</th>
+        <th>amount</th>
+        <th>status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="transaction in rippleTransactions">
+        <td>{{ transaction.id }}</td>
+        <td>{{ transaction.to_currency }}</td>
+        <td>{{ transaction.to_amount }}</td>
+        <td>{{ transaction.transaction_state }}</td>
       </tr>
     </tbody>
   </table>

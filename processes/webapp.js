@@ -37,6 +37,7 @@ function userAuth() {
 app.get('/api/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
 app.get('/api/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
 app.get('/api/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
+app.get('/api/v1/users/:id/ripple_transactions', userAuth(), userCtrl.rippleTransactions);
 
 // ADMIN
 
