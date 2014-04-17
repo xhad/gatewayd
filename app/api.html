@@ -37,88 +37,33 @@
       </tr>
     </thead>
     <tbody>
-          <tr>
-            <td><a href='/doc/users/create.html'>POST /api/v1/users</a></td>
-            <td width="60%">Create a new user at this gateway.</td>
-          </tr>
-            <form method='post' action='/api/v1/users'>
-            <td>username <input name='name' /></td>
-            <td>password <input name='password' />
-              <input type='submit'>
-            </td>
-            </form>
-          <tr>
-            <td><a href='/doc/users/show.html'>GET /api/v1/users/:userId/gateway_account</a></td>
-            <td width="60%">Get the user's account.</td>
-          </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a>
-      User Sessions
-    </a><br>
-    <small>Sign in a user and use the cookie token to interact with the api on their behalf</small>
-  </h2>
-  <table class="table">
-    <thead>
       <tr>
-        <th>Resource</th>
-        <th>Description</th>
+        <td><a href='/doc/users/create.html'>POST /api/v1/users</a></td>
+        <td width="60%">Create a new user at this gateway.</td>
       </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a href='/doc/users/create.html'>POST /api/v1/sessions</a></td>
-            <td width="60%">Create a user session</td>
-          </tr>
-          <tr>
-            <form method='post' action='/api/v1/sessions'>
-            <td>username <input name='name' /></td>
-            <td>password <input name='password' />
-              <input type='submit'>
-            </td>
-            </form>
-          </tr>
-          <tr>
-            <td><a href='/doc/users/show.html'>GET /api/v1/sessions</a></td>
-            <td width="60%">Get the current session</td>
-          </tr>
-          <tr>
-            <td><a href='/doc/users/show.html'>POST /api/v1/sessions/destroy</a></td>
-            <td width="60%">Clear the current user session
-
-            <form method='post' action='/api/v1/sessions/destroy'>
-            <input type='submit'>
-            </form>
-          </td>
-          </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a>
-      Gateway Accounts
-    </a><br>
-    <small>Create a new gateway account, which can be associated with a user, ripple addresses, and balances.</small>
-  </h2>
-  <table class="table">
-    <thead>
       <tr>
-        <th>Resource</th>
-        <th>Description</th>
+        <td><a href='/doc/users/list.html'>GET /api/v1/users</td>
+        <td width="60%">List user records.</td>
       </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td><a href='/doc/gateway_accounts/create.html'>POST /api/v1/users/:userId/gateway_accounts</a></td>
-            <td width="60%">Create a new gateway account given a user id</td>
-          </tr>
+      <tr>
+        <td><a href='/doc/users/show.html'>GET /api/v1/users/:id</a></td>
+        <td width="60%">Get a user record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/users/show.html'>PUT /api/v1/users/:id</a></td>
+        <td width="60%">Update a user record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/users/show.html'>DELETE /api/v1/users/:id</a></td>
+        <td width="60%">Delete a user record.</td>
+      </tr>
     </tbody>
   </table>
   <h2>
     <a>
-      Gateway Balances
+      ExternalAccounts
     </a><br>
-    <small>Resource to check on user balances in various currencies with the gateway</small>
+    <small>Bank Accounts and integrations are stored as External Accounts</small>
   </h2>
   <table class="table">
     <thead>
@@ -129,16 +74,32 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="/doc/gateway_balances/account.html">GET /api/v1/accounts/:accountId/balances</a></td>
-        <td width="60%">Get the balances for a gateway account</td>
+        <td><a href='/doc/external_accounts/create.html'>POST /api/v1/external_accounts</a></td>
+        <td width="60%">Create a new external account given a user id</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/external_accounts/list.html'>GET /api/v1/external_accounts</a></td>
+        <td width="60%">List external accounts</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/external_accounts/show.html'>GET /api/v1/external_accounts/:id</a></td>
+        <td width="60%">Show a single external account record</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/external_accounts/update.html'>PUT /api/v1/external_accounts/:id</a></td>
+        <td width="60%">Update an external account record</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/external_accounts/delete.html'>DELETE /api/v1/external_accounts/:id</a></td>
+        <td width="60%">Delete an external account record</td>
       </tr>
     </tbody>
   </table>
   <h2>
     <a>
-      Gateway Transactions
+      External Transactions
     </a><br>
-    <small>List gateway transactions made at this gateway</small>
+    <small>List external transactions made to an external account.</small>
   </h2>
   <table class="table">
     <thead>
@@ -149,18 +110,30 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href="/doc/gateway_transactions/account.html">GET /api/v1/gateway/accounts/:accountId/transactions</a></td>
-        <td width="60%">Show gateway transactions from a specific account</td>
+        <td><a href="/doc/external_transactions/create.html">POST /api/v1/external_transactions</a></td>
+        <td width="60%">Create an external transaction</td>
       </tr>
       <tr>
-        <td><a href="/doc/gateway_transactions/show.html">GET /api/v1/gateway/transactions/:id</a></td>
-        <td width="60%">Show a single gateway transaction</td>
+        <td><a href="/doc/external_transactions/list.html">GET /api/v1/external_transactions</a></td>
+        <td width="60%">Show external transactions</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/external_transactions/show.html">GET /api/v1/external_transactions/:id</a></td>
+        <td width="60%">Show a single external transaction</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/external_transactions/update.html">PUT /api/v1/external_transactions/:id</a></td>
+        <td width="60%">Update a single external transaction</td>
+      </tr>
+      <tr>
+        <td><a href="/doc/external_transactions/delete.html">DELETE /api/v1/external_transactions/:id</a></td>
+        <td width="60%">Delete a single external transaction</td>
       </tr>
     </tbody>
   </table>
   <h2>
     <a>
-      Gateway Deposits
+      Deposits
     </a><br>
     <small>List bank transactions made at this gateway</small>
   </h2>
@@ -180,7 +153,7 @@
   </table>
   <h2>
     <a>
-      Gateway Withdrawals
+      Withdrawals
     </a><br>
     <small>List bank transactions made at this gateway</small>
   </h2>
