@@ -201,12 +201,24 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href='/doc/ripple_addresses/account.html'>GET /api/v1/accounts/:account_id/ripple_addresses</a></td>
-        <td width="60%">Get the ripple address for a gateway account</td>
+        <td><a href='/doc/ripple_addresses/create.html'>POST /api/v1/ripple_addresses</a></td>
+        <td width="60%">Create a Ripple Address Record</td>
       </tr>
       <tr>
-        <td><a href='/doc/ripple_addresses/associate_account.html'>POST /api/v1/accounts/:account_id/ripple_addresses/:ripple_address</a></td>
-        <td width="60%">Associate a ripple address with a gateway account</td>
+        <td><a href='/doc/ripple_addresses/list.html'>GET /api/v1/ripple_addresses</a></td>
+        <td width="60%">List Ripple Addresses</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_addresses/show.html'>GET /api/v1/ripple_addresses/:id</a></td>
+        <td width="60%">Show a Ripple Addresses record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_addresses/update.html'>PUT /api/v1/ripple_addresses/:id</a></td>
+        <td width="60%">Update a Ripple Addresses record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_addresses/delete.html'>GET /api/v1/ripple_addresses/:id</a></td>
+        <td width="60%">Delete a Ripple Addresses record.</td>
       </tr>
     </tbody>
   </table>
@@ -225,58 +237,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><a href='/doc/ripple_transactions/address.html'>GET /api/v1/ripple_addresses/:address/ripple_transactions</a></td>
-        <td width="60%">Get all rippple transactions for a ripple address<td>
+        <td><a href='/doc/ripple_transactions/create.html'>POST /api/v1/ripple_transactions</a></td>
+        <td width='60%'>Create a ripple transaction record.</td>
       </tr>
       <tr>
-        <td><a href='/doc/ripple_transactions/show.html'>GET /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
-        <td width='60%'>Get any given ripple transaction by id</td>
+        <td><a href='/doc/ripple_transactions/index.html'>GET /api/v1/ripple_transactions/:id</a></td>
+        <td width="60%">List rippple transactions<td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_transactions/show.html'>GET /api/v1/ripple_transactions/:id</a></td>
+        <td width='60%'>Get a ripple transaction record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_transactions/update.html'>PUT /api/v1/ripple_transactions/:id</a></td>
+        <td width='60%'>Update a ripple transaction record.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/ripple_transactions/delete.html'>DELETE /api/v1/ripple_transactions/:id</a></td>
+        <td width='60%'>Delete a ripple transaction record.</td>
       </tr>
     </tbody>
   </table>
-  <h2>
-    <a>
-      Ripple Deposits
-    </a><br>
-    <small>Send funds into the gateway from outside the ripple network</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a href='/doc/ripple_deposits/create.html'>POST /api/v1/ripple_addresses/:address/deposits</a></td>
-        <td width="60%">Create a deposit into a gateway account</td>
-      </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a>
-      Ripple Withdrawals
-    </a><br>
-    <small>List Ripple Transaction Withdrawals</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a href='/doc/ripple_withdrawals/create.html'>POST /api/v1/ripple_addresses/:address/withdrawals</a></td>
-        <td width="60%">Create a withdrawal from a gateway account to the ripple account.</td>
-      </tr>
-      <tr>
-        <td><a href='/doc/ripple_withdrawals/update.html'>PUT /api/v1/ripple_transactions/:ripple_transaction_id</a></td>
-        <td>Update a withdrawal with its status from the ripple payment service.</td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
 </section>
