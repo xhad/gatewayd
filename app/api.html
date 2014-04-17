@@ -13,16 +13,51 @@
 <script type="text/javascript" async="" src="apidocs_files/embed.js"></script></head>
 <body>
   <div class="container">
-    <ul class="breadcrumb">
-  <li class="active"><a href="apidocs_files/apidocs.html">API Home 1.0</a></li>
-</ul>
 
 <div class="row" style='padding:0em 1em 1em 1em'>
 
-<div><h1 class="page-header">Ripple Gateway Accounts API Reference</h1>
-<section style='padding:2em; border:1px solid #bbb;'>
-  <h2 style='text-align:center'>Gateway</h2>
-
+<div><h1 style='text-align:center'class="page-header">Ripple Gateway API Reference</h1>
+<section style='padding:2em;'>
+  <h2>
+    <a> 
+      Core API Calls
+    </a><br>
+    <small>An integrator with ripple-gateway needs to focus on their particular banking integration, which means primarily making api calls for deposits and withdrawals. Also they will want to be able to track the state of deposits and withdrawals as they are processed and ultimately sent to the ripple network.</small>
+  </h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href='/doc/deposits/record.html'>POST /api/v1/deposits</a></td>
+        <td width="60%">Record the deposit of an asset at this gateway.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/deposits/record.html'>GET /api/v1/deposits</a></td>
+        <td width="60%">List pending deposits in the queue to be processed.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/withdrawals/pending.html'>GET /api/v1/withdrawals/pending</a></td>
+        <td width="60%">Listing pending withdrawals waiting to be processed.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/withdrawals/clear.html'>POST /api/v1/withdrawals/:id/clear</a></td>
+        <td width="60%">Clear a pending withdrawal upon processing it.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/payments/outgoing.html'>GET /api/v1/payments/outgoing</a></td>
+        <td width="60%">Listing pending outgoing payments to the ripple network.</td>
+      </tr>
+      <tr>
+        <td><a href='/doc/payments/incoming.html'>GET /api/v1/payments/incoming</a></td>
+        <td width="60%">Listing received ripple payments in the queue to be processed.</td>
+      </tr>
+    </tbody>
+  </table>
   <h2>
     <a>
       Users
@@ -131,61 +166,6 @@
       </tr>
     </tbody>
   </table>
-  <h2>
-    <a>
-      Deposits
-    </a><br>
-    <small>List bank transactions made at this gateway</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a href="/doc/gateway_deposits/create.html">POST /api/v1/gateway/accounts/:accountId/deposit</a></td>
-        <td width="60%">Record a deposit into the gateway from outside ripple network</td>
-      </tr>
-    </tbody>
-  </table>
-  <h2>
-    <a>
-      Withdrawals
-    </a><br>
-    <small>List bank transactions made at this gateway</small>
-  </h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Resource</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a href="/doc/gateway_withdrawals/create.html">POST /api/v1/gateway/accounts/:accountId/withdrawal</a></td>
-        <td width="60%">Create a withdrawal request out of the gateway to outside the ripple network</td>
-      </tr>
-      <tr>
-        <td><a href="/doc/gateway_withdrawals/pending.html">GET /api/v1/gateway/withdrawals/pending</a></td>
-        <td width="60%">Show all pending withdrawal requests</td>
-      </tr>
-      <tr>
-        <td><a href="/doc/gateway_withdrawals/accept.html">PUT /api/v1/gateway/withdrawals/:id/accept</a></td>
-        <td width="60%">After disbursing funds outside the ripple network, mark the withdrawal as successful and remove from the pending queue</td>
-      </tr>
-      <tr>
-        <td><a href="/doc/gateway_withdrawals/reject.html">PUT /api/v1/gateway/withdrawals/:id/reject</a></td>
-        <td width="60%">Reject a withdrawal request, destroying the gateway transaction record</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-<section style='padding:2em; border:1px solid #bbb;'>
-  <h2 style='text-align:center'>Ripple</h2>
   <h2>
     <a href="">
       Ripple Addresses
