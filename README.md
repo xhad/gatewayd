@@ -1,7 +1,7 @@
 ## Gateway API Server
 
 This software is a database-backed web server that serves as a
-back end for Ripple Gateway applications. A HTTP/JSON erver, Javascript library, and CLI are provided as interfaces to a deployed gateway.
+back end for Ripple Gateway applications. A HTTP/JSON server, Javascript library, and CLI are provided as interfaces to a deployed gateway.
 
 The Ripple Gateway's features include: 
   - user registration 
@@ -9,6 +9,13 @@ The Ripple Gateway's features include:
   - issuing currency
   - ripple payment sending and monitoring
   - gateway administration
+
+## Installation
+
+The gateway server software requires git, g++, make, nodejs, postgres, and several npm modules.
+
+- Compresensive [installation script](./doc/install.md) for Ubuntu
+- Installation Instructions for [Mac OSX and Linux]
 
 ## Running the Ripple Gateway
 
@@ -280,9 +287,4 @@ API calls: list_withdrawals, clear_withdrawal
 3. [Ripple REST API](https://github.com/ripple/ripple-rest.git)
   - The Ripple REST API provides a simplified HTTP/JSON interface to all the Ripple protocol network operations, such as payments and other transactions.
 
-## Installation
-
-The gateway server software requires git, g++, make, nodejs, postgres, and several npm modules.
-
-- Detailed [installation instructions](./doc/install.md) for Ubuntu 13.10
 
