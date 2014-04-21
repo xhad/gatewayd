@@ -1,13 +1,12 @@
 var gateway = require(__dirname+'/../');
 
-var queue = require(__dirname+'/../lib/withdrawal_payments_queue.js');
+var queue = require(__dirname+'/../lib/queues/withdrawal_processor.js');
 var sql = require(__dirname+'/../node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
 
 queue.on('payment:withdrawal', function(payment) {
 
   console.log('received a new payment event');
   console.log(payment.toJSON());
-
   
   gateway.data.rippleAddresses.read(payment.from_address_id, function(err, address) {
     
