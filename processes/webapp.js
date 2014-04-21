@@ -59,9 +59,10 @@ var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
-    key: fs.readFileSync(__dirname + '/../certs/server.key'),
-    cert: fs.readFileSync(__dirname + '/../certs/server.crt')
+    key: fs.readFileSync('/etc/ssl/certs/server.key'),
+    cert: fs.readFileSync('/etc/ssl/certs/server.crt')
   }, app);
+  console.log('SSL enabled');
 }
 
 var host = gateway.config.get('HOST');
