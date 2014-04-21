@@ -10,6 +10,8 @@ nconf.defaults({
   'RIPPLE_DATAMODEL_ADAPTER': 'ripple-gateway-data-sequelize',
   'RIPPLE_EXPRESS_GATEWAY': 'ripple-gateway-express',
   'SSL': true,
+  'SSL_KEY_PATH': __dirname+'/../certs/server.key',
+  'SSL_CERTIFICATE_PATH': __dirname+'/../certs/server.crt',
   'PORT': 5000,
   'HOST': 'localhost',
   'domain': 'example.com'
