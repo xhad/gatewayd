@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head><script type="text/javascript">var NREUMQ=NREUMQ||[];NREUMQ.push(["mark","firstbyte",new Date().getTime()]);</script>
+  <title>API documentation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link type="text/css" rel="stylesheet" href="/apidocs_files/bootstrap.min.css">
+
+<link type="text/css" rel="stylesheet" href="/apidocs_files/prettify.css">
+<!-- Theme style 
+<link type="text/css" rel="stylesheet" href="/apidocs_files/bootstrap-responsive.min.css">
+-->
+<link href="/theme/css/theme-style.min.css" rel="stylesheet">
+
+<!--Your custom colour override-->
+<link href="/theme/css/colour-blue.css" id="colour-scheme" rel="stylesheet">
+
+<!-- Your custom override -->
+<link href="/theme/css/custom-style.css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="/apidocs_files/application.css">
+
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <ul class='breadcrumb'>
+  <li>
+    <a href='/'>API Home 1.0</a>
+    <span class='divider'>/</span>
+  </li>
+  <li>
+    <a>
+      Deposits
+    </a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>list</li>
+</ul>
+
+  <div class='page-header'>
+    <h1>
+      GET /api/v1/deposits<br>
+      <small>List pending deposits in the queue to be processed.</small>
+    </h1>
+  </div>
+
+<div>
+
+  <p>Upon recording a deposit in Ripple Gateway it will be given a status of "pending". A process will then pick up the pending deposit and enqueue it to be sent to the ripple network and ultimately to your user's ripple wallet. You may provide custom business logic for how the deposit is processed.</p>
+
+    <h2>Examples</h2>
+      <pre class="prettyprint">
+# Request
+GET /api/v1/deposits
+
+# Response
+{
+  "deposits": [
+    {
+      "id": 783835;,
+      "amount": 1000;,
+      "currency": "MXN",
+      "external_account_id": 998,
+      "uid": 12344lkjdikek,
+      "status": "pending",
+      "created_at": "2005-10-30 T 10:45 UTC"
+    },
+    {
+      "id": 383883;,
+      "amount": 500;,
+      "currency": "ARS",
+      "external_account_id": 3777,
+      "uid": kdkijij3993f92,
+      "status": "pending",
+      "created_at": "2007-11-09 T 11:20 UTC"
+    }
+  ]
+}
+  </pre>
+
+
+</div>
+
+
+    <hr>
+    <footer>
+</footer>
+  </div>
+  <script type='text/javascript' src='/api/doc/javascripts/bundled/jquery-1.7.2.js'></script>
+<script type='text/javascript' src='/api/doc/javascripts/bundled/bootstrap-collapse.js'></script>
+<script type='text/javascript' src='/api/doc/javascripts/bundled/prettify.js'></script>
+<script type='text/javascript' src='/api/doc/javascripts/apipie.js'></script></body>
+</html>
+
