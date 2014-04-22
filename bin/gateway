@@ -5,7 +5,6 @@ process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 var trust = require(__dirname+'/../lib/ripple/trust.js');
 
 var program = require('commander');
-var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require('crypto');
 var PrettyPrintTable = require(__dirname+'/../lib/views/text/index.js');
 var cli = require(__dirname+'/../lib/cli');
@@ -121,7 +120,7 @@ program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
     .action(function(account, secret){
-      console.log(RippleWallet.generate());
+      console.log(gateway.rippleAddresses.generate());
     });
 
   program

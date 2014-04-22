@@ -1,11 +1,9 @@
-var nconf = require(__dirname + '/config/config.js');
-var api = require("ripple-gateway-data-sequelize");
-
-var coldWalletAddress = nconf.get('gateway_cold_wallet');
-var hot_wallet = nconf.get('gateway_hot_wallet');
+var config = require(__dirname + '/config/config.js');
+var data = require("ripple-gateway-data-sequelize");
 var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
 
-var startGateway = require(__dirname +'/lib/cli/start_gateway.js');
+var RippleWallet = require('ripple-wallet').Ripple.Wallet;
+var GatewayProcessManager = require(__dirname+'/lib/processes/');
 
 /**
 * List Users
@@ -14,7 +12,7 @@ var startGateway = require(__dirname +'/lib/cli/start_gateway.js');
 */
 
 function listUsers(fn) { 
-  api.users.readAll(fn);
+  data.users.readAll(fn);
 }
 
 /**
@@ -29,7 +27,7 @@ function clearWithdrawal(id, fn) {
     id: id, 
     status: "cleared"
   };  
-  api.externalTransactions.update(opts, fn);
+  data.externalTransactions.update(opts, fn);
 }
 
 /**
@@ -48,7 +46,7 @@ function registerUser(opts, fn) {
     name: opts.name,
     password: opts.password
   };  
-  api.users.create(userOpts, function(err, user) {
+  data.users.create(userOpts, function(err, user) {
     if (err) { fn(err, null); return; }
     var addressOpts = { 
       user_id: user.id,
@@ -56,18 +54,18 @@ function registerUser(opts, fn) {
       managed: false,
       type: "independent"
     };  
-    api.rippleAddresses.create(addressOpts, function(err, ripple_address) {
+    data.rippleAddresses.create(addressOpts, function(err, ripple_address) {
       if (err) { fn(err, null); return; };
-      api.externalAccounts.create({ name: "default", user_id: user.id }, function(err, account){
+      data.externalAccounts.create({ name: "default", user_id: user.id }, function(err, account){
         if (err) { fn(err, null); return; }
         var addressOpts = { 
           user_id: user.id,
-          address: coldWalletAddress,
+          address: config.get('COLD_WALLET'),
           managed: true,
           type: "hosted",
           tag: account.id
         };  
-        api.rippleAddresses.create(addressOpts, function(err, hosted_address) {
+        data.rippleAddresses.create(addressOpts, function(err, hosted_address) {
           var response = user.toJSON();
           response.ripple_address = ripple_address;
           response.external_account = account;
@@ -91,7 +89,7 @@ function registerUser(opts, fn) {
 
 function recordDeposit(opts, fn) {
 
-  api.externalTransactions.create({
+  data.externalTransactions.create({
     external_account_id: opts.external_account_id,
     currency: opts.currency,
     amount: opts.amount,
@@ -112,7 +110,7 @@ function recordDeposit(opts, fn) {
 
 function finalizeDeposit(opts, fn) {
 
-  api.externalTransactions.update({ 
+  data.externalTransactions.update({ 
     id: opts.id,
     ripple_transaction_id: opts.ripple_transaction_id,
     status: "processed"
@@ -129,7 +127,7 @@ function finalizeDeposit(opts, fn) {
 
 function listQueuedDeposits(fn) {
 
-  api.externalTransactions.readAll({
+  data.externalTransactions.readAll({
     deposit: true,
     status: 'queued'
   }, fn);
@@ -148,15 +146,15 @@ function listQueuedDeposits(fn) {
 
 function enqueueOutgoingPayment(opts, fn) {
  
-  api.rippleTransactions.create({
+  data.rippleTransactions.create({
     to_amount: opts.amount,
     to_currency: opts.currency,
-    to_issuer: coldWalletAddress,
+    to_issuer: config.get('COLD_WALLET'),
     from_amount: opts.amount,
     from_currency: opts.currency,
-    from_issuer: coldWalletAddress,
+    from_issuer: config.get('COLD_WALLET'),
     to_address_id: opts.to_address_id,
-    from_address_id: nconf.get('gateway_hot_wallet').id,
+    from_address_id: config.get('HOT_WALLET').id,
     transaction_state: 'outgoing'
   }, fn);
     
@@ -171,7 +169,7 @@ function enqueueOutgoingPayment(opts, fn) {
 
 function listOutgoingPayments(fn) {
 
-  api.rippleTransactions.readAll({ transaction_state: 'outgoing' }, fn);
+  data.rippleTransactions.readAll({ transaction_state: 'outgoing' }, fn);
 
 }
 
@@ -184,7 +182,7 @@ function listOutgoingPayments(fn) {
 
 function listIncomingPayments(fn) {
 
-  api.rippleTransactions.readAll({ transaction_state: 'incoming' }, fn);
+  data.rippleTransactions.readAll({ transaction_state: 'incoming' }, fn);
 
 }
 
@@ -192,7 +190,7 @@ function recordIncomingNotification(opts, fn) {
 
   if (opts.transaction_state == 'tesSUCCESS') {
     opts.transaction_state = 'incoming';
-    api.rippleTransactions.create(opts, fn);
+    data.rippleTransactions.create(opts, fn);
   } else {
     fn('state not tesSUCCESS', null);
   }
@@ -214,13 +212,13 @@ function recordIncomingNotification(opts, fn) {
 function recordIncomingPayment(destinationTag, currency, amount, state, hash, fn) {
   getHostedAddress(destinationTag, function(err, address) {
     if (err && fn) { fn(err, null); return; };
-    api.rippleTransactions.create({
+    data.rippleTransactions.create({
         to_amount: amount,
         to_currency: currency,
-        to_issuer: coldWalletAddress,
+        to_issuer: config.get('COLD_WALLET'),
         to_amount: amount,
         to_currency: currency,
-        to_issuer: coldWalletAddress,
+        to_issuer: config.get('COLD_WALLET'),
         from_address_id: address.id,
         to_address_id: '0',
         transaction_state: state,
@@ -236,7 +234,7 @@ function recordIncomingPayment(destinationTag, currency, amount, state, hash, fn
 
 function recordOutgoingNotification(opts, fn) {
 
-  api.rippleTransactions.update({ 
+  data.rippleTransactions.update({ 
     id: opts.id,
     transaction_state: opts.transaction_state,
     transaction_hash: opts.transaction_hash
@@ -251,7 +249,7 @@ function recordOutgoingNotification(opts, fn) {
 */
 
 function listPendingWithdrawals(fn) {
-  api.externalTransactions.readAllPending(fn);
+  data.externalTransactions.readAllPending(fn);
 }
 
 /**
@@ -267,11 +265,11 @@ function listPendingWithdrawals(fn) {
 
 function issueCurrency(amount, currency, secret, fn) {
   var opts = {
-    to_account: nconf.get('gateway_hot_wallet').address,
-    from_account: nconf.get('gateway_cold_wallet'),
+    to_account: config.get('HOT_WALLET').address,
+    from_account: config.get('COLD_WALLET'),
     amount: amount,
     currency: currency,
-    issuer: nconf.get('gateway_cold_wallet'),
+    issuer: config.get('COLD_WALLET'),
     secret: secret
   }
 
@@ -284,7 +282,7 @@ function issueCurrency(amount, currency, secret, fn) {
 */
 
 function getColdWalletAddress() {
-  return nconf.get('gateway_cold_wallet');
+  return config.get('COLD_WALLET');
 }
 
 function getUserAccounts(fn) {
@@ -294,7 +292,7 @@ function getUserAccounts(fn) {
     var users = [];
     for (var i=0; i<resp.length; i++) {
       var user = resp[i];
-      user.withdraw_address = coldWalletAddress + "?dt=" + user.external_account_id
+      user.withdraw_address = config.get('COLD_WALLET') + "?dt=" + user.external_account_id
       users.push(user);
     }
     fn(null, users);
@@ -305,20 +303,69 @@ function getUserAccounts(fn) {
 }
 
 function getHostedAddress(tag, fn) {
-  var params = { address: coldWalletAddress, tag: tag };
-  api.rippleAddresses.read(params, function(err, address) {
+  var params = { address: config.get('COLD_WALLET'), tag: tag };
+  data.rippleAddresses.read(params, function(err, address) {
     if (err) { fn(err, null); return; };
     if (address) {
       fn(null, address);
     } else {
-      api.rippleAddresses.create(params, fn);
+      data.rippleAddresses.create(params, fn);
     }
   });
 }
 
+function setHotWallet(address, secret, fn) {  
+  var key = 'HOT_WALLET'; 
+  config.set(key, {
+    address: address,
+    secret: secret
+  });
+  config.save(function(){   
+    fn(null, gateway.config.get(key));
+  });
+}
+
+function generateWallet() {
+
+};
+
+function syncHotWalletFromConfigToDatabase(fn){
+
+  var hotWallet = config.get('HOT_WALLET');
+  
+  if (!hotWallet || !hotWallet.address || !hotWallet.secret) {
+    // generate hot wallet
+  }
+
+  data.rippleAddresses.read({ address: address }, function(err, address){
+    if (err) {
+      fn(err, null);
+    } else if (address) {
+      setHotWallet(address);  
+    } else {
+
+    };
+  });
+
+}
+
+function getHotWallet(fn) {
+  var key = 'HOT_WALLET'; 
+  fn(config.get(key));
+}
+
+function generateWallet() {
+  return RippleWallet.generate(); 
+}
+
+function startGateway(opts) {
+  processManager = new GatewayProcessManager();
+  processManager.start(opts);
+}
+
 module.exports = {
-  data: api,
-  config: nconf,
+  data: data,
+  config: config,
   start: startGateway,
   users: {
     register: registerUser,
@@ -331,7 +378,10 @@ module.exports = {
     finalize: finalizeDeposit 
   },
   rippleAddresses: {
-    getHosted: getHostedAddress
+    getHosted: getHostedAddress,
+    setHotWallet: setHotWallet,
+    getHotWallet: getHotWallet,
+    generate: generateWallet
   },
   withdrawals: {
     listPending: listPendingWithdrawals,
