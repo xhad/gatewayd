@@ -26,7 +26,7 @@
 
 /************************************************/
 
-var DepositProcessor = require(__dirname+'/../lib/deposit_processor.js');
+var DepositProcessor = require(__dirname+'/../lib/queues/deposit_processor.js');
 
 var depositMiddleware;
 

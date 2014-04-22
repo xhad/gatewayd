@@ -5,14 +5,14 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 
-var passportAuth = require(__dirname + '/../lib/passport_auth');
+var userCtrl = require(__dirname + '/../lib/http_json/controllers/users');
+var adminCtrl = require(__dirname + '/../lib/http_json/controllers/admin');
+var publicCtrl = require(__dirname + '/../lib/http_json/controllers/public');
+
+var passportAuth = require(__dirname + '/../lib/http_json/passport_auth');
 var passport = require('passport');
 passport.use(passportAuth.adminBasic);
 passport.use(passportAuth.userBasic);
-
-var userCtrl = require(__dirname + '/../http/controllers/users');
-var adminCtrl = require(__dirname + '/../http/controllers/admin');
-var publicCtrl = require(__dirname + '/../http/controllers/public');
 
 app = express();
 
@@ -59,15 +59,15 @@ var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
 if (ssl) {
   app = https.createServer({
-    key: fs.readFileSync(gateway.config.get('SSL_KEY_PATH') || '/etc/ssl/certs/server.key'),
-    cert: fs.readFileSync(gateway.config.get('SSL_CERTIFICATE_PATH') || '/etc/ssl/certs/server.crt')
+    key: fs.readFileSync(gateway.config.get('SSL_KEY_PATH')),
+    cert: fs.readFileSync(gateway.config.get('SSL_CERTIFICATE_PATH'))
   }, app);
   console.log('SSL enabled');
 }
 
 var host = gateway.config.get('HOST');
 var port = gateway.config.get('PORT'); 
-var protocol = ssl ? 'https' : 'http'
+var protocol = ssl ? 'https' : 'http';
 
 app.listen(port, host);
 

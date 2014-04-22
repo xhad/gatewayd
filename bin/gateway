@@ -2,14 +2,13 @@
 var gateway = require('../');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
-var trust = require('../lib/trust.js');
+var trust = require(__dirname+'/../lib/ripple/trust.js');
 
 var program = require('commander');
-var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var crypto = require('crypto');
-var PrettyPrintTable = require('../lib/pretty_print_tables.js');
-var cli = require('../cli');
-var rippleAbstract = require('../lib/ripple_abstract');
+var PrettyPrintTable = require(__dirname+'/../lib/views/text/index.js');
+var cli = require(__dirname+'/../lib/cli');
+var rippleAbstract = require(__dirname+'/../lib/ripple/');
 
 program
   .version('0.1.0')
@@ -121,7 +120,7 @@ program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
     .action(function(account, secret){
-      console.log(RippleWallet.generate());
+      console.log(gateway.rippleAddresses.generate());
     });
 
   program
