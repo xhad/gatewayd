@@ -1,8 +1,8 @@
 var Client = require('ripple-rest-client');
 
 var gateway = require(__dirname + '/../');
-var send = require(__dirname + "/../lib/send_payment");
-var build_payment = require(__dirname + '/../lib/build_payment');
+var send = require(__dirname + "/../lib//ripple/send_payment");
+var build_payment = require(__dirname + '/../lib/ripple/build_payment');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
