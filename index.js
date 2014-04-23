@@ -342,7 +342,7 @@ function setHotWallet(address, secret, fn) {
     });
     config.save(function(){
       hot_wallet = config.get(key);
-      console.log('set the hot wallet:', hot_wallet);
+      fn(null, 'set the hot wallet:', hot_wallet);
     });
   }
   data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
@@ -352,7 +352,6 @@ function setHotWallet(address, secret, fn) {
         managed: true,
         address: rippleAddress
       }, function(err, address) {
-        console.log(err, address);
         saveHotWallet(address); 
       });
     } else {

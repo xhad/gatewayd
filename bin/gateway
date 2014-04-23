@@ -5,7 +5,6 @@ var cli = require(__dirname+'/../lib/cli');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
-
 program
   .version('0.1.0')
 
