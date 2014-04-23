@@ -99,7 +99,7 @@ program
   .action(function(domain){
     gateway.config.set('domain', domain);
     gateway.config.save(function() {
-      console.log(gateway.config.get('domain'));
+      console.log(gateway.config.get('DOMAIN'));
     });
   });
 
@@ -107,7 +107,7 @@ program
     .command('get_domain')
     .description('get the domain name of the gateway')
     .action(function(){
-      console.log(gateway.config.get('domain'));
+      console.log(gateway.config.get('DOMAIN'));
     });
 
   program
