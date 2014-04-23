@@ -15,7 +15,11 @@ The Ripple Gateway's features include:
 The gateway server software requires git, g++, make, nodejs, postgres, and several npm modules.
 
 - Compresensive [installation script](./doc/install.md) for Ubuntu
-- Installation Instructions for [Mac OSX and Linux]
+
+## Setup
+
+Once ripple-gateway is installed, [configure your gateway](./doc/setup.md) wallets and server
+
 
 ## Running the Ripple Gateway
 
