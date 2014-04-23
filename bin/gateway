@@ -129,7 +129,7 @@ program
     .action(function(rippleAddress, secret){
 
       function setHotWallet(address) {
-        var key = 'gateway_hot_wallet';
+        var key = 'HOT_WALLET';
         gateway.config.set(key, {
           address: address.address,
           secret: secret,
@@ -163,13 +163,13 @@ program
     .command('get_hot_wallet')
     .description('get the address of the gateway hot wallet')
     .action(function(){
-      var key = 'gateway_hot_wallet';
+      var key = 'HOT_WALLET';
       var hot_wallet = gateway.config.get(key);
       if (hot_wallet) {
         console.log(hot_wallet.address);
       } else {
         console.log('hot wallet not yet set');
-        console.log('use npm gateway wallet:set:hot <address> <secret>');
+        console.log('use bin/gateway set_hot_wallet <address> <secret>');
       }
     });
 
@@ -182,13 +182,13 @@ program
     .command('get_hot_wallet_secret')
     .description('get the secret of the gateway hot wallet')
     .action(function(){
-      var key = 'gateway_hot_wallet';
+      var key = 'HOT_WALLET';
       var hot_wallet = gateway.config.get(key);
       if (hot_wallet) {
         console.log(hot_wallet.secret);
       } else {
         console.log('hot wallet not yet set');
-        console.log('use npm gateway wallet:set:hot <address> <secret>');
+        console.log('use bin/gateway set_hot_wallet <address> <secret>');
       }
     });
 
@@ -196,7 +196,7 @@ program
   .command('set_cold_wallet <address>')
   .description('set the gateway cold wallet')
   .action(function(account){
-    var key = 'gateway_cold_wallet';
+    var key = 'COLD_WALLET';
     var cold_wallet = gateway.config.get(key);
     if (cold_wallet) {
       console.log('cold wallet address already set:', cold_wallet);
@@ -213,13 +213,13 @@ program
   .command('get_cold_wallet')
   .description('get the gateway cold wallet')
   .action(function(){
-    var key = 'gateway_cold_wallet';
+    var key = 'COLD_WALLET';
     var cold_wallet = gateway.config.get(key);
     if (cold_wallet) {
       console.log(cold_wallet);
     } else {
       console.log('cold wallet not yet set');
-      console.log('use npm gateway wallet:set:cold <address>');
+      console.log('use bin/gateway set_cold_wallet <address>');
     }
   });
 
@@ -330,9 +330,9 @@ function setTrustLine(currency, amount, fn) {
   trust({
     currency: currency.toUpperCase(),
     amount: amount,
-    issuer: gateway.config.get('gateway_cold_wallet'),
-    account: gateway.config.get('gateway_hot_wallet').address,
-    secret: gateway.config.get('gateway_hot_wallet').secret
+    issuer: gateway.config.get('COLD_WALLET'),
+    account: gateway.config.get('HOT_WALLET').address,
+    secret: gateway.config.get('HOT_WALLET').secret
   }, fn);
 }
 
@@ -346,8 +346,8 @@ program
   });
 
 function get_and_print_trust_lines() {
-  var hotWallet = gateway.config.get('gateway_hot_wallet').address;
-  var coldWallet = gateway.config.get('gateway_cold_wallet');
+  var hotWallet = gateway.config.get('HOT_WALLET').address;
+  var coldWallet = gateway.config.get('COLD_WALLET');
   var opts = {
     fromAccount: hotWallet,
     toAccount: coldWallet 
@@ -387,12 +387,12 @@ program
   .description('send back funds from the hot wallet to cold wallet')
   .action(function(amount, currency) {
     var opts = {
-      to_account: gateway.config.get('gateway_cold_wallet'),
-      from_account: gateway.config.get('gateway_hot_wallet').address,
+      to_account: gateway.config.get('COLD_WALLET'),
+      from_account: gateway.config.get('HOT_WALLET').address,
       amount: amount,
       currency: currency,
-      issuer: gateway.config.get('gateway_cold_wallet'),
-      secret: gateway.config.get('gateway_hot_wallet').secret
+      issuer: gateway.config.get('COLD_WALLET'),
+      secret: gateway.config.get('HOT_WALLET').secret
     }
     sendCurrency(opts, get_and_print_trust_lines);
   });
