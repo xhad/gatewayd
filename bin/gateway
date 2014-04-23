@@ -2,13 +2,11 @@
 var gateway = require('../');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
-var trust = require(__dirname+'/../lib/ripple/trust.js');
 
 var program = require('commander');
 var crypto = require('crypto');
 var PrettyPrintTable = require(__dirname+'/../lib/views/text/index.js');
 var cli = require(__dirname+'/../lib/cli');
-var rippleAbstract = require(__dirname+'/../lib/ripple/');
 
 program
   .version('0.1.0')
@@ -209,16 +207,6 @@ program
   .description('remove support for a currency')
   .action(cli.removeCurrency);
 
-function setTrustLine(currency, amount, fn) {
-  trust({
-    currency: currency.toUpperCase(),
-    amount: amount,
-    issuer: gateway.config.get('COLD_WALLET'),
-    account: gateway.config.get('HOT_WALLET').address,
-    secret: gateway.config.get('HOT_WALLET').secret
-  }, fn);
-}
-
 program
   .command('set_trust <amount> <currency>')
   .description('set level of trust from hot to cold wallet') 
@@ -228,25 +216,10 @@ program
     });
   });
 
-function get_and_print_trust_lines() {
-  var hotWallet = gateway.config.get('HOT_WALLET').address;
-  var coldWallet = gateway.config.get('COLD_WALLET');
-  var opts = {
-    fromAccount: hotWallet,
-    toAccount: coldWallet 
-  };
-  rippleAbstract.getTrustLines(opts, function(err, lines) {
-    PrettyPrintTable.trustLines(lines);
-  });
-}
-
 program
   .command('get_trust_lines')
   .description('get the trust lines from hot wallet to cold wallet')
-  .action(function() {
-    get_and_print_trust_lines();
-  });
-
+  .action(cli.getTrustLines);
 
 program
   .command('set_last_payment_hash <hash>')

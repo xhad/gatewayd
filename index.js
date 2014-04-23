@@ -5,6 +5,7 @@ var ripple = require(__dirname +'/lib/ripple/');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
 var crypto = require('crypto');
+var trust = require(__dirname+'/lib/ripple/trust.js');
 
 /**
 * List Users
@@ -288,13 +289,13 @@ function getColdWalletAddress(){
 
 function setColdWallet(address, fn){
   var key = 'COLD_WALLET';
-  var cold_wallet = gateway.config.get(key);
+  var cold_wallet = config.get(key);
   if (cold_wallet) {
     fn('cold wallet address already set: '+ cold_wallet, null);
   } else {
-    gateway.config.set(key, address);
-    gateway.config.save(function(){
-      cold_wallet = gateway.config.get(key);
+    config.set(key, address);
+    config.save(function(){
+      cold_wallet = config.get(key);
       fn(null, 'set the cold wallet:', cold_wallet);
     });
   }
@@ -375,8 +376,8 @@ function startGateway(opts) {
 }
 
 function setLastPaymentHash(hash, fn){
-  gateway.config.set('last_payment_hash', hash);
-  gateway.config.save(function(){
+  config.set('last_payment_hash', hash);
+  config.save(function(){
     fn(null, 'set the last payment hash to '+ hash);
   });
 }
@@ -393,27 +394,20 @@ function addCurrency(currency, fn){
 }
 
 function removeCurrency(currency, fn){
-  var currencies = gateway.config.get('currencies') || {};
+  var currencies = config.get('currencies') || {};
   delete currencies[currency];
-  gateway.config.set('currencies', currencies);
-  gateway.config.save(function(){
+  config.set('currencies', currencies);
+  config.save(function(){
     fn(null, currencies);
-  });
-}
-
-function setDatabaseUrl(url, fn){
-  gateway.config.set('DATABASE_URL', url);
-  gateway.config.save(function() {
-    fn(null, url);
   });
 }
 
 function setKey(fn){
   try {
     var password = crypto.randomBytes(32).toString('hex');
-    gateway.config.set('KEY', password);
-    gateway.config.save(function(err){
-      fn(null, gateway.config.get('KEY'));
+    config.set('KEY', password);
+    config.save(function(err){
+      fn(null, config.get('KEY'));
     });
   } catch(error) {
     fn(error, null);
@@ -421,13 +415,34 @@ function setKey(fn){
 };
 
 function getKey(fn){
-  key = gateway.config.get('KEY'); 
+  key = config.get('KEY'); 
   if (key) {
     fn(null, key);
   } else {
-    cli.setKey(fn);
+    setKey(fn);
   }
 };
+
+function getLines(fn){
+  var hotWallet = config.get('HOT_WALLET').address;
+  var coldWallet = config.get('COLD_WALLET');
+  var opts = {
+    fromAccount: hotWallet,
+    toAccount: coldWallet 
+  };
+  ripple.getTrustLines(opts, fn);
+}
+
+function setTrustLine(currency, amount, fn) {
+  trust({
+    currency: currency.toUpperCase(),
+    amount: amount,
+    issuer: config.get('COLD_WALLET'),
+    account: config.get('HOT_WALLET').address,
+    secret: config.get('HOT_WALLET').secret
+  }, fn);
+}
+
 
 module.exports = {
   data: data,
@@ -438,9 +453,10 @@ module.exports = {
     setLastPaymentHash: setLastPaymentHash,
     addCurrency: addCurrency,
     removeCurrency: removeCurrency,
-    setDatabaseUrl: databaseUrl,
     setKey: setKey,
-    getKey: getKey
+    getKey: getKey,
+    setTrustLine: setTrustLine,
+    getLines: getLines
   },
   users: {
     register: registerUser,
