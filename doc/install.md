@@ -52,4 +52,9 @@ start the gateway rest api server. The executable is located at ripple-gateway/b
 
     bin/gateway start
 
+## Setup
+
+Once ripple-gateway is installed, [configure your gateway](./setup.md) wallets and server
+
+
 
