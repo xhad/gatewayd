@@ -15,15 +15,13 @@ sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with passw
 sudo -u postgres createdb ripple_gateway
 export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 
-sudo chown -R $USER /usr/lib/node_modules/
+sudo npm install -g pg
+sudo npm install -g db-migrate
+sudo npm install -g forever
 
-npm install -g pg
-npm install -g db-migrate
-npm install -g forever
+npm install --save ripple-gateway
 
-npm install
-
-cd node_modules/ripple-gateway-data-sequelize
+cd node_modules/ripple-gateway/node-modules/ripple-gateway-data-sequelize
 db-migrate up
 cd ../../
 
