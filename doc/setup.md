@@ -8,5 +8,6 @@
 6. Issue funds from cold to hot wallet
 7. Set last payment hash
 8. Make sure `ripple-rest` is running
-9. Start registering users
-10. Accept deposits and credit accounts (issue funds into user ripple addresses)
+9. Start ripple-gateway processes
+10. Start registering users
+11. Accept deposits and credit accounts (issue funds into user ripple addresses)
