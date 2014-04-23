@@ -114,7 +114,7 @@ program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
     .action(function(account, secret){
-      console.log(gateway.rippleAddresses.generate());
+      console.log(gateway.api.generateWallet());
     });
 
   program
