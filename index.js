@@ -391,6 +391,15 @@ function addCurrency(currency, fn){
   });
 }
 
+function removeCurrency(currency, fn){
+  var currencies = gateway.config.get('currencies') || {};
+  delete currencies[currency];
+  gateway.config.set('currencies', currencies);
+  gateway.config.save(function(){
+    fn(null, currencies);
+  });
+}
+
 module.exports = {
   data: data,
   config: config,
@@ -398,7 +407,8 @@ module.exports = {
   start: startGateway,
   api: {
     setLastPaymentHash: setLastPaymentHash,
-    addCurrency: addCurrency
+    addCurrency: addCurrency,
+    removeCurrency: removeCurrency
   },
   users: {
     register: registerUser,

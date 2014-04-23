@@ -226,16 +226,7 @@ program
 program
   .command('remove_currency <currency>')
   .description('remove support for a currency')
-  .action(function(currency){
-    var currencies = gateway.config.get('currencies') || {};
-    delete currencies[currency];
-    gateway.config.set('currencies', currencies);
-    gateway.config.save(function(){
-      for (c in currencies) {
-        console.log(c);
-      }
-    });
-  });
+  .action(cli.removeCurrency);
 
 function setTrustLine(currency, amount, fn) {
   trust({
