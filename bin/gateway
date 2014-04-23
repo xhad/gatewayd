@@ -68,46 +68,45 @@ program
   .description('set the url of the postgres database')
   .action(function(url){
     gateway.config.set('DATABASE_URL', url);
-    gateway.config.save(function (err) {
-      console.log('set DATABASE_URL to:');
+    gateway.save(function(){
       console.log(gateway.config.get('DATABASE_URL'));
     });
   });
 
-  program
-    .command('get_postgres_url')
-    .description('get the url of the postgres database')
-    .action(function(cmd){
-      console.log(gateway.config.get('DATABASE_URL'));
-    });
+program
+  .command('get_postgres_url')
+  .description('get the url of the postgres database')
+  .action(function(cmd){
+    console.log(gateway.config.get('DATABASE_URL'));
+  });
 
-  program
-    .command('set_ripple_rest_url <url>')
-    .description('set the url of the ripple rest api')
-    .action(function(url){
-      gateway.config.set('RIPPLE_REST_API', url);
-      gateway.config.save(function(err) {
-        console.log('set the ripple rest api url');
-        console.log(gateway.config.get('RIPPLE_REST_API'));
-      });
-    });
-
-  program
-    .command('get_ripple_rest_url')
-    .description('get the url of the ripple rest api')
-    .action(function(cmd){
+program
+  .command('set_ripple_rest_url <url>')
+  .description('set the url of the ripple rest api')
+  .action(function(url){
+    gateway.config.set('RIPPLE_REST_API', url);
+    gateway.config.save(function(err) {
+      console.log('set the ripple rest api url');
       console.log(gateway.config.get('RIPPLE_REST_API'));
     });
+  });
 
-  program
-    .command('set_domain <domain>')
-    .description('set the domain name of the gateway')
-    .action(function(domain){
-      gateway.config.set('domain', domain);
-      gateway.config.save(function() {
-        console.log(gateway.config.get('domain'));
-      });
+program
+  .command('get_ripple_rest_url')
+  .description('get the url of the ripple rest api')
+  .action(function(cmd){
+    console.log(gateway.config.get('RIPPLE_REST_API'));
+  });
+
+program
+  .command('set_domain <domain>')
+  .description('set the domain name of the gateway')
+  .action(function(domain){
+    gateway.config.set('domain', domain);
+    gateway.config.save(function() {
+      console.log(gateway.config.get('domain'));
     });
+  });
 
   program
     .command('get_domain')
@@ -183,30 +182,12 @@ program
 program
   .command('set_key')
   .description('set the admin api key')
-  .action(function(account, secret){
-    var password = crypto.randomBytes(32).toString('hex');
-    gateway.config.set('KEY', password);
-    gateway.config.save(function(err){
-      console.log(gateway.config.get('KEY'));
-    });
-  });
-
+  .action(cli.setKey);
 
 program
   .command('get_key')
   .description('get the admin api key')
-  .action(function(account, secret){
-    key = gateway.config.get('KEY'); 
-    if (key) {
-      console.log(gateway.config.get('KEY'));
-    } else {
-      var password = crypto.randomBytes(32).toString('hex');
-      gateway.config.set('KEY', password);
-      gateway.config.save(function(err){
-        console.log(gateway.config.get('KEY'));
-      });
-    }
-  });
+  .action(cli.getKey);
 
 program
   .command('list_currencies')

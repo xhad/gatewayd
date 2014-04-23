@@ -4,6 +4,7 @@ var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/se
 var ripple = require(__dirname +'/lib/ripple/');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
+var crypto = require('crypto');
 
 /**
 * List Users
@@ -400,6 +401,34 @@ function removeCurrency(currency, fn){
   });
 }
 
+function setDatabaseUrl(url, fn){
+  gateway.config.set('DATABASE_URL', url);
+  gateway.config.save(function() {
+    fn(null, url);
+  });
+}
+
+function setKey(fn){
+  try {
+    var password = crypto.randomBytes(32).toString('hex');
+    gateway.config.set('KEY', password);
+    gateway.config.save(function(err){
+      fn(null, gateway.config.get('KEY'));
+    });
+  } catch(error) {
+    fn(error, null);
+  }
+};
+
+function getKey(fn){
+  key = gateway.config.get('KEY'); 
+  if (key) {
+    fn(null, key);
+  } else {
+    cli.setKey(fn);
+  }
+};
+
 module.exports = {
   data: data,
   config: config,
@@ -408,7 +437,10 @@ module.exports = {
   api: {
     setLastPaymentHash: setLastPaymentHash,
     addCurrency: addCurrency,
-    removeCurrency: removeCurrency
+    removeCurrency: removeCurrency,
+    setDatabaseUrl: databaseUrl,
+    setKey: setKey,
+    getKey: getKey
   },
   users: {
     register: registerUser,
