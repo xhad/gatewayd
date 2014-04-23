@@ -315,34 +315,34 @@ function getHostedAddress(tag, fn) {
 }
 
 function setHotWallet(address, secret, fn) {  
-  var key = 'HOT_WALLET'; 
-  config.set(key, {
-    address: address,
-    secret: secret
-  });
-  config.save(function(){   
-    fn(null, config.get(key));
-  });
-}
+  var rippleAddress = address;
 
-function syncHotWalletFromConfigToDatabase(fn){
-
-  var hotWallet = config.get('HOT_WALLET');
-  
-  if (!hotWallet || !hotWallet.address || !hotWallet.secret) {
-    // generate hot wallet
+  function saveHotWallet(address) {
+    var key = 'HOT_WALLET';
+    config.set(key, {
+      address: address.address,
+      secret: secret,
+      id: address.id
+    });
+    config.save(function(){
+      hot_wallet = config.get(key);
+      console.log('set the hot wallet:', hot_wallet);
+    });
   }
-
-  data.rippleAddresses.read({ address: address }, function(err, address){
+  data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
     if (err) {
-      fn(err, null);
-    } else if (address) {
-      setHotWallet(address);  
+      data.rippleAddresses.create({
+        type: 'hot',
+        managed: true,
+        address: rippleAddress
+      }, function(err, address) {
+        console.log(err, address);
+        saveHotWallet(address); 
+      });
     } else {
-
-    };
+      saveHotWallet(address); 
+    }
   });
-
 }
 
 function getHotWallet() {
