@@ -1,7 +1,7 @@
 var config = require(__dirname + '/config/config.js');
 var data = require("ripple-gateway-data-sequelize");
 var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
-
+var ripple = require(__dirname +'/lib/ripple/');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
 
@@ -321,13 +321,9 @@ function setHotWallet(address, secret, fn) {
     secret: secret
   });
   config.save(function(){   
-    fn(null, gateway.config.get(key));
+    fn(null, config.get(key));
   });
 }
-
-function generateWallet() {
-
-};
 
 function syncHotWalletFromConfigToDatabase(fn){
 
@@ -349,9 +345,9 @@ function syncHotWalletFromConfigToDatabase(fn){
 
 }
 
-function getHotWallet(fn) {
+function getHotWallet() {
   var key = 'HOT_WALLET'; 
-  fn(config.get(key));
+  return config.get(key);
 }
 
 function generateWallet() {
@@ -366,6 +362,7 @@ function startGateway(opts) {
 module.exports = {
   data: data,
   config: config,
+  ripple: ripple,
   start: startGateway,
   users: {
     register: registerUser,
