@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 var gateway = require('../');
+var program = require('commander');
+var cli = require(__dirname+'/../lib/cli');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
-var program = require('commander');
-var crypto = require('crypto');
-var PrettyPrintTable = require(__dirname+'/../lib/views/text/index.js');
-var cli = require(__dirname+'/../lib/cli');
 
 program
   .version('0.1.0')
@@ -210,11 +208,7 @@ program
 program
   .command('set_trust <amount> <currency>')
   .description('set level of trust from hot to cold wallet') 
-  .action(function(amount, currency){
-    setTrustLine(currency, amount, function(err, resp){
-      get_and_print_trust_lines();
-    });
-  });
+  .action(cli.setTrustLine);
 
 program
   .command('get_trust_lines')
@@ -236,17 +230,7 @@ program
 program
   .command('refund_cold_wallet <amount> <currency>')
   .description('send back funds from the hot wallet to cold wallet')
-  .action(function(amount, currency) {
-    var opts = {
-      to_account: gateway.config.get('COLD_WALLET'),
-      from_account: gateway.config.get('HOT_WALLET').address,
-      amount: amount,
-      currency: currency,
-      issuer: gateway.config.get('COLD_WALLET'),
-      secret: gateway.config.get('HOT_WALLET').secret
-    }
-    sendCurrency(opts, get_and_print_trust_lines);
-  });
+  .action(cli.refundColdWallet);
 
 program.parse(process.argv);
 

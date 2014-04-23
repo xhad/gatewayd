@@ -275,7 +275,7 @@ function issueCurrency(amount, currency, secret, fn) {
     secret: secret
   }
 
-  sendCurrency(opts, fn);
+  ripple.sendCurrency(opts, fn);
 }
 
 /**
@@ -443,6 +443,18 @@ function setTrustLine(currency, amount, fn) {
   }, fn);
 }
 
+function refundColdWallet(currency, amount, fn){
+  var opts = {
+    to_account: config.get('COLD_WALLET'),
+    from_account: config.get('HOT_WALLET').address,
+    amount: amount,
+    currency: currency,
+    issuer: config.get('COLD_WALLET'),
+    secret: config.get('HOT_WALLET').secret
+  }
+  ripple.sendCurrency(opts, fn);
+}
+
 
 module.exports = {
   data: data,
@@ -456,7 +468,8 @@ module.exports = {
     setKey: setKey,
     getKey: getKey,
     setTrustLine: setTrustLine,
-    getLines: getLines
+    getLines: getLines,
+    refundColdWallet: refundColdWallet
   },
   users: {
     register: registerUser,
