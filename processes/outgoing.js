@@ -8,7 +8,7 @@ process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 var client = new Client({
     api: gateway.config.get('RIPPLE_REST_API'),
-    account: gateway.config.get('gateway_hot_wallet').address,
+    account: gateway.config.get('HOT_WALLET').address,
     secret: ''
 });
 
@@ -33,7 +33,7 @@ if (middlewarePath) {
 
 function processOutgoingPayment(callback) {
 
-  gateway.payments.listOutgoing(function(err, transactions) {
+  gateway.api.listOutgoingPayments(function(err, transactions) {
     if (!err) {
       var transaction = transactions[0];
       if (transaction) {
