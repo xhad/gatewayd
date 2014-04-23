@@ -4,6 +4,8 @@ var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/se
 var ripple = require(__dirname +'/lib/ripple/');
 var RippleWallet = require('ripple-wallet').Ripple.Wallet;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
+var crypto = require('crypto');
+var trust = require(__dirname+'/lib/ripple/trust.js');
 
 /**
 * List Users
@@ -273,7 +275,7 @@ function issueCurrency(amount, currency, secret, fn) {
     secret: secret
   }
 
-  sendCurrency(opts, fn);
+  ripple.sendCurrency(opts, fn);
 }
 
 /**
@@ -281,8 +283,22 @@ function issueCurrency(amount, currency, secret, fn) {
 * @returns [RippleAddress]
 */
 
-function getColdWalletAddress() {
+function getColdWalletAddress(){
   return config.get('COLD_WALLET');
+}
+
+function setColdWallet(address, fn){
+  var key = 'COLD_WALLET';
+  var cold_wallet = config.get(key);
+  if (cold_wallet) {
+    fn('cold wallet address already set: '+ cold_wallet, null);
+  } else {
+    config.set(key, address);
+    config.save(function(){
+      cold_wallet = config.get(key);
+      fn(null, 'set the cold wallet:', cold_wallet);
+    });
+  }
 }
 
 function getUserAccounts(fn) {
@@ -315,34 +331,33 @@ function getHostedAddress(tag, fn) {
 }
 
 function setHotWallet(address, secret, fn) {  
-  var key = 'HOT_WALLET'; 
-  config.set(key, {
-    address: address,
-    secret: secret
-  });
-  config.save(function(){   
-    fn(null, config.get(key));
-  });
-}
+  var rippleAddress = address;
 
-function syncHotWalletFromConfigToDatabase(fn){
-
-  var hotWallet = config.get('HOT_WALLET');
-  
-  if (!hotWallet || !hotWallet.address || !hotWallet.secret) {
-    // generate hot wallet
+  function saveHotWallet(address) {
+    var key = 'HOT_WALLET';
+    config.set(key, {
+      address: address.address,
+      secret: secret,
+      id: address.id
+    });
+    config.save(function(){
+      hot_wallet = config.get(key);
+      fn(null, 'set the hot wallet:', hot_wallet);
+    });
   }
-
-  data.rippleAddresses.read({ address: address }, function(err, address){
+  data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
     if (err) {
-      fn(err, null);
-    } else if (address) {
-      setHotWallet(address);  
+      data.rippleAddresses.create({
+        type: 'hot',
+        managed: true,
+        address: rippleAddress
+      }, function(err, address) {
+        saveHotWallet(address); 
+      });
     } else {
-
-    };
+      saveHotWallet(address); 
+    }
   });
-
 }
 
 function getHotWallet() {
@@ -359,11 +374,102 @@ function startGateway(opts) {
   processManager.start(opts);
 }
 
+function setLastPaymentHash(hash, fn){
+  config.set('last_payment_hash', hash);
+  config.save(function(){
+    fn(null, 'set the last payment hash to '+ hash);
+  });
+}
+
+function addCurrency(currency, fn){
+  var currencies = config.get('currencies') || {};
+  if (!(currency in currencies)) {
+    currencies[currency] = 0;
+  }
+  config.set('currencies', currencies);
+  config.save(function(){
+    fn(null, currencies);
+  });
+}
+
+function removeCurrency(currency, fn){
+  var currencies = config.get('currencies') || {};
+  delete currencies[currency];
+  config.set('currencies', currencies);
+  config.save(function(){
+    fn(null, currencies);
+  });
+}
+
+function setKey(fn){
+  try {
+    var password = crypto.randomBytes(32).toString('hex');
+    config.set('KEY', password);
+    config.save(function(err){
+      fn(null, config.get('KEY'));
+    });
+  } catch(error) {
+    fn(error, null);
+  }
+};
+
+function getKey(fn){
+  key = config.get('KEY'); 
+  if (key) {
+    fn(null, key);
+  } else {
+    setKey(fn);
+  }
+};
+
+function getLines(fn){
+  var hotWallet = config.get('HOT_WALLET').address;
+  var coldWallet = config.get('COLD_WALLET');
+  var opts = {
+    fromAccount: hotWallet,
+    toAccount: coldWallet 
+  };
+  ripple.getTrustLines(opts, fn);
+}
+
+function setTrustLine(currency, amount, fn) {
+  trust({
+    currency: currency.toUpperCase(),
+    amount: amount,
+    issuer: config.get('COLD_WALLET'),
+    account: config.get('HOT_WALLET').address,
+    secret: config.get('HOT_WALLET').secret
+  }, fn);
+}
+
+function refundColdWallet(currency, amount, fn){
+  var opts = {
+    to_account: config.get('COLD_WALLET'),
+    from_account: config.get('HOT_WALLET').address,
+    amount: amount,
+    currency: currency,
+    issuer: config.get('COLD_WALLET'),
+    secret: config.get('HOT_WALLET').secret
+  }
+  ripple.sendCurrency(opts, fn);
+}
+
+
 module.exports = {
   data: data,
   config: config,
   ripple: ripple,
   start: startGateway,
+  api: {
+    setLastPaymentHash: setLastPaymentHash,
+    addCurrency: addCurrency,
+    removeCurrency: removeCurrency,
+    setKey: setKey,
+    getKey: getKey,
+    setTrustLine: setTrustLine,
+    getLines: getLines,
+    refundColdWallet: refundColdWallet
+  },
   users: {
     register: registerUser,
     list: listUsers,
@@ -386,7 +492,8 @@ module.exports = {
   },
   coldWallet: {
     issueCurrency: issueCurrency,
-    getAddress: getColdWalletAddress
+    getAddress: getColdWalletAddress,
+    set: setColdWallet
   },
   payments: {
     enqueueOutgoing: enqueueOutgoingPayment,
