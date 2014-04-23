@@ -188,12 +188,7 @@ program
 program
   .command('list_currencies')
   .description('List all currencies supported by the gateway')
-  .action(function(currency){
-    var currencies = gateway.config.get('currencies') || {};
-    for (c in currencies) {
-      console.log(c);
-    }
-  });
+  .action(cli.listCurrencies);
 
 program
   .command('add_currency <currency>')
