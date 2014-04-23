@@ -164,19 +164,7 @@ program
 program
   .command('set_cold_wallet <address>')
   .description('set the gateway cold wallet')
-  .action(function(account){
-    var key = 'COLD_WALLET';
-    var cold_wallet = gateway.config.get(key);
-    if (cold_wallet) {
-      console.log('cold wallet address already set:', cold_wallet);
-    } else {
-      gateway.config.set(key, account);
-      gateway.config.save(function(){
-        cold_wallet = gateway.config.get(key);
-        console.log('set the cold wallet:', cold_wallet);
-      });
-    }
-  });
+  .action(cli.setColdWallet);
 
 program
   .command('get_cold_wallet')
@@ -220,41 +208,6 @@ program
     }
   });
 
-function setCurrencyInNconf(currency, amount) {
-    key = 'gateway_currencies';
-    currency = currency.toUpperCase();
-    var currencies = gateway.config.get(key);
-    if (!currencies) {
-      currencies = {};
-    }
-    if (!currencies[currency]) {
-      currencies[currency] = amount;  
-    }
-    gateway.config.set(key, currencies);
-    gateway.config.save(function(){
-      console.log(gateway.config.get(key));
-    });
-
-}
-
-function setCurrency(currency, amount) {
-  var currency = currency.toUpperCase();
-  lookupRippleBalance(currency, function(err, balance) {
-    if (err) { fn(err, null); return; };
-    var currentAmount = balance.balance.toFloat();
-    var targetAmount = amount.toFloat();
-    if (currentAmount == targetAmount) { 
-      console.log('do nothing, trust is the same');
-    };
-    if (currentAmount > targetAmount) { 
-      console.log('decrease trust to '+targetAmount);
-    };
-    if (currentAmount < targetAmount) { 
-      console.log('increase trust to '+targetAmount);
-    };
-  });
-}
-
 program
   .command('list_currencies')
   .description('List all currencies supported by the gateway')
@@ -268,18 +221,7 @@ program
 program
   .command('add_currency <currency>')
   .description('add support for a currency') 
-  .action(function(currency){
-    var currencies = gateway.config.get('currencies') || {};
-    if (!(currency in currencies)) {
-      currencies[currency] = 0;
-    }
-    gateway.config.set('currencies', currencies);
-    gateway.config.save(function(){
-      for (c in currencies) {
-        console.log(c);
-      }
-    });
-  });
+  .action(cli.addCurrency);
 
 program
   .command('remove_currency <currency>')
@@ -337,12 +279,7 @@ program
 program
   .command('set_last_payment_hash <hash>')
   .description('set the last encountered payment hash for incoming processing.')
-  .action(function(hash) {
-    gateway.config.set('last_payment_hash', hash);
-    gateway.config.save(function(){
-      console.log('set the last payment hash to', hash);
-    });
-  });
+  .action(cli.setLastPaymentHash);
 
 program
   .command('get_last_payment_hash')

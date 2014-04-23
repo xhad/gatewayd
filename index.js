@@ -281,8 +281,22 @@ function issueCurrency(amount, currency, secret, fn) {
 * @returns [RippleAddress]
 */
 
-function getColdWalletAddress() {
+function getColdWalletAddress(){
   return config.get('COLD_WALLET');
+}
+
+function setColdWallet(address, fn){
+  var key = 'COLD_WALLET';
+  var cold_wallet = gateway.config.get(key);
+  if (cold_wallet) {
+    fn('cold wallet address already set: '+ cold_wallet, null);
+  } else {
+    gateway.config.set(key, address);
+    gateway.config.save(function(){
+      cold_wallet = gateway.config.get(key);
+      fn(null, 'set the cold wallet:', cold_wallet);
+    });
+  }
 }
 
 function getUserAccounts(fn) {
@@ -359,11 +373,33 @@ function startGateway(opts) {
   processManager.start(opts);
 }
 
+function setLastPaymentHash(hash, fn){
+  gateway.config.set('last_payment_hash', hash);
+  gateway.config.save(function(){
+    fn(null, 'set the last payment hash to '+ hash);
+  });
+}
+
+function addCurrency(currency, fn){
+  var currencies = config.get('currencies') || {};
+  if (!(currency in currencies)) {
+    currencies[currency] = 0;
+  }
+  config.set('currencies', currencies);
+  config.save(function(){
+    fn(null, currencies);
+  });
+}
+
 module.exports = {
   data: data,
   config: config,
   ripple: ripple,
   start: startGateway,
+  api: {
+    setLastPaymentHash: setLastPaymentHash,
+    addCurrency: addCurrency
+  },
   users: {
     register: registerUser,
     list: listUsers,
@@ -386,7 +422,8 @@ module.exports = {
   },
   coldWallet: {
     issueCurrency: issueCurrency,
-    getAddress: getColdWalletAddress
+    getAddress: getColdWalletAddress,
+    set: setColdWallet
   },
   payments: {
     enqueueOutgoing: enqueueOutgoingPayment,
