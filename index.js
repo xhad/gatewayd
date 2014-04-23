@@ -342,7 +342,7 @@ function setHotWallet(address, secret, fn) {
     });
     config.save(function(){
       hot_wallet = config.get(key);
-      fn(null, 'set the hot wallet:', hot_wallet);
+      fn(null, hot_wallet);
     });
   }
   data.rippleAddresses.read({ address: rippleAddress }, function(err, address) {
@@ -382,20 +382,20 @@ function setLastPaymentHash(hash, fn){
 }
 
 function addCurrency(currency, fn){
-  var currencies = config.get('currencies') || {};
+  var currencies = config.get('CURRENCIES') || {};
   if (!(currency in currencies)) {
     currencies[currency] = 0;
   }
-  config.set('currencies', currencies);
+  config.set('CURRENCIES', currencies);
   config.save(function(){
     fn(null, currencies);
   });
 }
 
 function removeCurrency(currency, fn){
-  var currencies = config.get('currencies') || {};
+  var currencies = config.get('CURRENCIES') || {};
   delete currencies[currency];
-  config.set('currencies', currencies);
+  config.set('CURRENCIES', currencies);
   config.save(function(){
     fn(null, currencies);
   });
@@ -422,7 +422,7 @@ function getKey(fn){
   }
 };
 
-function getLines(fn){
+function getTrustLines(fn){
   var hotWallet = config.get('HOT_WALLET').address;
   var coldWallet = config.get('COLD_WALLET');
   var opts = {
@@ -456,10 +456,9 @@ function refundColdWallet(currency, amount, fn){
 
 
 module.exports = {
-  data: data,
   config: config,
   ripple: ripple,
-  start: startGateway,
+  data: data,
   api: {
     setLastPaymentHash: setLastPaymentHash,
     addCurrency: addCurrency,
@@ -467,38 +466,37 @@ module.exports = {
     setKey: setKey,
     getKey: getKey,
     setTrustLine: setTrustLine,
-    getLines: getLines,
-    refundColdWallet: refundColdWallet
+    getTrustLines: getTrustLines,
+    refundColdWallet: refundColdWallet,
+    regiseterUser: registerUser,
+    listUsers: listUsers,
+    recordDeposit: recordDeposit,
+    listDeposits: listQueuedDeposits,
+    getHotWallet: getHotWallet,
+    setHotWallet: setHotWallet,
+    generateWallet: generateWallet,
+    listWithdrawals: listPendingWithdrawals,
+    clearWithdrawal: clearWithdrawal,
+    getColdWallet: getColdWalletAddress,
+    setColdWallet: setColdWallet,
+    start: startGateway,
+    listIncomingPayments: listIncomingPayments,
+    listOutgoingPayments: listOutgoingPayments
   },
   users: {
-    register: registerUser,
-    list: listUsers,
     listAccounts: getUserAccounts
   },
   deposits: {
-    record: recordDeposit,
-    listQueued: listQueuedDeposits,
     finalize: finalizeDeposit 
   },
   rippleAddresses: {
     getHosted: getHostedAddress,
-    setHotWallet: setHotWallet,
-    getHotWallet: getHotWallet,
-    generate: generateWallet
-  },
-  withdrawals: {
-    listPending: listPendingWithdrawals,
-    clear: clearWithdrawal
   },
   coldWallet: {
     issueCurrency: issueCurrency,
-    getAddress: getColdWalletAddress,
-    set: setColdWallet
   },
   payments: {
     enqueueOutgoing: enqueueOutgoingPayment,
-    listOutgoing: listOutgoingPayments,
-    listIncoming: listIncomingPayments,
     recordIncoming: recordIncomingPayment,
     recordIncomingNotification: recordIncomingNotification,
     recordOutgoingNotification: recordOutgoingNotification
