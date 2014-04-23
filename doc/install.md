@@ -30,13 +30,13 @@ Export your database url to the environment to set up the ripple gateway data ta
 
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 
-If you are using an SSL connection to your database, remember to append the follow to its url:
+If you are using an SSL connection to your database, remember to append the following to its url:
 
-    ?native=true
+    export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway?native=true
 
 ### Gateway API Server
 
-clone the project from github and install the package dependencies
+Install the ripple-gateway package and its dependencies using NPM:
 
     sudo npm install -g pg
     sudo npm install -g db-migrate
@@ -51,5 +51,10 @@ clone the project from github and install the package dependencies
 start the gateway rest api server. The executable is located at ripple-gateway/bin/gateway:
 
     bin/gateway start
+
+## Setup
+
+Once ripple-gateway is installed, [configure your gateway](./setup.md) wallets and server
+
 
 
