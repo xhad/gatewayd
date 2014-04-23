@@ -6,7 +6,7 @@ var cli = require(__dirname+'/../lib/cli');
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 program
-  .version('0.1.0')
+  .version('1.0.0')
 
 program
   .command('list_incoming_payments')
@@ -113,7 +113,7 @@ program
   program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
-    .action(function(account, secret){
+    .action(function(){
       console.log(gateway.api.generateWallet());
     });
 
