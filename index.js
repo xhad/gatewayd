@@ -2,7 +2,7 @@ var config = require(__dirname + '/config/config.js');
 var data = require("ripple-gateway-data-sequelize");
 var sql = require(__dirname +'/node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
 var ripple = require(__dirname +'/lib/ripple/');
-var RippleWallet = require('ripple-wallet').Ripple.Wallet;
+var WalletGenerator = require('ripple-wallet').Generator;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
 var crypto = require('crypto');
 var trust = require(__dirname+'/lib/ripple/trust.js');
@@ -366,7 +366,8 @@ function getHotWallet() {
 }
 
 function generateWallet() {
-  return RippleWallet.generate(); 
+  walletGenerator = new WalletGenerator();
+  return walletGenerator.generate();
 }
 
 function startGateway(opts) {
