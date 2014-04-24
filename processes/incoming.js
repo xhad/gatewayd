@@ -1,12 +1,12 @@
 var gateway = require(__dirname+'/../');
 
-var Listener = require(__dirname+'/../lib/listener.js');
+var Listener = require(__dirname+'/../lib/ripple/listener.js');
 
 var listener = new Listener();
 
 listener.onPayment = function(payment) {
 
-  if (payment.destination_account == gateway.config.get('gateway_cold_wallet')) {
+  if (payment.destination_account == gateway.config.get('COLD_WALLET')) {
     var dt = payment.destination_tag;
     var state = payment.result;
     var hash = payment.hash;
@@ -17,7 +17,7 @@ listener.onPayment = function(payment) {
       var currency = payment.destination_amount.currency;
       var issuer = payment.destination_amount.issuer;
 
-      if (issuer == gateway.config.get('gateway_cold_wallet')) {
+      if (issuer == gateway.config.get('COLD_WALLET')) {
 
         gateway.payments.recordIncoming(dt, currency, amount, 'incoming', hash, function(err, record) {
           if (err) {

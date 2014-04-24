@@ -56,3 +56,5 @@ depositProcessor = new DepositProcessor(depositMiddleware);
 
 depositProcessor.start();
 
+console.log('Processing deposits from the inbound asset deposit queue.')
+
