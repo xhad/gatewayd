@@ -18,11 +18,9 @@ export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway
 sudo npm install -g pg
 sudo npm install -g db-migrate
 sudo npm install -g forever
-
+sudo npm install -g grunt
 npm install --save ripple-gateway
 
-cd node_modules/ripple-gateway/node-modules/ripple-gateway-data-sequelize
-db-migrate up
-cd ../../
-
+cd node_modules/ripple-gateway
+grunt migrate:up
 bin/gateway start

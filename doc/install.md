@@ -41,12 +41,12 @@ Install the ripple-gateway package and its dependencies using NPM:
     sudo npm install -g pg
     sudo npm install -g db-migrate
     sudo npm install -g forever
+    sudo npm install -g grunt
 
     npm install --save ripple-gateway
 
-    cd node_modules/ripple-gateway/node_modules/ripple-gateway-data-sequelize/
-    db-migrate up
-    cd ../../
+    cd node_modules/ripple-gateway
+    grunt migrate:up
     
 start the gateway rest api server. The executable is located at ripple-gateway/bin/gateway:
 
@@ -55,6 +55,4 @@ start the gateway rest api server. The executable is located at ripple-gateway/b
 ## Setup
 
 Once ripple-gateway is installed, [configure your gateway](./setup.md) wallets and server
-
-
 
