@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "scripts": {
     "start": "./bin/gateway start"
   },
@@ -21,7 +21,7 @@
     "ripple-wallet": "1.0.0",
     "require-all": "",
     "ripple-gateway-express": "0.6.2",
-    "ripple-gateway-data-sequelize": "1.3.0",
+    "ripple-gateway-data-sequelize": "1.3.1",
     "ripple-rest-client": "1.3.1",
     "node-uuid": "1.4.1",
     "ejs": "",
