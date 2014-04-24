@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.6.1",
+  "version": "3.7.0",
   "scripts": {
     "start": "./bin/gateway start"
   },
@@ -29,10 +29,14 @@
     "underscore-node": "0.1.2",
     "jbuilder": "",
     "db-migrate": "^0.6.4",
-    "forever": ""
+    "forever": "",
+    "pg": "^3.0.3",
+    "grunt": "^0.4.4"
   },
   "devDependencies": {
     "mocha": "~1.14.0",
-    "node-uuid": "1.4.1"
+    "node-uuid": "1.4.1",
+    "grunt-db-migrate": "^0.2.0",
+    "grunt": "^0.4.4"
   }
 }
