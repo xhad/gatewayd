@@ -1,5 +1,0 @@
-start on starting ripple_gateway-incoming_ripple_payments
-stop on stopping ripple_gateway-incoming_ripple_payments
-respawn
-
-exec su - ubuntu -c 'cd /var/www/ripple_gateway/current; export PORT=5200; node processes/incoming.js >> /var/log/ripple_gateway/incoming_ripple_payments-1.log 2>&1'

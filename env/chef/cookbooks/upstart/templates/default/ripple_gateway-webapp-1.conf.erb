@@ -1,5 +1,0 @@
-start on starting ripple_gateway-webapp
-stop on stopping ripple_gateway-webapp
-respawn
-
-exec su - ubuntu -c 'cd /var/www/ripple_gateway/current; export PORT=5000; node processes/webapp.js >> /var/log/ripple_gateway/webapp-1.log 2>&1'

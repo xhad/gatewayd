@@ -8,5 +8,5 @@
     "recipe[upstart]",
     "recipe[ripple_rest]",
     "recipe[ripple_gateway]"
-  ]
+  ],
 }
