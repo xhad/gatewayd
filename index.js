@@ -460,7 +460,7 @@ function listProcesses(opts, fn){
   var command;
   if (typeof opts == 'function'){
     fn = opts;
-    opts = { json: false }
+    opts = { json: true }
   }
 
   if (opts.json){
@@ -469,19 +469,19 @@ function listProcesses(opts, fn){
     command = 'list';
   }
 
-  var output;
+  var output = "";
   var pm2 = exec('pm2 '+command);
 
   pm2.stdout.on('data', function (data) {
     output += data;
   });
 
-  pm2.stdout.on('error', function (error) {
-    fn(error, null);
-  });
-
   pm2.on('close', function (code) {
-    console.log(output);
+    if (opts.json){
+      fn(null, output);
+    } else {
+      fn(null, output);
+    }
   });
 };
 
