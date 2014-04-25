@@ -19,6 +19,7 @@ sudo npm install -g pg
 sudo npm install -g db-migrate
 sudo npm install -g forever
 sudo npm install -g grunt
+sudo npm install -g grunt-cli
 npm install --save ripple-gateway
 
 cd node_modules/ripple-gateway
