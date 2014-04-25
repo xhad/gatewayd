@@ -4,25 +4,20 @@ First generate a cold wallet using the (Ripple Client)[https://ripple.com/client
 
 ### Set(or generate) cold wallet address
 
-
     bin/gateway set_cold_wallet <address>
+
     
-    
-### Set(or generate) hot wallet address and secret
+### Generate and set hot wallet address and secret
 
    bin/gateway generate_wallet
-   {
-     address: 'address',
-     secret: 'secret'
-   }
-   
    bin/gateway set_hot_wallet <address> <secret>
+
 
 ### Add supported currencies
 
-
-  bin/gateway add_currency XAG
-  bin/gateway add_currency USD
+    bin/gateway add_currency XAG
+    bin/gateway add_currency USD
+  
   
   
 ### Fund both cold and hot wallets
@@ -31,8 +26,9 @@ First generate a cold wallet using the (Ripple Client)[https://ripple.com/client
 
 ### Establish trust between hot to cold wallets
 
-  bin/gateway set_trust 1000 XAG
-  bin/gateway set_trust 1000 USD
+    bin/gateway set_trust 1000 XAG
+    bin/gateway set_trust 1000 USD
+
 
 ### Issue funds from cold to hot wallet
 
@@ -45,10 +41,13 @@ Using the Ripple Client at ripple.com/client send 1000 USD to from the gateway's
 
     bin/gateway start
 
+
 ### Start registering users
 
     bin/gateway register_user
 
+
 ### Accept deposits and credit accounts (issue funds into user ripple addresses)
 
     bin/gateway record_depsoit
+
