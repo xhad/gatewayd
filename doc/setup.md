@@ -9,15 +9,14 @@ First generate a cold wallet using the (Ripple Client)[https://ripple.com/client
     
 ### Generate and set hot wallet address and secret
 
-   bin/gateway generate_wallet
-   bin/gateway set_hot_wallet <address> <secret>
+    bin/gateway generate_wallet
+    bin/gateway set_hot_wallet <address> <secret>
 
 
 ### Add supported currencies
 
     bin/gateway add_currency XAG
     bin/gateway add_currency USD
-  
   
   
 ### Fund both cold and hot wallets
