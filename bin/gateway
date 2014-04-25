@@ -6,7 +6,8 @@ var cli = require(__dirname+'/../lib/cli');
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
 program
-  .version('1.0.0')
+  .version('1.1.0')
+  .option('-j', '--json', 'json format');
 
 program
   .command('list_incoming_payments')
@@ -225,6 +226,11 @@ program
   .command('refund_cold_wallet <amount> <currency>')
   .description('send back funds from the hot wallet to cold wallet')
   .action(cli.refundColdWallet);
+
+program
+  .command('list_processes')
+  .description('list the processes currently run by ripple-gateway')
+  .action(cli.listProcesses);
 
 program.parse(process.argv);
 

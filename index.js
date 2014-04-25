@@ -6,6 +6,7 @@ var WalletGenerator = require('ripple-wallet').Generator;
 var GatewayProcessManager = require(__dirname+'/lib/processes/');
 var crypto = require('crypto');
 var trust = require(__dirname+'/lib/ripple/trust.js');
+var exec = require('child_process').exec;
 
 /**
 * List Users
@@ -455,6 +456,34 @@ function refundColdWallet(currency, amount, fn){
   ripple.sendCurrency(opts, fn);
 }
 
+function listProcesses(opts, fn){
+  var command;
+  if (typeof opts == 'function'){
+    fn = opts;
+    opts = { json: false }
+  }
+
+  if (opts.json){
+    command = 'prettylist';
+  } else {
+    command = 'list';
+  }
+
+  var output;
+  var pm2 = exec('pm2 '+command);
+
+  pm2.stdout.on('data', function (data) {
+    output += data;
+  });
+
+  pm2.stdout.on('error', function (error) {
+    fn(error, null);
+  });
+
+  pm2.on('close', function (code) {
+    console.log(output);
+  });
+};
 
 module.exports = {
   config: config,
@@ -482,7 +511,8 @@ module.exports = {
     setColdWallet: setColdWallet,
     start: startGateway,
     listIncomingPayments: listIncomingPayments,
-    listOutgoingPayments: listOutgoingPayments
+    listOutgoingPayments: listOutgoingPayments,
+    listProcesses: listProcesses
   },
   users: {
     listAccounts: getUserAccounts
