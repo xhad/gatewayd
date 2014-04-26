@@ -25,8 +25,8 @@ First generate a cold wallet using the (Ripple Client)[https://ripple.com/client
 
 ### Establish trust between hot to cold wallets
 
-    bin/gateway set_trust 1000 XAG
-    bin/gateway set_trust 1000 USD
+    bin/gateway set_trust XAG 1000
+    bin/gateway set_trust USD 1000
 
 
 ### Issue funds from cold to hot wallet
