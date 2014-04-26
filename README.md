@@ -1,6 +1,6 @@
 ## Ripple Gateway Framework
 
-This software is a framework for building and deploying a Ripple Gateway software sytem. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
+This software is a framework for building and deploying a Ripple Gateway software system. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
 
 Interact with the Ripple Gateway Framework by building custom integrations with banking and payment systems around the world, and by using the built-in APIs for designing beautiful gateway mobile apps and user interfaces. A HTTP/JSON server, Javascript library, and Command Line Interface are provided as interfaces to the Ripple Gateway Framework software.
 
