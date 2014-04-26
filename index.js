@@ -498,7 +498,7 @@ module.exports = {
     setTrustLine: setTrustLine,
     getTrustLines: getTrustLines,
     refundColdWallet: refundColdWallet,
-    regiseterUser: registerUser,
+    registerUser: registerUser,
     listUsers: listUsers,
     recordDeposit: recordDeposit,
     listDeposits: listQueuedDeposits,
