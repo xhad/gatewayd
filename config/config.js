@@ -11,8 +11,8 @@ nconf.defaults({
   'DATABASE_URL': 'postgres://postgres:password@localhost:5432/ripple_gateway',
   'RIPPLE_DATAMODEL_ADAPTER': 'ripple-gateway-data-sequelize',
   'SSL': true,
-  'SSL_KEY_PATH': __dirname+'/../certs/server.key',
-  'SSL_CERTIFICATE_PATH': __dirname+'/../certs/server.crt',
+  'SSL_KEY_PATH': __dirname+'/../env/certs/server.key',
+  'SSL_CERTIFICATE_PATH': __dirname+'/../env/certs/server.crt',
   'HTTP_SERVER': true, // Serve http/json api
   'BASIC_AUTH': false, // Require admin key for http api
   'KEY': false, // Required for BASIC_AUTH

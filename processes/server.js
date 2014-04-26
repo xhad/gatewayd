@@ -23,7 +23,7 @@ var apiRouter =  new ApiRouter({
 
 app = express();
 
-app.use("/", express.static(__dirname + "/../app"));
+app.use("/", express.static(__dirname + "/../node_modules/ripple-gateway-webapp-example/"));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(restful(sequelize));
