@@ -56,8 +56,18 @@ program
 
 program
   .command('start') 
-  .description('start the gateway and related processes')
+  .description('start the gateway processes')
   .action(cli.startGateway);
+
+program
+  .command('stop') 
+  .description('stop the gateway processes')
+  .action(cli.stopGateway);
+
+program
+  .command('restart') 
+  .description('restart the gateway processes')
+  .action(cli.restartGateway);
 
 program
   .command('set_postgres_url <url>')

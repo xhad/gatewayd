@@ -376,6 +376,16 @@ function startGateway(opts) {
   processManager.start(opts);
 }
 
+function stopGateway(opts) {
+  processManager = new GatewayProcessManager();
+  processManager.stop(opts);
+}
+
+function restartGateway(opts) {
+  processManager = new GatewayProcessManager();
+  processManager.restart(opts);
+}
+
 function setLastPaymentHash(hash, fn){
   config.set('last_payment_hash', hash);
   config.save(function(){
@@ -510,6 +520,8 @@ module.exports = {
     getColdWallet: getColdWalletAddress,
     setColdWallet: setColdWallet,
     start: startGateway,
+    stop: stopGateway,
+    restart: restartGateway,
     listIncomingPayments: listIncomingPayments,
     listOutgoingPayments: listOutgoingPayments,
     listProcesses: listProcesses

@@ -17,10 +17,10 @@ nconf.defaults({
   'BASIC_AUTH': false, // Require admin key for http api
   'KEY': false, // Required for BASIC_AUTH
   'USER_AUTH': true, // Require username/password auth for user routes
-  'PORT': 5000 // Port of http api server
+  'PORT': 5000, // Port of http api server
   'HOST': 'localhost',
-  'DOMAIN': 'example.com' // Domain of gateway, for ripple.txt and auth
-  'HOT_WALLET': { address: false, secret: false } // Required
+  'DOMAIN': 'example.com', // Domain of gateway, for ripple.txt and auth
+  'HOT_WALLET': { address: false, secret: false }, // Required
   'COLD_WALLET': false, // Required
   'CURRENCIES': false // Required
 });

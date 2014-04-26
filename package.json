@@ -32,7 +32,8 @@
     "forever": "",
     "pg": "^3.0.3",
     "grunt": "^0.4.4",
-    "pm2": "^0.8.1"
+    "pm2": "^0.8.1",
+    "sequelize-restful": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",

@@ -4,6 +4,8 @@ process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 var express = require('express');
 var fs = require('fs');
 var https = require('https');
+var sequelize = require(__dirname+'/../node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
+var restful = require('sequelize-restful');
 
 var userCtrl = require(__dirname + '/../lib/http_json/controllers/users');
 var publicCtrl = require(__dirname + '/../lib/http_json/controllers/public');
@@ -24,6 +26,7 @@ app = express();
 app.use("/", express.static(__dirname + "/../app"));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(restful(sequelize));
 
 // PUBLIC
 
