@@ -7,11 +7,11 @@ var https = require('https');
 var sequelize = require(__dirname+'/../node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
 var restful = require('sequelize-restful');
 
-var userCtrl = require(__dirname + '/../lib/http_json/controllers/users');
-var publicCtrl = require(__dirname + '/../lib/http_json/controllers/public');
-var ApiRouter = require(__dirname+'/../lib/http_json/routers/api_router.js');
+var userCtrl = require(__dirname + '/../lib/http/controllers/users');
+var publicCtrl = require(__dirname + '/../lib/http/controllers/public');
+var ApiRouter = require(__dirname+'/../lib/http/routers/api_router.js');
 
-var passportAuth = require(__dirname + '/../lib/http_json/passport_auth');
+var passportAuth = require(__dirname + '/../lib/http/passport_auth');
 var passport = require('passport');
 passport.use(passportAuth.adminBasic);
 passport.use(passportAuth.userBasic);

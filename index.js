@@ -500,10 +500,11 @@ function listProcesses(opts, fn){
 };
 
 function listUserExternalAccounts(userId, fn){
-
   data.externalAccounts.readAll({ user_id: userId }, fn);
-
 };
+
+var activateUser = require(__dirname+'/lib/api/activate_user.js');
+var deactivateUser = require(__dirname+'/lib/api/deactivate_user.js');
 
 module.exports = {
   config: config,
@@ -535,7 +536,9 @@ module.exports = {
     listIncomingPayments: listIncomingPayments,
     listOutgoingPayments: listOutgoingPayments,
     listProcesses: listProcesses,
-    listUserExternalAccounts: listUserExternalAccounts
+    listUserExternalAccounts: listUserExternalAccounts,
+    activateUser: activateUser,
+    deactivateUser: deactivateUser
   },
   users: {
     listAccounts: getUserAccounts

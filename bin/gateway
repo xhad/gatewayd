@@ -252,5 +252,15 @@ program
   .description('list the processes currently run by ripple-gateway')
   .action(cli.listProcesses);
 
+program
+  .command('activate_user')
+  .description('enable a user to use the ripple gateway')
+  .action(cli.activateUser);
+
+program
+  .command('deactivate_user')
+  .description('disable a user from using the ripple gateway')
+  .action(cli.deactivateUser);
+
 program.parse(process.argv);
 
