@@ -47,13 +47,14 @@ function clearWithdrawal(id, fn) {
 function registerUser(opts, fn) {
   var userOpts = { 
     name: opts.name,
-    password: opts.password
+    password: opts.password,
+    address: opts.ripple_address
   };  
   data.users.create(userOpts, function(err, user) {
     if (err) { fn(err, null); return; }
     var addressOpts = { 
       user_id: user.id,
-      address: opts.rippleAddress,
+      address: opts.ripple_address,
       managed: false,
       type: "independent"
     };  
@@ -505,6 +506,8 @@ function listUserExternalAccounts(userId, fn){
 
 var activateUser = require(__dirname+'/lib/api/activate_user.js');
 var deactivateUser = require(__dirname+'/lib/api/deactivate_user.js');
+var listFailedPayments = require(__dirname+'/lib/api/list_failed_payments.js');
+var retryFailedPayment = require(__dirname+'/lib/api/retry_failed_payment.js');
 
 module.exports = {
   config: config,
@@ -538,7 +541,9 @@ module.exports = {
     listProcesses: listProcesses,
     listUserExternalAccounts: listUserExternalAccounts,
     activateUser: activateUser,
-    deactivateUser: deactivateUser
+    deactivateUser: deactivateUser,
+    listFailedPayments: listFailedPayments,
+    retryFailedPayment: retryFailedPayment
   },
   users: {
     listAccounts: getUserAccounts

@@ -262,5 +262,15 @@ program
   .description('disable a user from using the ripple gateway')
   .action(cli.deactivateUser);
 
+program
+  .command('list_failed_payments')
+  .description('list outgoing ripple transactions that failed')
+  .action(cli.listFailedPayments);
+
+program
+  .command('retry_failed_payment <ripple_transaction_id>')
+  .description('retry an outgoing ripple transaction that failed')
+  .action(retryFailedPayment);
+
 program.parse(process.argv);
 
