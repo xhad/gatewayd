@@ -55,6 +55,11 @@ program
   .action(cli.listUserExternalAccounts);
 
 program
+  .command('add_external_account <name> <userId>')
+  .description('add an external account to a user')
+  .action(cli.addExternalAccount);
+
+program
   .command('register_user <username> <password> <ripple_address>')
   .description('create a user with a ripple address')
   .action(cli.registerUser);
