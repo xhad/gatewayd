@@ -39,12 +39,12 @@ function userAuth() {
   return passport.authenticate('userBasic', {session: false });
 }
 
-app.post('/api/v1/users/register', publicCtrl.registerUser);
-app.post('/api/v1/users/login', publicCtrl.loginUser);
-app.get('/api/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
-app.get('/api/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
-app.get('/api/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
-app.get('/api/v1/users/:id/ripple_transactions', userAuth(), userCtrl.rippleTransactions);
+app.post('/v1/users/register', publicCtrl.registerUser);
+app.post('/v1/users/login', publicCtrl.loginUser);
+app.get('/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
+app.get('/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
+app.get('/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
+app.get('/v1/users/:id/ripple_transactions', userAuth(), userCtrl.rippleTransactions);
 
 // ADMIN
 
@@ -67,6 +67,7 @@ if (ssl) {
 var host = gateway.config.get('HOST');
 var port = gateway.config.get('PORT'); 
 var protocol = ssl ? 'https' : 'http';
+
 
 app.listen(port, host);
 
