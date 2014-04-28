@@ -1,16 +1,8 @@
-var Client = require('ripple-rest-client');
-
 var gateway = require(__dirname + '/../');
 var send = require(__dirname + "/../lib//ripple/send_payment");
 var build_payment = require(__dirname + '/../lib/ripple/build_payment');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
-
-var client = new Client({
-    api: gateway.config.get('RIPPLE_REST_API'),
-    account: gateway.config.get('HOT_WALLET').address,
-    secret: ''
-});
 
 var middleware;
 var middlewarePath = process.env.PAYMENT_SENT_MIDDLEWARE;
@@ -57,7 +49,7 @@ function processOutgoingPayment(callback) {
                 }, 1000);
               }
             } else {
-              send(payment, function(err, payment){
+             send(payment, function(err, payment){
                 if (err) { 
                   setTimeout(function(){ 
                     processOutgoingPayment(processOutgoingPayment);
@@ -106,7 +98,7 @@ setTimeout(function(){
 
   processOutgoingPayment(processOutgoingPayment);
 
-}, 10000);
+}, 2000);
 
 console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
 
