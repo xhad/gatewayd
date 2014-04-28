@@ -59,19 +59,6 @@
     }
   }
 
-/**
-* Register a User
-* - creates external account named "default"
-* - creates ripple address as provided
-*
-* @param {string} name
-* @param {string} rippleAddress 
-* @param {string} password
-* @returns {User}, {ExternalAccount}, {RippleAddress}
-*/
-
-
-
 ### Record Deposit
 
     curl -k --data "external_account_id=1&amount=1&currency=USD" http:/localhost:5000/api/v1/deposits
