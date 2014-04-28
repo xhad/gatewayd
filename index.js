@@ -495,6 +495,12 @@ function listProcesses(opts, fn){
   });
 };
 
+function listUserExternalAccounts(userId, fn){
+
+  data.externalAccounts.readAll({ user_id: userId }, fn);
+
+};
+
 module.exports = {
   config: config,
   ripple: ripple,
@@ -524,7 +530,8 @@ module.exports = {
     restart: restartGateway,
     listIncomingPayments: listIncomingPayments,
     listOutgoingPayments: listOutgoingPayments,
-    listProcesses: listProcesses
+    listProcesses: listProcesses,
+    listUserExternalAccounts: listUserExternalAccounts
   },
   users: {
     listAccounts: getUserAccounts
