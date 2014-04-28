@@ -35,19 +35,11 @@ function processOutgoingPayment(callback) {
               currency = transaction.to_currency;
 
           build_payment(address, amount, currency, function(err, payment) {
-
             if (err) {
-              console.log(err);
-              if (err == 'No paths found') {
-                transaction.transaction_state = 'no_path_found';
-                setTimeout(function(){ 
-                  processOutgoingPayment(processOutgoingPayment);
-                }, 1000);
-              } else {
-                setTimeout(function(){ 
-                  processOutgoingPayment(processOutgoingPayment);
-                }, 1000);
-              }
+              transaction.transaction_state = 'failed';
+              transaction.save().complete(function(){
+                processOutgoingPayment(processOutgoingPayment);
+              });
             } else {
              send(payment, function(err, payment){
                 if (err) { 
@@ -94,11 +86,8 @@ function processOutgoingPayment(callback) {
 }
 
 setTimeout(function(){
-
-
   processOutgoingPayment(processOutgoingPayment);
-
-}, 2000);
+}, 1000);
 
 console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
 
