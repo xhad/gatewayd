@@ -320,10 +320,14 @@ function getUserAccounts(fn) {
 }
 
 function getHostedAddress(tag, fn) {
-  var params = { address: config.get('COLD_WALLET'), tag: tag };
+  var params = {
+    address: config.get('COLD_WALLET'),
+    tag: tag,
+    type: 'hosted',
+    managed: true
+  };
   data.rippleAddresses.read(params, function(err, address) {
-    if (err) { fn(err, null); return; };
-    if (address) {
+    if (address && !err) {
       fn(null, address);
     } else {
       data.rippleAddresses.create(params, fn);
