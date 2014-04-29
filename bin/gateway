@@ -270,7 +270,7 @@ program
 program
   .command('retry_failed_payment <ripple_transaction_id>')
   .description('retry an outgoing ripple transaction that failed')
-  .action(retryFailedPayment);
+  .action(cli.retryFailedPayment);
 
 program.parse(process.argv);
 
