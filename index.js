@@ -82,28 +82,6 @@ function registerUser(opts, fn) {
 };
 
 /**
-* Record the deposit of an asset
-*
-* @param {string} currency
-* @param {decimal} amount 
-* @param {intenger} external_account_id 
-* @param {function(err, deposit)} callback
-* @returns {Deposit}
-*/
-
-function recordDeposit(opts, fn) {
-
-  data.externalTransactions.create({
-    external_account_id: opts.external_account_id,
-    currency: opts.currency,
-    amount: opts.amount,
-    deposit: true,
-    status: 'queued'
-  }, fn); 
-
-}
-
-/**
 * Finalize a deposit after processing
 *
 * @param {integer} id
@@ -504,10 +482,17 @@ function listUserExternalAccounts(userId, fn){
   data.externalAccounts.readAll({ user_id: userId }, fn);
 };
 
+var api = {};
+
+function bind(filename, method){
+  api[method] = require(__dirname+'/lib/api/'+filename);
+}
+
 var activateUser = require(__dirname+'/lib/api/activate_user.js');
 var deactivateUser = require(__dirname+'/lib/api/deactivate_user.js');
 var listFailedPayments = require(__dirname+'/lib/api/list_failed_payments.js');
 var retryFailedPayment = require(__dirname+'/lib/api/retry_failed_payment.js');
+var recordDeposit = require(__dirname+'/lib/api/record_deposit.js');
 
 module.exports = {
   config: config,
