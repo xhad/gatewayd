@@ -21,9 +21,9 @@ queue.on('payment:withdrawal', function(payment) {
 
       gateway.data.externalTransactions.create({
         deposit: false,
-        amount: payment.to_amount * 0.99,
+        amount: payment.to_amount * (1 - gateway.config.get("WITHDRAWAL_FEE")),
         currency: payment.to_currency,
-        status: 'pending',
+        status: 'queued',
         ripple_transaction_id: payment.id,
         external_account_id: address.tag
       }, function(err, withdrawal) {

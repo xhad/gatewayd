@@ -38,7 +38,7 @@ listener.onPayment = function(payment) {
   };
 };
 
-listener.start(gateway.config.get('last_payment_hash'));
+listener.start(gateway.config.get('LAST_PAYMENT_HASH'));
 
 console.log('Listening for incoming ripple payments from Ripple REST.');
 

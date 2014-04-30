@@ -40,7 +40,7 @@ if (middlewarePath) {
 
   depositMiddleware = function(deposit, fn) {
 
-    var amount = deposit.amount * 0.98; // 2% deposit fee
+    var amount = deposit.amount * (1 - gateway.config.get('DEPOSIT_FEE'));
 
     fn(null, {
       to_address_id: deposit.to_address_id,

@@ -231,7 +231,8 @@ function recordOutgoingNotification(opts, fn) {
 */
 
 function listPendingWithdrawals(fn) {
-  data.externalTransactions.readAllPending(fn);
+  data.externalTransactions.readAll({ deposit: false, status: 'queued' }, fn);
+  //data.externalTransactions.readAllPending(fn);
 }
 
 /**
@@ -370,7 +371,7 @@ function restartGateway(opts) {
 }
 
 function setLastPaymentHash(hash, fn){
-  config.set('last_payment_hash', hash);
+  config.set('LAST_PAYMENT_HASH', hash);
   config.save(function(){
     fn(null, 'set the last payment hash to '+ hash);
   });
