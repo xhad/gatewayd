@@ -9,10 +9,9 @@ var middlewarePath = process.env.PAYMENT_SENT_MIDDLEWARE;
 if (middlewarePath) {
   middleware = require(middlewarePath);
 } else {
-  middleware = function(payment, fn){
+  middleware = function(payment){
     console.log('payment sent');
     console.log(payment.to_amount, payment.to_currency);
-    fn();
   };
 };
 
@@ -52,6 +51,7 @@ function popOutgoingPayment(callback) {
       if (transaction) {
         gateway.data.rippleAddresses.read(transaction.to_address_id, function(err, address) {
           processOutgoingPayment(transaction, address, function(err, resp){
+            console.log(err, resp);
             if (err) {
               switch(err)
               {
@@ -68,7 +68,11 @@ function popOutgoingPayment(callback) {
               transaction.transaction_state = 'sent';
               middleware(transaction);
             }
-            transaction.save().complete(loop);
+      console.log(transaction.transaction_state);
+            transaction.save().complete(function(){
+        console.log(transaction.transaction_state);
+        loop();
+      });
           });
         });
       } else {
