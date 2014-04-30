@@ -1,93 +1,86 @@
 var gateway = require(__dirname + '/../');
-var send = require(__dirname + "/../lib//ripple/send_payment");
-var build_payment = require(__dirname + '/../lib/ripple/build_payment');
+var sendPayment = require(__dirname + "/../lib//ripple/send_payment");
+var buildPayment = require(__dirname + '/../lib/ripple/build_payment');
+var middleware;
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
-var middleware;
 var middlewarePath = process.env.PAYMENT_SENT_MIDDLEWARE;
-
 if (middlewarePath) {
-
   middleware = require(middlewarePath);
-
 } else {
-
   middleware = function(payment, fn){
-
     console.log('payment sent');
     console.log(payment.to_amount, payment.to_currency);
     fn();
-
   };
-
 };
 
-function processOutgoingPayment(callback) {
+function loop(){
+  setTimeout(function(){ 
+    popOutgoingPayment(popOutgoingPayment);
+  }, 1000);
+}
 
+function processOutgoingPayment(transaction, address, fn){
+
+  buildPayment(transaction, address, function(err, payment) {
+    if (err) { handleError(err, fn); return; }
+
+    sendPayment(payment, function(err, resp){
+      if (err || !resp.success) {
+        handleError(err, fn);
+      } else {
+        fn(null, resp);
+      }   
+    }); 
+  }); 
+
+  function handleError(err, fn) {
+    if (err.match('No paths found')){ 
+      fn('noPathFound', null);
+      } else {
+        fn('retry', null);
+    }
+  }
+}
+
+function popOutgoingPayment(callback) {
   gateway.api.listOutgoingPayments(function(err, transactions) {
     if (!err) {
       var transaction = transactions[0];
       if (transaction) {
         gateway.data.rippleAddresses.read(transaction.to_address_id, function(err, address) {
-          var address = address.address,
-              amount = transaction.to_amount,
-              currency = transaction.to_currency;
-
-          build_payment(address, amount, currency, function(err, payment) {
+          processOutgoingPayment(transaction, address, function(err, resp){
             if (err) {
-              transaction.transaction_state = 'failed';
-              transaction.save().complete(function(){
-                processOutgoingPayment(processOutgoingPayment);
-              });
+              switch(err)
+              {
+              case 'retry':
+                transaction.transaction_state = 'outgoing';
+                break;
+              case 'noPathFound':
+                transaction.transaction_state = 'failed';
+                break;
+              default:
+                transaction.transaction_state = 'failed';
+              }
             } else {
-             send(payment, function(err, payment){
-                if (err) { 
-                  setTimeout(function(){ 
-                    processOutgoingPayment(processOutgoingPayment);
-                  }, 1000);
-                } else {
-
-                  if (payment.success) {
-                    transaction.transaction_state = 'sent';
-                    transaction.save().complete(function(){
-
-                      middleware(payment, function() {
-
-                        console.log(transaction);
-                        setTimeout(function(){ 
-                          processOutgoingPayment(processOutgoingPayment);
-                        }, 1000);
-                      
-                      });
-                    });
-                  } else {
-                    setTimeout(function(){ 
-                      processOutgoingPayment(processOutgoingPayment);
-                    }, 1000);
-                  }
-                }
-              });
+              transaction.transaction_state = 'sent';
+              middleware(transaction);
             }
+            transaction.save().complete(loop);
           });
         });
       } else {
-        setTimeout(function(){ 
-          processOutgoingPayment(processOutgoingPayment);
-        }, 1000);
+        loop();
       }
     } else {
-      setTimeout(function(){ 
-        processOutgoingPayment(processOutgoingPayment);
-      }, 1000);
+      loop();
     }
   });
-
 }
 
-setTimeout(function(){
-  processOutgoingPayment(processOutgoingPayment);
-}, 1000);
+loop();
 
 console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
 
