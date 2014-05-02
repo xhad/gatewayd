@@ -146,3 +146,5 @@ A banking API integration or manual human gateway operator reads the queue of pe
 
 API calls: list_withdrawals, clear_withdrawal
 
+Alternatively one can provide a WITHDRAWALS_CALLBACK_URL in the configuration, and then start the withdrawal_callbacks process to receive POST notifications whenever a new withdrawal comes in the gateway from the Ripple network. This process is currently not starte by default.
+
