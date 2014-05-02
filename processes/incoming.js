@@ -6,7 +6,7 @@ var listener = new Listener();
 
 listener.onPayment = function(payment) {
 
-  if (payment.destination_account == gateway.config.get('COLD_WALLET')) {
+  if (payment && payment.destination_account == gateway.config.get('COLD_WALLET')) {
     var dt = payment.destination_tag;
     var state = payment.result;
     var hash = payment.hash;
