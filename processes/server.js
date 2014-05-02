@@ -16,43 +16,36 @@ var passport = require('passport');
 passport.use(passportAuth.adminBasic);
 passport.use(passportAuth.userBasic);
 
-var apiRouter =  new ApiRouter({
-  passport: passport,
-  authName: 'adminBasic'
-});
-
 app = express();
-
 app.use("/", express.static(__dirname + "/../node_modules/ripple-gateway-webapp-example/"));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(restful(sequelize));
 
-// PUBLIC
+var apiRouter =  new ApiRouter({
+  passport: passport,
+  authName: 'adminBasic'
+});
+apiRouter.bind(app);
 
 app.get('/ripple.txt', publicCtrl.rippleTxt);
-app.get('/app', publicCtrl.webapp);
 
-// USER
-
-function userAuth() {
-  return passport.authenticate('userBasic', {session: false });
+if (gateway.config.get('WEBAPP')) {
+  app.get('/app', publicCtrl.webapp);
+  app.post('/v1/users/register', publicCtrl.registerUser);
 }
 
-app.post('/v1/users/register', publicCtrl.registerUser);
-app.post('/v1/users/login', publicCtrl.loginUser);
-app.get('/v1/users/:id', userAuth(), userCtrl.show);
-app.get('/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
-app.get('/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
-app.get('/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
-app.get('/v1/users/:id/ripple_transactions', userAuth(), userCtrl.rippleTransactions);
-
-// ADMIN
-
-function adminAuth() {
-  return passport.authenticate('adminBasic', {session: false });
+if (gateway.config.get('USER_AUTH')) {
+  function userAuth() {
+    return passport.authenticate('userBasic', {session: false });
+  }
+  app.post('/v1/users/login', userAuth(), publicCtrl.loginUser);
+  app.get('/v1/users/:id', userAuth(), userCtrl.show);
+  app.get('/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
+  app.get('/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
+  app.get('/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
+  app.get('/v1/users/:id/ripple_transactions', userAuth(), userCtrl.rippleTransactions);
 }
-apiRouter.bind(app);
 
 var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
