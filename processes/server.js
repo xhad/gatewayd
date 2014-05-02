@@ -41,6 +41,7 @@ function userAuth() {
 
 app.post('/v1/users/register', publicCtrl.registerUser);
 app.post('/v1/users/login', publicCtrl.loginUser);
+app.get('/v1/users/:id', userAuth(), userCtrl.show);
 app.get('/v1/users/:id/external_accounts', userAuth(), userCtrl.externalAccounts);
 app.get('/v1/users/:id/external_transactions', userAuth(), userCtrl.externalTransactions);
 app.get('/v1/users/:id/ripple_addresses', userAuth(), userCtrl.rippleAddresses);
@@ -52,7 +53,6 @@ function adminAuth() {
   return passport.authenticate('adminBasic', {session: false });
 }
 apiRouter.bind(app);
-
 
 var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
 
