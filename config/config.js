@@ -14,7 +14,7 @@ nconf.defaults({
   'SSL_KEY_PATH': __dirname+'/../env/certs/server.key',
   'SSL_CERTIFICATE_PATH': __dirname+'/../env/certs/server.crt',
   'HTTP_SERVER': true, // Serve http/json api
-  'BASIC_AUTH': false, // Require admin key for http api
+  'BASIC_AUTH': true, // Require admin key for http api
   'KEY': false, // Required for BASIC_AUTH
   'USER_AUTH': true, // Require username/password auth for user routes
   'PORT': 5000, // Port of http api server
