@@ -158,11 +158,6 @@ program
     });
 
   program
-    .command('fund_hot_wallet <amount> <currency> <secret>')
-    .description('issue funds from cold wallet to hot wallet') 
-    .action(cli.fundHotWallet);
-
-  program
     .command('get_hot_wallet_secret')
     .description('get the secret of the gateway hot wallet')
     .action(function(){
