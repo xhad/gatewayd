@@ -6,7 +6,7 @@ nconf
 
 nconf.defaults({
   'RIPPLE_REST_API': 'http://localhost:5990/',
-  'RIPPLE_REST_PATH': __dirname+'/../node_modules/ripple-rest/',
+  'RIPPLE_REST_PATH': null,
   'RUN_RIPPLE_REST': false,
   'DATABASE_URL': 'postgres://postgres:password@localhost:5432/ripple_gateway',
   'RIPPLE_DATAMODEL_ADAPTER': 'ripple-gateway-data-sequelize',
