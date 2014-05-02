@@ -22,7 +22,11 @@ nconf.defaults({
   'DOMAIN': 'example.com', // Domain of gateway, for ripple.txt and auth
   'HOT_WALLET': { address: false, secret: false }, // Required
   'COLD_WALLET': false, // Required
-  'CURRENCIES': false // Required
+  'CURRENCIES': false, // Required
+  'WITHDRAWAL_FEE': 0.01, // Required
+  'DEPOSIT_FEE': 0.01, // Required
+  'WITHDRAWALS_CALLBACK_URL': null, // URL to POST callback of withdrawals
+  'WITHDRAWALS_CALLBACK_CERTIFICATE': null // Used to validate SSL on callbacks
 });
 
 module.exports = nconf;
