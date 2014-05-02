@@ -24,7 +24,7 @@ function loop() {
       if (err) {
         setTimeout(loop, 500);
       } else {
-        withdrawal.status = 'pending';
+        withdrawal.status = 'notified';
         withdrawal.save().complete(function(){
           setTimeout(loop, 500);
         });
@@ -51,5 +51,3 @@ function postWithdrawalCallback(withdrawal, url, fn) {
 }
 
 loop();
-
-
