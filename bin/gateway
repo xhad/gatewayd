@@ -115,18 +115,18 @@ program
   });
 
 program
-  .command('set_domain <domain>')
-  .description('set the domain name of the gateway')
-  .action(function(domain){
-    gateway.config.set('domain', domain);
+  .command('set_DOMAIN <DOMAIN>')
+  .description('set the DOMAIN name of the gateway')
+  .action(function(DOMAIN){
+    gateway.config.set('DOMAIN', DOMAIN);
     gateway.config.save(function() {
       console.log(gateway.config.get('DOMAIN'));
     });
   });
 
   program
-    .command('get_domain')
-    .description('get the domain name of the gateway')
+    .command('get_DOMAIN')
+    .description('get the DOMAIN name of the gateway')
     .action(function(){
       console.log(gateway.config.get('DOMAIN'));
     });
