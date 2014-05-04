@@ -17,7 +17,7 @@ passport.use(passportAuth.adminBasic);
 passport.use(passportAuth.userBasic);
 
 app = express();
-app.use("/", express.static(__dirname + "/../node_modules/ripple-gateway-webapp-example/"));
+app.use("/", express.static(gateway.config.get('WEBAPP_PATH')));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(restful(sequelize));
@@ -32,7 +32,7 @@ app.get('/ripple.txt', publicCtrl.rippleTxt);
 
 if (gateway.config.get('WEBAPP')) {
   app.get('/app', publicCtrl.webapp);
-  app.post('/v1/users/register', publicCtrl.registerUser);
+  app.post('/v1/register', publicCtrl.registerUser);
 }
 
 if (gateway.config.get('USER_AUTH')) {
