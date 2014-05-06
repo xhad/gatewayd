@@ -20,7 +20,10 @@ app = express();
 app.use("/", express.static(gateway.config.get('WEBAPP_PATH')));
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(restful(sequelize));
+
+if (!gateway.config.get('BASIC_AUTH')){
+  app.use(restful(sequelize));
+}
 
 var apiRouter =  new ApiRouter({
   passport: passport,
