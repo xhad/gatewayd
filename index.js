@@ -116,6 +116,14 @@ function listQueuedDeposits(fn) {
 
 }
 
+function listClearedDeposits(fn) {
+
+  data.externalTransactions.readAll({
+    status: 'cleared'
+  }, fn);
+
+}
+
 /**
 * Add a payment to the outgoing queue
 *
@@ -512,6 +520,7 @@ module.exports = {
     listUsers: listUsers,
     recordDeposit: recordDeposit,
     listDeposits: listQueuedDeposits,
+    listCleared: listClearedDeposits,
     getHotWallet: getHotWallet,
     setHotWallet: setHotWallet,
     generateWallet: generateWallet,
