@@ -10,6 +10,7 @@ var restful = require('sequelize-restful');
 var userCtrl = require(__dirname + '/../lib/http/controllers/users');
 var publicCtrl = require(__dirname + '/../lib/http/controllers/public');
 var ApiRouter = require(__dirname+'/../lib/http/routers/api_router.js');
+var ResourcesRouter = require(__dirname+'/../lib/http/routers/resources_router.js');
 
 var passportAuth = require(__dirname + '/../lib/http/passport_auth');
 var passport = require('passport');
@@ -21,15 +22,18 @@ app.use("/", express.static(gateway.config.get('WEBAPP_PATH')));
 app.use(express.json());
 app.use(express.urlencoded());
 
-if (!gateway.config.get('BASIC_AUTH')){
-  app.use(restful(sequelize));
-}
-
 var apiRouter =  new ApiRouter({
   passport: passport,
   authName: 'adminBasic'
 });
+
+var resourcesRouter =  new ResourcesRouter({
+  passport: passport,
+  authName: 'adminBasic'
+});
+
 apiRouter.bind(app);
+resourcesRouter.bind(app);
 
 app.get('/ripple.txt', publicCtrl.rippleTxt);
 
@@ -63,7 +67,6 @@ if (ssl) {
 var host = gateway.config.get('HOST');
 var port = gateway.config.get('PORT'); 
 var protocol = ssl ? 'https' : 'http';
-
 
 app.listen(port, host);
 
