@@ -13,6 +13,10 @@ validator.extend('isRippleAddress', function(string){
   return ripple.lib.UInt160.is_valid(string);
 });
 
+validator.extend('isPassword', function(string){
+  return string.length >= 6;
+});
+
 /**
 * List Users
 *
@@ -51,7 +55,15 @@ function clearWithdrawal(id, fn) {
 
 function registerUser(opts, fn) {
   if (!validator.isRippleAddress(opts.ripple_address)) {
-    fn('ripple_address', null);
+    fn('invalid ripple_address', null);
+    return;
+  };
+  if (!validator.isAlphanumeric(opts.name)) {
+    fn('name must be alphanumeric', null);
+    return;
+  };
+  if (!validator.isPassword(opts.password)) {
+    fn('password must be at least six characters', null);
     return;
   };
 
