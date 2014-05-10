@@ -8,6 +8,11 @@ var crypto = require('crypto');
 var trust = require(__dirname+'/lib/ripple/trust.js');
 var exec = require('child_process').exec;
 
+var validator = require('validator');
+validator.extend('isRippleAddress', function(string){
+  return ripple.lib.UInt160.is_valid(string);
+});
+
 /**
 * List Users
 *
@@ -45,11 +50,17 @@ function clearWithdrawal(id, fn) {
 */
 
 function registerUser(opts, fn) {
+  if (!validator.isRippleAddress(opts.ripple_address)) {
+    fn('ripple_address', null);
+    return;
+  };
+
   var userOpts = { 
     name: opts.name,
     password: opts.password,
     address: opts.ripple_address
   };  
+
   data.users.create(userOpts, function(err, user) {
     if (err) { fn(err, null); return; }
     var addressOpts = { 
