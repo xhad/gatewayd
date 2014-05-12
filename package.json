@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.12.3",
+  "version": "3.12.4",
   "scripts": {
     "start": "./bin/gateway start"
   },
