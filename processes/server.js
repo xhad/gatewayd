@@ -5,7 +5,6 @@ var express = require('express');
 var fs = require('fs');
 var https = require('https');
 var sequelize = require(__dirname+'/../node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
-var restful = require('sequelize-restful');
 
 var userCtrl = require(__dirname + '/../lib/http/controllers/users');
 var publicCtrl = require(__dirname + '/../lib/http/controllers/public');
