@@ -15,6 +15,11 @@ program
   .action(cli.listIncomingPayments);
 
 program
+  .command('list_cleared')
+  .description('get cleared transactions')
+  .action(cli.listCleared);
+
+program
   .command('list_withdrawals')
   .description('get pending withdrawals to external accounts')
   .action(cli.listWithdrawals);
