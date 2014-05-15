@@ -55,11 +55,11 @@ function clearWithdrawal(id, fn) {
 
 function registerUser(opts, fn) {
   if (!validator.isRippleAddress(opts.ripple_address)) {
-    fn('invalid ripple_address', null);
+    fn('ripple_address must be a valid ripple address', null);
     return;
   };
-  if (!validator.isAlphanumeric(opts.name)) {
-    fn('name must be alphanumeric', null);
+  if (!validator.isEmail(opts.name)) {
+    fn('name must be a valid email address', null);
     return;
   };
   if (!validator.isPassword(opts.password)) {
