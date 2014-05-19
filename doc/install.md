@@ -40,8 +40,8 @@ Install the ripple-gateway package and its dependencies using NPM:
 
     sudo npm install -g pg
     sudo npm install -g db-migrate
-    sudo npm install -g forever
     sudo npm install -g grunt
+    sudo npm install -g pm2
 
     npm install --save ripple-gateway
 
