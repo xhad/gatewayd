@@ -6,25 +6,24 @@ var TIMEOUT = 1000;
 var FEE = 1 - gateway.config.get("WITHDRAWAL_FEE");
 
 function getIncomingTransaction(fn){
-  gateway.models.rippleTransactions.find({ where: { incoming: true }})
-  .complete(function(fn);
+  gateway.data.models.rippleTransactions.find({
+    where: { transaction_state: 'incoming' }
+  }).complete(fn);
 }
 
 function finalizeRippleTransaction(rippleTransaction, sqlTransaction, done){
-  var query = 'update ripple_transactions set "transaction_state" = "succeeded"';
-    query += 'where id = '+rippleTransaction.id+' and "transaction_state" = "incoming"';
-  sql.query(query).success(function(){
-    sqlTransaction.commit();
-    done();
-  }).error(function(){
-    sqlTransaction.rollback;
+  var query = "update ripple_transactions set transaction_state = 'succeeded'";
+    query += " where id = "+rippleTransaction.id+" and transaction_state = 'incoming'";
+  sql.query(query).complete(function(err, rippleTransaction){
+    if (err) { console.log('error', err) };
     done();
   });
 }
 
-function getTransactionRippleAddress(rippleTransaction, function(err, address){
-  var query = { where: { id: payment.from_address_id }};
-  gateway.data.rippleAddresses.find(query, function(err, address) {
+function getTransactionRippleAddress(rippleTransaction, fn){
+  gateway.data.models.rippleAddresses.find({
+    where: { id: rippleTransaction.from_address_id }
+  }).complete(function(err, address) {
     if (err){
       fn(err, null);
     } else if (address){
@@ -33,10 +32,10 @@ function getTransactionRippleAddress(rippleTransaction, function(err, address){
       fn('no address found', null);
     }
   });
-});
+};
 
-function handleIncoming(rippleTransaction, done){
-  getTransactionRippleAddress(function(err, address)
+function handleIncomingTransaction(rippleTransaction, done){
+  getTransactionRippleAddress(rippleTransaction, function(err, address){
     if (err) { console.log('error', err); done(); return; };
     sql.transaction(function(sqlTransaction) {
       createWithdrawal(rippleTransaction, address, sqlTransaction, function(err){
@@ -45,17 +44,17 @@ function handleIncoming(rippleTransaction, done){
       })
     });
   })
-});
+};
 
 function createWithdrawal(rippleTransaction, address, sqlTransaction, callback){
-  gateway.data.externalTransactions.create({
+  gateway.data.models.externalTransactions.create({
     deposit: false,
-    amount: rippleTransactoin.to_amount * (1 - gateway.config.get("WITHDRAWAL_FEE")),
+    amount: rippleTransaction.to_amount * (1 - gateway.config.get("WITHDRAWAL_FEE")),
     currency: rippleTransaction.to_currency,
     status: 'queued',
-    ripple_transaction_id: payment.id,
+    ripple_transaction_id: rippleTransaction.id,
     external_account_id: address.tag
-  }, function(err, withdrawal) {
+  }).complete(function(err, withdrawal) {
     if (err) {
       sqlTransaction.rollback();
       callback(err);
@@ -74,7 +73,7 @@ function getNextIncomingTransaction(callback){
       setTimeout(function(){
         callback(callback);
       }, TIMEOUT);
-    } else if {
+    } else if (transaction) {
       handleIncomingTransaction(transaction, function(){
         callback(callback);
       });
