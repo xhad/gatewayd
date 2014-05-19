@@ -258,7 +258,7 @@ program
   .action(cli.activateUser);
 
 program
-  .command('deactivate_user')
+  .command('deactivate_user <userId>')
   .description('disable a user from using the ripple gateway')
   .action(cli.deactivateUser);
 
