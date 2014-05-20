@@ -2,7 +2,7 @@ var gateway = require(__dirname+'/../');
 var request = require('request');
 
 function getQueuedWithdrawal(fn){
-  gateway.api.listWithdrawals(function(err, withdrawals){
+  gateway.api.listQueuedWithdrawals(function(err, withdrawals){
     if (err){
       fn(err, null);
     } else {

@@ -20,9 +20,9 @@ program
   .action(cli.listCleared);
 
 program
-  .command('list_withdrawals')
-  .description('get pending withdrawals to external accounts')
-  .action(cli.listWithdrawals);
+  .command('list_queued_withdrawals')
+  .description('get queued withdrawals to external accounts')
+  .action(cli.listQueuedWithdrawals);
 
 program
   .command('clear_withdrawal <external_transaction_id>')
@@ -40,9 +40,9 @@ program
   .action(cli.recordDeposit);
 
 program
-  .command('list_deposits')
+  .command('list_queued_deposits')
   .description('list deposits in the deposit processing queue')
-  .action(cli.listDeposits);
+  .action(cli.listQueuedDeposits);
 
 program
   .command('list_outgoing_payments')
@@ -89,7 +89,7 @@ program
   .description('set the url of the postgres database')
   .action(function(url){
     gateway.config.set('DATABASE_URL', url);
-    gateway.save(function(){
+    gateway.config.save(function(){
       console.log(gateway.config.get('DATABASE_URL'));
     });
   });
@@ -120,7 +120,7 @@ program
   });
 
 program
-  .command('set_DOMAIN <DOMAIN>')
+  .command('set_domain <DOMAIN>')
   .description('set the DOMAIN name of the gateway')
   .action(function(DOMAIN){
     gateway.config.set('DOMAIN', DOMAIN);
@@ -130,7 +130,7 @@ program
   });
 
   program
-    .command('get_DOMAIN')
+    .command('get_domain')
     .description('get the DOMAIN name of the gateway')
     .action(function(){
       console.log(gateway.config.get('DOMAIN'));
@@ -221,7 +221,7 @@ program
   .action(cli.removeCurrency);
 
 program
-  .command('set_trust <amount> <currency>')
+  .command('set_trust <currency> <amount>')
   .description('set level of trust from hot to cold wallet') 
   .action(cli.setTrustLine);
 
@@ -258,7 +258,7 @@ program
   .action(cli.activateUser);
 
 program
-  .command('deactivate_user')
+  .command('deactivate_user <userId>')
   .description('disable a user from using the ripple gateway')
   .action(cli.deactivateUser);
 
