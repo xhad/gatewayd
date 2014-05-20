@@ -24,7 +24,7 @@ listener.vent.on("payment", function(payment) {
 
       if (issuer == gateway.config.get('COLD_WALLET')) {
 
-        gateway.payments.recordIncoming(dt, currency, amount, 'incoming', hash, function(err, record) {
+        gateway.api.recordIncomingPayment(dt, currency, amount, 'incoming', hash, function(err, record) {
           if (err) {
             console.log('error:', err); 
             try {
