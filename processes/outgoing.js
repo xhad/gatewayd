@@ -16,7 +16,7 @@ if (middlewarePath) {
 };
 
 function loop(){
-  setTimeout(function(){ 
+  setTimeout(function(){
     popOutgoingPayment(popOutgoingPayment);
   }, 1000);
 }
@@ -31,15 +31,15 @@ function processOutgoingPayment(transaction, address, fn){
         handleError(err, fn);
       } else {
         fn(null, resp);
-      }   
-    }); 
-  }); 
+      }
+    });
+  });
 
   function handleError(err, fn) {
-    if (err.match('No paths found')){ 
+    if (err.match('No paths found')){
       fn('noPathFound', null);
-      } else {
-        fn('retry', null);
+    } else {
+      fn('retry', null);
     }
   }
 }
@@ -55,24 +55,24 @@ function popOutgoingPayment(callback) {
             if (err) {
               switch(err)
               {
-              case 'retry':
-                transaction.transaction_state = 'outgoing';
-                break;
-              case 'noPathFound':
-                transaction.transaction_state = 'failed';
-                break;
-              default:
-                transaction.transaction_state = 'failed';
+                case 'retry':
+                  transaction.transaction_state = 'outgoing';
+                  break;
+                case 'noPathFound':
+                  transaction.transaction_state = 'failed';
+                  break;
+                default:
+                  transaction.transaction_state = 'failed';
               }
             } else {
               transaction.transaction_state = 'sent';
               middleware(transaction);
             }
-      console.log(transaction.transaction_state);
+            transaction.uid = resp.client_resource_id;
             transaction.save().complete(function(){
-        console.log(transaction.transaction_state);
-        loop();
-      });
+              console.log(transaction.transaction_state);
+              loop();
+            });
           });
         });
       } else {
