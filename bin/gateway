@@ -20,9 +20,9 @@ program
   .action(cli.listCleared);
 
 program
-  .command('list_withdrawals')
-  .description('get pending withdrawals to external accounts')
-  .action(cli.listWithdrawals);
+  .command('list_queued_withdrawals')
+  .description('get queued withdrawals to external accounts')
+  .action(cli.listQueuedWithdrawals);
 
 program
   .command('clear_withdrawal <external_transaction_id>')
