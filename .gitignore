@@ -5,3 +5,4 @@ node_modules/
 nohup.out
 log/server.log
 config/config.json
+npm-debug.log
