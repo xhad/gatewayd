@@ -5,21 +5,24 @@ var Listener = require(__dirname+'/../lib/ripple/listener.js');
 var listener = new Listener();
 
 listener.onPayment = function(payment) {
-
   if (payment && payment.destination_account == gateway.config.get('COLD_WALLET')) {
-    var dt = payment.destination_tag;
-    var state = payment.result;
-    var hash = payment.hash;
 
-    if (dt && (state == 'tesSUCCESS')){
+    var opts = {
+      destinationTag : payment.destination_tag,
+      transaction_state : payment.result,
+      hash : payment.hash
+    };
 
-      var amount = payment.destination_amount.value;
-      var currency = payment.destination_amount.currency;
-      var issuer = payment.destination_amount.issuer;
+    if (opts.destinationTag && (opts.transaction_state  == 'tesSUCCESS')){
 
-      if (issuer == gateway.config.get('COLD_WALLET')) {
+      opts.amount = payment.destination_amount.value;
+      opts.currency = payment.destination_amount.currency;
+      opts.issuer = payment.destination_amount.issuer;
+      opts.state = 'incoming';
 
-        gateway.api.recordIncomingPayment(dt, currency, amount, 'incoming', hash, function(err, record) {
+      if (opts.issuer == gateway.config.get('COLD_WALLET')) {
+
+        gateway.api.recordIncomingPayment(opts, function(err, record) {
           if (err) {
             console.log('error:', err); 
 
