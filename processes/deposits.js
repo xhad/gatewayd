@@ -31,6 +31,8 @@ var gateway = require(__dirname+'/../');
 
 var depositMiddleware;
 
+var FEE = gateway.config.get('DEPOSIT_FEE');
+
 var middlewarePath = process.env.DEPOSIT_MIDDLEWARE;
 
 if (middlewarePath) {
@@ -41,7 +43,7 @@ if (middlewarePath) {
 
   depositMiddleware = function(deposit, fn) {
 
-    var amount = deposit.amount * (1 - gateway.config.get('DEPOSIT_FEE'));
+    var amount = deposit.amount * (1 - FEE);
 
     fn(null, {
       to_address_id: deposit.to_address_id,
