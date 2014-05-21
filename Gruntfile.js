@@ -14,7 +14,20 @@ module.exports = function (grunt) {
     }
   }); 
 
+  grunt.initConfig({
+    jsdoc : {
+      dist : {
+        src: ['index.js', 'lib/api/*.js'],
+        options: {
+            destination: 'doc/jsdoc/'
+        }
+      }
+    }
+  });
+
+
   
   grunt.loadNpmTasks('grunt-db-migrate');
+  grunt.loadNpmTasks('grunt-jsdoc');
   grunt.registerTask('default', ['migrate']);
 };
