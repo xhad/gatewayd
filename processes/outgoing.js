@@ -17,11 +17,27 @@ if (middlewarePath) {
   };
 };
 
+
+/**
+ * @function loop
+ * @description Polls database for outgoing payments.
+ */
 function loop(){
   setTimeout(function(){
-    popOutgoingPayment(popOutgoingPayment);
+    popOutgoingPayment();
   }, 1000);
 }
+
+/**
+ * @function processOutgoingPayment
+ * @description Process queued outgoing payments by calling
+ * Ripple REST to construct and post a payment.
+ *
+ * @param transaction
+ * @param address
+ * @param fn
+ *
+ */
 
 function processOutgoingPayment(transaction, address, fn){
 
@@ -45,7 +61,64 @@ function processOutgoingPayment(transaction, address, fn){
   }
 }
 
-function popOutgoingPayment(callback) {
+/**
+ *
+ * @function getAndHandlePaymentStatus
+ * @param statusUrl
+ * @param callback
+ * @param loopFunction
+ *
+ * @description Call this function in a loop, passing in itself as the loopFunction.
+ * It will call Ripple REST for the status of a payment, and loop if
+ * the state is not "validated"
+ *
+ */
+
+function getAndHandlePaymentStatus(statusUrl, callback, loopFunction){
+  getPaymentStatus(statusUrl, function(err, payment){
+    if(err){
+      callback(err, null);
+      loopFunction(statusUrl, callback, loopFunction);
+    } else {
+      console.log('getPaymentStatus::', payment);
+      if (payment.state == 'validated'){
+        callback(null, payment);
+      } else {
+        loopFunction(statusUrl, callback, loopFunction);
+      }
+    }
+  });
+}
+
+/**
+ * @function pollPaymentStatus
+ * @description Upon successfully posting a payment to Ripple REST
+ * use the client_resource_id and status url provided to poll for
+ * the payment's status and validate its state in the Rippled ledger.
+ *
+ * The pollPaymentStatus function calls a single looping function,
+ * passing in the callback and looping function as parameters
+ * @param {string} statusUrl
+ * @param {function} callback
+ * @returns {Payment}
+ */
+function pollPaymentStatus(statusUrl, callback){
+  getAndHandlePaymentStatus(statusUrl, callback, getAndHandlePaymentStatus);
+}
+
+/**
+ * @function performOutgoingPaymentJob
+ *
+ * Read a single ripple transaction with state of "outgoing"
+ * from the database, process it by sending the payment to
+ * Ripple REST. Upon response from Ripple REST record the payment
+ * state in the database and poll Ripple REST for the status
+ * of the payment. Finally record the transaction_state and
+ * ripple transaction_hash from the ledger.
+ *
+ * Loops infinitely by calling itself.
+ */
+function popOutgoingPayment() {
   gateway.api.listOutgoingPayments(function(err, transactions) {
     if (!err) {
       var transaction = transactions[0];
@@ -65,28 +138,22 @@ function popOutgoingPayment(callback) {
                   transaction.state = 'failed';
               }
             } else {
-              var statusUrl = resp.status_url
+              var statusUrl = resp.status_url;
               transaction.state = 'sent';
               transaction.uid = resp.client_resource_id;
+              transaction.save().complete(function(){
+                middleware(transaction);
 
-              middleware(transaction);
-              getPaymentStatus(statusUrl, function(err, resp){
-                if(err){
-                  console.log('Error:getPaymentStatus::', err);
-                } else {
-                  transaction.transaction_state = resp.result;
+                pollPaymentStatus(statusUrl, function(err, payment){
+                  transaction.transaction_state = payment.result;
+                  transaction.transaction_hash = payment.hash;
                   transaction.save().complete(function(){
                     console.log(transaction.transaction_state);
                     loop();
                   });
-                }
-              })
+                });
+              });
             }
-
-            transaction.save().complete(function(){
-              console.log(transaction.state);
-              loop();
-            });
           });
         });
       } else {
