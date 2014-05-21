@@ -25,7 +25,6 @@ function processOutgoingPayment(transaction, address, fn){
 
   buildPayment(transaction, address, function(err, payment) {
     if (err) { handleError(err, fn); return; }
-
     sendPayment(payment, function(err, resp){
       if (err || !resp.success) {
         handleError(err, fn);
@@ -51,21 +50,20 @@ function popOutgoingPayment(callback) {
       if (transaction) {
         gateway.data.rippleAddresses.read(transaction.to_address_id, function(err, address) {
           processOutgoingPayment(transaction, address, function(err, resp){
-            console.log(err, resp);
             if (err) {
               switch(err)
               {
                 case 'retry':
-                  transaction.transaction_state = 'outgoing';
+                  transaction.state = 'outgoing';
                   break;
                 case 'noPathFound':
-                  transaction.transaction_state = 'failed';
+                  transaction.state = 'failed';
                   break;
                 default:
-                  transaction.transaction_state = 'failed';
+                  transaction.state = 'failed';
               }
             } else {
-              transaction.transaction_state = 'sent';
+              transaction.state = 'sent';
               middleware(transaction);
             }
             transaction.uid = resp.client_resource_id;
