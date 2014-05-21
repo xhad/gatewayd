@@ -1,6 +1,8 @@
 var gateway = require(__dirname + '/../');
 var sendPayment = require(__dirname + "/../lib//ripple/send_payment");
 var buildPayment = require(__dirname + '/../lib/ripple/build_payment');
+var getPaymentStatus = require(__dirname + '/../lib/ripple/get_payment_status');
+
 var middleware;
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
@@ -63,12 +65,26 @@ function popOutgoingPayment(callback) {
                   transaction.state = 'failed';
               }
             } else {
+              var statusUrl = resp.status_url
               transaction.state = 'sent';
+              transaction.uid = resp.client_resource_id;
+
               middleware(transaction);
+              getPaymentStatus(statusUrl, function(err, resp){
+                if(err){
+                  console.log('Error:getPaymentStatus::', err);
+                } else {
+                  transaction.transaction_state = resp.result;
+                  transaction.save().complete(function(){
+                    console.log(transaction.transaction_state);
+                    loop();
+                  });
+                }
+              })
             }
-            transaction.uid = resp.client_resource_id;
+
             transaction.save().complete(function(){
-              console.log(transaction.transaction_state);
+              console.log(transaction.state);
               loop();
             });
           });
