@@ -7,13 +7,13 @@ var FEE = 1 - gateway.config.get("WITHDRAWAL_FEE");
 
 function getIncomingTransaction(fn){
   gateway.data.models.rippleTransactions.find({
-    where: { transaction_state: 'incoming' }
+    where: { state: 'incoming' }
   }).complete(fn);
 }
 
 function finalizeRippleTransaction(rippleTransaction, sqlTransaction, done){
-  var query = "update ripple_transactions set transaction_state = 'succeeded'";
-    query += " where id = "+rippleTransaction.id+" and transaction_state = 'incoming'";
+  var query = "update ripple_transactions set state = 'succeeded'";
+    query += " where id = "+rippleTransaction.id+" and state = 'incoming'";
   sql.query(query).complete(function(err, rippleTransaction){
     if (err) { console.log('error', err) };
     done();
