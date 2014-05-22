@@ -2,12 +2,14 @@ var gateway = require(__dirname+'/../');
 var request = require('request');
 
 function getQueuedWithdrawal(fn){
-  gateway.api.listQueuedWithdrawals(function(err, withdrawals){
+  gateway.data.models.externalTransactions.find({
+    where: { status: "queued" }
+  }).complete(function(err, withdrawal){
     if (err){
       fn(err, null);
     } else {
-      if (withdrawals && withdrawals[0]){
-        fn(null, withdrawals[0]);
+      if (withdrawal){
+        fn(null, withdrawal);
       } else {
         fn(null,null);
       }
@@ -43,9 +45,12 @@ function postWithdrawalCallback(withdrawal, url, fn) {
     uri: url,
     form: body
   }, function(err, resp, body){
-    console.log('CODE', resp.statusCode);
-    console.log('ERROR', err);
-    console.log('BODY', body);
+    if (err) {
+      console.log('ERROR', err);
+    } else {
+      console.log('CODE', resp.statusCode);
+      console.log('BODY', body);
+    }
     fn(err, body);
   });
 }

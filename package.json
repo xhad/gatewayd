@@ -18,7 +18,7 @@
     "commander": "2.1.0",
     "ripple-wallet": "1.0.0",
     "require-all": "",
-    "ripple-gateway-data-sequelize": "1.7.1",
+    "ripple-gateway-data-sequelize": "1.8.1",
     "ripple-gateway-webapp-example": "1.6.1",
     "ripple-rest-client": "1.4.0",
     "node-uuid": "1.4.1",

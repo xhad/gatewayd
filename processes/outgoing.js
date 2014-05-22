@@ -2,6 +2,9 @@ var gateway = require(__dirname + '/../');
 var sendPayment = require(__dirname + "/../lib//ripple/send_payment");
 var buildPayment = require(__dirname + '/../lib/ripple/build_payment');
 var getPaymentStatus = require(__dirname + '/../lib/ripple/get_payment_status');
+var depositCallbackJob = require(__dirname+'/../lib/jobs/deposit_completion_callback.js');
+
+console.log(depositCallbackJob.perform);
 
 var middleware;
 
@@ -53,7 +56,7 @@ function processOutgoingPayment(transaction, address, fn){
   });
 
   function handleError(err, fn) {
-    if (err.match('No paths found')){
+    if (typeof err === 'string' && err.match('No paths found')){
       fn('noPathFound', null);
     } else {
       fn('retry', null);
@@ -137,18 +140,25 @@ function popOutgoingPayment() {
                 default:
                   transaction.state = 'failed';
               }
+              depositCallbackJob.perform([transaction.id], console.log);
             } else {
               var statusUrl = resp.status_url;
               transaction.state = 'sent';
               transaction.uid = resp.client_resource_id;
               transaction.save().complete(function(){
                 middleware(transaction);
-
                 pollPaymentStatus(statusUrl, function(err, payment){
                   transaction.transaction_state = payment.result;
                   transaction.transaction_hash = payment.hash;
+                  switch(payment.result) {
+                  case 'tesSUCCESS':
+                    transaction.state = 'succeeded';
+                    break;
+                  default:
+                    transcation.state = 'failed';
+                  }
                   transaction.save().complete(function(){
-                    console.log(transaction.transaction_state);
+                    depositCallbackJob.perform([transaction.id], console.log);
                     loop();
                   });
                 });
