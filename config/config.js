@@ -28,7 +28,9 @@ nconf.defaults({
   'WITHDRAWAL_FEE': 0.01, // Required - default 1%
   'DEPOSIT_FEE': 0.01, // Required - default 1%
   'WITHDRAWALS_CALLBACK_URL': null, // URL to POST callback of withdrawals
-  'WITHDRAWALS_CALLBACK_CERTIFICATE': null // Used to validate SSL on callbacks
+  'WITHDRAWALS_CALLBACK_CERTIFICATE': null, // Used to validate SSL on callbacks
+  'DEPOSITS_CALLBACK_URL': null, // URL to POST callback of withdrawals
+  'DEPOSITS_CALLBACK_CERTIFICATE': null // Used to validate SSL on callbacks
 });
 
 module.exports = nconf;
