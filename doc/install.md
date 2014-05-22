@@ -34,19 +34,17 @@ If you are using an SSL connection to your database, remember to append the foll
 
     export DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway?native=true
 
-### Gateway API Server
+Install gatewayd's dependencies using NPM:
 
-Install the ripple-gateway package and its dependencies using NPM:
-
+    npm install
     sudo npm install -g pg
     sudo npm install -g db-migrate
     sudo npm install -g grunt
     sudo npm install -g pm2
 
-    npm install --save ripple-gateway
+Use grunt to create database tables
 
-    cd node_modules/ripple-gateway
-    grunt migrate:up
+    grunt migrate
     
 start the gateway rest api server. The executable is located at ripple-gateway/bin/gateway:
 
