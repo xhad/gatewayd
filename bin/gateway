@@ -238,9 +238,7 @@ program
 program
   .command('get_last_payment_hash')
   .description('get the last encountered payment hash for incoming processing.')
-  .action(function() {
-    console.log(gateway.config.get('last_payment_hash'));
-  });
+  .action(cli.getLastPaymentHash);
 
 program
   .command('refund_cold_wallet <amount> <currency>')
