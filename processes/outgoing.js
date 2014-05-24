@@ -140,7 +140,10 @@ function popOutgoingPayment() {
                 default:
                   transaction.state = 'failed';
               }
-              depositCallbackJob.perform([transaction.id], console.log);
+              transaction.save().complete(function(){
+                depositCallbackJob.perform([transaction.id], console.log);
+                loop();
+              }); 
             } else {
               var statusUrl = resp.status_url;
               transaction.state = 'sent';
