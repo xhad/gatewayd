@@ -31,7 +31,6 @@
     "forever": "",
     "pg": "^3.0.3",
     "grunt": "^0.4.4",
-    "pm2": "^0.8.1",
     "validator": "^3.11.0",
     "grunt-cli": "^0.1.13",
     "require-all-to-camel": "^1.0.0"
