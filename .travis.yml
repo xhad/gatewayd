@@ -3,8 +3,12 @@ node_js:
   - "0.10"
 before_install:
 script: "npm test"
+addons:
+  postgresql: "9.3"
+before_script:
+  - psql -c 'create database ripple_gateway_test;' -U postgres
 env:
-  - DATABASE_URL=postgres://postgres:password@localhost:5432/ripple_gateway_test
+  - DATABASE_URL=postgres://postgres:@localhost:5432/ripple_gateway_test
 notifications:
   email:
     false
