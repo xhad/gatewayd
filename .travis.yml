@@ -9,6 +9,7 @@ before_script:
   - psql -c 'create database ripple_gateway_test;' -U postgres
 env:
   - DATABASE_URL=postgres://postgres:@localhost:5432/ripple_gateway_test
+  - KEY=123456789
 notifications:
   email:
     false
