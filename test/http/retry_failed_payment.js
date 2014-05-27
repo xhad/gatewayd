@@ -2,11 +2,11 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 
-describe('list users', function(){
+describe('retry failed payment', function(){
 
   it('should return unauthorized without credentials', function(done){
     request(app)
-      .get('/v1/users')
+      .post('/v1/payments/failed/1/retry')
       .expect(401)
       .end(function(err, res){
         if (err) throw err;
@@ -16,7 +16,7 @@ describe('list users', function(){
 
   it('should return successfully with credentials', function(done){
     request(app)
-      .get('/v1/users')
+      .post('/v1/payments/failed/1/retry')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){
