@@ -11,7 +11,7 @@ before_script:
   - npm install -g grunt
   - npm install -g grunt-cli
   - psql -c 'create database ripple_gateway_test;' -U postgres
-  - grunt migrate
+  - cd node_modules/ripple-gateway-data-sequelize && db-migrate up
 env:
   - DATABASE_URL=postgres://postgres:@localhost:5432/ripple_gateway_test KEY=123456789
 notifications:
