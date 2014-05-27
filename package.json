@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.18.0",
+  "version": "3.18.1",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "mocha -R spec ./test/http"
@@ -19,7 +19,7 @@
     "commander": "2.1.0",
     "ripple-wallet": "1.0.0",
     "require-all": "",
-    "ripple-gateway-data-sequelize": "1.8.1",
+    "ripple-gateway-data-sequelize": "1.8.2",
     "ripple-gateway-webapp-example": "1.6.1",
     "ripple-rest-client": "1.4.0",
     "node-uuid": "1.4.1",
