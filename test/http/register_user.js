@@ -16,15 +16,25 @@ describe('register user', function(){
   });
 
   it('should return successfully with credentials', function(done){
+    var testUser = { name: 'testUser@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' };
+
     request(app)
       .post('/v1/registrations')
       .set('Accept', 'application/json')
-      .send({ name: 'test6@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' })
+      .send(testUser)
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){
         if (err) throw err;
-        done();
+        //remove test username to avoid test fail due to duplicate username
+        data.models.users.destroy({ name: testUser.name }).complete(function(err, resp){
+          if(err){
+            console.log('username destroy error:: ', err);
+          } else {
+            console.log('username destroyed:: ', resp);
+          }
+          done();
+        });
       });
   });
 
