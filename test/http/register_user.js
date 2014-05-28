@@ -6,8 +6,8 @@ describe('retry failed payment', function(){
 
   it('should return unauthorized without credentials', function(done){
     request(app)
-      .post('/v1/payments/failed/111/retry')
-      .expect(401)
+      .post('/v1/register/')
+      .expect('401')
       .end(function(err, res){
         if (err) throw err;
         done();
@@ -16,9 +16,9 @@ describe('retry failed payment', function(){
 
   it('should return successfully with credentials', function(done){
     request(app)
-      .post('/v1/payments/failed/111/retry')
+      .post('/v1/register/')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
-      .expect(200)
+      .expect('200')
       .end(function(err, res){
         if (err) throw err;
         done();
