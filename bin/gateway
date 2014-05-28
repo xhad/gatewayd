@@ -139,9 +139,7 @@ program
   program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
-    .action(function(){
-      console.log(gateway.api.generateWallet());
-    });
+    .action(gateway.api.generateWallet);
 
   program
     .command('set_hot_wallet <address> <secret>')
