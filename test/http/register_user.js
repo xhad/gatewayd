@@ -1,6 +1,7 @@
 var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
+var data = require("ripple-gateway-data-sequelize");
 
 describe('register user', function(){
 
@@ -18,7 +19,7 @@ describe('register user', function(){
     request(app)
       .post('/v1/registrations')
       .set('Accept', 'application/json')
-      .send({ name: 'test4@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' })
+      .send({ name: 'test6@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){
