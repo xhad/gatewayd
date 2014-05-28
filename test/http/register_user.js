@@ -2,12 +2,12 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 
-describe('retry failed payment', function(){
+describe('register user', function(){
 
   it('should return unauthorized without credentials', function(done){
     request(app)
-      .post('/v1/register/')
-      .expect('401')
+      .post('/v1/registrations')
+      .expect(401)
       .end(function(err, res){
         if (err) throw err;
         done();
@@ -16,9 +16,11 @@ describe('retry failed payment', function(){
 
   it('should return successfully with credentials', function(done){
     request(app)
-      .post('/v1/register/')
+      .post('/v1/registrations')
+      .set('Accept', 'application/json')
+      .send({ name: 'test4@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
-      .expect('200')
+      .expect(200)
       .end(function(err, res){
         if (err) throw err;
         done();

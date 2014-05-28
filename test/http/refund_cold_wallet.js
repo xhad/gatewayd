@@ -18,6 +18,8 @@ describe('refund cold wallet', function(){
     this.timeout(4000)
     request(app)
       .post('/v1/wallets/cold/refund')
+      .set('Accept', 'application/json')
+      .send({ currency: 'SWG', amount: 1 })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

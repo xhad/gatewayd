@@ -18,6 +18,7 @@ describe('fund hot wallet', function(){
     this.timeout(10000);
     request(app)
       .post('/v1/wallets/hot/fund')
+      .send({ amount: 1, currency: 'SWG', secret: '' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

@@ -17,6 +17,7 @@ describe('set trust lines', function(){
   it('should return successfully with credentials', function(done){
     request(app)
       .post('/v1/trust')
+      .send({ currency: 'XRP', amount: 1000 })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){
