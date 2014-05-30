@@ -1,7 +1,7 @@
 var gateway = require(__dirname+'/../');
 
 var queue = require(__dirname+'/../lib/queues/withdrawal_processor.js');
-var sql = require(__dirname+'/../node_modules/ripple-gateway-data-sequelize/lib/sequelize.js');
+var sql = require(__dirname+'/../lib/data/sequelize.js');
 var TIMEOUT = 1000;
 var FEE = 1 - gateway.config.get("WITHDRAWAL_FEE");
 
