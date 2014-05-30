@@ -17,6 +17,8 @@ describe('set hot wallet', function(){
   it('should return successfully with credentials', function(done){
     request(app)
       .post('/v1/config/wallets/hot')
+      .set('Accept', 'application/json')
+      .send({ address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr', secret: 'ssuBBapjuJ2hE5wto254aNWERa8VV' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

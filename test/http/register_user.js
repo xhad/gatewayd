@@ -1,13 +1,14 @@
 var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
+var data = require("ripple-gateway-data-sequelize");
 
-describe('retry failed payment', function(){
+describe('register user', function(){
 
   it('should return unauthorized without credentials', function(done){
     request(app)
-      .post('/v1/register/')
-      .expect('401')
+      .post('/v1/registrations')
+      .expect(401)
       .end(function(err, res){
         if (err) throw err;
         done();
@@ -15,13 +16,25 @@ describe('retry failed payment', function(){
   });
 
   it('should return successfully with credentials', function(done){
+    var testUser = { name: 'testUser@ripple.com', password: 'passw0rd', ripple_address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr' };
+
     request(app)
-      .post('/v1/register/')
+      .post('/v1/registrations')
+      .set('Accept', 'application/json')
+      .send(testUser)
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
-      .expect('200')
+      .expect(200)
       .end(function(err, res){
         if (err) throw err;
-        done();
+        //remove test username to avoid test fail due to duplicate username
+        data.models.users.destroy({ name: testUser.name }).complete(function(err, resp){
+          if(err){
+            console.log('username destroy error:: ', err);
+          } else {
+            console.log('username destroyed:: ', resp);
+          }
+          done();
+        });
       });
   });
 

@@ -2,7 +2,7 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 
-describe('set trust lines', function(){
+describe('set trust line', function(){
 
   it('should return unauthorized without credentials', function(done){
     request(app)
@@ -17,6 +17,8 @@ describe('set trust lines', function(){
   it('should return successfully with credentials', function(done){
     request(app)
       .post('/v1/trust')
+      .set('Accept', 'application/json')
+      .send({ currency: 'XRP', amount: 1000 })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

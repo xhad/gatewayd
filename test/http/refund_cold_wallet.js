@@ -14,10 +14,11 @@ describe('refund cold wallet', function(){
       });
   });
 
-  it('should return successfully with credentials', function(done){
+  it.skip('should return successfully with credentials', function(done){
     this.timeout(4000)
     request(app)
       .post('/v1/wallets/cold/refund')
+      .send({ currency: 'SWG', amount: 1 })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

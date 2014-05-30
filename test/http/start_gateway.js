@@ -18,6 +18,7 @@ describe('start gatewayd', function(){
     this.timeout(5000);
     request(app)
       .post('/v1/start')
+      .send({ processes: ['deposits', 'incoming', 'withdrawals', 'outgoing', 'server'] })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){

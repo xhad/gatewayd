@@ -17,6 +17,7 @@ describe('set ripple rest url', function(){
   it('should return successfully with credentials', function(done){
     request(app)
       .post('/v1/config/ripple/rest')
+      .send({ url: 'http://localhost:5990/' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
       .end(function(err, res){
