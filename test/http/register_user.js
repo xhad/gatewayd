@@ -1,7 +1,7 @@
 var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
-var data = require("ripple-gateway-data-sequelize");
+var data = require(__dirname+'/../../lib/data/');
 
 describe('register user', function(){
 
