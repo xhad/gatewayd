@@ -1,5 +1,5 @@
 var config = require(__dirname + '/config/config.js');
-var data   = require("ripple-gateway-data-sequelize");
+var data   = require(__dirname +'/lib/data/');
 var ripple = require(__dirname +'/lib/ripple/');
 
 /** @module Api */
