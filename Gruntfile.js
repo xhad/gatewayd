@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         env: {
           DATABASE_URL: nconf.get('DATABASE_URL')
         },
-        'migrations-dir': './node_modules/ripple-gateway-data-sequelize/migrations/',
+        'migrations-dir': './lib/data/migrations/',
         verbose: true
       }
     }
