@@ -1,3 +1,20 @@
+##06/10/2014
+
+###Version:
+3.20.0
+
+###Fixed bugs:
+- Validate ripple address in registerUser api call
+- correct migration task with gruntfile
+- correct installation / setup instructions
+- remove redundant list_users http endpoint
+
+###Added features:
+- CRUD http routes for external accounts
+- HTTP route to create a user
+- Add validator with isRippleAddress validation method
+- Validate setup wizard parameters with tests
+
 ##06/03/2014
 
 ###Version: 

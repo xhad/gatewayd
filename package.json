@@ -1,9 +1,13 @@
 {
   "name": "ripple-gateway",
-  "version": "3.19.0",
+  "version": "3.20.0",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "mocha -R spec ./test/http"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ripple/gatewayd.git"
   },
   "dependencies": {
     "express": "3.x",
@@ -20,7 +24,7 @@
     "ripple-wallet": "1.0.0",
     "require-all": "",
     "ripple-gateway-webapp-example": "1.6.1",
-    "ripple-rest-client": "1.4.0",
+    "ripple-rest-client": "1.5.0",
     "node-uuid": "1.4.1",
     "ejs": "",
     "cli-table": "0.3.0",
@@ -33,9 +37,7 @@
     "validator": "^3.11.0",
     "grunt-cli": "^0.1.13",
     "require-all-to-camel": "^1.0.0",
-    "sequelize": "^1.7.0"
-  },
-  "devDependencies": {
+    "sequelize": "^1.7.0",
     "mocha": "~1.14.0",
     "node-uuid": "1.4.1",
     "grunt-db-migrate": "^0.2.0",
