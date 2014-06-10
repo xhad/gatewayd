@@ -147,34 +147,50 @@ __`GET /v1/config/wallets/cold`__
 __`POST /v1/config/wallets/generate`__
 
 ## Setting The Hot Wallet ##
+__`POST /v1/config/wallets/cold`__
 
-## Showing The Cold Wallet ##
+## Showing The Hot Wallet ##
+__`POST /v1/config/wallets/cold`__
 
 ## Setting Trust From Hot Wallet To Cold Wallet ##
+__`POST /v1/trust`__
 
 ## Listing Trust From Hot Wallet To Cold Wallet ##
+__`GET /v1/trust`__
 
 ## Funding The Hot Wallet ##
+__`POST /v1/wallets/hot/fund`__
 
 ## Setting The Last Payment Hash ##
+__`POST /v1/config/last_payment_hash`__
 
 ## Showing The Last Payment Hash ##
+__`GET /v1/config/last_payment_hash`__
 
 ## Setting The Domain ##
+__`POST /v1/config/domain`__
 
 ## Showing The Domain ##
+__`GET /v1/config/domain`__
 
 ## Setting The Api Key ##
+__`POST /v1/config/key`__
 
 ## Showing The Api Key ##
+__`GET /v1/config/key`__
 
 ## Setting Currencies ##
+__`POST /v1/currencies`__
 
 ## Listing Currencies ##
+__`GET /v1/currencies`__
 
 ## Sending Funds From Hot Wallet To Cold Wallet ##
+__`POST /v1/wallets/cold/refund`__
 
 ## Starting Worker Processes ##
+__`POST /v1/start`__
 
 ## Listing Current Processes ##
+__`GET /v1/processes`__
 
