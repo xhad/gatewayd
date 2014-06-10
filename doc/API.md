@@ -1,5 +1,3 @@
-# INTRODUCTION #
-
 `gatewayd : v3.19.0`
 
 ## Gatewayd API ##
@@ -60,4 +58,94 @@
 * [`POST /v1/processes`](#listing-current-processes)
 
 ## API Overview ##
+
+## Registering A User ##
+
+## Activating A User ##
+
+## Deactivating A User ##
+
+## Creating A Deposit ##
+
+## Listing Deposits ##
+
+## Listing Outgoing Payments ##
+
+## Listing Failed Payments ##
+
+## Retrying A Failed Payment ##
+
+## Listing Incoming Payments ##
+
+## Listing Withdrawals ##
+
+## Clearing A Withdrawal ##
+
+## Listing Cleared External Transactions ##
+
+## Listing Hot Wallet Balances ##
+
+## Listing Cold Wallet Liabilities ##
+
+## Registering A User ##
+
+## Logging In A User ##
+
+## Showing A User ##
+
+## Listing User External Accounts ##
+
+## Listing User External Transactions ##
+
+## Listing User Ripple Addresses ##
+
+## Listing User Ripple Transactions ##
+
+## Funding The Hot Wallet ##
+
+## Setting The Database Url ##
+
+## Showing The Database Url ##
+
+## Setting The Ripple Rest Url ##
+
+## Showing The Ripple Rest Url ##
+
+## Setting The Cold Wallet ##
+
+## Showing The Cold Wallet ##
+
+## Generating A Ripple Wallet ##
+
+## Setting The Hot Wallet ##
+
+## Showing The Cold Wallet ##
+
+## Setting Trust From Hot Wallet To Cold Wallet ##
+
+## Listing Trust From Hot Wallet To Cold Wallet ##
+
+## Funding The Hot Wallet ##
+
+## Setting The Last Payment Hash ##
+
+## Showing The Last Payment Hash ##
+
+## Setting The Domain ##
+
+## Showing The Domain ##
+
+## Setting The Api Key ##
+
+## Showing The Api Key ##
+
+## Setting Currencies ##
+
+## Listing Currencies ##
+
+## Sending Funds From Hot Wallet To Cold Wallet ##
+
+## Starting Worker Processes ##
+
+## Listing Current Processes ##
 
