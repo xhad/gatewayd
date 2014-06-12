@@ -61,13 +61,17 @@
 
 ## Registering A User ##
 __`POST /v1/registrations`__
-Request:
+
+###Request:
+
     {
       "name": "steven@ripple.com",
       "password": "s0m3supe&$3cretp@s$w0r*",
       "ripple_address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk"
     }
-Response:
+
+###Response:
+
     {
       "user": {
         "name": "steven@ripple.com",
@@ -127,7 +131,9 @@ Response:
 
 ## Activating A User ##
 __`POST /v1/users/{:id}/activate`__
-response:
+
+###response:
+
     {
       "user": {
         "id": 508,
@@ -150,6 +156,9 @@ response:
 
 ## Deactivating A User ##
 __`POST /v1/users/{:id}/deactivate`__
+
+###response:
+
     {
       "user": {
         "id": 508,
@@ -172,14 +181,17 @@ __`POST /v1/users/{:id}/deactivate`__
 
 ## Creating A Deposit ##
 __`POST /v1/deposits`__
-request:
+
+###request:
+
     {
       "external_account_id": 307,
       "currency": "BTC"
       "amount": "10.7"
     }
 
-response:
+###response:
+
     {
       "deposit": {
         "data": null,
@@ -198,7 +210,9 @@ response:
 
 ## Listing Deposits ##
 __`GET /v1/deposits`__
-response:
+
+###response:
+
     {
       "deposits": [
         {
@@ -232,6 +246,9 @@ response:
 
 ## Listing Outgoing Payments ##
 __`GET /v1/payments/outgoing`__
+
+###response:
+
     {
       "payments": [
         {
