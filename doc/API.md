@@ -61,6 +61,11 @@
 
 ## Registering A User ##
 __`POST /v1/registrations`__
+Register a user with the gatewayd. A username, password, and ripple address are required. Upon
+registration several records are created in the gatewayd database, including a user record,
+a "independent" ripple address record with the address provided, a "hosted" ripple address
+record for making withdrawals, and a "default" external account for recording deposits and
+withdrawals.
 
 ###Request:
 
@@ -132,6 +137,10 @@ __`POST /v1/registrations`__
 ## Activating A User ##
 __`POST /v1/users/{:id}/activate`__
 
+By default a user is marked as "inactive", and to activate the user run this
+command. No separate action is taken by gatewayd to prevent inactive users from
+operating, and for now it is simply informational.
+
 ###response:
 
     {
@@ -157,6 +166,9 @@ __`POST /v1/users/{:id}/activate`__
 ## Deactivating A User ##
 __`POST /v1/users/{:id}/deactivate`__
 
+Mark a user an "inactive", which is a flag purely for informational purposes and has no
+explicit effect on the user's interaction with gatewayd.
+
 ###response:
 
     {
@@ -181,6 +193,12 @@ __`POST /v1/users/{:id}/deactivate`__
 
 ## Creating A Deposit ##
 __`POST /v1/deposits`__
+
+Upon receipt of an asset from a user, record the asset in gatewayd's database with
+a "deposit" record, which creates an entry in the external transactions database
+table. By default a deposit is marked as "queued", and the gatewayd "deposit" process
+will take the queued deposit, apply fees, and enqueue a corresponding outbound ripple
+payment.
 
 ###request:
 
@@ -210,6 +228,9 @@ __`POST /v1/deposits`__
 
 ## Listing Deposits ##
 __`GET /v1/deposits`__
+
+List all deposits that are currently queued, ie they have not been processed
+yet nor sent to ripple.
 
 ###response:
 
@@ -246,6 +267,11 @@ __`GET /v1/deposits`__
 
 ## Listing Outgoing Payments ##
 __`GET /v1/payments/outgoing`__
+
+Ripple transaction records that are marked as "outgoing" are picked up
+and sent to the ripple network. List Outoing Payments returns a list of the
+queued "outgoing" payments. All deposit records are eventually placed in the
+outgoing payments queue after fees are subtracted.
 
 ###response:
 
@@ -297,6 +323,12 @@ __`GET /v1/payments/outgoing`__
 ## Listing Failed Payments ##
 __`GET /v1/payments/failed`__
 
+Outgoing payments are often rejected from ripple, such as when there is
+insufficient trust from the recipient account to the gateway account, or
+when the gateway hot wallet account has insufficient funds to process the
+payment. In the case that a payment will never make it into the ripple
+ledger the outgoing payment is marked as "failed".
+
 ###response:
 
     {
@@ -347,6 +379,12 @@ __`GET /v1/payments/failed`__
 ## Retrying A Failed Payment ##
 __`POST /v1/payments/failed/{:id}/retry`__
 
+A payment that failed due to insufficient funds or lack of trust lines
+may be successfully retried once funds are increased or an appropriate
+line of trust is established. Retrying a payment simply changes the 
+payment's state from "failed" to "outgoing", effectively enqueueing the 
+transaction to be re-submitted to ripple.
+
 ###response:
 
     {
@@ -374,6 +412,12 @@ __`POST /v1/payments/failed/{:id}/retry`__
 
 ## Listing Incoming Payments ##
 __`GET /v1/payments/incoming`__
+
+Gatewayd monitors the gateway's account for inbound payments made to the gateway,
+and records the payments in the Ripple Transactions database table. Newly recorded
+incoming ripple transactions are always marked as "incoming" until the gatewayd
+"withdrawals" process picks them up and, after applying fees, enqueues a withdrawal
+record in the external transactions table.
 
 ###response:
 
@@ -404,6 +448,13 @@ __`GET /v1/payments/incoming`__
 
 ## Listing Withdrawals ##
 __`GET /v1/withdrawals`__
+
+To retrieve assets from the gateway a user sends funds back to the gateway's account.
+Once the incoming payment has been received and processed (fees subtracted) it is
+placed in the pending withdrawals queue, which is a list of external transaction withdrawal
+records with a state of "pending". If the gateway administrator has registered a withdrawal 
+callback url, the withdrawal callbacks process will read withdrawals from this list and
+POST their data to the callback url provided.
 
 ###response:
 
@@ -441,6 +492,10 @@ __`GET /v1/withdrawals`__
 ## Clearing A Withdrawal ##
 __`POST /v1/withdrawals/{:id}/clear`__
 
+A pending withdrawal record indicates to the gateway operator that a
+user wishes to withdraw a given asset. Once the operator processes the withdrawal
+by sending the asset to the user, mark the withdrawal as "cleared".
+
 ###response:
 
     {
@@ -461,6 +516,8 @@ __`POST /v1/withdrawals/{:id}/clear`__
 
 ## Listing Cleared External Transactions ##
 __`GET /v1/cleared`__
+
+List all deposits and withdrawals that have been completed, ie are no longer pending.
 
     {
       "deposits": [
@@ -497,6 +554,9 @@ __`GET /v1/cleared`__
 ## Listing Hot Wallet Balances ##
 __`GET /v1/balances`__
 
+The hot wallet holds limited funds issued by the cold wallet, and the current
+balance thereof is represented as hot wallet balances.
+
 ###response:
 
     {
@@ -522,6 +582,10 @@ __`GET /v1/balances`__
 
 ## Listing Cold Wallet Liabilities ##
 __`GET /v1/liabilities`__
+
+Every asset that the gateway holds and for which it issues currency is
+a liability of the gateway. Listed here are the total gateway liabilities
+for each asset type.
 
 ###response:
 
@@ -564,8 +628,13 @@ __`GET /v1/liabilities`__
 ## Logging In A User ##
 __`POST /v1/users/login`__
 
+Verifies that a user has the correct username and password combination. Used
+for the web application and requires user credentials in place of an API key.
+
 ## Showing A User ##
 __`GET /v1/users/{:id}`__
+
+Return the database record for a given user.
 
     {
       "success": true,
@@ -591,6 +660,8 @@ __`GET /v1/users/{:id}`__
 ## Listing User External Accounts ##
 __`GET /v1/users/{:id}/external_accounts`__
 
+List all external account records for a given user.
+
     {
       "external_accounts": [
         {
@@ -607,6 +678,9 @@ __`GET /v1/users/{:id}/external_accounts`__
 
 ## Listing User External Transactions ##
 __`GET /v1/users/{:id}/external_transactions`__
+
+List all external transaction records for a given user. Withdrawals and 
+deposits are the two types of external transaction records.
 
     {
       "externalTransactions": [
@@ -633,6 +707,9 @@ __`GET /v1/users/{:id}/external_transactions`__
 
 ## Listing User Ripple Addresses ##
 __`GET /v1/users/{:id}/ripple_addresses`__
+
+List all ripple addresses for a given user. Most users will have at least one
+independent address and one hosted address.
 
     {
       "rippleAddresses": [
@@ -669,6 +746,9 @@ __`GET /v1/users/{:id}/ripple_addresses`__
 
 ## Listing User Ripple Transactions ##
 __`GET /v1/users/{:id}/ripple_transactions`__
+
+List all ripple transactions for a given user, which represent transactions
+made to or from all of the users's ripple addresses.
 
     {
       "rippleTransactions": [
@@ -724,38 +804,82 @@ __`GET /v1/users/{:id}/ripple_transactions`__
 ## Funding The Hot Wallet ##
 __`POST /v1/wallets/hot/fund`__
 
+Issue funds from the cold wallet to the hot wallet, specifying the amount, currency, and
+the cold wallet secret key.
+
 ## Setting The Database Url ##
 __`POST /v1/config/database`__
+
+Set the database url for in gatewayd configuration.
 
 ## Showing The Database Url ##
 __`GET /v1/config/database`__
 
+Show the database url from the gatewayd configuration.
+
+    {
+      "DATABASE_URL": "postgres://postgres:password@localhost:5432/ripple_gateway"
+    }
+
 ## Setting The Ripple Rest Url ##
 __`POST /v1/config/ripple/rest`__
+
+Set the ripple rest url in the gatewayd configuration.
 
 ## Showing The Ripple Rest Url ##
 __`GET /v1/config/ripple/rest`__
 
+Show the ripple rest url from the gatewayd configuration.
+
+    {
+      "RIPPLE_REST_API": "http://localhost:5990/"
+    }
+
 ## Setting The Cold Wallet ##
 __`POST /v1/config/wallets/cold`__
+
+Set the gateway cold wallet, from which funds are issued.
 
 ## Showing The Cold Wallet ##
 __`GET /v1/config/wallets/cold`__
 
+Show the gatewayd cold wallet, from which funds are issued.
+
 ## Generating A Ripple Wallet ##
 __`POST /v1/config/wallets/generate`__
+
+Generate a random ripple address and secret key pair, which
+represents an unfunded ripple account.
 
 ## Setting The Hot Wallet ##
 __`POST /v1/config/wallets/cold`__
 
+Set the gatewayd hot wallet, which is used to automatically send
+funds, and which maintains trust to and balances of the cold wallet.
+
 ## Showing The Hot Wallet ##
 __`POST /v1/config/wallets/cold`__
+
+Show the gatewayd hot wallet, which is used to automatically send
+funds, and which maintains trust to and balances of the cold wallet.
+
 
 ## Setting Trust From Hot Wallet To Cold Wallet ##
 __`POST /v1/trust`__
 
+Set a line of trust from the gateway hot wallet to the gateway cold
+wallet. The line of trust represents the total amount of each asset
+that gatewayd can hold and automatically send out without a manual
+refunding by a gateway operator.
+
 ## Listing Trust From Hot Wallet To Cold Wallet ##
 __`GET /v1/trust`__
+
+
+List lines of trust from the gateway hot wallet to the gateway cold
+wallet. The line of trust represents the total amount of each asset
+that gatewayd can hold and automatically send out without a manual
+refunding by a gateway operator.
 
     {
       "lines": [
@@ -774,11 +898,20 @@ __`GET /v1/trust`__
 ## Funding The Hot Wallet ##
 __`POST /v1/wallets/hot/fund`__
 
+Issue funds from the cold wallet to the hot wallet. The cold wallet secret
+is required.
+
 ## Setting The Last Payment Hash ##
 __`POST /v1/config/last_payment_hash`__
 
+Gatewayd polls the ripple network for notifications of inbound and outbound
+payments beginning with the last known transaction hash. Manually set that hash.
+
 ## Showing The Last Payment Hash ##
 __`GET /v1/config/last_payment_hash`__
+
+Gatewayd polls the ripple network for notifications of inbound and outbound
+payments beginning with the last known transaction hash. Returns that hash.
 
     {
       "LAST_PAYMENT_HASH": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80"
@@ -787,8 +920,12 @@ __`GET /v1/config/last_payment_hash`__
 ## Setting The Domain ##
 __`POST /v1/config/domain`__
 
+Set the domain of the gateway, which is automatically added to the gateway's ripple.txt.
+
 ## Showing The Domain ##
 __`GET /v1/config/domain`__
+
+Show the domain of the gateway, which is shown in the gateway's ripple.txt.
 
     {
       "DOMAIN": "stroopgate.com"
@@ -797,8 +934,12 @@ __`GET /v1/config/domain`__
 ## Setting The Api Key ##
 __`POST /v1/config/key`__
 
+Reset the gateway api key, which generates, saves, and returns a new api key.
+
 ## Showing The Api Key ##
 __`GET /v1/config/key`__
+
+Show the current api key.
 
     {
       "KEY": "ebdb883d5723a71c59fb8ecefbb65476a6923f2a69b49b53cffe212c817cab92"
@@ -808,8 +949,14 @@ __`GET /v1/config/key`__
 ## Setting Currencies ##
 __`POST /v1/currencies`__
 
+Add a currency to be supported by the gateway. This currency is shown in the gateway's
+ripple.txt manifest file.
+
 ## Listing Currencies ##
 __`GET /v1/currencies`__
+
+List currencies supported by the gateway, which are shown in the gateway's ripple.txt
+manifest file.
 
     {
       "CURRENCIES": {
@@ -820,11 +967,18 @@ __`GET /v1/currencies`__
 ## Sending Funds From Hot Wallet To Cold Wallet ##
 __`POST /v1/wallets/cold/refund`__
 
+If a hot wallet is potentially compromised, send the remaining funds back to the cold wallet.
+
 ## Starting Worker Processes ##
 __`POST /v1/start`__
 
+Start one or more gateway processes, including but not limited to "deposits", "outgoing",
+"incoming", "withdrawals", "callbacks", etc.
+
 ## Listing Current Processes ##
 __`GET /v1/processes`__
+
+List information about the currently-running gateway daemon processes.
 
     [ { pid: 26269,
         name: 'ripplerest',
