@@ -67,16 +67,14 @@ a "independent" ripple address record with the address provided, a "hosted" ripp
 record for making withdrawals, and a "default" external account for recording deposits and
 withdrawals.
 
-###Request:
-
+    REQUEST:
     {
       "name": "steven@ripple.com",
       "password": "s0m3supe&$3cretp@s$w0r*",
       "ripple_address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk"
     }
 
-###Response:
-
+    RESPONSE:
     {
       "user": {
         "name": "steven@ripple.com",
@@ -141,8 +139,7 @@ By default a user is marked as "inactive", and to activate the user run this
 command. No separate action is taken by gatewayd to prevent inactive users from
 operating, and for now it is simply informational.
 
-###response:
-
+    RESPONSE:
     {
       "user": {
         "id": 508,
@@ -169,8 +166,7 @@ __`POST /v1/users/{:id}/deactivate`__
 Mark a user an "inactive", which is a flag purely for informational purposes and has no
 explicit effect on the user's interaction with gatewayd.
 
-###response:
-
+    RESPONSE:
     {
       "user": {
         "id": 508,
@@ -200,16 +196,14 @@ table. By default a deposit is marked as "queued", and the gatewayd "deposit" pr
 will take the queued deposit, apply fees, and enqueue a corresponding outbound ripple
 payment.
 
-###request:
-
+    REQUEST:
     {
       "external_account_id": 307,
       "currency": "BTC"
       "amount": "10.7"
     }
 
-###response:
-
+    RESPONSE:
     {
       "deposit": {
         "data": null,
@@ -232,8 +226,7 @@ __`GET /v1/deposits`__
 List all deposits that are currently queued, ie they have not been processed
 yet nor sent to ripple.
 
-###response:
-
+    RESPONSE:
     {
       "deposits": [
         {
@@ -273,8 +266,7 @@ and sent to the ripple network. List Outoing Payments returns a list of the
 queued "outgoing" payments. All deposit records are eventually placed in the
 outgoing payments queue after fees are subtracted.
 
-###response:
-
+    RESPONSE:
     {
       "payments": [
         {
@@ -329,8 +321,7 @@ when the gateway hot wallet account has insufficient funds to process the
 payment. In the case that a payment will never make it into the ripple
 ledger the outgoing payment is marked as "failed".
 
-###response:
-
+    RESPONSE:
     {
       "payments": [
         {
@@ -385,8 +376,7 @@ line of trust is established. Retrying a payment simply changes the
 payment's state from "failed" to "outgoing", effectively enqueueing the 
 transaction to be re-submitted to ripple.
 
-###response:
-
+    RESPONSE:
     {
       "payment": {
         "data": null,
@@ -419,8 +409,7 @@ incoming ripple transactions are always marked as "incoming" until the gatewayd
 "withdrawals" process picks them up and, after applying fees, enqueues a withdrawal
 record in the external transactions table.
 
-###response:
-
+    RESPONSE:
     {
       "incoming_payments": [
         {
@@ -456,8 +445,7 @@ records with a state of "pending". If the gateway administrator has registered a
 callback url, the withdrawal callbacks process will read withdrawals from this list and
 POST their data to the callback url provided.
 
-###response:
-
+    RESPONSE:
     {
       "withdrawals": [
         {
@@ -496,8 +484,7 @@ A pending withdrawal record indicates to the gateway operator that a
 user wishes to withdraw a given asset. Once the operator processes the withdrawal
 by sending the asset to the user, mark the withdrawal as "cleared".
 
-###response:
-
+    RESPONSE:
     {
       "withdrawal": {
         "data": null,
@@ -557,8 +544,7 @@ __`GET /v1/balances`__
 The hot wallet holds limited funds issued by the cold wallet, and the current
 balance thereof is represented as hot wallet balances.
 
-###response:
-
+    RESPONSE:
     {
       "success": true,
       "balances": [
@@ -587,8 +573,7 @@ Every asset that the gateway holds and for which it issues currency is
 a liability of the gateway. Listed here are the total gateway liabilities
 for each asset type.
 
-###response:
-
+    RESPONSE:
     {
       "success": true,
       "balances": [
@@ -636,6 +621,7 @@ __`GET /v1/users/{:id}`__
 
 Return the database record for a given user.
 
+    RESPONSE:
     {
       "success": true,
       "users": {
@@ -661,7 +647,8 @@ Return the database record for a given user.
 __`GET /v1/users/{:id}/external_accounts`__
 
 List all external account records for a given user.
-
+  
+    RESPONSE:
     {
       "external_accounts": [
         {
@@ -682,6 +669,7 @@ __`GET /v1/users/{:id}/external_transactions`__
 List all external transaction records for a given user. Withdrawals and 
 deposits are the two types of external transaction records.
 
+    RESPONSE:
     {
       "externalTransactions": [
         {
@@ -711,6 +699,7 @@ __`GET /v1/users/{:id}/ripple_addresses`__
 List all ripple addresses for a given user. Most users will have at least one
 independent address and one hosted address.
 
+    RESPONSE:
     {
       "rippleAddresses": [
         {
@@ -750,6 +739,7 @@ __`GET /v1/users/{:id}/ripple_transactions`__
 List all ripple transactions for a given user, which represent transactions
 made to or from all of the users's ripple addresses.
 
+    RESPONSE:
     {
       "rippleTransactions": [
         {
@@ -817,6 +807,7 @@ __`GET /v1/config/database`__
 
 Show the database url from the gatewayd configuration.
 
+    RESPONSE:
     {
       "DATABASE_URL": "postgres://postgres:password@localhost:5432/ripple_gateway"
     }
@@ -831,6 +822,7 @@ __`GET /v1/config/ripple/rest`__
 
 Show the ripple rest url from the gatewayd configuration.
 
+    RESPONSE:
     {
       "RIPPLE_REST_API": "http://localhost:5990/"
     }
@@ -881,6 +873,7 @@ wallet. The line of trust represents the total amount of each asset
 that gatewayd can hold and automatically send out without a manual
 refunding by a gateway operator.
 
+    RESPONSE:
     {
       "lines": [
         {
@@ -913,6 +906,7 @@ __`GET /v1/config/last_payment_hash`__
 Gatewayd polls the ripple network for notifications of inbound and outbound
 payments beginning with the last known transaction hash. Returns that hash.
 
+    RESPONSE:
     {
       "LAST_PAYMENT_HASH": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80"
     }
@@ -927,6 +921,7 @@ __`GET /v1/config/domain`__
 
 Show the domain of the gateway, which is shown in the gateway's ripple.txt.
 
+    RESPONSE:
     {
       "DOMAIN": "stroopgate.com"
     }
@@ -941,6 +936,7 @@ __`GET /v1/config/key`__
 
 Show the current api key.
 
+    RESPONSE:
     {
       "KEY": "ebdb883d5723a71c59fb8ecefbb65476a6923f2a69b49b53cffe212c817cab92"
     }
@@ -958,9 +954,10 @@ __`GET /v1/currencies`__
 List currencies supported by the gateway, which are shown in the gateway's ripple.txt
 manifest file.
 
+    RESPONSE:
     {
       "CURRENCIES": {
-        "SWD": 0
+        "SWD": 10000
       }
     }
 
@@ -980,6 +977,7 @@ __`GET /v1/processes`__
 
 List information about the currently-running gateway daemon processes.
 
+    RESPONSE:
     [ { pid: 26269,
         name: 'ripplerest',
         pm2_env: 

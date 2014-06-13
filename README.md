@@ -552,6 +552,7 @@ __`GET /v1/cleared`__
 
 List all deposits and withdrawals that have been completed, ie are no longer pending.
 
+    RESPONSE:
     {
       "deposits": [
         {
@@ -962,6 +963,16 @@ __`POST /v1/config/domain`__
 
 Set the domain of the gateway, which is automatically added to the gateway's ripple.txt.
 
+    REQUEST:
+    {
+      "domain": "stevenzeiler.com"
+    }
+
+    RESPONSE:
+    {
+      "DOMAIN": "stevenzeiler.com"
+    }
+
 ## Showing The Domain ##
 __`GET /v1/config/domain`__
 
@@ -977,6 +988,16 @@ __`POST /v1/config/key`__
 
 Reset the gateway api key, which generates, saves, and returns a new api key.
 
+    REQUEST:
+    {
+      "key": "1234578dddd"
+    }
+
+    RESPONSE:
+    {
+      "KEY": "1234578dddd"
+    }
+
 ## Showing The Api Key ##
 __`GET /v1/config/key`__
 
@@ -986,13 +1007,6 @@ Show the current api key.
     {
       "KEY": "ebdb883d5723a71c59fb8ecefbb65476a6923f2a69b49b53cffe212c817cab92"
     }
-
-
-## Setting Currencies ##
-__`POST /v1/currencies`__
-
-Add a currency to be supported by the gateway. This currency is shown in the gateway's
-ripple.txt manifest file.
 
 ## Listing Currencies ##
 __`GET /v1/currencies`__
@@ -1004,6 +1018,25 @@ manifest file.
     {
       "CURRENCIES": {
         "SWD": 10000
+      }
+    }
+
+## Setting Currencies ##
+__`POST /v1/currencies`__
+
+Add a currency to be supported by the gateway. This currency is shown in the gateway's
+ripple.txt manifest file.
+
+    REQUEST:
+    {
+      currency: "XAG"
+    }
+
+    RESPONSE:
+    {
+      "CURRENCIES": {
+        "SWD": 10000,
+        "XAG": 0
       }
     }
 
