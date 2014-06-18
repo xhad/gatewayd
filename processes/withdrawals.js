@@ -5,7 +5,7 @@ var gateway = require(__dirname+'/../');
 var worker = new SqlMqWorker({
   Class: gateway.data.models.rippleTransactions,
   predicate: { where: {
-    status: 'incoming'
+    state: 'incoming'
   }},
   job: function(incomingPayment, callback) {
     withdrawalProcessor = new WithdrawalProcessor(incomingPayment);
