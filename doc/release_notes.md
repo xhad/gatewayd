@@ -1,3 +1,16 @@
+##06/17/2014
+
+##Version:
+3.21.0
+
+###Fixed bugs:
+- Use 'state' column in list failed payments api call
+- Default webapp paths under USER_AUTH
+
+###Added features:
+- HTTP / JSON Api Documenation
+- List Trust Lines endpoint from account to cold wallet
+
 ##06/10/2014
 
 ###Version:
