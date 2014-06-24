@@ -139,7 +139,7 @@ program
   program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
-    .action(gateway.api.generateWallet);
+    .action(cli.generateWallet);
 
   program
     .command('set_hot_wallet <address> <secret>')
