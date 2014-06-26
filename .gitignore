@@ -7,3 +7,4 @@ log/server.log
 npm-debug.log
 lib/data/database.json
 logfile
+logs/

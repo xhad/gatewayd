@@ -1,6 +1,7 @@
 var gateway = require(__dirname + '/../');
 var https = require('https');
 var fs = require('fs');
+var logger = require('winston');
 
 var app = require(__dirname+'/../lib/app.js');
 
@@ -19,5 +20,5 @@ var protocol = ssl ? 'https' : 'http';
 
 app.listen(port, host);
 
-console.log('Serving REST API and Angular WebApp at '+protocol+'://'+host+':'+port);
+logger.info('Serving REST API and Angular WebApp at', protocol, '://', host, ':', port);
 
