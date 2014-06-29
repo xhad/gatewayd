@@ -1,11 +1,14 @@
 var outgoingTransactionRecord;
 
 describe('Outgoing Payment', function() {
-
   describe('Sending a queued payment to ripple', function() {
 
-    it('should send a payment to ripple rest', function() {
-
+    it('should send a payment to ripple rest', function(done) {
+      var outgoingPayment = new OutgoingPayment(outgoingTransactionRecord);
+      outgoingPayment.sendToRippleRest(function(error, response) {
+        assert(!error);
+        assert(response.success);
+      });
     });
 
     it('should confirm the success of a payment', function() {
@@ -32,7 +35,6 @@ describe('Outgoing Payment', function() {
 
   before(function(done) {
     gateway.data.models.rippleTransactions.create({
-      
     }).complete(function(error, rippleTransaction) {
       outgoingTransactionRecord = rippleTransaction;
       done();
