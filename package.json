@@ -54,5 +54,6 @@
     "supertest": "^0.13.0",
     "validator": "^3.11.0",
     "winston": "^0.7.3"
+    "superagent": "^0.18.0"
   }
 }
