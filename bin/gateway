@@ -2,6 +2,7 @@
 var gateway = require('../');
 var program = require('commander');
 var cli = require(__dirname+'/../lib/cli');
+var logger = require('winston');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
@@ -90,7 +91,7 @@ program
   .action(function(url){
     gateway.config.set('DATABASE_URL', url);
     gateway.config.save(function(){
-      console.log(gateway.config.get('DATABASE_URL'));
+      logger.info(gateway.config.get('DATABASE_URL'));
     });
   });
 
@@ -98,7 +99,7 @@ program
   .command('get_postgres_url')
   .description('get the url of the postgres database')
   .action(function(cmd){
-    console.log(gateway.config.get('DATABASE_URL'));
+    logger.info(gateway.config.get('DATABASE_URL'));
   });
 
 program
@@ -107,8 +108,8 @@ program
   .action(function(url){
     gateway.config.set('RIPPLE_REST_API', url);
     gateway.config.save(function(err) {
-      console.log('set the ripple rest api url');
-      console.log(gateway.config.get('RIPPLE_REST_API'));
+      logger.info('set the ripple rest api url');
+      logger.info(gateway.config.get('RIPPLE_REST_API'));
     });
   });
 
@@ -116,7 +117,7 @@ program
   .command('get_ripple_rest_url')
   .description('get the url of the ripple rest api')
   .action(function(cmd){
-    console.log(gateway.config.get('RIPPLE_REST_API'));
+    logger.info(gateway.config.get('RIPPLE_REST_API'));
   });
 
 program
@@ -125,7 +126,7 @@ program
   .action(function(DOMAIN){
     gateway.config.set('DOMAIN', DOMAIN);
     gateway.config.save(function() {
-      console.log(gateway.config.get('DOMAIN'));
+      logger.info(gateway.config.get('DOMAIN'));
     });
   });
 
@@ -133,13 +134,13 @@ program
     .command('get_domain')
     .description('get the DOMAIN name of the gateway')
     .action(function(){
-      console.log(gateway.config.get('DOMAIN'));
+      logger.info(gateway.config.get('DOMAIN'));
     });
 
   program
     .command('generate_wallet')
     .description('generate a random ripple wallet')
-    .action(gateway.api.generateWallet);
+    .action(cli.generateWallet);
 
   program
     .command('set_hot_wallet <address> <secret>')
@@ -152,11 +153,11 @@ program
     .action(function(){
       var key = 'HOT_WALLET';
       var hot_wallet = gateway.config.get(key);
-      if (hot_wallet) {
-        console.log(hot_wallet.address);
+      if (hot_wallet.address) {
+        logger.info(hot_wallet.address);
       } else {
-        console.log('hot wallet not yet set');
-        console.log('use bin/gateway set_hot_wallet <address> <secret>');
+        logger.error('hot wallet not yet set');
+        logger.error('use bin/gateway set_hot_wallet <address> <secret>');
       }
     });
 
@@ -166,11 +167,11 @@ program
     .action(function(){
       var key = 'HOT_WALLET';
       var hot_wallet = gateway.config.get(key);
-      if (hot_wallet) {
-        console.log(hot_wallet.secret);
+      if (hot_wallet.secret) {
+        logger.info(hot_wallet.secret);
       } else {
-        console.log('hot wallet not yet set');
-        console.log('use bin/gateway set_hot_wallet <address> <secret>');
+        logger.error('hot wallet not yet set');
+        logger.error('use bin/gateway set_hot_wallet <address> <secret>');
       }
     });
 
@@ -186,10 +187,10 @@ program
     var key = 'COLD_WALLET';
     var cold_wallet = gateway.config.get(key);
     if (cold_wallet) {
-      console.log(cold_wallet);
+      logger.info(cold_wallet);
     } else {
-      console.log('cold wallet not yet set');
-      console.log('use bin/gateway set_cold_wallet <address>');
+      logger.error('cold wallet not yet set');
+      logger.error('use bin/gateway set_cold_wallet <address>');
     }
   });
 

@@ -5,6 +5,7 @@ nconf
   .env();
 
 nconf.defaults({
+  'ENVIRONMENT': 'production',
   'RIPPLE_REST_API': 'http://localhost:5990/',
   'RIPPLE_REST_PATH': null,
   'RUN_RIPPLE_REST': false,

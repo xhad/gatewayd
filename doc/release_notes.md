@@ -1,7 +1,25 @@
+##06/30/2014
+
+###
+3.22.0
+
+###Fixed bugs:
+- Outgoing payments now have logging
+- Retry Failed Payment is now tested and properly implemented
+- Bad outgoing payments now fail and are not retried
+- Properly document fund_hot_wallet cli call parameters
+
+###Added features:
+- Robust logger with Winston
+- Use ripple-rest-client for many ripple-rest related calls
+- Capistrano configuration for deployment
+- Use sql-mq-worker module for processing queues
+- Add CLI for generate_wallet
+
 ##06/24/2014
 
 ##Version:
-3.20.1
+3.21.1
 
 ###Fixed bugs:
 - On incoming payments record to_address_id not from_address_id

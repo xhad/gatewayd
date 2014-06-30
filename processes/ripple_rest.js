@@ -1,6 +1,6 @@
-
 var exec = require("child_process").exec;
 var spawn = require("child_process").spawn;
+var logger = require('winston');
 
 var databaseUrl = process.env.DATABASE_URL;
 
@@ -12,10 +12,10 @@ var command = 'cd '+ serverPath + ' && node server.js';
 
 exec(command, function(err, stdout, stderr) {
   if (err) {
-    console.log(err);
+    logger.error(err);
   } else {
-    console.log(stdout);
+    logger.info(stdout);
   }
 });
 
-console.log('Running Ripple REST on http://localhost:5990');
+logger.info('Running Ripple REST on http://localhost:5990');
