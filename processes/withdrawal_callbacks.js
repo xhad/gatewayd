@@ -1,5 +1,6 @@
 var gateway = require(__dirname+'/../');
 var request = require('request');
+var logger = require('winston');
 
 function getQueuedWithdrawal(fn){
   gateway.data.models.externalTransactions.find({
@@ -38,18 +39,18 @@ function loop() {
 
 function postWithdrawalCallback(withdrawal, url, fn) {
   body = withdrawal.toJSON();
-  console.log('about to post withdrawal', body);
-  console.log('WITHDRAWAL', body);
+  logger.info('about to post withdrawal', body);
+  logger.info('WITHDRAWAL', body);
   request({
     method: 'POST',
     uri: url,
     form: body
   }, function(err, resp, body){
     if (err) {
-      console.log('ERROR', err);
+      logger.error(err);
     } else {
-      console.log('CODE', resp.statusCode);
-      console.log('BODY', body);
+      logger.info('CODE', resp.statusCode);
+      logger.info('BODY', body);
     }
     fn(err, body);
   });

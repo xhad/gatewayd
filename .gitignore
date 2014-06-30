@@ -6,3 +6,6 @@ nohup.out
 log/server.log
 config/config.json
 npm-debug.log
+lib/data/database.json
+logfile
+logs/

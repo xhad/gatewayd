@@ -1,5 +1,7 @@
 var gateway = require(__dirname+'/../');
 
+var logger = require('winston');
+
 var Listener = require(__dirname+'/../lib/ripple/listener.js');
 
 var listener = new Listener();
@@ -24,15 +26,12 @@ listener.onPayment = function(payment) {
 
         gateway.api.recordIncomingPayment(opts, function(err, record) {
           if (err) {
-            console.log('error:', err); 
-
+            logger.error(err); 
           } else {
             try {
-              console.log(record.toJSON()); 
-
+              logger.info(record.toJSON()); 
             } catch(e) {
-              console.log('error', e);
-
+              logger.error(e);
             }
           }
         });
@@ -43,5 +42,5 @@ listener.onPayment = function(payment) {
 
 listener.start(gateway.config.get('LAST_PAYMENT_HASH'));
 
-console.log('Listening for incoming ripple payments from Ripple REST.');
+logger.info('Listening for incoming ripple payments from Ripple REST.');
 

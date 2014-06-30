@@ -34,6 +34,15 @@ Create the database and grant the created user as owner:
     'DATABASE_URL': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db',
     ...
 
+### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. ( your DATABASE_URL )
+
+    ...
+    'development': {
+      'ENV': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
+    }
+    ...
+
+
 ### Use Grunt to configure the postgres database
 
     grunt migrate

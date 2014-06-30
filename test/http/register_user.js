@@ -2,6 +2,7 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 var data = require(__dirname+'/../../lib/data/');
+var logger = require('winston');
 
 describe('register user', function(){
 
@@ -29,9 +30,9 @@ describe('register user', function(){
         //remove test username to avoid test fail due to duplicate username
         data.models.users.destroy({ name: testUser.name }).complete(function(err, resp){
           if(err){
-            console.log('username destroy error:: ', err);
+            logger.error('username destroy error:: ', err);
           } else {
-            console.log('username destroyed:: ', resp);
+            logger.info('username destroyed:: ', resp);
           }
           done();
         });

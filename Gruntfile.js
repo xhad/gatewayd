@@ -13,7 +13,7 @@ module.exports = function (grunt) {
           DATABASE_URL: nconf.get('DATABASE_URL')
         }
       }
-    }
+    },
 
     jsdoc : {
       dist : {
