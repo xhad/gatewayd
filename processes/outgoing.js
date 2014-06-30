@@ -3,8 +3,9 @@ var sendPayment = require(__dirname + "/../lib//ripple/send_payment");
 var buildPayment = require(__dirname + '/../lib/ripple/build_payment');
 var getPaymentStatus = require(__dirname + '/../lib/ripple/get_payment_status');
 var depositCallbackJob = require(__dirname+'/../lib/jobs/deposit_completion_callback.js');
+var logger = require('winston');
 
-console.log(depositCallbackJob.perform);
+logger.info(depositCallbackJob.perform);
 
 var middleware;
 
@@ -15,8 +16,8 @@ if (middlewarePath) {
   middleware = require(middlewarePath);
 } else {
   middleware = function(payment){
-    console.log('payment sent');
-    console.log(payment.to_amount, payment.to_currency);
+    logger.info('payment sent');
+    logger.info(payment.to_amount, payment.to_currency);
   };
 };
 
@@ -83,7 +84,7 @@ function getAndHandlePaymentStatus(statusUrl, callback, loopFunction){
       callback(err, null);
       loopFunction(statusUrl, callback, loopFunction);
     } else {
-      console.log('getPaymentStatus::', payment);
+      logger.info('getPaymentStatus::', payment);
       if (payment.state == 'validated'){
         callback(null, payment);
       } else {
@@ -141,7 +142,7 @@ function popOutgoingPayment() {
                   transaction.state = 'failed';
               }
               transaction.save().complete(function(){
-                depositCallbackJob.perform([transaction.id], console.log);
+                depositCallbackJob.perform([transaction.id], logger.info);
                 loop();
               }); 
             } else {
@@ -161,7 +162,7 @@ function popOutgoingPayment() {
                     transcation.state = 'failed';
                   }
                   transaction.save().complete(function(){
-                    depositCallbackJob.perform([transaction.id], console.log);
+                    depositCallbackJob.perform([transaction.id], logger.info);
                     loop();
                   });
                 });
@@ -180,5 +181,5 @@ function popOutgoingPayment() {
 
 loop();
 
-console.log('Sending outgoing ripple payments from the queue to Ripple REST.');
+logger.info('Sending outgoing ripple payments from the queue to Ripple REST.');
 
