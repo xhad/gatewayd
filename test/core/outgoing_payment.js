@@ -95,7 +95,7 @@ describe('Outgoing Payment', function() {
 
     restConfirmationResponse = {
       source_account: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr',
-      source_tag: '',
+      source_tag: '623',
       source_amount: { value: '0.001939', currency: 'XRP', issuer: '' },
       source_slippage: '0',
       destination_account: 'rp4u5gEskM8DtBZvonZwbu6dspgVdeAGM6',
