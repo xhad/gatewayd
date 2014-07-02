@@ -1,6 +1,7 @@
 ## Ripple Gateway Framework
 
 ![Travis CI Build Status](https://api.travis-ci.org/ripple/gatewayd.svg?branch=develop)
+[![Code Climate](https://codeclimate.com/github/ripple/gatewayd.png)](https://codeclimate.com/github/ripple/gatewayd)
 
 This software is a framework for building and deploying a Ripple Gateway software system. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
 
