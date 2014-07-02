@@ -47,6 +47,10 @@ After installation, start the gateway processes by running the command:
 
     bin/gateway start
 
+## Deploying with Capistrano
+
+Deploying with Capistrano is [__documented here__](doc/capistrano.md) 
+
 ## Gatewayd API ##
 
 `gatewayd : v3.20.0`
