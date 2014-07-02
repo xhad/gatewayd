@@ -24,6 +24,7 @@
     "module": false,
     "process": false,
     "console": false,
+    "logger": false,
     "nconf": false,
     "exports": false,
     "__dirname": false,

@@ -1,7 +1,6 @@
 var gateway = require(__dirname + '/../');
 var https = require('https');
 var fs = require('fs');
-var logger = require('winston');
 
 var app = require(__dirname+'/../lib/app.js');
 

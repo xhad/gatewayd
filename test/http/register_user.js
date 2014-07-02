@@ -2,7 +2,6 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 var data = require(__dirname+'/../../lib/data/');
-var logger = require('winston');
 
 describe('register user', function(){
 
