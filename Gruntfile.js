@@ -19,8 +19,24 @@ module.exports = function (grunt) {
       dist : {
         src: ['./index.js', './lib/api/*.js'],
         options: {
-            destination: './doc/jsdoc'
+          destination: './doc/jsdoc'
         }
+      }
+    },
+
+    jshint: {
+      files: [
+        'Gruntfile.js',
+        'index.js',
+        'package.json',
+        'bin/gateway',
+        'config/*',
+        'lib/**/*.js',
+        'processes/**/*.js',
+        'test/**/*.js'
+      ],
+      options: {
+        jshintrc: '.jshintrc'
       }
     }
 
@@ -28,5 +44,6 @@ module.exports = function (grunt) {
   
   grunt.loadNpmTasks('grunt-db-migrate');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.registerTask('default', ['migrate']);
 };

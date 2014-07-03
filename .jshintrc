@@ -1,0 +1,33 @@
+{
+  "bitwise": true,
+  "camelcase": true,
+  "eqeqeq": true,
+  "immed": true,
+  "indent": 2,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "quotmark": true,
+  "undef": true,
+  "unused": true,
+  "trailing": true,
+  "maxparams": 3,
+  "maxdepth": 4,
+  "maxcomplexity": 6,
+  "white": false,
+  "sub": true,
+  "-W004": true,
+  "strict": false,
+
+  "globals": {
+    "require": false,
+    "module": false,
+    "process": false,
+    "console": false,
+    "__dirname": false,
+    "it": false,
+    "describe": false,
+    "before": false
+  }
+}
+

@@ -37,17 +37,7 @@
     "ripple-lib": "",
     "ripple-wallet": "1.0.0",
     "ripple-rest-client": "1.8.1",
-    "node-uuid": "1.4.1",
-    "ejs": "",
-    "cli-table": "0.3.0",
     "underscore-node": "0.1.2",
-    "jbuilder": "",
-    "db-migrate": "^0.6.4",
-    "forever": "",
-    "pg": "^3.0.3",
-    "grunt": "^0.4.4",
-    "grunt-cli": "^0.1.13",
-    "require-all-to-camel": "^1.0.0",
     "sequelize": "^1.7.0",
     "sinon": "^1.9.1",
     "sql-mq-worker": "^1.0.1",
@@ -55,5 +45,9 @@
     "validator": "^3.11.0",
     "winston": "^0.7.3",
     "superagent": "^0.18.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.5.0",
+    "grunt-contrib-jshint": "^0.10.0"
   }
 }
