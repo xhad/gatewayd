@@ -4,7 +4,7 @@ var logger = require('winston');
 
 function getQueuedWithdrawal(fn){
   gateway.data.models.externalTransactions.find({
-    where: { status: "queued" }
+    where: { status: 'queued' }
   }).complete(function(err, withdrawal){
     if (err){
       fn(err, null);
@@ -23,7 +23,7 @@ function loop() {
     if (err || !withdrawal) { setTimeout(loop, 500); return; }
 
     var url = gateway.config.get('WITHDRAWALS_CALLBACK_URL');
-    postWithdrawalCallback(withdrawal, url, function(err, resp){
+    postWithdrawalCallback(withdrawal, url, function(err){
       if (err) {
         setTimeout(loop, 500);
       } else {
@@ -38,7 +38,7 @@ function loop() {
 }
 
 function postWithdrawalCallback(withdrawal, url, fn) {
-  body = withdrawal.toJSON();
+  var body = withdrawal.toJSON();
   logger.info('about to post withdrawal', body);
   logger.info('WITHDRAWAL', body);
   request({

@@ -8,7 +8,7 @@ describe('list failed payments', function(){
     request(app)
       .get('/v1/payments/failed')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('list failed payments', function(){
       .get('/v1/payments/failed')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -8,7 +8,7 @@ describe('set key', function(){
     request(app)
       .post('/v1/config/key')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('set key', function(){
       .post('/v1/config/key')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

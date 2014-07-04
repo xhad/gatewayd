@@ -2,9 +2,9 @@ var request = require('supertest');
 var app = require(__dirname+'/../../../lib/app.js');
 var gateway = require(__dirname+'/../../../');
 var assert = require('assert');
-var crypto = require("crypto");
+var crypto = require('crypto');
 
-var random = function(){ return crypto.randomBytes(16).toString('hex') }
+var random = function(){ return crypto.randomBytes(16).toString('hex'); };
 
 var userCreatedId;
 

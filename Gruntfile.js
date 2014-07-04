@@ -1,4 +1,4 @@
-var nconf = require( __dirname + '/config/config.js' );
+var config = require( __dirname + '/config/config.js' );
 
 module.exports = function (grunt) {
 
@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         dir: './lib/data/migrations',
         verbose: true,
         env: {
-          DATABASE_URL: nconf.get('DATABASE_URL')
+          DATABASE_URL: config.get('DATABASE_URL')
         }
       }
     },
