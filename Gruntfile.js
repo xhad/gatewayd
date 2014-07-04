@@ -24,6 +24,15 @@ module.exports = function (grunt) {
       }
     },
 
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/http/**/*.js']
+      }
+    },
+
     jshint: {
       files: [
         'Gruntfile.js',
@@ -45,5 +54,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-db-migrate');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-mocha-test');
+  
+  grunt.registerTask('test', ['jshint', 'mochaTest']);
+
   grunt.registerTask('default', ['migrate']);
 };
