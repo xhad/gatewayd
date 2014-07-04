@@ -1,7 +1,7 @@
 var gateway = require(__dirname+'/../../');
 var assert = require('assert');
 var crypto = require('crypto');
-var random = function(){ return crypto.randomBytes(16).toString('hex') }
+var random = function(){ return crypto.randomBytes(16).toString('hex'); };
 
 describe('Register User', function(){
 
@@ -39,8 +39,7 @@ describe('Register User', function(){
       assert.strictEqual(response.hosted_address.type, 'hosted');
       done();
     });
-
-  })
+  });
 
   it('should create an independent ripple address record for the user', function(done){
     var validUserParameters = {
@@ -57,8 +56,7 @@ describe('Register User', function(){
       assert.strictEqual(response.ripple_address.type, 'independent');
       done();
     });
-
-  })
+  });
   
   it('should create a default external account', function(done){
     var validUserParameters = {
@@ -74,7 +72,6 @@ describe('Register User', function(){
       assert.strictEqual(response.external_account.name, 'default');
       done();
     });
-
   });
 
   it('should not create a user record with an invalid ripple addres', function(done){
@@ -86,7 +83,7 @@ describe('Register User', function(){
       ripple_address: '1232342lkjsdlkd'
     };
 
-    gateway.api.registerUser(validUserParameters, function(error, response){
+    gateway.api.registerUser(validUserParameters, function(error){
       assert(error.ripple_address);
       assert.strictEqual(error.ripple_address, 'invalid ripple address');
 

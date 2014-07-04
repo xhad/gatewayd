@@ -8,7 +8,7 @@ describe('clear withdrawals', function(){
     request(app)
       .post('/v1/withdrawals/110/clear')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('clear withdrawals', function(){
       .post('/v1/withdrawals/110/clear')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

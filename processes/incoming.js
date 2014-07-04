@@ -7,7 +7,7 @@ var Listener = require(__dirname+'/../lib/ripple/listener.js');
 var listener = new Listener();
 
 listener.onPayment = function(payment) {
-  if (payment && payment.destination_account == gateway.config.get('COLD_WALLET')) {
+  if (payment && payment.destination_account === gateway.config.get('COLD_WALLET')) {
 
     var opts = {
       destinationTag : payment.destination_tag,
@@ -15,14 +15,14 @@ listener.onPayment = function(payment) {
       hash : payment.hash
     };
 
-    if (opts.destinationTag && (opts.transaction_state  == 'tesSUCCESS')){
+    if (opts.destinationTag && (opts.transaction_state === 'tesSUCCESS')){
 
       opts.amount = payment.destination_amount.value;
       opts.currency = payment.destination_amount.currency;
       opts.issuer = payment.destination_amount.issuer;
       opts.state = 'incoming';
 
-      if (opts.issuer == gateway.config.get('COLD_WALLET')) {
+      if (opts.issuer === gateway.config.get('COLD_WALLET')) {
 
         gateway.api.recordIncomingPayment(opts, function(err, record) {
           if (err) {
@@ -37,7 +37,7 @@ listener.onPayment = function(payment) {
         });
       }
     }
-  };
+  }
 };
 
 listener.start(gateway.config.get('LAST_PAYMENT_HASH'));

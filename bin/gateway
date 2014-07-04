@@ -98,7 +98,7 @@ program
 program
   .command('get_postgres_url')
   .description('get the url of the postgres database')
-  .action(function(cmd){
+  .action(function (){
     logger.info(gateway.config.get('DATABASE_URL'));
   });
 
@@ -107,7 +107,7 @@ program
   .description('set the url of the ripple rest api')
   .action(function(url){
     gateway.config.set('RIPPLE_REST_API', url);
-    gateway.config.save(function(err) {
+    gateway.config.save(function () {
       logger.info('set the ripple rest api url');
       logger.info(gateway.config.get('RIPPLE_REST_API'));
     });
@@ -116,7 +116,7 @@ program
 program
   .command('get_ripple_rest_url')
   .description('get the url of the ripple rest api')
-  .action(function(cmd){
+  .action(function (){
     logger.info(gateway.config.get('RIPPLE_REST_API'));
   });
 
