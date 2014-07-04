@@ -91,7 +91,6 @@ namespace :staging do
     setup.upload_config
     configure_postgres
     node.install_global_packages
-    deploy.cold
   end
 
   desc 'Configure postgresql in a manner suitable for staging/testing'
@@ -112,6 +111,7 @@ namespace :node do
   desc 'Install globally required NPM packages'
   task :install_global_packages do
     run 'sudo npm install --global pg pm2 grunt grunt-cli forever db-migrate'
+    run "sudo chown -R #{user}:#{user} ~#{user}/tmp ~#{user}/.npm" # fix permissions
   end
 end
 
