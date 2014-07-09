@@ -1,16 +1,18 @@
-## Ripple Gateway Framework
+# Ripple Gateway Framework #
 
 ![Travis CI Build Status](https://api.travis-ci.org/ripple/gatewayd.svg?branch=develop)
 
-This software is a framework for building and deploying a Ripple Gateway software system. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
+The Ripple Gateway Framework, also known as `gatewayd`, provides the basic functionality of a gateway on the Ripple Network, so that you can extend it to build your own gateway. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
 
-Interact with the Ripple Gateway Framework by building custom integrations with banking and payment systems around the world, and by using the built-in APIs for designing beautiful gateway mobile apps and user interfaces. A HTTP/JSON server, Javascript library, and Command Line Interface are provided as interfaces to the Ripple Gateway Framework software.
+Interact with the Ripple Gateway Framework by building custom integrations with banking and payment systems around the world, and by using the built-in APIs for designing beautiful gateway mobile apps and user interfaces. A HTTP/JSON server, Javascript library, and commandline interface are provided as interfaces to the Ripple Gateway Framework software.
 
 The Ripple Gateway's features include: 
+
   - user registration 
   - deposits and withdrawals
   - issuing currency
-  - ripple payment sending and monitoring
+  - robust Ripple payment sending 
+  - incoming Ripple payment monitoring
   - gateway administration
 
 ## Dependencies
@@ -39,13 +41,74 @@ The gateway server software requires git, g++, make, nodejs, postgres, and sever
 Once ripple-gateway is installed, [configure your gateway](./doc/setup.md) wallets and server
 
 
+# Gateway Framework Usage #
+
 ## Running the Ripple Gateway
 
 After installation, start the gateway processes by running the command:
 
     bin/gateway start
 
-## Gatewayd API ##
+## Ripple Gateway Processes
+
+The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 
+
+![Ripple Gateway Process Diagram](../gatewayd/doc/Ripple_Gateway_Framework_Overview.svg)
+
+In the diagram above each process is represented by a circle, and should be designed to scale horizontally, that is enable N processes of each type all operating on the same queues. Queues, represented by rectangles are actually SQL database tables maintained by the gateway data store.
+
+## Process Flow of a Gateway Deposit
+
+- Process 1: Recording Deposits
+
+A banking API integration or manual human gateway operator receives the deposit of an asset and records the deposit in the ripple gateway data store. This process is designed to be implemented externally, and example implementations are provided by the command line interface and the http/json express.js server.
+
+API calls: record_deposit
+
+- Process 2: Deposit Business Logic
+    
+A newly recorded deposit is handed to the business logic, which performs some function, ultimately en-queuing a corresponding ripple payment. This process is designed to be modified and customized.
+
+    node processes/deposits.js
+
+API calls: list_deposits, enqueue_payment
+
+-  Process 3: Send Outgoing Ripple Payments
+
+A payment record resulting from the deposit business logic process is sent to the Ripple REST server, ultimately propagating to the network. This process is standard and should not be modified.
+
+    node processes/outgoing.js
+
+API calls: send_payment
+
+## Process Flow of a Gateway Withdrawal
+
+- Process 1: Record inbound Ripple payments
+
+Poll the Ripple REST server for new payment notifications to the gateway, and record the incoming payments in the ripple gateway data store. This process is standard and should not be modified.
+
+    node processes/incoming.js
+
+API calls: get_payment_notification, record_payment
+
+- Process 2: Withdrawal Business Logic
+
+A newly recorded incoming ripple payment is handed to the business logic, which performs some function, ultimately en-queuing a corresponding asset withdrawal record. This process is designed to be modified and customized.
+
+    node processes/withdrawals.js
+
+API calls: enqueue_withdrawal
+
+- Process 3: Clear Withdrawals
+
+A banking API integration or manual human gateway operator reads the queue of pending withdrawals from the gateway data store, redeems the corresponding asset, and finally clears the withdrawal from the queue by updating the gateway data store. This process is designed to be implemented externally, and example implementations are provided by the command line interface and the http/json express.js server.
+
+API calls: list_withdrawals, clear_withdrawal
+
+Alternatively one can provide a WITHDRAWALS_CALLBACK_URL in the configuration, and then start the withdrawal_callbacks process to receive POST notifications whenever a new withdrawal comes in the gateway from the Ripple network. This process is currently not starte by default.
+
+
+# Gatewayd API #
 
 `gatewayd : v3.20.0`
 
@@ -103,9 +166,11 @@ After installation, start the gateway processes by running the command:
 * [`POST /v1/start`](#starting-worker-processes)
 * [`POST /v1/processes`](#listing-current-processes)
 
-## API Overview ##
+# API Overview #
 
-## Registering A User ##
+## Managing Users ##
+
+### Registering A User ###
 __`POST /v1/registrations`__
 Register a user with the gatewayd. A username, password, and ripple address are required. Upon
 registration several records are created in the gatewayd database, including a user record,
@@ -113,14 +178,17 @@ a "independent" ripple address record with the address provided, a "hosted" ripp
 record for making withdrawals, and a "default" external account for recording deposits and
 withdrawals.
 
-    REQUEST:
+Request:
+```
     {
       "name": "steven@ripple.com",
       "password": "s0m3supe&$3cretp@s$w0r*",
       "ripple_address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk"
     }
+```
 
-    RESPONSE:
+Response:
+```
     {
       "user": {
         "name": "steven@ripple.com",
@@ -177,8 +245,9 @@ withdrawals.
         }
       }
     }
+```
 
-## Activating A User ##
+### Activating A User ###
 __`POST /v1/users/{:id}/activate`__
 
 By default a user is marked as "inactive", and to activate the user run this
@@ -206,7 +275,7 @@ operating, and for now it is simply informational.
       }
     }
 
-## Deactivating A User ##
+### Deactivating a User ###
 __`POST /v1/users/{:id}/deactivate`__
 
 Mark a user an "inactive", which is a flag purely for informational purposes and has no
@@ -233,437 +302,13 @@ explicit effect on the user's interaction with gatewayd.
       }
     }
 
-## Creating A Deposit ##
-__`POST /v1/deposits`__
-
-Upon receipt of an asset from a user, record the asset in gatewayd's database with
-a "deposit" record, which creates an entry in the external transactions database
-table. By default a deposit is marked as "queued", and the gatewayd "deposit" process
-will take the queued deposit, apply fees, and enqueue a corresponding outbound ripple
-payment.
-
-    REQUEST:
-    {
-      "external_account_id": 307,
-      "currency": "BTC"
-      "amount": "10.7"
-    }
-
-    RESPONSE:
-    {
-      "deposit": {
-        "data": null,
-        "external_account_id": 307,
-        "currency": "BTC",
-        "amount": "10.7",
-        "deposit": true,
-        "status": "queued",
-        "updatedAt": "2014-06-12T00:46:02.080Z",
-        "createdAt": "2014-06-12T00:46:02.080Z",
-        "id": 1,
-        "ripple_transaction_id": null,
-        "uid": null
-      }
-    }
-
-## Listing Deposits ##
-__`GET /v1/deposits`__
-
-List all deposits that are currently queued, ie they have not been processed
-yet nor sent to ripple.
-
-    RESPONSE:
-    {
-      "deposits": [
-        {
-          "data": null,
-          "id": 1,
-          "amount": "10.7",
-          "currency": "BTC",
-          "deposit": true,
-          "external_account_id": 307,
-          "status": "queued",
-          "ripple_transaction_id": null,
-          "createdAt": "2014-06-12T00:46:02.080Z",
-          "updatedAt": "2014-06-12T00:46:02.080Z",
-          "uid": null
-        },
-        {
-          "data": null,
-          "id": 2,
-          "amount": "281.2",
-          "currency": "XAG",
-          "deposit": true,
-          "external_account_id": 307,
-          "status": "queued",
-          "ripple_transaction_id": null,
-          "createdAt": "2014-06-12T00:47:24.754Z",
-          "updatedAt": "2014-06-12T00:47:24.754Z",
-          "uid": null
-        }
-      ]
-    }
-
-## Listing Outgoing Payments ##
-__`GET /v1/payments/outgoing`__
-
-Ripple transaction records that are marked as "outgoing" are picked up
-and sent to the ripple network. List Outoing Payments returns a list of the
-queued "outgoing" payments. All deposit records are eventually placed in the
-outgoing payments queue after fees are subtracted.
-
-    RESPONSE:
-    {
-      "payments": [
-        {
-          "data": null,
-          "id": 1,
-          "to_address_id": 647,
-          "from_address_id": 623,
-          "transaction_state": null,
-          "transaction_hash": null,
-          "to_amount": "10.593",
-          "to_currency": "BTC",
-          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "from_amount": "10.593",
-          "from_currency": "BTC",
-          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "createdAt": "2014-06-12T00:48:02.302Z",
-          "updatedAt": "2014-06-12T00:48:02.302Z",
-          "uid": null,
-          "client_resource_id": "false",
-          "state": "outgoing",
-          "external_transaction_id": 1
-        },
-        {
-          "data": null,
-          "id": 2,
-          "to_address_id": 647,
-          "from_address_id": 623,
-          "transaction_state": null,
-          "transaction_hash": null,
-          "to_amount": "278.388",
-          "to_currency": "XAG",
-          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "from_amount": "278.388",
-          "from_currency": "XAG",
-          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "createdAt": "2014-06-12T00:48:02.324Z",
-          "updatedAt": "2014-06-12T00:48:02.324Z",
-          "uid": null,
-          "client_resource_id": "false",
-          "state": "outgoing",
-          "external_transaction_id": 2
-        }
-      ]
-    }
-
-## Listing Failed Payments ##
-__`GET /v1/payments/failed`__
-
-Outgoing payments are often rejected from ripple, such as when there is
-insufficient trust from the recipient account to the gateway account, or
-when the gateway hot wallet account has insufficient funds to process the
-payment. In the case that a payment will never make it into the ripple
-ledger the outgoing payment is marked as "failed".
-
-    RESPONSE:
-    {
-      "payments": [
-        {
-          "data": null,
-          "id": 2,
-          "to_address_id": 647,
-          "from_address_id": 623,
-          "transaction_state": null,
-          "transaction_hash": null,
-          "to_amount": "278.388",
-          "to_currency": "XAG",
-          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "from_amount": "278.388",
-          "from_currency": "XAG",
-          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "createdAt": "2014-07-28T02:48:02.324Z",
-          "updatedAt": "2014-06-13T00:38:03.086Z",
-          "uid": null,
-          "client_resource_id": "false",
-          "state": "failed",
-          "external_transaction_id": 2
-        },
-        {
-          "data": null,
-          "id": 3,
-          "to_address_id": 25,
-          "from_address_id": 623,
-          "transaction_state": null,
-          "transaction_hash": null,
-          "to_amount": "9899999999.01",
-          "to_currency": "XAG",
-          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "from_amount": "9899999999.01",
-          "from_currency": "XAG",
-          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
-          "createdAt": "2014-06-16T12:37:39.985Z",
-          "updatedAt": "2014-06-13T00:38:04.184Z",
-          "uid": null,
-          "client_resource_id": "false",
-          "state": "failed",
-          "external_transaction_id": 3
-        }
-      ]
-    }
-
-## Retrying A Failed Payment ##
-__`POST /v1/payments/failed/{:id}/retry`__
-
-A payment that failed due to insufficient funds or lack of trust lines
-may be successfully retried once funds are increased or an appropriate
-line of trust is established. Retrying a payment simply changes the 
-payment's state from "failed" to "outgoing", effectively enqueueing the 
-transaction to be re-submitted to ripple.
-
-    RESPONSE:
-    {
-      "payment": {
-        "data": null,
-        "id": 6,
-        "to_address_id": 1,
-        "from_address_id": 2,
-        "transaction_state": null,
-        "transaction_hash": null,
-        "to_amount": "100",
-        "to_currency": "XAG",
-        "to_issuer": "1",
-        "from_amount": "100",
-        "from_currency": "XAG",
-        "from_issuer": "1",
-        "createdAt": "2014-06-13T07:46:07.190Z",
-        "updatedAt": "2014-06-13T02:33:26.772Z",
-        "uid": null,
-        "client_resource_id": "false",
-        "state": "outgoing",
-        "external_transaction_id": null
-      }
-    }
-
-## Listing Incoming Payments ##
-__`GET /v1/payments/incoming`__
-
-Gatewayd monitors the gateway's account for inbound payments made to the gateway,
-and records the payments in the Ripple Transactions database table. Newly recorded
-incoming ripple transactions are always marked as "incoming" until the gatewayd
-"withdrawals" process picks them up and, after applying fees, enqueues a withdrawal
-record in the external transactions table.
-
-    RESPONSE:
-    {
-      "incoming_payments": [
-        {
-          "data": null,
-          "id": 90,
-          "to_address_id": 0,
-          "from_address_id": 13,
-          "transaction_state": "tesSUCCESS",
-          "transaction_hash": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80",
-          "to_amount": "5.12",
-          "to_currency": "SWD",
-          "to_issuer": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6",
-          "from_amount": "5.12",
-          "from_currency": "SWD",
-          "from_issuer": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6",
-          "createdAt": "2014-06-12T19:59:52.642Z",
-          "updatedAt": "2014-06-12T19:59:52.642Z",
-          "uid": null,
-          "client_resource_id": "false",
-          "state": "incoming",
-          "external_transaction_id": null
-        }
-      ]
-    }
-
-## Listing Withdrawals ##
-__`GET /v1/withdrawals`__
-
-To retrieve assets from the gateway a user sends funds back to the gateway's account.
-Once the incoming payment has been received and processed (fees subtracted) it is
-placed in the pending withdrawals queue, which is a list of external transaction withdrawal
-records with a state of "pending". If the gateway administrator has registered a withdrawal 
-callback url, the withdrawal callbacks process will read withdrawals from this list and
-POST their data to the callback url provided.
-
-    RESPONSE:
-    {
-      "withdrawals": [
-        {
-          "data": null,
-          "id": 79,
-          "amount": "1001",
-          "currency": "SWD",
-          "deposit": false,
-          "external_account_id": 6,
-          "status": "queued",
-          "ripple_transaction_id": 80,
-          "createdAt": "2014-05-30T19:23:48.390Z",
-          "updatedAt": "2014-05-30T19:23:48.390Z",
-          "uid": null
-        },
-        {
-          "data": null,
-          "id": 84,
-          "amount": "8.5",
-          "currency": "SWD",
-          "deposit": false,
-          "external_account_id": 6,
-          "status": "queued",
-          "ripple_transaction_id": 85,
-          "createdAt": "2014-06-11T00:23:56.992Z",
-          "updatedAt": "2014-06-11T00:23:56.992Z",
-          "uid": null
-        }
-      ]
-    }
-
-## Clearing A Withdrawal ##
-__`POST /v1/withdrawals/{:id}/clear`__
-
-A pending withdrawal record indicates to the gateway operator that a
-user wishes to withdraw a given asset. Once the operator processes the withdrawal
-by sending the asset to the user, mark the withdrawal as "cleared".
-
-    RESPONSE:
-    {
-      "withdrawal": {
-        "data": null,
-        "id": 84,
-        "amount": "8.5",
-        "currency": "SWD",
-        "deposit": false,
-        "external_account_id": 6,
-        "status": "cleared",
-        "ripple_transaction_id": 85,
-        "createdAt": "2014-06-11T00:23:56.992Z",
-        "updatedAt": "2014-06-12T20:01:29.663Z",
-        "uid": null
-      }
-    }
-
-## Listing Cleared External Transactions ##
-__`GET /v1/cleared`__
-
-List all deposits and withdrawals that have been completed, ie are no longer pending.
-
-    RESPONSE:
-    {
-      "deposits": [
-        {
-          "data": null,
-          "id": 3,
-          "amount": "4.95",
-          "currency": "SWD",
-          "deposit": false,
-          "external_account_id": 1,
-          "status": "cleared",
-          "ripple_transaction_id": 3,
-          "createdAt": "2014-05-13T23:10:20.803Z",
-          "updatedAt": "2014-05-13T23:11:26.323Z",
-          "uid": null
-        },
-        {
-          "data": null,
-          "id": 5,
-          "amount": "2.9699999999999998",
-          "currency": "SWD",
-          "deposit": false,
-          "external_account_id": 1,
-          "status": "cleared",
-          "ripple_transaction_id": 5,
-          "createdAt": "2014-05-14T19:45:05.244Z",
-          "updatedAt": "2014-05-14T21:19:54.231Z",
-          "uid": null
-        }
-      ]
-    }
-
-
-## Listing Hot Wallet Balances ##
-__`GET /v1/balances`__
-
-The hot wallet holds limited funds issued by the cold wallet, and the current
-balance thereof is represented as hot wallet balances.
-
-    RESPONSE:
-    {
-      "success": true,
-      "balances": [
-        {
-          "value": "29.999358",
-          "currency": "XRP",
-          "counterparty": ""
-        },
-        {
-          "value": "8776.3012",
-          "currency": "SWD",
-          "counterparty": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6"
-        },
-        {
-          "value": "0",
-          "currency": "USD",
-          "counterparty": "rNoc7mZg54TkSd1mENAtEi65c9afYMBuTu"
-        }
-      ]
-    }
-
-## Listing Cold Wallet Liabilities ##
-__`GET /v1/liabilities`__
-
-Every asset that the gateway holds and for which it issues currency is
-a liability of the gateway. Listed here are the total gateway liabilities
-for each asset type.
-
-    RESPONSE:
-    {
-      "success": true,
-      "balances": [
-        {
-          "value": "29.999985",
-          "currency": "XRP",
-          "counterparty": ""
-        },
-        {
-          "value": "-8776.3012",
-          "currency": "SWD",
-          "counterparty": "rEmFrbcZvNR9i2fkBkLxDzB4X85aB4qwyZ"
-        },
-        {
-          "value": "-63.1843",
-          "currency": "SWD",
-          "counterparty": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk"
-        },
-        {
-          "value": "0",
-          "currency": "SWD",
-          "counterparty": "rNoc7mZg54TkSd1mENAtEi65c9afYMBuTu"
-        },
-        {
-          "value": "0",
-          "currency": "SWD",
-          "counterparty": "rwNJY1jnzXHCyfKRyCyVyt8UcSZfAo7z68"
-        },
-        {
-          "value": "0",
-          "currency": "SWD",
-          "counterparty": "raj7HbHuG4da8bm5eNA8dAD19t8Kj8G4NR"
-        }
-      ]
-    }
-
-## Logging In A User ##
+### Logging In A User ###
 __`POST /v1/users/login`__
 
 Verifies that a user has the correct username and password combination. Used
 for the web application and requires user credentials in place of an API key.
 
-## Showing A User ##
+### Showing A User ###
 __`GET /v1/users/{:id}`__
 
 Return the database record for a given user.
@@ -690,7 +335,7 @@ Return the database record for a given user.
       }
     }
 
-## Listing User External Accounts ##
+### Listing User External Accounts ###
 __`GET /v1/users/{:id}/external_accounts`__
 
 List all external account records for a given user.
@@ -710,7 +355,7 @@ List all external account records for a given user.
       ]
     }
 
-## Listing User External Transactions ##
+### Listing User External Transactions ###
 __`GET /v1/users/{:id}/external_transactions`__
 
 List all external transaction records for a given user. Withdrawals and 
@@ -740,7 +385,7 @@ deposits are the two types of external transaction records.
       ]
     }
 
-## Listing User Ripple Addresses ##
+### Listing User Ripple Addresses ###
 __`GET /v1/users/{:id}/ripple_addresses`__
 
 List all ripple addresses for a given user. Most users will have at least one
@@ -780,7 +425,7 @@ independent address and one hosted address.
       ]
     }
 
-## Listing User Ripple Transactions ##
+### Listing User Ripple Transactions ###
 __`GET /v1/users/{:id}/ripple_transactions`__
 
 List all ripple transactions for a given user, which represent transactions
@@ -838,72 +483,491 @@ made to or from all of the users's ripple addresses.
       ]
     }
 
-## Funding The Hot Wallet ##
+
+## Managing Payments ##
+
+### Listing Outgoing Payments ###
+__`GET /v1/payments/outgoing`__
+
+Ripple transaction records that are marked as "outgoing" are picked up
+and sent to the ripple network. List Outoing Payments returns a list of the
+queued "outgoing" payments. All deposit records are eventually placed in the
+outgoing payments queue after fees are subtracted.
+
+    RESPONSE:
+    {
+      "payments": [
+        {
+          "data": null,
+          "id": 1,
+          "to_address_id": 647,
+          "from_address_id": 623,
+          "transaction_state": null,
+          "transaction_hash": null,
+          "to_amount": "10.593",
+          "to_currency": "BTC",
+          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "from_amount": "10.593",
+          "from_currency": "BTC",
+          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "createdAt": "2014-06-12T00:48:02.302Z",
+          "updatedAt": "2014-06-12T00:48:02.302Z",
+          "uid": null,
+          "client_resource_id": "false",
+          "state": "outgoing",
+          "external_transaction_id": 1
+        },
+        {
+          "data": null,
+          "id": 2,
+          "to_address_id": 647,
+          "from_address_id": 623,
+          "transaction_state": null,
+          "transaction_hash": null,
+          "to_amount": "278.388",
+          "to_currency": "XAG",
+          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "from_amount": "278.388",
+          "from_currency": "XAG",
+          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "createdAt": "2014-06-12T00:48:02.324Z",
+          "updatedAt": "2014-06-12T00:48:02.324Z",
+          "uid": null,
+          "client_resource_id": "false",
+          "state": "outgoing",
+          "external_transaction_id": 2
+        }
+      ]
+    }
+
+### Listing Failed Payments ###
+__`GET /v1/payments/failed`__
+
+Outgoing payments are often rejected from ripple, such as when there is
+insufficient trust from the recipient account to the gateway account, or
+when the gateway hot wallet account has insufficient funds to process the
+payment. In the case that a payment will never make it into the ripple
+ledger the outgoing payment is marked as "failed".
+
+    RESPONSE:
+    {
+      "payments": [
+        {
+          "data": null,
+          "id": 2,
+          "to_address_id": 647,
+          "from_address_id": 623,
+          "transaction_state": null,
+          "transaction_hash": null,
+          "to_amount": "278.388",
+          "to_currency": "XAG",
+          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "from_amount": "278.388",
+          "from_currency": "XAG",
+          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "createdAt": "2014-07-28T02:48:02.324Z",
+          "updatedAt": "2014-06-13T00:38:03.086Z",
+          "uid": null,
+          "client_resource_id": "false",
+          "state": "failed",
+          "external_transaction_id": 2
+        },
+        {
+          "data": null,
+          "id": 3,
+          "to_address_id": 25,
+          "from_address_id": 623,
+          "transaction_state": null,
+          "transaction_hash": null,
+          "to_amount": "9899999999.01",
+          "to_currency": "XAG",
+          "to_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "from_amount": "9899999999.01",
+          "from_currency": "XAG",
+          "from_issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+          "createdAt": "2014-06-16T12:37:39.985Z",
+          "updatedAt": "2014-06-13T00:38:04.184Z",
+          "uid": null,
+          "client_resource_id": "false",
+          "state": "failed",
+          "external_transaction_id": 3
+        }
+      ]
+    }
+
+### Retrying A Failed Payment ###
+__`POST /v1/payments/failed/{:id}/retry`__
+
+A payment that failed due to insufficient funds or lack of trust lines
+may be successfully retried once funds are increased or an appropriate
+line of trust is established. Retrying a payment simply changes the 
+payment's state from "failed" to "outgoing", effectively enqueueing the 
+transaction to be re-submitted to ripple.
+
+    RESPONSE:
+    {
+      "payment": {
+        "data": null,
+        "id": 6,
+        "to_address_id": 1,
+        "from_address_id": 2,
+        "transaction_state": null,
+        "transaction_hash": null,
+        "to_amount": "100",
+        "to_currency": "XAG",
+        "to_issuer": "1",
+        "from_amount": "100",
+        "from_currency": "XAG",
+        "from_issuer": "1",
+        "createdAt": "2014-06-13T07:46:07.190Z",
+        "updatedAt": "2014-06-13T02:33:26.772Z",
+        "uid": null,
+        "client_resource_id": "false",
+        "state": "outgoing",
+        "external_transaction_id": null
+      }
+    }
+
+### Listing Incoming Payments ###
+__`GET /v1/payments/incoming`__
+
+Gatewayd monitors the gateway's account for inbound payments made to the gateway,
+and records the payments in the Ripple Transactions database table. Newly recorded
+incoming ripple transactions are always marked as "incoming" until the gatewayd
+"withdrawals" process picks them up and, after applying fees, enqueues a withdrawal
+record in the external transactions table.
+
+    RESPONSE:
+    {
+      "incoming_payments": [
+        {
+          "data": null,
+          "id": 90,
+          "to_address_id": 0,
+          "from_address_id": 13,
+          "transaction_state": "tesSUCCESS",
+          "transaction_hash": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80",
+          "to_amount": "5.12",
+          "to_currency": "SWD",
+          "to_issuer": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6",
+          "from_amount": "5.12",
+          "from_currency": "SWD",
+          "from_issuer": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6",
+          "createdAt": "2014-06-12T19:59:52.642Z",
+          "updatedAt": "2014-06-12T19:59:52.642Z",
+          "uid": null,
+          "client_resource_id": "false",
+          "state": "incoming",
+          "external_transaction_id": null
+        }
+      ]
+    }
+    
+### Setting The Last Payment Hash ###
+__`POST /v1/config/last_payment_hash`__
+
+Gatewayd polls the ripple network for notifications of inbound and outbound
+payments beginning with the last known transaction hash. Manually set that hash.
+
+### Showing The Last Payment Hash ###
+__`GET /v1/config/last_payment_hash`__
+
+Gatewayd polls the ripple network for notifications of inbound and outbound
+payments beginning with the last known transaction hash. Returns that hash.
+
+    RESPONSE:
+    {
+      "LAST_PAYMENT_HASH": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80"
+    }
+
+## Managing Deposits and Withdrawals ##
+
+### Creating a Deposit ###
+__`POST /v1/deposits`__
+
+Upon receipt of an asset from a user, record the asset in gatewayd's database with
+a "deposit" record, which creates an entry in the external transactions database
+table. By default a deposit is marked as "queued", and the gatewayd "deposit" process
+will take the queued deposit, apply fees, and enqueue a corresponding outbound ripple
+payment.
+
+    REQUEST:
+    {
+      "external_account_id": 307,
+      "currency": "BTC"
+      "amount": "10.7"
+    }
+
+    RESPONSE:
+    {
+      "deposit": {
+        "data": null,
+        "external_account_id": 307,
+        "currency": "BTC",
+        "amount": "10.7",
+        "deposit": true,
+        "status": "queued",
+        "updatedAt": "2014-06-12T00:46:02.080Z",
+        "createdAt": "2014-06-12T00:46:02.080Z",
+        "id": 1,
+        "ripple_transaction_id": null,
+        "uid": null
+      }
+    }
+
+### Listing Deposits ###
+__`GET /v1/deposits`__
+
+List all deposits that are currently queued, ie they have not been processed
+yet nor sent to ripple.
+
+    RESPONSE:
+    {
+      "deposits": [
+        {
+          "data": null,
+          "id": 1,
+          "amount": "10.7",
+          "currency": "BTC",
+          "deposit": true,
+          "external_account_id": 307,
+          "status": "queued",
+          "ripple_transaction_id": null,
+          "createdAt": "2014-06-12T00:46:02.080Z",
+          "updatedAt": "2014-06-12T00:46:02.080Z",
+          "uid": null
+        },
+        {
+          "data": null,
+          "id": 2,
+          "amount": "281.2",
+          "currency": "XAG",
+          "deposit": true,
+          "external_account_id": 307,
+          "status": "queued",
+          "ripple_transaction_id": null,
+          "createdAt": "2014-06-12T00:47:24.754Z",
+          "updatedAt": "2014-06-12T00:47:24.754Z",
+          "uid": null
+        }
+      ]
+    }
+
+
+### Listing Withdrawals ###
+__`GET /v1/withdrawals`__
+
+To retrieve assets from the gateway a user sends funds back to the gateway's account.
+Once the incoming payment has been received and processed (fees subtracted) it is
+placed in the pending withdrawals queue, which is a list of external transaction withdrawal
+records with a state of "pending". If the gateway administrator has registered a withdrawal 
+callback url, the withdrawal callbacks process will read withdrawals from this list and
+POST their data to the callback url provided.
+
+    RESPONSE:
+    {
+      "withdrawals": [
+        {
+          "data": null,
+          "id": 79,
+          "amount": "1001",
+          "currency": "SWD",
+          "deposit": false,
+          "external_account_id": 6,
+          "status": "queued",
+          "ripple_transaction_id": 80,
+          "createdAt": "2014-05-30T19:23:48.390Z",
+          "updatedAt": "2014-05-30T19:23:48.390Z",
+          "uid": null
+        },
+        {
+          "data": null,
+          "id": 84,
+          "amount": "8.5",
+          "currency": "SWD",
+          "deposit": false,
+          "external_account_id": 6,
+          "status": "queued",
+          "ripple_transaction_id": 85,
+          "createdAt": "2014-06-11T00:23:56.992Z",
+          "updatedAt": "2014-06-11T00:23:56.992Z",
+          "uid": null
+        }
+      ]
+    }
+
+### Clearing A Withdrawal ###
+__`POST /v1/withdrawals/{:id}/clear`__
+
+A pending withdrawal record indicates to the gateway operator that a
+user wishes to withdraw a given asset. Once the operator processes the withdrawal
+by sending the asset to the user, mark the withdrawal as "cleared".
+
+    RESPONSE:
+    {
+      "withdrawal": {
+        "data": null,
+        "id": 84,
+        "amount": "8.5",
+        "currency": "SWD",
+        "deposit": false,
+        "external_account_id": 6,
+        "status": "cleared",
+        "ripple_transaction_id": 85,
+        "createdAt": "2014-06-11T00:23:56.992Z",
+        "updatedAt": "2014-06-12T20:01:29.663Z",
+        "uid": null
+      }
+    }
+
+### Listing Cleared External Transactions ###
+__`GET /v1/cleared`__
+
+List all deposits and withdrawals that have been completed, ie are no longer pending.
+
+    RESPONSE:
+    {
+      "deposits": [
+        {
+          "data": null,
+          "id": 3,
+          "amount": "4.95",
+          "currency": "SWD",
+          "deposit": false,
+          "external_account_id": 1,
+          "status": "cleared",
+          "ripple_transaction_id": 3,
+          "createdAt": "2014-05-13T23:10:20.803Z",
+          "updatedAt": "2014-05-13T23:11:26.323Z",
+          "uid": null
+        },
+        {
+          "data": null,
+          "id": 5,
+          "amount": "2.9699999999999998",
+          "currency": "SWD",
+          "deposit": false,
+          "external_account_id": 1,
+          "status": "cleared",
+          "ripple_transaction_id": 5,
+          "createdAt": "2014-05-14T19:45:05.244Z",
+          "updatedAt": "2014-05-14T21:19:54.231Z",
+          "uid": null
+        }
+      ]
+    }
+
+## Managing Wallets ##
+
+### Listing Hot Wallet Balances ###
+__`GET /v1/balances`__
+
+The hot wallet holds limited funds issued by the cold wallet, and the current
+balance thereof is represented as hot wallet balances.
+
+    RESPONSE:
+    {
+      "success": true,
+      "balances": [
+        {
+          "value": "29.999358",
+          "currency": "XRP",
+          "counterparty": ""
+        },
+        {
+          "value": "8776.3012",
+          "currency": "SWD",
+          "counterparty": "rDNP5C7Vjt2mLushCmUPwm6dvwNzNiuND6"
+        },
+        {
+          "value": "0",
+          "currency": "USD",
+          "counterparty": "rNoc7mZg54TkSd1mENAtEi65c9afYMBuTu"
+        }
+      ]
+    }
+
+### Listing Cold Wallet Liabilities ###
+__`GET /v1/liabilities`__
+
+Every asset that the gateway holds and for which it issues currency is
+a liability of the gateway. Listed here are the total gateway liabilities
+for each asset type.
+
+    RESPONSE:
+    {
+      "success": true,
+      "balances": [
+        {
+          "value": "29.999985",
+          "currency": "XRP",
+          "counterparty": ""
+        },
+        {
+          "value": "-8776.3012",
+          "currency": "SWD",
+          "counterparty": "rEmFrbcZvNR9i2fkBkLxDzB4X85aB4qwyZ"
+        },
+        {
+          "value": "-63.1843",
+          "currency": "SWD",
+          "counterparty": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk"
+        },
+        {
+          "value": "0",
+          "currency": "SWD",
+          "counterparty": "rNoc7mZg54TkSd1mENAtEi65c9afYMBuTu"
+        },
+        {
+          "value": "0",
+          "currency": "SWD",
+          "counterparty": "rwNJY1jnzXHCyfKRyCyVyt8UcSZfAo7z68"
+        },
+        {
+          "value": "0",
+          "currency": "SWD",
+          "counterparty": "raj7HbHuG4da8bm5eNA8dAD19t8Kj8G4NR"
+        }
+      ]
+    }
+
+
+### Funding the Hot Wallet ###
 __`POST /v1/wallets/hot/fund`__
 
 Issue funds from the cold wallet to the hot wallet, specifying the amount, currency, and
 the cold wallet secret key.
 
-## Setting The Database Url ##
-__`POST /v1/config/database`__
-
-Set the database url for in gatewayd configuration.
-
-## Showing The Database Url ##
-__`GET /v1/config/database`__
-
-Show the database url from the gatewayd configuration.
-
-    RESPONSE:
-    {
-      "DATABASE_URL": "postgres://postgres:password@localhost:5432/ripple_gateway"
-    }
-
-## Setting The Ripple Rest Url ##
-__`POST /v1/config/ripple/rest`__
-
-Set the ripple rest url in the gatewayd configuration.
-
-## Showing The Ripple Rest Url ##
-__`GET /v1/config/ripple/rest`__
-
-Show the ripple rest url from the gatewayd configuration.
-
-    RESPONSE:
-    {
-      "RIPPLE_REST_API": "http://localhost:5990/"
-    }
-
-## Setting The Cold Wallet ##
+### Setting the Cold Wallet ###
 __`POST /v1/config/wallets/cold`__
 
 Set the gateway cold wallet, from which funds are issued.
 
-## Showing The Cold Wallet ##
+### Showing the Cold Wallet ###
 __`GET /v1/config/wallets/cold`__
 
 Show the gatewayd cold wallet, from which funds are issued.
 
-## Generating A Ripple Wallet ##
+### Generating a Ripple Wallet ###
 __`POST /v1/config/wallets/generate`__
 
 Generate a random ripple address and secret key pair, which
 represents an unfunded ripple account.
 
-## Setting The Hot Wallet ##
+### Setting the Hot Wallet ###
 __`POST /v1/config/wallets/cold`__
 
 Set the gatewayd hot wallet, which is used to automatically send
 funds, and which maintains trust to and balances of the cold wallet.
 
-## Showing The Hot Wallet ##
+### Showing the Hot Wallet ###
 __`POST /v1/config/wallets/cold`__
 
 Show the gatewayd hot wallet, which is used to automatically send
 funds, and which maintains trust to and balances of the cold wallet.
 
 
-## Setting Trust From Hot Wallet To Cold Wallet ##
+### Setting Trust From Hot Wallet To Cold Wallet ###
 __`POST /v1/trust`__
 
 Set a line of trust from the gateway hot wallet to the gateway cold
@@ -911,9 +975,8 @@ wallet. The line of trust represents the total amount of each asset
 that gatewayd can hold and automatically send out without a manual
 refunding by a gateway operator.
 
-## Listing Trust From Hot Wallet To Cold Wallet ##
+### Listing Trust From Hot Wallet To Cold Wallet ###
 __`GET /v1/trust`__
-
 
 List lines of trust from the gateway hot wallet to the gateway cold
 wallet. The line of trust represents the total amount of each asset
@@ -935,30 +998,50 @@ refunding by a gateway operator.
       ]
     }
 
-## Funding The Hot Wallet ##
+### Funding The Hot Wallet ###
 __`POST /v1/wallets/hot/fund`__
 
 Issue funds from the cold wallet to the hot wallet. The cold wallet secret
 is required.
 
-## Setting The Last Payment Hash ##
-__`POST /v1/config/last_payment_hash`__
+### Sending Funds From Hot Wallet To Cold Wallet ###
+__`POST /v1/wallets/cold/refund`__
 
-Gatewayd polls the ripple network for notifications of inbound and outbound
-payments beginning with the last known transaction hash. Manually set that hash.
+If a hot wallet is potentially compromised, send the remaining funds back to the cold wallet.
 
-## Showing The Last Payment Hash ##
-__`GET /v1/config/last_payment_hash`__
+## Configuring gatewayd ##
 
-Gatewayd polls the ripple network for notifications of inbound and outbound
-payments beginning with the last known transaction hash. Returns that hash.
+### Setting the Database Url ###
+__`POST /v1/config/database`__
+
+Set the database url for in gatewayd configuration.
+
+### Showing the Database Url ###
+__`GET /v1/config/database`__
+
+Show the database url from the gatewayd configuration.
 
     RESPONSE:
     {
-      "LAST_PAYMENT_HASH": "12AE1B1843D886D7D6783DA02AB5F43C32579212853CF3CEFD6DBDF29F03BC80"
+      "DATABASE_URL": "postgres://postgres:password@localhost:5432/ripple_gateway"
     }
 
-## Setting The Domain ##
+### Setting The Ripple Rest Url ###
+__`POST /v1/config/ripple/rest`__
+
+Set the ripple rest url in the gatewayd configuration.
+
+### Showing The Ripple Rest Url ###
+__`GET /v1/config/ripple/rest`__
+
+Show the ripple rest url from the gatewayd configuration.
+
+    RESPONSE:
+    {
+      "RIPPLE_REST_API": "http://localhost:5990/"
+    }
+
+### Setting The Domain ###
 __`POST /v1/config/domain`__
 
 Set the domain of the gateway, which is automatically added to the gateway's ripple.txt.
@@ -973,7 +1056,7 @@ Set the domain of the gateway, which is automatically added to the gateway's rip
       "DOMAIN": "stevenzeiler.com"
     }
 
-## Showing The Domain ##
+### Showing The Domain ###
 __`GET /v1/config/domain`__
 
 Show the domain of the gateway, which is shown in the gateway's ripple.txt.
@@ -983,7 +1066,7 @@ Show the domain of the gateway, which is shown in the gateway's ripple.txt.
       "DOMAIN": "stroopgate.com"
     }
 
-## Setting The Api Key ##
+### Setting The Api Key ###
 __`POST /v1/config/key`__
 
 Reset the gateway api key, which generates, saves, and returns a new api key.
@@ -998,7 +1081,7 @@ Reset the gateway api key, which generates, saves, and returns a new api key.
       "KEY": "1234578dddd"
     }
 
-## Showing The Api Key ##
+### Showing The Api Key ###
 __`GET /v1/config/key`__
 
 Show the current api key.
@@ -1008,7 +1091,7 @@ Show the current api key.
       "KEY": "ebdb883d5723a71c59fb8ecefbb65476a6923f2a69b49b53cffe212c817cab92"
     }
 
-## Listing Currencies ##
+### Listing Currencies ###
 __`GET /v1/currencies`__
 
 List currencies supported by the gateway, which are shown in the gateway's ripple.txt
@@ -1021,7 +1104,7 @@ manifest file.
       }
     }
 
-## Setting Currencies ##
+### Setting Currencies ###
 __`POST /v1/currencies`__
 
 Add a currency to be supported by the gateway. This currency is shown in the gateway's
@@ -1040,18 +1123,15 @@ ripple.txt manifest file.
       }
     }
 
-## Sending Funds From Hot Wallet To Cold Wallet ##
-__`POST /v1/wallets/cold/refund`__
+## Managing gateway Processes
 
-If a hot wallet is potentially compromised, send the remaining funds back to the cold wallet.
-
-## Starting Worker Processes ##
+### Starting Worker Processes ###
 __`POST /v1/start`__
 
 Start one or more gateway processes, including but not limited to "deposits", "outgoing",
 "incoming", "withdrawals", "callbacks", etc.
 
-## Listing Current Processes ##
+### Listing Current Processes ###
 __`GET /v1/processes`__
 
 List information about the currently-running gateway daemon processes.
@@ -1303,107 +1383,51 @@ List information about the currently-running gateway daemon processes.
         pm_id: 5,
         monit: { memory: 0, cpu: 0 } } ]
 
-## Command Line Interface
+# Command Line Interface #
 
-    Usage: bin/gateway [options] [command]
+```
+bin/gateway [options] [command]
+```
+
+The available *options* are as follows:
+
+```
+-h, --help     output usage information
+```
   
-    Commands:
+The available commands are as follows:
   
-      register_user <username> <password> <ripple_address> create a user with a ripple address
-      list_users             list registered users
-      record_deposit <amount> <currency> <external_account_id> record a deposit in the deposit processing queue
-      list_deposits          list deposits in the deposit processing queue
-      list_outgoing_payments  list the outgoing ripple payments.
-      list_incoming_payments  list unprocesses incoming ripple payments
-      list_withdrawals       get pending withdrawals to external accounts
-      clear_withdrawal <external_transaction_id> clear pending withdrawal to external account
-
-      generate_wallet        generate a random ripple wallet
-      set_hot_wallet <address> <secret> set the gateway hot wallet
-      get_hot_wallet         get the address of the gateway hot wallet
-      get_hot_wallet_secret  get the secret of the gateway hot wallet
-      fund_hot_wallet <amount> <currency> issue funds from cold wallet to hot wallet
-      set_cold_wallet <account> set the gateway hot wallet
-      get_cold_wallet        get the gateway cold wallet
-      refund_cold_wallet <amount> <currency> send back funds from the hot wallet to cold wallet
-      
-      set_trust <amount> <currency> set level of trust from hot to cold wallet
-      get_trust_lines        get the trust lines from hot wallet to cold wallet
-
-      list_currencies        List all currencies supported by the gateway
-      add_currency <currency> add support for a currency
-      remove_currency <currency> remove support for a currency
-      set_domain <domain>    set the domain name of the gateway
-      get_domain             get the domain name of the gateway
-
-      set_postgres_url <url> set the url of the postgres database
-      get_postgres_url       get the url of the postgres database
-      set_ripple_rest_url <url> set the url of the ripple rest api
-      get_ripple_rest_url    get the url of the ripple rest api
-      set_key                set the admin api key
-      get_key                get the admin api key
-      set_last_payment_hash <hash> set the last encountered payment hash for incoming processing.
-      get_last_payment_hash  get the last encountered payment hash for incoming processing.
+| Command Syntax | Description |
+|----------------|-------------|
+| `register_user <username> <password> <ripple_address> ` | create a user with a ripple address |
+| `list_users` | list registered users |
+| `record_deposit <amount> <currency> <external_account_id>` | record a deposit in the deposit processing queue |
+| `list_deposits` | list deposits in the deposit processing queue |
+| `list_outgoing_payments` | list the outgoing ripple payments. |
+| `list_incoming_payments` | list unprocesses incoming ripple payments |
+| `list_withdrawals` | get pending withdrawals to external accounts |
+| `clear_withdrawal <external_transaction_id>` | clear pending withdrawal to external account |
+| `generate_wallet` | generate a random ripple wallet |
+| `set_hot_wallet <address> <secret>` | set the gateway hot wallet |
+| `get_hot_wallet` | get the address of the gateway hot wallet |
+| `get_hot_wallet_secret` | get the secret of the gateway hot wallet |
+| `fund_hot_wallet <amount> <currency>` | issue funds from cold wallet to hot wallet |
+| `set_cold_wallet <account>` | set the gateway hot wallet |
+| `get_cold_wallet` | get the gateway cold wallet |
+| `refund_cold_wallet <amount> <currency>` | send back funds from the hot wallet to cold wallet |
+| `set_trust <amount> <currency>` | set level of trust from hot to cold wallet |
+| `get_trust_lines` | get the trust lines from hot wallet to cold wallet |
+| `list_currencies` | List all currencies supported by the gateway |
+| `add_currency <currency>` | add support for a currency |
+| `remove_currency <currency>` | remove support for a currency |
+| `set_domain <domain>` | set the domain name of the gateway |
+| `get_domain` | get the domain name of the gateway |
+| `set_postgres_url <url>` | set the url of the postgres database |
+| `get_postgres_url` | get the url of the postgres database |
+| `set_ripple_rest_url <url>` | set the url of the ripple rest api |
+| `get_ripple_rest_url` | get the url of the ripple rest api |
+| `set_key` | set the admin api key |
+| `get_key` | get the admin api key |
+| `set_last_payment_hash <hash>` | set the last encountered payment hash for incoming processing. |
+| `get_last_payment_hash` | get the last encountered payment hash for incoming processing. |
     
-    Options:
-  
-      -h, --help     output usage information
-  
-## Ripple Gateway Processes
-
-The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 
-
-![Ripple Gateway Process Diagram](https://s3.amazonaws.com/imagesz/ripple_gateway_diagram.jpg)
-
-In the diagram above each process is represented by a circle, and should be designed to scale horizontally, that is enable N processes of each type all operating on the same queues. Queues, represented by rectangles are actually SQL database tables maintained by the gateway data store.
-
-## Process Flow of a Gateway Deposit
-
-- Process 1: Recording Deposits
-
-A banking API integration or manual human gateway operator receives the deposit of an asset and records the deposit in the ripple gateway data store. This process is designed to be implemented externally, and example implementations are provided by the command line interface and the http/json express.js server.
-
-API calls: record_deposit
-
-- Process 2: Deposit Business Logic
-    
-A newly recorded deposit is handed to the business logic, which performs some function, ultimately en-queuing a corresponding ripple payment. This process is designed to be modified and customized.
-
-    node processes/deposits.js
-
-API calls: list_deposits, enqueue_payment
-
--  Process 3: Send Outgoing Ripple Payments
-
-A payment record resulting from the deposit business logic process is sent to the Ripple REST server, ultimately propagating to the network. This process is standard and should not be modified.
-
-    node processes/outgoing.js
-
-API calls: send_payment
-
-## Process Flow of a Gateway Withdrawal
-
-- Process 1: Record inbound Ripple payments
-
-Poll the Ripple REST server for new payment notifications to the gateway, and record the incoming payments in the ripple gateway data store. This process is standard and should not be modified.
-
-    node processes/incoming.js
-
-API calls: get_payment_notification, record_payment
-
-- Process 2: Withdrawal Business Logic
-
-A newly recorded incoming ripple payment is handed to the business logic, which performs some function, ultimately en-queuing a corresponding asset withdrawal record. This process is designed to be modified and customized.
-
-    node processes/withdrawals.js
-
-API calls: enqueue_withdrawal
-
-- Process 3: Clear Withdrawals
-
-A banking API integration or manual human gateway operator reads the queue of pending withdrawals from the gateway data store, redeems the corresponding asset, and finally clears the withdrawal from the queue by updating the gateway data store. This process is designed to be implemented externally, and example implementations are provided by the command line interface and the http/json express.js server.
-
-API calls: list_withdrawals, clear_withdrawal
-
-Alternatively one can provide a WITHDRAWALS_CALLBACK_URL in the configuration, and then start the withdrawal_callbacks process to receive POST notifications whenever a new withdrawal comes in the gateway from the Ripple network. This process is currently not starte by default.
-
