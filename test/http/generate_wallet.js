@@ -7,7 +7,7 @@ describe('generate wallet', function(){
     request(app)
       .post('/v1/wallets/generate')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -18,7 +18,7 @@ describe('generate wallet', function(){
       .post('/v1/wallets/generate')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -9,7 +9,7 @@ var worker = new SqlMqWorker({
     status: 'queued'
   }},
   job: function(deposit, callback) {
-    depositProcessor = new DepositProcessor(deposit);
+    var depositProcessor = new DepositProcessor(deposit);
     depositProcessor.processDeposit(callback);
   }
 });

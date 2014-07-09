@@ -4,6 +4,8 @@ var async = require('async');
 
 describe('Retrying a Failed Payment', function() {
 
+  var failedPayment, successfulPayment;
+
   it('should move a failed payment back into the outgoing payment queue', function(done) {
     gateway.api.retryFailedPayment(failedPayment.id, function(error, payment) {
       assert(!error);
@@ -13,7 +15,7 @@ describe('Retrying a Failed Payment', function() {
   });
 
   it('should not modify a payment not marked as failed', function(done) {
-    gateway.api.retryFailedPayment(successfulPayment.id, function(error, payment) {
+    gateway.api.retryFailedPayment(successfulPayment.id, function(error) {
       assert.strictEqual(error.state, 'must be "failed"');
       gateway.data.models.rippleTransactions.find({ where: { id: successfulPayment.id }})
       .complete(function(error, transaction) {
