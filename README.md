@@ -2,6 +2,8 @@
 
 ![Travis CI Build Status](https://api.travis-ci.org/ripple/gatewayd.svg?branch=develop)
 
+[![Code Climate](https://codeclimate.com/github/ripple/gatewayd.png)](https://codeclimate.com/github/ripple/gatewayd)
+
 This software is a framework for building and deploying a Ripple Gateway software system. The system includes a core database that manages accounting for deposits and withdrawals of assets to the Ripple network. The Ripple Gateway Framework provides a standard interface for issuing any currency on the Ripple network and exchange, with the goal of completely abstracting interaction with Ripple.
 
 Interact with the Ripple Gateway Framework by building custom integrations with banking and payment systems around the world, and by using the built-in APIs for designing beautiful gateway mobile apps and user interfaces. A HTTP/JSON server, Javascript library, and Command Line Interface are provided as interfaces to the Ripple Gateway Framework software.
@@ -44,6 +46,10 @@ Once ripple-gateway is installed, [configure your gateway](./doc/setup.md) walle
 After installation, start the gateway processes by running the command:
 
     bin/gateway start
+
+## Deploying with Capistrano
+
+Deploying with Capistrano is [__documented here__](doc/capistrano.md) 
 
 ## Gatewayd API ##
 
