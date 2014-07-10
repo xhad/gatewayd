@@ -1,7 +1,5 @@
 var gateway = require(__dirname+'/../');
 
-var logger = require('winston');
-
 var Listener = require(__dirname+'/../lib/ripple/listener.js');
 
 var listener = new Listener();
@@ -26,12 +24,12 @@ listener.onPayment = function(payment) {
 
         gateway.api.recordIncomingPayment(opts, function(err, record) {
           if (err) {
-            logger.error(err); 
+            logger.error('payment:incoming:error', err); 
           } else {
             try {
-              logger.info(record.toJSON()); 
+              logger.info('payment:incoming:recorded', record.toJSON());
             } catch(e) {
-              logger.error(e);
+              logger.error('payment:incoming:error', e); 
             }
           }
         });

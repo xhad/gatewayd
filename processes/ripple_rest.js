@@ -1,5 +1,4 @@
 var exec = require('child_process').exec;
-var logger = require('winston');
 
 process.env.DATABASE_URL = null;
 

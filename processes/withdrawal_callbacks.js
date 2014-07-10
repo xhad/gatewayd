@@ -1,6 +1,5 @@
 var gateway = require(__dirname+'/../');
 var request = require('request');
-var logger = require('winston');
 
 function getQueuedWithdrawal(fn){
   gateway.data.models.externalTransactions.find({
@@ -29,6 +28,7 @@ function loop() {
       } else {
         withdrawal.status = 'notified';
         withdrawal.save().complete(function(){
+          logger.info('withdrawal:notified', withdrawal.toJSON());
           setTimeout(loop, 500);
         });
       }
@@ -39,18 +39,16 @@ function loop() {
 
 function postWithdrawalCallback(withdrawal, url, fn) {
   var body = withdrawal.toJSON();
-  logger.info('about to post withdrawal', body);
-  logger.info('WITHDRAWAL', body);
+
   request({
     method: 'POST',
     uri: url,
     form: body
   }, function(err, resp, body){
     if (err) {
-      logger.error(err);
+      logger.error('withdrawal:failed', err);
     } else {
-      logger.info('CODE', resp.statusCode);
-      logger.info('BODY', body);
+      logger.info('withdrawal:cleared', body, resp.statusCode);
     }
     fn(err, body);
   });
