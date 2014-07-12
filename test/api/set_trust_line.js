@@ -1,8 +1,6 @@
 var gateway = require(__dirname+'/../../');
 var assert = require('assert');
 
-var SECRET = process.env.RIPPLE_ACCOUNT_SECRET;
-
 describe('Set trust lines', function(){
   it('should set a line of trust from the gateway hot wallet to the gateway cold wallet', function(done){
     this.timeout(5000);
