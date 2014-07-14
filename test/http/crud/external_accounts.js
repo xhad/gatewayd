@@ -2,9 +2,9 @@ var request = require('supertest');
 var app = require(__dirname+'/../../../lib/app.js');
 var gateway = require(__dirname+'/../../../');
 var assert = require('assert');
-var crypto = require("crypto");
+var crypto = require('crypto');
 
-var random = function(){ return crypto.randomBytes(16).toString('hex') }
+var random = function(){ return crypto.randomBytes(16).toString('hex'); };
 
 var createdExternalAccountId;
 
@@ -18,7 +18,6 @@ describe('CRUD External Accounts', function(){
       .end(function(error, response){
         if (error) {
           throw new Error(error);
-          done();
         } else {
           assert(response.body.external_accounts);
           done();
@@ -36,7 +35,6 @@ describe('CRUD External Accounts', function(){
       .end(function(error, response){
         if (error) {
           throw new Error(error);
-          done();
         } else {
           assert(response.body.success); 
           assert.strictEqual(response.body.external_account.name, name);
@@ -55,7 +53,6 @@ describe('CRUD External Accounts', function(){
       .end(function(error, response){
         if (error) {
           throw new Error(error);
-          done();
         } else {
           assert(response.body.success); 
           assert.strictEqual(response.body.external_account.id, createdExternalAccountId); 
@@ -74,7 +71,6 @@ describe('CRUD External Accounts', function(){
       .end(function(error, response){
         if (error) {
           throw new Error(error);
-          done();
         } else {
           assert(response.body.success); 
           assert.strictEqual(response.body.external_account.id, createdExternalAccountId); 

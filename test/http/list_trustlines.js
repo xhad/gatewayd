@@ -10,7 +10,7 @@ describe('list trust lines', function(){
     request(app)
       .get('/v1/trustlines/'+account)
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

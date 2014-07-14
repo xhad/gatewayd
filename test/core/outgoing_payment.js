@@ -1,5 +1,4 @@
 var assert = require('assert');
-var sinon = require('sinon');
 var gateway = require(__dirname+'/../../');
 var OutgoingPayment = require(__dirname+'/../../lib/core/outgoing_payment.js');
 var outgoingTransactionRecord;
@@ -32,7 +31,7 @@ describe('Outgoing Payment', function() {
         status_url: 'http://localhost:5990/v1/accounts/rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr/payments/a2837056-20e8-410a-b730-879dd0493742'
       };
 
-      outgoingPayment._confirmSuccessfulPayment(rippleRestResponse, function(error, response) {
+      outgoingPayment._confirmSuccessfulPayment(rippleRestResponse, function(error) {
         assert.strictEqual(outgoingPayment.record.state, 'succeeded');
         assert(!error);
         done();
@@ -44,7 +43,7 @@ describe('Outgoing Payment', function() {
       var confirmationResponse = new Object(restConfirmationResponse);
       confirmationResponse.result = 'temPATH_DRY';
 
-      outgoingPayment._recordAcceptanceOrRejectionStatus(confirmationResponse, function(error, record) {
+      outgoingPayment._recordAcceptanceOrRejectionStatus(confirmationResponse, function(error) {
         assert(!error);
         assert.strictEqual(outgoingPayment.record.state, 'failed');
         done();
@@ -53,7 +52,7 @@ describe('Outgoing Payment', function() {
 
     it('should record the failure of a payment upon submission to ripple rest', function(done) {
       var outgoingPayment = new OutgoingPayment(outgoingTransactionRecord);
-      outgoingPayment._handleRippleRestFailure('No path found. Please try ....', function(error, record) {
+      outgoingPayment._handleRippleRestFailure('No path found. Please try ....', function(error) {
         assert(!error);
         assert.strictEqual(outgoingPayment.record.state, 'failed');
         done();
@@ -62,12 +61,14 @@ describe('Outgoing Payment', function() {
 
     it('should retry a payment by moving it back to the "outgoing" queue', function(done) {
       var outgoingPayment = new OutgoingPayment(outgoingTransactionRecord);
-      outgoingPayment._handleRippleRestFailure('retry', function(error, record) {
+      outgoingPayment._handleRippleRestFailure('retry', function(error) {
         assert(!error);
         assert.strictEqual(outgoingPayment.record.state, 'outgoing');
         done();
       });
     });
+
+    var outgoingPayment;
 
     before(function(done) {
       outgoingPayment = new OutgoingPayment(outgoingTransactionRecord);

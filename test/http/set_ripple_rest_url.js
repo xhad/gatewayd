@@ -8,7 +8,7 @@ describe('set ripple rest url', function(){
     request(app)
       .post('/v1/config/ripple/rest')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -20,7 +20,7 @@ describe('set ripple rest url', function(){
       .send({ url: 'http://localhost:5990/' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

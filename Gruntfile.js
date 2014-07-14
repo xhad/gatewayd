@@ -1,4 +1,4 @@
-var nconf = require( __dirname + '/config/config.js' );
+var config = require( __dirname + '/config/config.js' );
 
 module.exports = function (grunt) {
 
@@ -7,10 +7,10 @@ module.exports = function (grunt) {
     migrate: {
       options: {
         config: './lib/data/database.json',
-        dir: './lib/data/migrations',
+        'migrations-dir': './lib/data/migrations',
         verbose: true,
         env: {
-          DATABASE_URL: nconf.get('DATABASE_URL')
+          DATABASE_URL: config.get('DATABASE_URL')
         }
       }
     },
@@ -21,6 +21,15 @@ module.exports = function (grunt) {
         options: {
           destination: './doc/jsdoc'
         }
+      }
+    },
+
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/http/**/*.js']
       }
     },
 
@@ -45,5 +54,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-db-migrate');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-mocha-test');
+  
+  grunt.registerTask('test', ['jshint', 'mochaTest']);
+
   grunt.registerTask('default', ['migrate']);
 };
