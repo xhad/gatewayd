@@ -44,7 +44,7 @@ describe('clear withdrawals', function(){
 
   it('should return 404 for a nonexistant withdrawal', function(done) {
     request(app)
-      .post('/v1/withdrawals/'+999998+'/clear')
+      .post('/v1/withdrawals/999998/clear')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(404)
       .end(function(error, response){
