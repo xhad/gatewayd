@@ -1,3 +1,19 @@
+##07/16/2014
+
+###
+3.22.1
+
+###Fixed bugs:
+- Handle ripple rest to rippled connection issues by retrying
+
+###Added Features:
+- Capistrano for deployment and setup
+- Replace ripple-lib functionality with ripple rest client
+- Winston logging
+- Add http api integration tests
+- Add code climate for code gpa score card
+- JS Hint for code linting
+
 ##06/30/2014
 
 ###
