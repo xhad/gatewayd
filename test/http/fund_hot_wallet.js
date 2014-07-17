@@ -1,6 +1,8 @@
 var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
+var assert = require('assert');
+var SECRET = process.env.RIPPLE_ACCOUNT_SECRET;
 
 describe('fund hot wallet', function(){
 
@@ -13,19 +15,25 @@ describe('fund hot wallet', function(){
         done();
       });
   });
+  if (SECRET) {
+    it('should return successfully with credentials', function(done){
+      this.timeout(10000);
+      var payment = { amount: 1, currency: 'XRP', secret: SECRET, issuer: gateway.config.get('COLD_WALLET') };
 
-  it('should return successfully with credentials', function(done){
-    this.timeout(10000);
-    request(app)
-      .post('/v1/wallets/hot/fund')
-      .send({ amount: 1, currency: 'SWG', secret: '' })
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
-      .expect(200)
-      .end(function(err){
-        if (err) throw err;
-        done();
-      });
-  });
+      request(app)
+        .post('/v1/wallets/hot/fund')
+        .send(payment)
+        .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+        .expect(200)
+        .end(function(error, resp){
+          var paymentResponse = resp.body;
+          assert.strictEqual(paymentResponse.hot_wallet.source_account, gateway.config.get('COLD_WALLET'));
+          assert.strictEqual(paymentResponse.hot_wallet.destination_account, gateway.config.get('HOT_WALLET').address);
+          assert.strictEqual(paymentResponse.hot_wallet.destination_amount.currency, payment.currency);
+          done();
+        });
+    });
+  }
 
 });
 
