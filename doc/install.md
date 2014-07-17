@@ -15,7 +15,7 @@ All of these commands assume your are in the base of the cloned project director
 
 ### Install gatewayd's dependencies using NPM:
 
-    sudo npm install --global pg pm2 grunt grunt-cli forever db-migrate
+    sudo npm install --global pg pm2 grunt grunt-cli forever db-migrate jshint
     npm install --save
 
 ### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)

@@ -49,6 +49,10 @@ After installation, start the gateway processes by running the command:
 
     bin/gateway start
 
+## Deploying with Capistrano
+
+Deploying with Capistrano is [__documented here__](doc/capistrano.md) 
+
 ## Ripple Gateway Processes
 
 The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 

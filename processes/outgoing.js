@@ -8,7 +8,7 @@ var worker = new SqlMqWorker({
     state: 'outgoing'
   }},
   job: function(outgoingPayment, callback) {
-    outgoingPaymentProcessor = new OutgoingPaymentProcessor(outgoingPayment);
+    var outgoingPaymentProcessor = new OutgoingPaymentProcessor(outgoingPayment);
     outgoingPaymentProcessor.processOutgoingPayment(callback);
   }
 });

@@ -18,7 +18,7 @@ bundle exec cap HOSTS=<ip or hostnames of target server> deploy:create_user
 ```
 
 ### Put the configuration in place
-SSH to the server and create the configuration file.
+SSH to the server and create the configuration file, or copy the `env/deploy/config.json.example` file to `env/deploy/config.json`, make your changes and run the `setup:upload_config` task.
 
 Here's an example config that may be suitable for a staging environment where security is not important. NODE_ENV is omitted because capistrano sets it as an environment variable.
 ```bash
@@ -46,6 +46,30 @@ bundle exec cap HOSTS=<ip or hostname of target server> branch=mycoolfeature dep
 Capistrano also allows you to set (override) variables
 ```bash
 bundle exec cap HOSTS=<ip or hostname of target server> --set repository='https://github.com/foo/gatewayd.git' deploy
+```
+
+#### Create deploy path
+```bash
+bundle exec cap HOSTS=<ip or hostname of target server> setup:create_deploy_path
+```
+
+#### Install prerequisite packages
+This task will install the needed ubuntu packages: nodejs, postgresql, and development tools for building npm modules.
+```bash
+bundle exec cap HOSTS=<ip or hostname of target server> setup:install_dependencies
+```
+
+#### Install global npm packages
+Some NPMs need to be installed --global
+```bash
+bundle exec cap HOSTS=<ip or hostname of target server> node:install_global_packages
+```
+
+#### Quickly provision a staging server
+You can use this task to quickly deploy a server suitable for staging/testing. It will call the other tasks to create the service user, create the deploy path, install dependencies, upload the config file and create a database, etc.
+```bash
+bundle exec cap HOSTS=<ip or hostname of target server> staging:cold_setup
+bundle exec cap HOSTS=<ip or hostname of target server> deploy
 ```
 
 ### Notes

@@ -1,12 +1,12 @@
 var gateway = require(__dirname+'/../../');
 var assert = require('assert');
-var crypto = require('crypto');
-var random = function(){ return crypto.randomBytes(16).toString('hex') }
 var _ = require('underscore-node');
 
 var newFailedPayment;
 
 describe('List Failed Payments', function(){
+
+  var failedPayment;
 
   before(function(done) {
     gateway.data.models.rippleTransactions.create({
@@ -33,7 +33,7 @@ describe('List Failed Payments', function(){
       })[0];
       assert.strictEqual(failedPayment.id, newFailedPayment.id);
       assert.strictEqual(failedPayment.to_currency, 'XAG');
-      assert.strictEqual(parseFloat(failedPayment.to_amount), 101)
+      assert.strictEqual(parseFloat(failedPayment.to_amount), 101);
       done();
     });
   });

@@ -8,7 +8,7 @@ describe('get last payment hash', function(){
     request(app)
       .get('/v1/config/last_payment_hash')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('get last payment hash', function(){
       .get('/v1/config/last_payment_hash')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
