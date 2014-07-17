@@ -5,9 +5,9 @@ var crypto= require('crypto');
 
 var user;
 var independentAddress;
-var externalAccount
+var externalAccount;
 var deposit;
-var random = function(){ return crypto.randomBytes(16).toString('hex') };
+var random = function(){ return crypto.randomBytes(16).toString('hex'); };
 
 describe('Deposit Processor', function() {
   
@@ -21,10 +21,12 @@ describe('Deposit Processor', function() {
       independentAddress = registeredUser.ripple_address;
       externalAccount = registeredUser.external_account;
       done();
-    })
+    });
   });
 
   describe('Enqueuing a payment to ripple', function() {
+
+    var depositProcessor;
 
     before(function(done) {
       gateway.api.recordDeposit({
@@ -32,7 +34,7 @@ describe('Deposit Processor', function() {
         amount: 5,
         currency: 'XAG'
       }, function(error, depositRecord) {
-        deposit = depositRecord
+        deposit = depositRecord;
         gateway.config.set('DEPOSIT_FEE', 0.02);
         depositProcessor = new DepositProcessor(deposit);
         depositProcessor.processDeposit(done);

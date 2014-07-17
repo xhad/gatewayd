@@ -1,11 +1,10 @@
 var gateway = require(__dirname + '/../');
 var https = require('https');
 var fs = require('fs');
-var logger = require('winston');
 
 var app = require(__dirname+'/../lib/app.js');
 
-var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') != 'false'));
+var ssl = (gateway.config.get('SSL') && (gateway.config.get('SSL') !== 'false'));
 
 if (ssl) {
   app = https.createServer({
