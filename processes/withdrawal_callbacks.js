@@ -3,7 +3,10 @@ var request = require('request');
 
 function getQueuedWithdrawal(fn){
   gateway.data.models.externalTransactions.find({
-    where: { status: 'queued' }
+    where: {
+      status: 'queued',
+      deposit: false
+    }
   }).complete(function(err, withdrawal){
     if (err){
       fn(err, null);
