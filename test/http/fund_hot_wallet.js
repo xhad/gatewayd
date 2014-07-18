@@ -18,7 +18,12 @@ describe('fund hot wallet', function(){
   if (SECRET) {
     it('should return successfully with credentials', function(done){
       this.timeout(10000);
-      var payment = { amount: 1, currency: 'XRP', secret: SECRET, issuer: gateway.config.get('COLD_WALLET') };
+
+      var payment = {
+        amount: 1,
+        currency: 'XRP',
+        secret: SECRET
+      };
 
       request(app)
         .post('/v1/wallets/hot/fund')
