@@ -804,7 +804,6 @@ the cold wallet secret key.
     }
 
     RESPONSE:
-    curl -k -X POST http://localhost:5000/v1/wallets/hot/fund
     {
         "success": true,
         "hot_wallet": {
