@@ -796,6 +796,7 @@ __`POST /v1/wallets/hot/fund`__
 
 Issue funds from the cold wallet to the hot wallet, specifying the amount, currency, and
 the cold wallet secret key.
+
     REQUEST:
     {
         "amount": "1",
