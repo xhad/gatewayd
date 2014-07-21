@@ -14,7 +14,6 @@ describe('Fund hot wallet', function() {
       };
 
       gateway.api.fundHotWallet(options, function(error, response){
-        console.log(response);
         assert.strictEqual(gateway.config.get('HOT_WALLET').address, response.destination_account);
         assert.strictEqual(gateway.config.get('COLD_WALLET'), response.source_account);
         assert.strictEqual(response.result, 'tesSUCCESS');
