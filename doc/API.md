@@ -797,6 +797,48 @@ __`POST /v1/wallets/hot/fund`__
 Issue funds from the cold wallet to the hot wallet, specifying the amount, currency, and
 the cold wallet secret key.
 
+    REQUEST:
+    {
+        "amount": "1",
+        "currency": "XRP",
+        "secret": <cold_wallet_secret>
+    }
+
+    RESPONSE:
+    {
+        "success": true,
+        "hot_wallet": {
+            "source_account": "r1234....",
+            "source_tag": "",
+            "source_amount": {
+                "value": "1",
+                "currency": "XRP",
+                "issuer": ""
+            },
+            "source_slippage": "0",
+            "destination_account": "rABCde....",
+            "destination_tag": "",
+            "destination_amount": {
+                "value": "1",
+                "currency": "XRP",
+                "issuer": ""
+            },
+            "invoice_id": "",
+            "paths": "[]",
+            "no_direct_ripple": false,
+            "partial_payment": false,
+            "direction": "outgoing",
+            "state": "validated",
+            "result": "tesSUCCESS",
+            "ledger": "",
+            "hash": "3548329D5FBC24D8188DEA50451294965CC3BBAD89B32C432742D461BDB89EAF",
+            "timestamp": "2014-07-18T22:01:09.000Z",
+            "fee": "0.000012",
+            "source_balance_changes": [],
+            "destination_balance_changes": []
+        }
+    }
+
 ## Setting The Database Url ##
 __`POST /v1/config/database`__
 
