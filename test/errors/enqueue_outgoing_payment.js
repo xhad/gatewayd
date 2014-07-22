@@ -1,5 +1,6 @@
 var assert = require('assert');
-var EnqueueOutgoingPaymentError = require(__dirname+'/../../lib/errors/enqueue_outgoing_payment.js');
+var gateway = require(__dirname+'/../../');
+var EnqueueOutgoingPaymentError = gateway.errors.enqueueOutgoingPaymentError;
 
 describe('Enqueue Outgoing Payment Error', function(){
   it('should inherit from Error', function() {
