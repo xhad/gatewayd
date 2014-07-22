@@ -176,7 +176,7 @@ Alternatively one can provide a WITHDRAWALS_CALLBACK_URL in the configuration, a
 
 ### Enqueue Outgoing Payment ###
 
-__`POST /v1/payments/outgoing`
+__`POST /v1/payments/outgoing`__
 Enqueue an outgoing payment to be automatically send from the gatewayd hot wallet account
 to the desired independent ripple address provided. Another process, found in `processes/outgoing.js`
 pulls payments off of the outgoing payment queue and sends them to ripple rest.
