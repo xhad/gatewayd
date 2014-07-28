@@ -1,3 +1,17 @@
+##07/27/2014
+
+###
+3.23.0
+
+###Fixed Bugs:
+- Check for source tag before appending
+- Remove abbreviations
+- Use options object instead of multiple arguments
+
+###Added Features:
+- api.enqueueOutgoingPayment and POST /payments/outgoing
+
+
 ##07/16/2014
 
 ###
