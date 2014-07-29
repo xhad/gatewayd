@@ -1,3 +1,13 @@
+##07/28/2014
+
+###
+3.23.1
+
+###Fixed Bugs:
+- Do not log when there are no new notifications
+- In WithdrawalProcessor update incomingPayment ripple transaction
+  record state to 'succeeded'
+
 ##07/27/2014
 
 ###
