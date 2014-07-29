@@ -65,6 +65,11 @@ describe('Withdrawal Processor', function() {
       assert.strictEqual(withdrawalProcessor.externalTransactionWithdrawal.external_account_id, externalAccount.id);
     });
 
+    it("should finalize the ripple transaction by setting state to 'succeeded'", function(next) {
+      assert.strictEqual(incomingTransaction.state, 'succeeded');
+      next();
+    });
+
   });
 });
 
