@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.23.0",
+  "version": "3.23.1",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"
@@ -36,7 +36,7 @@
     "ripple-gateway-webapp-example": "1.6.1",
     "ripple-lib": "",
     "ripple-wallet": "1.0.0",
-    "ripple-rest-client": "1.9.1",
+    "ripple-rest-client": "1.9.2",
     "underscore-node": "0.1.2",
     "sequelize": "^1.7.0",
     "sinon": "^1.9.1",
