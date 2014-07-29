@@ -7,6 +7,8 @@
 - Do not log when there are no new notifications
 - In WithdrawalProcessor update incomingPayment ripple transaction
   record state to 'succeeded'
+- In Listener change log level from 'error' to 'info' and the event
+  from 'processed' to 'received'
 
 ##07/27/2014
 
