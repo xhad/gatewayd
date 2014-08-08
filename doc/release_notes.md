@@ -1,3 +1,17 @@
+##08/07/2014
+
+###
+3.24.0
+
+###Added Features:
+- Gatewaydfile.js for plugins
+- Enable Loggly winston transport
+- Add Policy database table and model
+- No longer require user id for external account
+
+###Fixed Bugs:
+- api.stopGateway now stops processes
+
 ##07/28/2014
 
 ###
