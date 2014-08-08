@@ -5,13 +5,14 @@ var crypto= require('crypto');
 
 var user;
 var independentAddress;
-var externalAccount
-var withdrawal;
+var externalAccount;
 var incomingTransaction;
-var random = function(){ return crypto.randomBytes(16).toString('hex') };
+var random = function(){ return crypto.randomBytes(16).toString('hex'); };
 
 describe('Withdrawal Processor', function() {
   
+  var hostedAddress, withdrawalProcessor;
+
   before(function(done) {
     gateway.api.registerUser({
       name: random(),
@@ -23,7 +24,7 @@ describe('Withdrawal Processor', function() {
       hostedAddress = registeredUser.hosted_address;
       externalAccount = registeredUser.external_account;
       done();
-    })
+    });
   });
 
   describe('Processing an incoming payment', function() {
@@ -62,6 +63,11 @@ describe('Withdrawal Processor', function() {
 
     it('should use the user external account', function() {
       assert.strictEqual(withdrawalProcessor.externalTransactionWithdrawal.external_account_id, externalAccount.id);
+    });
+
+    it("should finalize the ripple transaction by setting state to 'succeeded'", function(next) {
+      assert.strictEqual(incomingTransaction.state, 'succeeded');
+      next();
     });
 
   });

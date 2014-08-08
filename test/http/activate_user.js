@@ -8,7 +8,7 @@ describe('activate user', function(){
     request(app)
       .post('/v1/users/1/activate')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('activate user', function(){
       .post('/v1/users/1/activate')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -8,7 +8,7 @@ describe('get cold wallet balance', function(){
     request(app)
       .get('/v1/liabilities')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('get cold wallet balance', function(){
       .get('/v1/liabilities')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -8,7 +8,7 @@ describe('start gatewayd', function(){
     request(app)
       .post('/v1/start')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -21,7 +21,7 @@ describe('start gatewayd', function(){
       .send({ processes: ['deposits', 'incoming', 'withdrawals', 'outgoing', 'server'] })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

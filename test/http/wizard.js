@@ -1,6 +1,5 @@
 var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
-var gateway = require(__dirname+'/../../');
 var assert = require('assert');
 
 
@@ -31,7 +30,7 @@ describe('set configuration profile', function(){
         }
       )
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -53,7 +52,7 @@ describe('set configuration profile', function(){
       .expect(400)
       .end(function(err, res){
         assert(findError(res.body.errors, 'database_url'));
-        assert(findError(res.body.errors, 'database_url').message == 'please provide a valid database_url');
+        assert(findError(res.body.errors, 'database_url').message === 'please provide a valid database_url');
         if (err) throw err;
         done();
       });
@@ -73,7 +72,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'currencies'));
-      assert(findError(res.body.errors, 'currencies').message == 'please provide currencies');
+      assert(findError(res.body.errors, 'currencies').message === 'please provide currencies');
       if (err) throw err;
       done();
      });
@@ -93,9 +92,9 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'currencies'));
-      assert(findError(res.body.errors, 'currencies').message == 'please provide currencies');
+      assert(findError(res.body.errors, 'currencies').message === 'please provide currencies');
       assert(findError(res.body.errors, 'ripple_address'));
-      assert(findError(res.body.errors, 'ripple_address').message == 'please provide a valid ripple_address');
+      assert(findError(res.body.errors, 'ripple_address').message === 'please provide a valid ripple_address');
       if (err) throw err;
       done();
     });
@@ -117,7 +116,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'ripple_rest_url'));
-      assert(findError(res.body.errors, 'ripple_rest_url').message == 'please provide a valid ripple_rest_url');
+      assert(findError(res.body.errors, 'ripple_rest_url').message === 'please provide a valid ripple_rest_url');
       if (err) throw err;
       done();
     });
@@ -142,7 +141,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'database_url'));
-      assert(findError(res.body.errors, 'database_url').message == 'please provide a valid database_url');
+      assert(findError(res.body.errors, 'database_url').message === 'please provide a valid database_url');
       if (err) throw err;
       done();
     });
@@ -165,7 +164,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'ripple_rest_url'));
-      assert(findError(res.body.errors, 'ripple_rest_url').message == 'please provide a valid ripple_rest_url');
+      assert(findError(res.body.errors, 'ripple_rest_url').message === 'please provide a valid ripple_rest_url');
       if (err) throw err;
       done();
     });
@@ -188,7 +187,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'ripple_address'));
-      assert(findError(res.body.errors, 'ripple_address').message == 'please provide a valid ripple_address');
+      assert(findError(res.body.errors, 'ripple_address').message === 'please provide a valid ripple_address');
       if (err) throw err;
       done();
     });
@@ -211,7 +210,7 @@ describe('set configuration profile', function(){
     .expect(400)
     .end(function(err, res){
       assert(findError(res.body.errors, 'currency_limit'));
-      assert(findError(res.body.errors, 'currency_limit').message == 'please provide a valid currency limit amount');
+      assert(findError(res.body.errors, 'currency_limit').message === 'please provide a valid currency limit amount');
       if (err) throw err;
       done();
     });

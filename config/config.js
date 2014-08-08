@@ -1,3 +1,5 @@
+/* jshint -W079 */
+
 var nconf = require('nconf');
 
 nconf
@@ -19,7 +21,7 @@ nconf.defaults({
   'KEY': false, // Required for BASIC_AUTH
   'USER_AUTH': false, // Enable user routes with name/password basic auth
   'WEBAPP': false,
-  'WEBAPP_PATH': __dirname+"/../node_modules/ripple-gateway-webapp-example/",
+  'WEBAPP_PATH': __dirname + '/../node_modules/ripple-gateway-webapp-example/',
   'PORT': 5000, // Port of http api server
   'HOST': 'localhost',
   'DOMAIN': 'example.com', // Domain of gateway, for ripple.txt and auth
@@ -31,7 +33,8 @@ nconf.defaults({
   'WITHDRAWALS_CALLBACK_URL': null, // URL to POST callback of withdrawals
   'WITHDRAWALS_CALLBACK_CERTIFICATE': null, // Used to validate SSL on callbacks
   'DEPOSITS_CALLBACK_URL': null, // URL to POST callback of withdrawals
-  'DEPOSITS_CALLBACK_CERTIFICATE': null // Used to validate SSL on callbacks
+  'DEPOSITS_CALLBACK_CERTIFICATE': null, // Used to validate SSL on callbacks
+  'LOGGLY': false
 });
 
 module.exports = nconf;

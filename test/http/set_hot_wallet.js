@@ -8,7 +8,7 @@ describe('set hot wallet', function(){
     request(app)
       .post('/v1/config/wallets/hot')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -21,7 +21,7 @@ describe('set hot wallet', function(){
       .send({ address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr', secret: 'ssuBBapjuJ2hE5wto254aNWERa8VV' })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -49,6 +49,10 @@ After installation, start the gateway processes by running the command:
 
     bin/gateway start
 
+## Deploying with Capistrano
+
+Deploying with Capistrano is [__documented here__](doc/capistrano.md) 
+
 ## Ripple Gateway Processes
 
 The Ripple Gateway software is composed of a backed data store which serves as a queue for many types of processes that handle deposits and withdrawals of assets, and issuance and receipt of digital currency on ripple. In this post I will explain the various processes of a ripple gateway that together form an automated machine of gateway transaction processing. 
@@ -167,6 +171,58 @@ Alternatively one can provide a WITHDRAWALS_CALLBACK_URL in the configuration, a
 * [`POST /v1/processes`](#listing-current-processes)
 
 # API Overview #
+
+## Sending Outgoing Payments Directly ##
+
+### Enqueue Outgoing Payment ###
+
+__`POST /v1/payments/outgoing`__
+Enqueue an outgoing payment to be automatically sent from the gatewayd hot wallet account
+to the desired independent ripple address provided. Another process, found in `processes/outgoing.js`
+pulls payments off of the outgoing payment queue and sends them to ripple rest.
+
+Request:
+```
+    {
+      "amount": 6.5,
+      "currency": "BTC",
+      "address": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+    }
+```
+
+Optional Parameters:
+```
+    {
+      "destinationTag": 1555,
+      "issuer": "r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk",
+    }
+```
+
+Response
+```
+    {
+      "payment": {
+        data: null,
+        to_amount: '0.01',
+        to_currency: 'USD',
+        from_amount: '0.01',
+        from_currency: 'USD',
+        to_address_id: 25,
+        from_address_id: 623,
+        to_issuer: 'rP5ShE8dGBH6hHtNvRESdMceen36XFBQmh',
+        from_issuer: 'rP5ShE8dGBH6hHtNvRESdMceen36XFBQmh',
+        updatedAt: Tue Jul 22 2014 22:56:08 GMT-0700 (PDT),
+        createdAt: Tue Jul 22 2014 22:56:08 GMT-0700 (PDT),
+        id: 567,
+        transaction_state: null,
+        transaction_hash: null,
+        uid: null,
+        client_resource_id: 'false',
+        state: 'false',
+        external_transaction_id: null
+      }
+    }
+```
 
 ## Managing Users ##
 

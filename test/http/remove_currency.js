@@ -8,7 +8,7 @@ describe('delete currency', function(){
     request(app)
       .delete('/v1/currencies/usd')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('delete currency', function(){
       .delete('/v1/currencies/usd')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

@@ -2,7 +2,6 @@ var request = require('supertest');
 var app = require(__dirname+'/../../lib/app.js');
 var gateway = require(__dirname+'/../../');
 var data = require(__dirname+'/../../lib/data/');
-var logger = require('winston');
 
 describe('register user', function(){
 
@@ -10,7 +9,7 @@ describe('register user', function(){
     request(app)
       .post('/v1/registrations')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -25,7 +24,7 @@ describe('register user', function(){
       .send(testUser)
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         //remove test username to avoid test fail due to duplicate username
         data.models.users.destroy({ name: testUser.name }).complete(function(err, resp){

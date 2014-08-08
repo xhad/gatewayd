@@ -8,7 +8,7 @@ describe('deactivate user', function(){
     request(app)
       .post('/v1/users/1/deactivate')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -19,7 +19,7 @@ describe('deactivate user', function(){
       .post('/v1/users/1/deactivate')
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });

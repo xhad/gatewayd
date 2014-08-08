@@ -1,3 +1,59 @@
+##08/07/2014
+
+###
+3.24.0
+
+###Added Features:
+- Gatewaydfile.js for plugins
+- Enable Loggly winston transport
+- Add Policy database table and model
+- No longer require user id for external account
+
+###Fixed Bugs:
+- api.stopGateway now stops processes
+
+##07/28/2014
+
+###
+3.23.1
+
+###Fixed Bugs:
+- Do not log when there are no new notifications
+- In WithdrawalProcessor update incomingPayment ripple transaction
+  record state to 'succeeded'
+- In Listener change log level from 'error' to 'info' and the event
+  from 'processed' to 'received'
+
+##07/27/2014
+
+###
+3.23.0
+
+###Fixed Bugs:
+- Check for source tag before appending
+- Remove abbreviations
+- Use options object instead of multiple arguments
+
+###Added Features:
+- api.enqueueOutgoingPayment and POST /payments/outgoing
+
+
+##07/16/2014
+
+###
+3.22.1
+
+###Fixed bugs:
+- Handle ripple rest to rippled connection issues by retrying
+
+###Added Features:
+- Capistrano for deployment and setup
+- Replace ripple-lib functionality with ripple rest client
+- Winston logging
+- Add http api integration tests
+- Add code climate for code gpa score card
+- JS Hint for code linting
+
 ##06/30/2014
 
 ###

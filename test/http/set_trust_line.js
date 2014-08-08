@@ -8,7 +8,7 @@ describe('set trust line', function(){
     request(app)
       .post('/v1/trust')
       .expect(401)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
@@ -21,7 +21,7 @@ describe('set trust line', function(){
       .send({ currency: 'XRP', amount: 1000 })
       .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err, res){
+      .end(function(err){
         if (err) throw err;
         done();
       });
