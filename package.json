@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.23.2",
+  "version": "3.24.0",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"
@@ -33,18 +33,19 @@
     "request": "",
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
-    "ripple-gateway-webapp-example": "1.6.1",
+    "ripple-gateway-webapp-example": "1.7.0",
     "ripple-lib": "",
     "ripple-wallet": "1.0.0",
-    "ripple-rest-client": "1.9.2",
+    "ripple-rest-client": "1.9.4",
     "underscore-node": "0.1.2",
     "sequelize": "^1.7.0",
     "sinon": "^1.9.1",
-    "sql-mq-worker": "^1.0.1",
+    "sql-mq-worker": "^1.0.3",
     "supertest": "^0.13.0",
     "validator": "^3.11.0",
     "winston": "^0.7.3",
-    "superagent": "^0.18.0"
+    "superagent": "^0.18.0",
+    "winston-loggly": "^1.0.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
