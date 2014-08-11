@@ -16,7 +16,7 @@
     "commander": "2.1.0",
     "db-migrate": "^0.6.4",
     "ejs": "",
-    "express": "3.x",
+    "express": "^4.8.3",
     "express-authorization": "0.1.1",
     "forever": "",
     "grunt": "^0.4.4",
@@ -45,7 +45,8 @@
     "validator": "^3.11.0",
     "winston": "^0.7.3",
     "superagent": "^0.18.0",
-    "winston-loggly": "^1.0.1"
+    "winston-loggly": "^1.0.1",
+    "body-parser": "^1.6.3"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
