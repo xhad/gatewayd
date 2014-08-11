@@ -15,3 +15,11 @@ var worker = new SqlMqWorker({
 
 worker.start();
 
+process.on('uncaughtException', function(error) {
+  logger.error('exception', error);
+  logger.error('exception:stack', error.stack);
+  process.exit();
+});
+
+
+
