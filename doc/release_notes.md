@@ -1,3 +1,15 @@
+##08/11/2014
+
+###3.24.1
+
+### Fixed Bugs
+- Handle error cases when confirming outgoing payment
+- Handle uncaught exceptions in process/outgoing.js by logging
+- Only callback on queued withdrawals, not queued deposits
+
+###Added Features:
+- Update to Express 4, use body-parser library
+
 ##08/07/2014
 
 ###
