@@ -9,10 +9,3 @@ exports.validator = require(__dirname+'/lib/validator.js');
 exports.server = require(__dirname+'/lib/app.js');
 
 require(__dirname+'/Gatewaydfile')(exports);
-
-process.on('uncaughtException', function(error) {
-  logger.error('exception', error);
-  logger.error('exception stack', error.stack);
-  process.exit();
-});
-
