@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.24.0",
+  "version": "3.24.1",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"

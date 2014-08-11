@@ -1,3 +1,10 @@
+##08/11/2014
+
+###3.24.1
+
+### Fixed Bugs
+- Handle error cases when confirming outgoing payment
+
 ##08/07/2014
 
 ###
