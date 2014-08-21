@@ -1,3 +1,11 @@
+##08/19/2014
+
+### Added Features:
+
+- GatewayTransactions database table to tie a RippleTransaction
+  to an ExternalTransaction and a Policy
+- Extract setup wizard to a separate NPM module
+
 ##08/11/2014
 
 ###3.24.1
