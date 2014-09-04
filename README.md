@@ -44,6 +44,7 @@ The [Ripple Dev Portal](https://dev.ripple.com/gatewayd.html) contains detailed 
 ## Installation
 
 - Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/install.md) for Ubuntu
+- Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/installmac.md) for Mac
 
 ## Updating ##
 
