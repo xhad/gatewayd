@@ -25,10 +25,12 @@ Create the database and grant the created user as owner:
 
     sudo psql -U postgres -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
 
-### Edit config/config.js with created postgres credentials
+### Add the created postgres credentials to onfig/config.json.
 
     ...
-    'DATABASE_URL': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db',
+    {
+      'DATABASE_URL': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
+    }
     ...
 
 ### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. ( your DATABASE_URL )
