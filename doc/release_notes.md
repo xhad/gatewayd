@@ -1,3 +1,18 @@
+##09/09/2014
+
+###3.26.0
+
+### Added Features:
+
+- Process Manager can add/remote arbitrary processes
+- Installation Guide for Mac
+
+### Fixed Bugs:
+
+- Process manager variable not found exception fixed
+- Install doc now dictates using config.json not config.js
+  for custom database url
+
 ##09/02/2014
 
 ###3.25.1
