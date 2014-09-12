@@ -2,6 +2,8 @@
 
 The following are for a clean build of Ubuntu 13.10. If you have any problems please create an issue.
 
+Before you start, make sure you have already installed [ripple-rest](https://github.com/ripple/ripple-rest).
+
 All of these commands assume your are in the base of the cloned project directory (e.g. ~/gatewayd).
 
 ## Install
@@ -15,7 +17,8 @@ All of these commands assume your are in the base of the cloned project director
 
 ### Install gatewayd's dependencies using NPM:
 
-    sudo npm install --global pg pm2 grunt grunt-cli forever db-migrate jshint
+    sudo npm install --global pg grunt grunt-cli forever db-migrate jshint
+    sudo npm install pm2 -g --unsafe-perm
     npm install --save
 
 ### Configure [Postgres](https://help.ubuntu.com/community/PostgreSQL)
