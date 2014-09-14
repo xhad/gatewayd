@@ -1,3 +1,14 @@
+##09/14/2014
+
+###3.26.1
+
+### Fixed Bugs:
+
+- Use absolute paths with __dirname when adding processes
+  to the ProcessSet instance, which fixes bin/gateway start
+  when running in a current working directory somewhere
+  other than the gatewayd directory itself.
+
 ##09/09/2014
 
 ###3.26.0
