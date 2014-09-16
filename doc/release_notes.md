@@ -1,3 +1,17 @@
+##09/16/2014
+
+###3.27.0
+
+### Fixed Bugs:
+
+- pm2 installation documentation error
+
+### Added Features:
+
+- HTTP REST CRUD routes for all database tables
+- Use express.Router instead of custom ResourcesRouter
+- Enable Cross Origin Resource Sharing by default
+
 ##09/14/2014
 
 ###3.26.1
