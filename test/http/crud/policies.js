@@ -11,40 +11,41 @@ var auth = {
   key: gatewayd.config.get('KEY')
 }
 
-var externalAccountCreatedId;
+var policyCreatedId;
 
-describe('CRUD ExternalAccounts', function(){
+describe('CRUD Policies', function(){
 
-  it('should list externalAccounts', function(done){
+  it('should list policies', function(done){
     request(app)
-      .get('/v1/external_accounts')
+      .get('/v1/polcies')
       .auth(auth.name, auth.key)
       .expect(200)
       .end(function(error, response){
         assert(response.body.success);
-        assert(response.body.external_accounts);
-        console.log(response.body.external_accounts);
+        assert(response.body.polcies);
+        console.log(response.body.policies);
         done();
       });
   });
 
-  it('should create a externalAccount', function(done){
+  it('should create a policy', function(done){
     request(app)
-      .post('/v1/external_accounts')
+      .post('/v1/polcies')
       .send()
       .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response){
         assert(response.body.success); 
-        assert(response.body.external_account.id);
-        externalAccountCreatedId = response.body.external_account.id;
+        assert.strictEqual(response.body.policy.name, name);
+        assert(response.body.policy.id);
+        policyCreatedId = response.body.policy.id;
         done();
       });
   });
 
-  it.skip('should update a externalAccount', function(done) {
+  it.skip('should update a policy', function(done) {
     request(app)
-      .put('/v1/external_accounts/'+externalAccountCreated.id)
+      .put('/v1/polcies/'+policyCreated.id)
       .send()
       .auth(auth.user, auth.key)
       .expect(200)
@@ -53,9 +54,9 @@ describe('CRUD ExternalAccounts', function(){
       });
   });
 
-  it.skip('should show a single externalAccount', function(done) {
+  it.skip('should show a single policy', function(done) {
     request(app)
-      .get('/v1/external_accounts/'+externalAccountCreated.id)
+      .get('/v1/polcies/'+policyCreated.id)
       .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response) {
@@ -63,9 +64,9 @@ describe('CRUD ExternalAccounts', function(){
       });
   });
 
-  it.skip('should delete a externalAccount', function(done) {
+  it.skip('should delete a policy', function(done) {
     request(app)
-      .delete('/v1/external_accounts/'+externalAccountCreated.id)
+      .delete('/v1/polcies/'+policyCreated.id)
       .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response) {
