@@ -41,5 +41,17 @@ describe('CRUD Users', function(){
       });
   });
 
+  it.skip('should update a user', function(done) {
+    done();
+  });
+
+  it.skip('should show a single user', function(done) {
+    done();
+  });
+
+  it.skip('should delete a user', function(done) {
+    done();
+  });
+
 });
 
