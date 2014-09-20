@@ -3,6 +3,7 @@ var gateway = require('../');
 var program = require('commander');
 var cli = require(__dirname+'/../lib/cli');
 var logger = require('winston');
+var promptly = require('promptly');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
@@ -31,9 +32,15 @@ program
   .action(cli.clearWithdrawal);
 
 program
-  .command('fund_hot_wallet <amount> <currency> <cold_wallet_secret>')
+  .command('fund_hot_wallet <amount> <currency>')
   .description('issue funds from cold wallet to hot wallet') 
-  .action(cli.fundHotWallet);
+  .action(function(amount, currency) {
+    promptly.password('Cold wallet secret: ', function(err, secret) {
+      if (!err) {
+        cli.fundHotWallet(amount, currency, secret);
+      }
+    });
+  });
 
 program
   .command('record_deposit <amount> <currency> <external_account_id>')
