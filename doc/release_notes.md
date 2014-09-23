@@ -1,3 +1,25 @@
+##09/22/2014
+
+###3.28.0
+
+### Fixed Bugs:
+- fund_hot_wallet without issuer no longer crashes Ripple REST
+- Mac installation instructions
+- Remove duplicate ExternalAccounts controller actions
+- Remove duplicate RippleAddresses controller actions
+- Remove duplicate Users controller actions
+- Remove unused files in lib/core and test/core
+
+### Added Features:
+- Extract capistrano into https://github.com/gatewayd/gatewayd-capistrano
+- Extract docker into https://github.com/gatewayd/gatewayd-docker
+- Add Procfile for process management on Heroku and / or with Foreman
+- Support currency amount in CLI
+- Bridges database table migration and ORM Model
+- Add controller actions for gateway_transactions database table
+- Refactor CRUD routes for all resources to be DRY
+
+
 ##09/16/2014
 
 ###3.27.0
