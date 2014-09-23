@@ -3,6 +3,7 @@
 ###3.28.0
 
 ### Fixed Bugs:
+- fund_hot_wallet without issuer no longer crashes Ripple REST
 - Mac installation instructions
 - Remove duplicate ExternalAccounts controller actions
 - Remove duplicate RippleAddresses controller actions
