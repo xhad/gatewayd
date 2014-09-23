@@ -9,7 +9,7 @@ All of these commands assume your are in the base of the cloned project director
 ### [Xcode](https://developer.apple.com/xcode/downloads/)
 
 ### Install gatewayd's dependencies using NPM:
-    
+
     sudo npm install -g git
     sudo npm install -g pm2 --unsafe-perm
     sudo npm install --global pg grunt grunt-cli forever db-migrate jshint
@@ -21,11 +21,16 @@ Create the postgres user for gatewayd:
 
     sudo psql -U postgres -c "create user gatewayd_user with password 'password'"
 
+If the "postgres" role doesn't exist, you can create one:
+
+    psql
+    CREATE USER postgres;
+
 Create the database and grant the created user as owner:
 
     sudo psql -U postgres -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
 
-### Add the created postgres credentials to onfig/config.json.
+### Add the created postgres credentials to config/config.json.
 
     ...
     {

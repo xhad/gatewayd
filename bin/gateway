@@ -217,8 +217,8 @@ program
   .action(cli.listCurrencies);
 
 program
-  .command('add_currency <currency>')
-  .description('add support for a currency') 
+  .command('add_currency <currency> <amount>')
+  .description('add support for a currency and trustline amount')
   .action(cli.addCurrency);
 
 program
