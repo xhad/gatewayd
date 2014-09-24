@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.28.0",
+  "version": "3.28.1",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"
@@ -33,7 +33,7 @@
     "request": "",
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
-    "ripple-gateway-webapp-example": "1.8.0",
+    "ripple-gateway-webapp-example": "1.8.1",
     "ripple-lib": "",
     "ripple-wallet": "1.0.0",
     "ripple-rest-client": "1.10.2",
