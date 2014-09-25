@@ -60,4 +60,4 @@ The executable is located at bin/gateway:
 
 ## Configure gatewayd
 
-Once gatewayd is installed, [configure your gateway](./setup.md) wallets and server
+Once gatewayd is installed, [configure your gateway](https://dev.ripple.com/gatewayd.html#configuration) wallets and server
