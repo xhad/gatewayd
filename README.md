@@ -6,7 +6,7 @@ Gatewayd (pronounced "gateway-dee"), provides a framework you can extend to buil
 
 Interact with the gatewayd by building custom integrations with banking and payment systems around the world, and by using the built-in APIs for designing beautiful gateway mobile apps and user interfaces. Gatewayd includes a REST API, Javascript library, and commandline interface; developers can also interact with Gatewayd by directly modifying the database records it monitors.
 
-Gatewayd's features include: 
+Gatewayd's features include:
 
   - deposits and withdrawals
   - issuing currency
@@ -14,8 +14,8 @@ Gatewayd's features include:
   - incoming Ripple payment monitoring
   - gateway administration
   - support for custom plugins
-  
-## Documentation 
+
+## Documentation
 
 The [Ripple Dev Portal](https://dev.ripple.com/gatewayd.html) contains detailed information on Gatewayd and its APIs.
 
@@ -65,7 +65,7 @@ The update process for gatewayd may change in the future, but for now, updating 
 
 Before you can run gatewayd, you need to set up the appropriate accounts that will be used to store and send funds in the Ripple network. You also need to define which currencies your gateway issues. Beyond that, there are some options you can set if they fit your needs.
 
-The defaults for all of gatewayd's settings are found in the file `config/config.js`. You can override any of those settings with your own values by editing them in the file `config/config.json`, or by using the API methods for setting the configuration. (The API methods result in editing the `config/config.json` file anyway.) Don't edit the `config/config.js` file, since that only contains the defaults, and gets overridden in a software update.
+The defaults for all of gatewayd's settings are found in the file `config/environment.js`. You can override any of those settings with your own values by editing them in the file `config/config.json`, or by using the API methods for setting the configuration. (The API methods result in editing the `config/config.json` file anyway.) Don't edit the `config/environment.js` file, since that only contains the defaults, and gets overridden in a software update.
 
 ## Running gatewayd ##
 
