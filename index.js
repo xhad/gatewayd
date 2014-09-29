@@ -2,6 +2,7 @@ var requireAll = require('require-all-to-camel');
 
 exports.config = require(__dirname + '/config/config.js');
 exports.data  = require(__dirname +'/lib/data/');
+exports.database  = require(__dirname +'/lib/data/sequelize.js');
 exports.models = requireAll(__dirname +'/lib/data/models/');
 exports.api = requireAll(__dirname+'/lib/api/');
 exports.errors = requireAll(__dirname+'/lib/errors/');
