@@ -37,7 +37,19 @@ listener.onPayment = function(payment) {
   }
 };
 
-listener.start(gateway.config.get('LAST_PAYMENT_HASH'));
+var lastHash = gateway.config.get('LAST_PAYMENT_HASH');
 
-logger.info('Listening for incoming ripple payments from Ripple REST.');
+if (lastHash) {
+  listener.start(lastHash);
+  logger.info('Listening for incoming ripple payments from Ripple REST, starting at', lastHash);
+} else {
+  console.log('LAST_PAYMENT_HASH not set... gatewayd is now fetching it from Ripple.');
+  gateway.api.fetchLastPaymentHash().then(function(hash) {
+    gateway.config.set('LAST_PAYMENT_HASH', hash)
+    gateway.config.save(function() {
+      listener.start(hash);
+      logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
+    });
+  });
+}
 
