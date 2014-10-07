@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 var gateway = require('../');
 var program = require('commander');
-var cli = require(__dirname+'/../lib/cli');
+const requireAll = require('require-all-to-camel');
+var cli = requireAll(__dirname+'/../lib/cli/');
 var logger = require('winston');
 var promptly = require('promptly');
 
@@ -280,6 +281,11 @@ program
   .command('setup')
   .description('run the setup wizard using the current configuration')
   .action(cli.setup);
+
+program
+  .command('enqueue_outgoing_payment <address> <amount> <currency>')
+  .description('run the setup wizard using the current configuration')
+  .action(cli.enqueueOutgoingPayment);
 
 program.parse(process.argv);
 

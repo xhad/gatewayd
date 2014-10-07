@@ -49,7 +49,7 @@
     "body-parser": "^1.6.3",
     "cors": "^2.4.1",
     "bluebird": "^0.11.6",
-    "gatewayd-setup-wizard-plugin": "^2.0.3"
+    "gatewayd-setup-wizard-plugin": "^2.0.4"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
