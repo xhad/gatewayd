@@ -32,7 +32,7 @@ describe('Outgoing Payment', function() {
       };
 
       outgoingPayment._confirmSuccessfulPayment(rippleRestResponse, function(error) {
-        assert.strictEqual(outgoingPayment.record.state, 'succeeded');
+        assert.strictEqual(outgoingPayment.record.state, 'sent');
         assert(!error);
         done();
       });

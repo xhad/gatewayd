@@ -47,7 +47,9 @@
     "superagent": "^0.18.0",
     "winston-loggly": "^1.0.1",
     "body-parser": "^1.6.3",
-    "cors": "^2.4.1"
+    "cors": "^2.4.1",
+    "gatewayd-setup-wizard-plugin": "^1.0.2",
+    "bluebird": "^0.11.6"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
