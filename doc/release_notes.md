@@ -1,3 +1,14 @@
+##10/08/2014
+
+### Fixed Bugs:
+- Move config/config.js to config/environment.js to prevent confusion.
+
+### Added Features:
+
+- Include setup wizard with comments in Gatewaydfile
+- New database configuration scheme from environment / config variables
+- Add enqueue_outgoing_payment CLI command
+
 ##09/22/2014
 
 ###3.28.0
