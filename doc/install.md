@@ -1,6 +1,6 @@
 # Ripple Gateway Installation Instructions
 
-The following are for a clean build of Ubuntu 13.10. If you have any problems please create an issue.
+The following are for a clean build of Ubuntu 14.04. If you have any problems please create an issue.
 
 Before you start, make sure you have already installed [ripple-rest](https://github.com/ripple/ripple-rest).
 
