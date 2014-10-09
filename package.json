@@ -1,6 +1,6 @@
 {
   "name": "ripple-gateway",
-  "version": "3.28.1",
+  "version": "3.29.0",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"
@@ -33,7 +33,7 @@
     "request": "",
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
-    "ripple-gateway-webapp-example": "1.8.1",
+    "gatewayd-admin": "1.9.1",
     "ripple-lib": "",
     "ripple-wallet": "1.0.0",
     "ripple-rest-client": "1.10.2",
@@ -48,8 +48,8 @@
     "winston-loggly": "^1.0.1",
     "body-parser": "^1.6.3",
     "cors": "^2.4.1",
-    "gatewayd-setup-wizard-plugin": "^1.0.2",
-    "bluebird": "^0.11.6"
+    "bluebird": "^0.11.6",
+    "gatewayd-setup-wizard-plugin": "^2.0.4"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",

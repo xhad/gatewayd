@@ -1,3 +1,23 @@
+##10/08/2014
+
+### Fixed Bugs:
+- Move config/config.js to config/environment.js to prevent confusion.
+- Fix broken link to configuration in docs.
+- Default WEBAPP to true
+
+### Added Features:
+
+- Automatically set LAST_PAYMENT_HASH if not provided
+- Update admin webapp to use new styles, behavior, rename to gatewayd-admin
+- Include setup wizard with comments in Gatewaydfile
+- New database configuration scheme from environment / config variables
+- Add enqueue_outgoing_payment CLI command
+- Add Bridge REST resource
+- Add bluebird Promise library dependency
+- Include destination tag on outgoing payments if provided
+- Add address, type to external_accounts
+- Add global export (gatewayd.database) of the sequelize.js db object
+
 ##09/22/2014
 
 ###3.28.0

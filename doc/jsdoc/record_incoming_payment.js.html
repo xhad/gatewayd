@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>JSDoc: Source: lib/api/record_incoming_payment.js</title>
-    
+
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
     <!--[if lt IE 9]>
@@ -16,27 +16,27 @@
 <body>
 
 <div id="main">
-    
+
     <h1 class="page-title">Source: lib/api/record_incoming_payment.js</h1>
-    
-    
 
 
-    
+
+
+
     <section>
         <article>
             <pre class="prettyprint source"><code>var data = require('ripple-gateway-data-sequelize');
 var getHostedAddress = require(__dirname+'/get_hosted_address.js');
-var config = require(__dirname+'/../../config/config.js');
+var config = require(__dirname+'/../../config/environment.js');
 
 /**
 * Record incoming payment
 *
 * @param {integer} destinationTag
 * @param {string} currency
-* @param {decimal} amount 
-* @param {string} state 
-* @param {string} hash 
+* @param {decimal} amount
+* @param {string} state
+* @param {string} hash
 * @param {function(err, deposit)} callback
 * @returns {Payment}
 */
