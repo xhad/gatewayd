@@ -50,6 +50,8 @@
     "cors": "^2.4.1",
     "bluebird": "^0.11.6",
     "gatewayd-setup-wizard-plugin": "^2.0.4"
+    "bluebird": "^0.11.6",
+    "host-meta-plugin": "^0.1.0"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",

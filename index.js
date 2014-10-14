@@ -11,5 +11,11 @@ exports.validator = require(__dirname+'/lib/validator.js');
 exports.server = require(__dirname+'/lib/app.js');
 exports.processes = require(__dirname+'/lib/processes/');
 
+var initializers = requireAll(__dirname+'/config/initializers/');
+
+for (i in initializers) {
+  initializers[i](exports);
+}
+
 require(__dirname+'/Gatewaydfile')(exports);
 
