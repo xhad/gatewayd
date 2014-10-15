@@ -1,9 +1,9 @@
 var SqlMqWorker = require('sql-mq-worker');
 var WithdrawalProcessor = require(__dirname+'/../lib/core/withdrawal_processor.js');
-var gateway = require(__dirname+'/../');
+var gatewayd = require(__dirname+'/../');
 
 var worker = new SqlMqWorker({
-  Class: gateway.data.models.rippleTransactions,
+  Class: gatewayd.data.models.rippleTransactions,
   predicate: { where: {
     state: 'incoming'
   }},
