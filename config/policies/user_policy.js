@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const ExternalAccount = require(__dirname+'/../../lib/data/models/external_accounts.js');
 const RippleAddress = require(__dirname+'/../../lib/data/models/ripple_addresses.js');
 
-function lookupRippleAddressDestination(deposit) {
+function lookupRippleAddressDestination(payment) {
   return new Promise(function(resolve, reject) {
     ExternalAccount.find(payment.external_account_id)
     .then(function(externalAccount) {
