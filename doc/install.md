@@ -35,7 +35,7 @@ Create the database and grant the created user as owner:
 
     ...
     {
-      'DATABASE_URL': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
+      "DATABASE_URL": "postgres://gatewayd_user:password@localhost:5432/gatewayd_db"
     }
     ...
 
