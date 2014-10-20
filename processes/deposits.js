@@ -1,17 +1,18 @@
 var SqlMqWorker = require('sql-mq-worker');
-var DepositProcessor = require(__dirname+'/../lib/core/deposit_processor.js');
-var gateway = require(__dirname+'/../');
+var gatewayd = require(__dirname+'/../');
 
 var worker = new SqlMqWorker({
-  Class: gateway.data.models.externalTransactions,
+  Class: gatewayd.data.models.externalTransactions,
   predicate: { where: {
     deposit: true,
-    status: 'queued'
+    status: 'incoming'
   }},
   job: function(deposit, callback) {
-    logger.info('deposits:queued:popped', deposit.toJSON());
-    var depositProcessor = new DepositProcessor(deposit);
-    depositProcessor.processDeposit(callback);
+    gatewayd.policies.determinePolicy(deposit).then(function(policy) {
+      gatewayd.policies.getPolicy('default_policy').apply(deposit)
+        .then(callback)
+        .error(callback)
+    })
   }
 });
 

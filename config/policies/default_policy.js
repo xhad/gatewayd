@@ -9,10 +9,11 @@ module.exports = {
   },
 
   apply: function(payment) {
+    console.log('about to apply default policy to', payment.toJSON());
     data = payment.data || {};
     data.error = 'no applicable policy found';
     return payment.updateAttributes({
-      status: 'failed',
+      status: 'failed:incoming',
       data: data
     });
   }
