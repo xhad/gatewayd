@@ -59,6 +59,10 @@ function.
       }
     })
 
+Optionally load a policy directly from a file:
+
+    var policy = Policy.load(__dirname+'/policies/invoice_policy.js');
+
 ### The Invoice Policy
 
 If the incoming payment has an associated gateway transaction record,
