@@ -37,5 +37,40 @@ describe('Policy Base class', function() {
       done();
     });
   })
+
+  it('should reject the application with an error if unimplemented', function(done) {
+    var policy = new Policy({
+      name: 'bridge_policy',
+      doesApply: function(payment) {
+        return new Promise(function(resolve, reject) {
+          resolve(true);
+        })
+      }
+    })
+    policy.apply().error(function(error) {
+      assert.strictEqual(error.message, 'apply() unimplemented');
+      done();
+    })
+  });
+
+  it("should apply the provided application function", function(done) {
+    var policy = new Policy({
+      name: 'bridge_policy',
+      doesApply: function(payment) {
+        return new Promise(function(resolve, reject) { resolve(true);
+          resolve(true);
+        })
+      },
+      apply: function(payment) {
+        return new Promise(function(resolve, reject) {
+          resolve('a reward!');
+        })
+      }
+    });
+    policy.apply().then(function(result) {
+      assert.strictEqual(result, 'a reward!');
+      done();
+    });
+  })
 });
 
