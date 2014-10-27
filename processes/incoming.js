@@ -1,3 +1,14 @@
+var Promise = require('bluebird');
+Error.stackTraceLimit = Infinity;
+
+process.on('uncaughtException', function(err) {
+  console.log('Caught exception: ' + err);
+});
+
+Promise.onPossiblyUnhandledRejection(function(err) {
+  console.log('Caught exception: ' + err);
+});
+
 var gatewayd = require(__dirname+'/../');
 var Listener = require(__dirname+'/../lib/ripple/listener.js');
 var listener = new Listener();
@@ -37,17 +48,25 @@ listener.onPayment = function(payment) {
 
 var lastHash = gatewayd.config.get('LAST_PAYMENT_HASH');
 
-if (lastHash) {
-  listener.start(lastHash);
-  gatewayd.logger.info('Listening for incoming ripple payments from Ripple REST, starting at', lastHash);
-} else {
-  console.log('LAST_PAYMENT_HASH not set... gatewayd is now fetching it from Ripple.');
-  gatewayd.api.fetchLastPaymentHash().then(function(hash) {
-    gatewayd.config.set('LAST_PAYMENT_HASH', hash)
-    gatewayd.config.save(function() {
-      listener.start(hash);
-      gatewayd.logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
+gatewayd.api.getColdWallet(function(error, address) {
+  if (error) {
+    throw new Error(error);
+  }
+  if (!address) {
+    throw new Error('Ripple COLD_WALLET not set');
+  }
+  if (address.getLastPaymentHash()) {
+    const hash = address.getLastPaymentHash();
+    listener.start(hash); 
+    logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
+  } else {
+    logger.info('LAST_PAYMENT_HASH not set... gatewayd is now fetching it from Ripple.');
+    address.fetchLastPaymentHash().then(function(hash) {
+      address.setLastPaymentHash(hash).then(function() {
+        listener.start(hash);
+        logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
+      });
     });
-  });
-}
+  }
+});
 
