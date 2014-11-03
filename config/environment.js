@@ -6,19 +6,22 @@ nconf
   .file({ file: __dirname+'/config.json' })
   .env();
 
+var DBConfigFile = require(__dirname+'/../lib/data/database.json');
+var dbConfig = DBConfigFile[nconf.get('NODE_ENV')];
+
 nconf.defaults({
   'ENVIRONMENT': 'production',
   'RIPPLE_REST_API': 'https://api.ripple.com/',
-  'DATABASE_USER': 'postgres',
-  'DATABASE_PASSWORD': 'password',
-  'DATABASE_NAME': 'ripple_gateway',
-  'DATABASE_HOST': 'localhost',
-  'DATABASE_PORT': '5432',
-  // DATABASE_URL supercedes the other DATABASE_* config options.
-  // e.g. 'DATABASE_URL': 'postgres://postgres:password@localhost:5432/ripple_gateway',
-  //
+  'DATABASE_USER': dbConfig.user,
+  'DATABASE_PASSWORD': dbConfig.password,
+  'DATABASE_NAME': dbConfig.database,
+  'DATABASE_HOST': dbConfig.host,
+  'DATABASE_PORT': dbConfig.port,
+  'DATABASE_DIALECT': dbConfig.dialect,
+  'DATABASE_LOGGING': dbConfig.logging,
   // DEPRECATED: Use DATABASE_{USER|PASSWORD|...} instead.
   'DATABASE_URL': null,
+  'NODE_ENV': 'development',
   'SSL': true,
   'SSL_KEY_PATH': __dirname+'/../env/certs/server.key',
   'SSL_CERTIFICATE_PATH': __dirname+'/../env/certs/server.crt',

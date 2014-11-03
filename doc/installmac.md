@@ -29,26 +29,51 @@ If the "postgres" role doesn't exist, you can create one:
 Create the database and grant the created user as owner:
 
     sudo psql -U postgres -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
+    
+Create the corresponding test database:
 
-### Add the created postgres credentials to config/config.json.
+    sudo psql -U postgres -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8'"    
 
-    ...
-    {
-      'DATABASE_URL': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
-    }
-    ...
-
-### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. ( your DATABASE_URL )
+### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. (NODE_ENV=test|development|staging|...)
 
     ...
-    'development': {
-      'ENV': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
-    }
+    "test": {
+        "dialect":"postgres",
+        "database": "gatewayd_db_test",
+        "user": "gatewayd_user",
+        "password": "",
+        "host": "localhost",
+        "port": "5432",
+        "logging": true
+      },
+      "development": {
+        "dialect":"postgres",
+        "database": "gatewayd_db",
+        "user": "gatewayd_user",
+        "password": "",
+        "host": "localhost",
+        "port": "5432",
+        "logging": true
+      },
+      "staging": {
+        "dialect":"postgres",
+        "database": "",
+        "user": "",
+        "password": "",
+        "host": "",
+        "port": "",
+        "logging": false
+      },
     ...
 
 ### Use Grunt to configure the postgres database
 
     grunt migrate
+    
+### Use Grunt to configure the test postgres database
+
+    export NODE_ENV=test
+    grunt migrate    
 
 ## Running gatewayd
 

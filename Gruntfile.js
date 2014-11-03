@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         'migrations-dir': './lib/data/migrations',
         verbose: true,
         env: {
-          DATABASE_URL: config.get('DATABASE_URL')
+          DATABASE_URL: 'postgres://' + config.get('DATABASE_USER') + ':' + config.get('DATABASE_PASSWORD') + '@' + config.get('DATABASE_HOST') + ':' + config.get('DATABASE_PORT') + '/' + config.get('DATABASE_NAME')
         }
       }
     },

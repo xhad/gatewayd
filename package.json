@@ -49,6 +49,7 @@
     "sequelize": "^1.7.0",
     "sinon": "^1.9.1",
     "sql-mq-worker": "^1.0.3",
+    "sqlite3": "^3.0.2",
     "superagent": "^0.18.0",
     "supertest": "^0.13.0",
     "underscore-node": "0.1.2",

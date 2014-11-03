@@ -1,11 +1,46 @@
 {
+  "test_in_memory": {
+    "dialect":"sqlite",
+    "database": "gatewayd_db_test",
+    "user": "gatewayd_user",
+    "password": "",
+    "storage": ":memory:",
+    "logging": true
+  },
+  "test": {
+    "dialect":"postgres",
+    "database": "gatewayd_db_test",
+    "user": "gatewayd_user",
+    "password": "",
+    "host": "localhost",
+    "port": "5432",
+    "logging": true
+  },
   "development": {
-    "ENV": "DATABASE_URL"
+    "dialect":"postgres",
+    "database": "gatewayd_db",
+    "user": "gatewayd_user",
+    "password": "",
+    "host": "localhost",
+    "port": "5432",
+    "logging": true
   },
   "staging": {
-    "ENV": "DATABASE_URL"
+    "dialect":"postgres",
+    "database": "",
+    "user": "",
+    "password": "",
+    "host": "",
+    "port": "",
+    "logging": false
   },
   "production": {
-    "ENV": "DATABASE_URL"
+    "dialect":"postgres",
+    "database": "",
+    "user": "",
+    "password": "",
+    "host": "",
+    "port": "",
+    "logging": false
   }
 }
