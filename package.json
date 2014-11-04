@@ -41,7 +41,7 @@
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
     "ripple-lib": "",
-    "ripple-rest-client": "1.10.2",
+    "ripple-rest-client": "1.11.0",
     "ripple-wallet": "1.0.0",
     "sequelize": "^1.7.0",
     "sinon": "^1.9.1",
