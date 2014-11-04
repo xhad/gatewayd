@@ -8,9 +8,7 @@ nconf
 
 nconf.defaults({
   'ENVIRONMENT': 'production',
-  'RIPPLE_REST_API': 'http://localhost:5990/',
-  'RIPPLE_REST_PATH': null,
-  'RUN_RIPPLE_REST': false,
+  'RIPPLE_REST_API': 'https://api.ripple.com/',
   'DATABASE_USER': 'postgres',
   'DATABASE_PASSWORD': 'password',
   'DATABASE_NAME': 'ripple_gateway',
