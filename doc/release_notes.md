@@ -1,3 +1,15 @@
+##11/05/2014
+
+###3.30.1
+
+### Fixed Bugs:
+- Handle all Ripple-REST responses in outgoing payments
+- Remove faulty logic to start local ripple-rest instance
+
+### Added Features:
+- Use https://api.ripple.com/ by default for Ripple-REST's base url
+- Ability to install gatewayd globally
+
 ##11/03/2014
 
 ###3.30.0
