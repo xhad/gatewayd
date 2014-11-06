@@ -9,7 +9,7 @@ describe('RippleTransactions ', function() {
   chai.use(chaiAsPromised);
 
   beforeEach(function(done) {
-    RippleTransactions.initModel(true, function() {
+    RippleTransactions.initModel(true).then(function() {
       done();
     });
   });
@@ -27,14 +27,15 @@ describe('RippleTransactions ', function() {
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
         chai.assert.strictEqual(transaction.from_address_id, 2);
-        // Is equal because postgres marshals to string, sqlite marshals to int
+        chai.assert.strictEqual(transaction.to_amount, 5);
         chai.assert.strictEqual(transaction.to_currency, 'USD');
         chai.assert.strictEqual(transaction.to_issuer, 'r12345');
-        // Is equal because postgres marshals to string, sqlite marshals to int
-        chai.assert.equal(transaction.from_amount, 6);
+        chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
         chai.assert.strictEqual(transaction.from_issuer, 'r67890');
-      })
+    }).error(function(error) {
+        throw new Error(JSON.stringify(error));
+    })
   });
 
   it('should successfully persist a ripple_transaction record with memo and invoice_id fields', function() {
@@ -52,16 +53,16 @@ describe('RippleTransactions ', function() {
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
         chai.assert.strictEqual(transaction.from_address_id, 2);
-        // Is equal because postgres marshals to string, sqlite marshals to int
-        chai.assert.equal(transaction.to_amount, 5);
+        chai.assert.strictEqual(transaction.to_amount, 5);
         chai.assert.strictEqual(transaction.to_currency, 'USD');
         chai.assert.strictEqual(transaction.to_issuer, 'r12345');
-        // Is equal because postgres marshals to string, sqlite marshals to int
-        chai.assert.equal(transaction.from_amount, 6);
+        chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
         chai.assert.strictEqual(transaction.from_issuer, 'r67890');
         chai.assert.strictEqual(transaction.invoice_id, 'x123456');
         chai.assert.deepEqual(transaction.memos, [{ MemoData: '7274312E302E3132', MemoType: '636C69656E74' }]);
+    }).error(function(error) {
+        throw new Error(JSON.stringify(error));
     })
   });
 
