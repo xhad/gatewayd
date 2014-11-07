@@ -42,10 +42,4 @@ nconf.set('DATABASE_DIALECT', dbConfig.dialect);
 nconf.set('DATABASE_LOGGING', dbConfig.logging);
 nconf.set('DATABASE_URL', null);
 
-nconf.save(function(error) {
-  if (error) {
-    console.log('nconf error: ', error);
-  }
-});
-
 module.exports = nconf;
