@@ -7,6 +7,7 @@ nconf
   .env();
 
 nconf.defaults({
+  'ENVIRONMENT': 'production',
   'NODE_ENV': 'development',
   'SSL': true,
   'SSL_KEY_PATH': __dirname+'/../env/certs/server.key',
@@ -25,26 +26,26 @@ nconf.defaults({
   'CURRENCIES': null, // Required
   'WITHDRAWAL_FEE': 0.01, // Required - default 1%
   'DEPOSIT_FEE': 0.01, // Required - default 1%
-  'LOGGLY': false
+  'LOGGLY': false,
+  'RIPPLE_REST_API': 'https://api.ripple.com/'
 });
 
 var DBConfigFile = require(__dirname+'/../lib/data/database.json');
 var dbConfig = DBConfigFile[nconf.get('NODE_ENV')];
 
-nconf.defaults({
-  'RIPPLE_REST_API': 'https://api.ripple.com/',
-  'DATABASE_USER': dbConfig.user,
-  'DATABASE_PASSWORD': dbConfig.password,
-  'DATABASE_NAME': dbConfig.database,
-  'DATABASE_HOST': dbConfig.host,
-  'DATABASE_PORT': dbConfig.port,
-  'DATABASE_DIALECT': dbConfig.dialect,
-  'DATABASE_LOGGING': dbConfig.logging,
-  // DATABASE_URL supercedes the other DATABASE_* config options.
-  // e.g. 'DATABASE_URL': 'postgres://postgres:password@localhost:5432/ripple_gateway',
-  //
-  // DEPRECATED: Use DATABASE_{USER|PASSWORD|...} instead.
-  'DATABASE_URL': null,
+nconf.set('DATABASE_USER', dbConfig.user);
+nconf.set('DATABASE_PASSWORD', dbConfig.password);
+nconf.set('DATABASE_NAME', dbConfig.database);
+nconf.set('DATABASE_HOST', dbConfig.host);
+nconf.set('DATABASE_PORT', dbConfig.port);
+nconf.set('DATABASE_DIALECT', dbConfig.dialect);
+nconf.set('DATABASE_LOGGING', dbConfig.logging);
+nconf.set('DATABASE_URL', null);
+
+nconf.save(function(error) {
+  if (error) {
+    console.log('nconf error: ', error);
+  }
 });
 
 module.exports = nconf;
