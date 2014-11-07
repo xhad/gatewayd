@@ -1,15 +1,16 @@
 process.env.NODE_ENV = 'test_in_memory';
+const gatewayd = require(__dirname+'/../../');
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
-var RippleTransactions = require(__dirname+'/../../').data.models.rippleTransactions;
+var RippleTransactions = gatewayd.models.rippleTransactions;
 
 describe('RippleTransactions ', function() {
 
   chai.use(chaiAsPromised);
 
   beforeEach(function(done) {
-    RippleTransactions.initModel(true).then(function() {
+    gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });
