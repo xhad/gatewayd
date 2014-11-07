@@ -1,9 +1,9 @@
 var SqlMqWorker = require('sql-mq-worker');
 var OutgoingPaymentProcessor = require(__dirname+'/../lib/core/outgoing_payment_processor.js');
-var gateway = require(__dirname+'/../');
+var gatewayd = require(__dirname+'/../');
 
 var worker = new SqlMqWorker({
-  Class: gateway.data.models.rippleTransactions,
+  Class: gatewayd.data.models.rippleTransactions,
   predicate: { where: {
     state: 'outgoing'
   }},
@@ -16,8 +16,8 @@ var worker = new SqlMqWorker({
 worker.start();
 
 process.on('uncaughtException', function(error) {
-  logger.error('exception', error);
-  logger.error('exception:stack', error.stack);
+  gatewayd.logger.error('exception', error);
+  gatewayd.logger.error('exception:stack', error.stack);
   process.exit();
 });
 

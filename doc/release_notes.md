@@ -1,4 +1,36 @@
+##11/05/2014
+
+###3.30.1
+
+### Fixed Bugs:
+- Handle all Ripple-REST responses in outgoing payments
+- Remove faulty logic to start local ripple-rest instance
+
+### Added Features:
+- Use https://api.ripple.com/ by default for Ripple-REST's base url
+- Ability to install gatewayd globally
+
+##11/03/2014
+
+###3.30.0
+
+### Fixed Bugs:
+
+- Restart gateway command line call
+- mark successful payments only after payment is confirmed
+
+### Added Features:
+
+- Policy engine to manage and determine policies to apply to payments (alpha)
+- Config initializers for adding custom behavior at bootup
+- Config initializers for adding custom behavior at bootup
+- Initializer that attaches the Host Meta plugin to gatewayd's express app
+- Database table for "configs" items, move to store configuration in SQL
+- Automatically get and set last payment hash in database
+
 ##10/08/2014
+
+###3.29.0
 
 ### Fixed Bugs:
 - Move config/config.js to config/environment.js to prevent confusion.
