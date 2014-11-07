@@ -34,7 +34,7 @@ Create the corresponding test database:
 
     sudo psql -U postgres -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8'"    
 
-### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. (NODE_ENV=test|development|staging|...)
+### Make any environment specific database changes to lib/data/database.json (It should work by default if you followed the above instructions)
 
     ...
     "test": {
