@@ -23,7 +23,8 @@ describe('RippleTransactions ', function() {
       to_issuer: 'r12345',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r67890',
+      direction: 'to-ripple'
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
         chai.assert.strictEqual(transaction.from_address_id, 2);
@@ -33,6 +34,7 @@ describe('RippleTransactions ', function() {
         chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
         chai.assert.strictEqual(transaction.from_issuer, 'r67890');
+        chai.assert.strictEqual(transaction.direction, 'to-ripple');
     }).error(function(error) {
         throw new Error(JSON.stringify(error));
     })
@@ -169,6 +171,22 @@ describe('RippleTransactions ', function() {
     }, {
       to_address_id: [ 'Validation notNull failed: from_currency' ]
     }))
+  });
+
+  it('create should be rejected if direction is invalid', function() {
+    return chai.assert.isRejected(RippleTransactions.create({
+      to_address_id: 1,
+      from_address_id: 2,
+      to_amount: 5,
+      to_currency: 'USD',
+      to_issuer: 'r12345',
+      from_amount: 6,
+      from_currency: 'USD',
+      from_issuer: 'r67890',
+      direction: 'up-and-up'
+    }, {
+      direction: [ 'Validation isIn failed: direction' ]
+    }));
   });
 
   it('create should be rejected if from_issuer is missing', function() {
