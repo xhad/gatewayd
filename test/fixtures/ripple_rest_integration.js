@@ -34,6 +34,18 @@ module.exports = {
       }
     }
   },
+  outgoing_record: {
+    to_amount: 0.0019399999999999999,
+    from_amount: 0.002,
+    to_address_id: 820,
+    from_address_id: 623,
+    to_currency: 'XRP',
+    to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+    from_currency: 'XRP',
+    from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+    state: 'outgoing',
+    external_transaction_id: 169
+  },
   successful_responses: {
     validated_payment: {
       source_account: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr',
@@ -71,6 +83,11 @@ module.exports = {
       paths: '[]',
       partial_payment: false,
       no_direct_ripple: false
+    },
+    pending_payment: {
+      success: true,
+      client_resource_id: '1',
+      status_url: 'https://api.ripple.com/v1/accounts/rDmSZbgLbw7qkkgDXMWoiSQX7VZ6KknWcL/payments/1'
     }
   }
 };
