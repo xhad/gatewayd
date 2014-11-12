@@ -30,7 +30,7 @@
     "express-authorization": "0.1.1",
     "forever": "",
     "gatewayd-admin": "1.9.1",
-    "gatewayd-setup-wizard-plugin": "^2.0.4",
+    "gatewayd-setup-wizard-plugin": "^2.0.5",
     "grunt": "^0.4.4",
     "grunt-cli": "^0.1.13",
     "grunt-db-migrate": "^0.2.0",
