@@ -1,18 +1,16 @@
 process.env.NODE_ENV = 'test_in_memory';
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const gateway = require(__dirname+'/../../');
+const gatewayd = require(__dirname+'/../../');
 const OutgoingPayment = require(__dirname+'/../../lib/core/outgoing_payment.js');
 var fixtures = require(__dirname+'/../fixtures/ripple_rest_integration.js');
-var RippleTransactions = gateway.data.models.rippleTransactions;
-var outgoingTransactionRecord;
-
+var RippleTransactions = gatewayd.models.rippleTransactions;
 
 describe('Outgoing Payment', function() {
   chai.use(chaiAsPromised);
 
   beforeEach(function(done) {
-    RippleTransactions.initModel(true).then(function() {
+    gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });
@@ -124,7 +122,7 @@ describe('Outgoing Payment', function() {
   it('should handle socket hang up connection error -- retry', function(done) {
     var error = new Error('socket hang up');
     error.code = 'ECONNRESET';
-    
+
     RippleTransactions
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
@@ -146,6 +144,11 @@ describe('Outgoing Payment', function() {
 
 
 describe('Sending a queued payment to ripple', function() {
+  beforeEach(function(done) {
+    gatewayd.database.sync({force: true}).then(function() {
+      done();
+    });
+  });
 
   it('should record the rejection of a payment from the Ripple Ledger', function(done) {
 
@@ -195,13 +198,61 @@ describe('Sending a queued payment to ripple', function() {
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
         var outgoingPayment = new OutgoingPayment(rippleTransaction);
-        outgoingPayment._confrimPayment(fixtures.requests.pending_payment)
+        outgoingPayment._confirmPayment(fixtures.requests.pending_payment)
           .error(function(payment){
             chai.assert(outgoingPayment.record.state, 'pending');
             done();
           });
       })
       .error(function(error){
+        throw new Error(error);
+      });
+  });
+
+  it('should successfully submit outgoing payments and must have transaction_hash and transaction_state', function(done){
+    this.timeout(10000);
+    var outgoingPayment;
+    RippleTransactions
+      .create(fixtures.outgoing_record)
+      .then(function(rippleTransaction){
+        outgoingPayment = new OutgoingPayment(rippleTransaction);
+        return outgoingPayment._sendPayment(fixtures.requests.payment)
+      })
+      .then(function(pendingPayment){
+        return outgoingPayment._confirmPayment(pendingPayment)
+      })
+      .then(function(payment){
+        return outgoingPayment._recordAcceptanceOrRejectionStatus(payment)
+      })
+      .then(function(payment){
+        chai.assert.strictEqual(payment.transaction_state, 'tesSUCCESS');
+        chai.assert(payment.transaction_hash);
+        done();
+      })
+      .catch(function(error){
+        throw new Error(error);
+      });
+  });
+
+  it('should successfully submit outgoing payments with invoice and memos fields', function(done){
+    this.timeout(10000);
+    var outgoingPayment;
+    RippleTransactions
+      .create(fixtures.outgoing_record_invoice_id_memos)
+      .then(function(rippleTransaction){
+        outgoingPayment = new OutgoingPayment(rippleTransaction);
+        return outgoingPayment._sendPayment(fixtures.requests.payment)
+      })
+      .then(function(pendingPayment){
+        return outgoingPayment._confirmPayment(pendingPayment)
+      })
+      .then(function(confirmedPayment){
+        chai.assert(confirmedPayment.memos);
+        chai.assert.isArray(confirmedPayment.memos);
+        chai.assert.equal(confirmedPayment.invoice_id, fixtures.outgoing_record_invoice_id_memos.invoice_id);
+        done();
+      })
+      .catch(function(error){
         throw new Error(error);
       });
   });
