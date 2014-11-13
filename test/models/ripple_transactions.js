@@ -15,7 +15,7 @@ describe('RippleTransactions ', function() {
     });
   });
 
-  it('should successfully persist a ripple_transaction record', function() {
+  it('should successfully persist a ripple_transaction record with direction to-ripple', function() {
     return RippleTransactions.create({
       to_address_id: 1,
       from_address_id: 2,
@@ -37,8 +37,34 @@ describe('RippleTransactions ', function() {
         chai.assert.strictEqual(transaction.from_issuer, 'r67890');
         chai.assert.strictEqual(transaction.direction, 'to-ripple');
     }).error(function(error) {
-        throw new Error(JSON.stringify(error));
-    })
+        throw new error(JSON.stringify(error));
+    });
+  });
+
+  it('should successfully persist a ripple_transaction record with direction from-ripple', function() {
+    return RippleTransactions.create({
+      to_address_id: 1,
+      from_address_id: 2,
+      to_amount: 5,
+      to_currency: 'USD',
+      to_issuer: 'r12345',
+      from_amount: 6,
+      from_currency: 'USD',
+      from_issuer: 'r67890',
+      direction: 'from-ripple'
+    }).then(function(transaction) {
+        chai.assert.strictEqual(transaction.to_address_id, 1);
+        chai.assert.strictEqual(transaction.from_address_id, 2);
+        chai.assert.strictEqual(transaction.to_amount, 5);
+        chai.assert.strictEqual(transaction.to_currency, 'USD');
+        chai.assert.strictEqual(transaction.to_issuer, 'r12345');
+        chai.assert.strictEqual(transaction.from_amount, 6);
+        chai.assert.strictEqual(transaction.from_currency, 'USD');
+        chai.assert.strictEqual(transaction.from_issuer, 'r67890');
+        chai.assert.strictEqual(transaction.direction, 'from-ripple');
+    }).error(function(error) {
+        throw new error(JSON.stringify(error));
+    });
   });
 
   it('should successfully persist a ripple_transaction record with memo and invoice_id fields', function() {
@@ -52,6 +78,7 @@ describe('RippleTransactions ', function() {
       from_currency: 'USD',
       from_issuer: 'r67890',
       invoice_id: '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4',
+      direction: 'from-ripple',
       memos: [{ MemoData: '7274312E302E3132', MemoType: '636C69656E74' }]
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
