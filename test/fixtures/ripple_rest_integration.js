@@ -44,7 +44,8 @@ module.exports = {
     from_currency: 'XRP',
     from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
     state: 'outgoing',
-    external_transaction_id: 169
+    external_transaction_id: 169,
+    direction: 'from-ripple'
   },
   outgoing_record_invoice_id_memos: {
     to_amount: 0.0019399999999999999,
@@ -57,6 +58,7 @@ module.exports = {
     from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
     state: 'outgoing',
     external_transaction_id: 169,
+    direction: 'from-ripple',
     invoice_id: '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4',
     memos: [
       {
