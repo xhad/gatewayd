@@ -1,3 +1,21 @@
+### 11/12/2014
+
+### 3.31.0
+
+### Fixed Bugs:
+- Config file overwriting file issues
+- Replaced database.example.json with database.json
+
+### Added Features
+- Support for memos and invoice_id fields
+- Mark unconfirmed payments pending
+- Associate ripple addresses and ripple transactions in database
+- Add direction to ripple transactions (to-ripple, from-ripple)
+- Add invoice_id to external transactions
+- Validate Ripple Address using validator
+- Commandline interface for seeding ripple records
+- Enabled sqlite in memory and sqlite persistent connectors
+
 ##11/05/2014
 
 ###3.30.1
