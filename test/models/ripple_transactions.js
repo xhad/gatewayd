@@ -272,13 +272,68 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       invoice_id: '12323'
     }, {
       invoice_id: [ 'Must be a valid SHA-256 hash' ]
     }));
   });
+
+  it('should be rejected when no to_issuer is provided for fiat to_currency', function() {
+     return chai.assert.isRejected(RippleTransactions.create({
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 5,
+        to_currency: 'USD',
+        from_amount: 6,
+        from_currency: 'USD',
+        from_issuer: 'r67890'
+     }, {
+       to_issuer: [ 'Validation notNull of to_issuer' ]
+     }));
+  });
+
+  it('should be rejected when no from_issuer is provided', function() {
+     return chai.assert.isRejected(RippleTransactions.create({
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 5,
+        to_currency: 'USD',
+        to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+        from_amount: 6,
+        from_currency: 'USD'
+     }, {
+       from_issuer: [ 'Validation notNull of from_issuer' ]
+     }));
+  });
+
+  it('should be accepted with no from_issuer if from_currency is XRP', function() {
+     return chai.assert.isFulfilled(RippleTransactions.create({
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 5,
+        to_currency: 'USD',
+        to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+        from_amount: 6,
+        from_currency: 'XRP',
+        direction: 'from-ripple'
+     }));
+  });
+
+  it('should be accepted with no to_issuer if to_currency is XRP', function() {
+     return chai.assert.isFulfilled(RippleTransactions.create({
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 5,
+        to_currency: 'XRP',
+        from_amount: 6,
+        from_currency: 'USD',
+        from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+        direction: 'to-ripple'
+     }));
+  });
 });
+
