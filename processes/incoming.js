@@ -10,7 +10,7 @@ Promise.onPossiblyUnhandledRejection(function(err) {
 });
 
 var gatewayd = require(__dirname+'/../');
-var Listener = require(__dirname+'/../lib/ripple/listener.js');
+var Listener = require(__dirname+'/../lib/ripple_listener.js');
 var listener = new Listener();
 
 listener.onPayment = function(payment) {
