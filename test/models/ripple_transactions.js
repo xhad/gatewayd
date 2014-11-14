@@ -21,20 +21,20 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       direction: 'to-ripple'
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
         chai.assert.strictEqual(transaction.from_address_id, 2);
         chai.assert.strictEqual(transaction.to_amount, 5);
         chai.assert.strictEqual(transaction.to_currency, 'USD');
-        chai.assert.strictEqual(transaction.to_issuer, 'r12345');
+        chai.assert.strictEqual(transaction.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
-        chai.assert.strictEqual(transaction.from_issuer, 'r67890');
+        chai.assert.strictEqual(transaction.from_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.direction, 'to-ripple');
     }).error(function(error) {
         throw new error(JSON.stringify(error));
@@ -47,20 +47,20 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       direction: 'from-ripple'
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, 1);
         chai.assert.strictEqual(transaction.from_address_id, 2);
         chai.assert.strictEqual(transaction.to_amount, 5);
         chai.assert.strictEqual(transaction.to_currency, 'USD');
-        chai.assert.strictEqual(transaction.to_issuer, 'r12345');
+        chai.assert.strictEqual(transaction.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
-        chai.assert.strictEqual(transaction.from_issuer, 'r67890');
+        chai.assert.strictEqual(transaction.from_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.direction, 'from-ripple');
     }).error(function(error) {
         throw new error(JSON.stringify(error));
@@ -73,10 +73,10 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       invoice_id: '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4',
       direction: 'from-ripple',
       memos: [{ MemoData: '7274312E302E3132', MemoType: '636C69656E74' }]
@@ -85,10 +85,10 @@ describe('RippleTransactions ', function() {
         chai.assert.strictEqual(transaction.from_address_id, 2);
         chai.assert.strictEqual(transaction.to_amount, 5);
         chai.assert.strictEqual(transaction.to_currency, 'USD');
-        chai.assert.strictEqual(transaction.to_issuer, 'r12345');
+        chai.assert.strictEqual(transaction.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.from_amount, 6);
         chai.assert.strictEqual(transaction.from_currency, 'USD');
-        chai.assert.strictEqual(transaction.from_issuer, 'r67890');
+        chai.assert.strictEqual(transaction.from_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         chai.assert.strictEqual(transaction.invoice_id, '03AC674216F3E15C761EE1A5E255F067953623C8B388B4459E13F978D7C846F4');
         chai.assert.deepEqual(transaction.memos, [{ MemoData: '7274312E302E3132', MemoType: '636C69656E74' }]);
     }).error(function(error) {
@@ -102,10 +102,10 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: to_address_id' ]
     }))
@@ -117,10 +117,10 @@ describe('RippleTransactions ', function() {
       //from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: from_address_id' ]
     }))
@@ -132,10 +132,10 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       //to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: to_amount' ]
     }))
@@ -147,27 +147,42 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       //to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: to_currency' ]
     }))
   });
 
-  it('create should be rejected if to_issuer is missing', function() {
+  it('create should be rejected if to_issuer is not a valid ripple address', function() {
     return chai.assert.isRejected(RippleTransactions.create({
       to_address_id: 1,
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      //to_issuer: 'r12345',
+      to_issuer: 'r12345',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
-      to_address_id: [ 'Validation notNull failed: to_issuer' ]
+      to_address_id: [ 'Validation isRippleAddress failed: to_issuer' ]
+    }))
+  });
+
+  it('create should be rejected if from_issuer is not a valid ripple address', function() {
+    return chai.assert.isRejected(RippleTransactions.create({
+      to_address_id: 1,
+      from_address_id: 2,
+      to_amount: 5,
+      to_currency: 'USD',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+      from_amount: 6,
+      from_currency: 'USD',
+      from_issuer: 'r12345'
+    }, {
+      to_address_id: [ 'Validation isRippleAddress failed: to_issuer' ]
     }))
   });
 
@@ -177,10 +192,10 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       //from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: from_amount' ]
     }))
@@ -192,10 +207,10 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       //from_currency: 'USD',
-      from_issuer: 'r67890'
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     }, {
       to_address_id: [ 'Validation notNull failed: from_currency' ]
     }))
@@ -207,29 +222,48 @@ describe('RippleTransactions ', function() {
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
       from_currency: 'USD',
-      from_issuer: 'r67890',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       direction: 'up-and-up'
     }, {
       direction: [ 'Validation isIn failed: direction' ]
     }));
   });
 
-  it('create should be rejected if from_issuer is missing', function() {
-    return chai.assert.isRejected(RippleTransactions.create({
+  it('create should be valid if from_issuer is missing', function(done) {
+    return RippleTransactions.create({
       to_address_id: 1,
       from_address_id: 2,
       to_amount: 5,
       to_currency: 'USD',
-      to_issuer: 'r12345',
+      to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
       from_amount: 6,
-      from_currency: 'USD'
-      //from_issuer: 'r67890'
-    }, {
-      to_address_id: [ 'Validation notNull failed: from_issuer' ]
-    }))
+      from_currency: 'USD',
+      //from_issuer: 'r67890',
+      direction: 'to-ripple'
+    }).then(function(transaction) {
+      chai.assert(transaction.id);
+      done();
+    });
+  });
+
+  it('create should be valid if to_issuer is an empty string', function(done) {
+    return RippleTransactions.create({
+      to_address_id: 1,
+      from_address_id: 2,
+      to_amount: 5,
+      to_currency: 'USD',
+      to_issuer: '',
+      from_amount: 6,
+      from_currency: 'USD',
+      from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+      direction: 'to-ripple'
+    }).then(function(transaction) {
+      chai.assert(transaction.id);
+      done();
+    });
   });
 
   it('create should be rejected if invoice_id is not a valid SHA-256 hash', function() {
