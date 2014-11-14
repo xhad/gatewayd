@@ -1,6 +1,6 @@
 {
   "name": "gatewayd",
-  "version": "3.31.1",
+  "version": "3.31.2",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "grunt test"
