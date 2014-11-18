@@ -11,14 +11,14 @@ module.exports = {
       address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     },
     invalid_currency: {
-      amount: '0.01a',
-      currency: 'ZMK',
+      amount: '0.01',
+      currency: '$ZMK',
       address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
     },
     invalid_address: {
       amount: '0.01',
-      currency: '$ZMK',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
+      currency: 'ZMK',
+      address: 'r421'
     },
     invalid_destination_tag: {
       amount: '0.01',
