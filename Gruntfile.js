@@ -41,8 +41,8 @@ module.exports = function (grunt) {
         'bin/gateway',
         'config/*',
         'lib/**/*.js',
-        'processes/**/*.js',
-        'test/**/*.js'
+        '!lib/data/migrations/*.js',
+        'processes/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'

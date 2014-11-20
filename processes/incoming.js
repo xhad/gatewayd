@@ -27,24 +27,22 @@ listener.onPayment = function(payment) {
     if (opts.destination_tag && (opts.transaction_state === 'tesSUCCESS')){
       if (payment.destination_balance_changes) {
         var destination_amount = payment.destination_balance_changes[0];
-        if (destination_amount) {
+        var source_amount = payment.source_balance_changes[0];
+        if (destination_amount && source_amount) {
           opts.destination_amount = destination_amount;
           opts.state = 'incoming';
-          var source_amount = payment.source_balance_changes[0];
-          if (source_amount) {
-            opts.source_amount = source_amount;
-            gatewayd.api.recordIncomingPayment(opts)
-              .then(function(rippleTransaction) {
-                try {
-                  gatewayd.logger.info('payment:incoming:recorded', JSON.stringify(rippleTransaction));
-                } catch (exception) {
-                  gatewayd.logger.error('payment:incoming:error', exception);
-                }
-              })
-              .error(function(error) {
-                gatewayd.logger.error('payment:incoming:error', error);
-              });
-          }
+          opts.source_amount = source_amount;
+          gatewayd.api.recordIncomingPayment(opts)
+            .then(function(rippleTransaction) {
+              try {
+                gatewayd.logger.info('payment:incoming:recorded', JSON.stringify(rippleTransaction));
+              } catch (exception) {
+                gatewayd.logger.error('payment:incoming:error', exception);
+              }
+            })
+            .error(function(error) {
+              gatewayd.logger.error('payment:incoming:error', error);
+            });
         }
       }
     }

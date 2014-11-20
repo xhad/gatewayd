@@ -3,7 +3,7 @@ const HostMeta = require(__dirname + '/../../lib/host_meta/host_meta.js');
 
 module.exports = function(gatewayd) {
 
-  plugin = new HostMetaPlugin({
+  var plugin = new HostMetaPlugin({
     gatewayd: gatewayd
   });
 
@@ -12,5 +12,5 @@ module.exports = function(gatewayd) {
   gatewayd.hostMeta = new HostMeta({
     gatewayd: gatewayd
   });
-}
+};
 

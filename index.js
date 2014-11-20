@@ -13,7 +13,7 @@ exports.logger = require(__dirname+'/lib/data/logs.js');
 
 var initializers = requireAll(__dirname+'/config/initializers/');
 
-for (i in initializers) {
+for (var i in initializers) {
   initializers[i](exports);
 }
 
