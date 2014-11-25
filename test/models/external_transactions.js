@@ -1,15 +1,15 @@
 process.env.NODE_ENV = 'test_in_memory';
+const gatewayd = require(__dirname+'/../../');
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
-var ExternalTransactions = require(__dirname+'/../../').data.models.externalTransactions;
+var ExternalTransactions = gatewayd.models.externalTransactions;
 
-describe('RippleTransactions ', function() {
-
+describe('external_transactions model', function() {
   chai.use(chaiAsPromised);
 
   beforeEach(function(done) {
-    ExternalTransactions.initModel(true).then(function() {
+    gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });

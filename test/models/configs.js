@@ -1,8 +1,17 @@
-const assert = require('assert');
-const Config = require(__dirname+'/../../').models.configs;
+process.env.NODE_ENV = 'test_in_memory';
 
-describe('Configs database table', function() {
+const assert = require('assert');
+const gatewayd = require(__dirname+'/../../');
+const Config = gatewayd.models.configs;
+
+describe('configs model', function() {
   var createdConfig;
+
+  beforeEach(function(done) {
+    gatewayd.database.sync({force: true}).then(function() {
+      done();
+    });
+  });
 
   it('should require a key and value', function(done) {
     Config.create().error(function(error) {
@@ -21,10 +30,12 @@ describe('Configs database table', function() {
     })
   });
 
-  it('should return a config item', function(done) {
-    Config.get('identifier').then(function(config) {
-      assert.strictEqual(config.value, 'ripple:stevenzeiler');
-      done();
+  it('should return a previously created config item', function(done) {
+    Config.set('identifier', 'ripple:stevenzeiler').then(function(config) {
+      Config.get('identifier').then(function(config) {
+        assert.strictEqual(config.value, 'ripple:stevenzeiler');
+        done();
+      });
     });
   });
   
@@ -33,10 +44,6 @@ describe('Configs database table', function() {
       assert(!config);
       done();
     });
-  });
-
-  after(function(done) {
-    createdConfig.destroy().complete(done);
   });
 });
 

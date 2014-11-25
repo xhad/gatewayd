@@ -5,7 +5,7 @@ var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 var RippleTransactions = gatewayd.models.rippleTransactions;
 
-describe('RippleTransactions ', function() {
+describe('ripple_transactions model', function() {
 
   chai.use(chaiAsPromised);
 

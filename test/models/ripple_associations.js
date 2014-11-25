@@ -6,7 +6,7 @@ var RippleTransaction = gatewayd.models.rippleTransactions;
 
 var toAddress, fromAddress, rippleTransaction;
 
-describe('Ripple model associations', function() {
+describe('ripple_associations', function() {
 
   it('ripple transaction should have one FromAddress', function(done) {
 

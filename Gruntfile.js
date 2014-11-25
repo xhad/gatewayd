@@ -1,17 +1,20 @@
-var config = require( __dirname + '/config/environment.js' );
-
 module.exports = function (grunt) {
 
   grunt.initConfig({
+    env: {
+      test: {
+        NODE_ENV: 'test'
+      },
+      test_in_memory: {
+        NODE_ENV: 'test_in_memory'
+      }
+    },
 
     migrate: {
       options: {
         config: './lib/data/database.json',
         'migrations-dir': './lib/data/migrations',
-        verbose: true,
-        env: {
-          DATABASE_URL: 'postgres://' + config.get('DATABASE_USER') + ':' + config.get('DATABASE_PASSWORD') + '@' + config.get('DATABASE_HOST') + ':' + config.get('DATABASE_PORT') + '/' + config.get('DATABASE_NAME')
-        }
+        verbose: true
       }
     },
 
@@ -25,11 +28,11 @@ module.exports = function (grunt) {
     },
 
     mochaTest: {
-      test: {
+      test_in_memory: {
         options: {
           reporter: 'spec'
         },
-        src: ['test/http/**/*.js']
+        src: ['test/models/**/*.js']
       }
     },
 
@@ -55,8 +58,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-env');
 
-  grunt.registerTask('test', ['jshint', 'mochaTest']);
+  grunt.registerTask('test_im', ['env:test_in_memory', 'mochaTest:test_in_memory']);
 
   grunt.registerTask('default', ['migrate']);
 };

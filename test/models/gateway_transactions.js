@@ -1,9 +1,18 @@
+process.env.NODE_ENV = 'test_in_memory';
+const gatewayd = require(__dirname+'/../../');
+
 var GatewayTransaction = require(__dirname+'/../../').data.models.gatewayTransactions;
 var assert = require('assert');
 
 var gatewayTransaction;
 
-describe('Gateway Transaction database table', function() {
+describe('gateway_transactions model', function() {
+
+  beforeEach(function(done) {
+    gatewayd.database.sync({force: true}).then(function() {
+      done();
+    });
+  });
 
   it('should relate external transactions to ripple transactions', function(done) {
     GatewayTransaction.create({
@@ -23,13 +32,21 @@ describe('Gateway Transaction database table', function() {
   });
 
   it('should accept a state', function(done) {
-    gatewayTransaction.updateAttributes({
-      state: 'invoice'
+    GatewayTransaction.create({
+      ripple_transaction_id: 123,
+      external_transaction_id: 456,
+      policy_id: 789
     })
-    .then(function() {
-      assert.strictEqual(gatewayTransaction.state, 'invoice');
-      done();
-    });
+    .then(function(transaction) {
+      gatewayTransaction.updateAttributes({
+        state: 'invoice'
+      })
+        .then(function() {
+          assert.strictEqual(gatewayTransaction.state, 'invoice');
+          done();
+        });
+    })
+    .error(console.log);
   });
 
   it('should fail to save without a ripple transaction id', function(done) {
@@ -53,6 +70,7 @@ describe('Gateway Transaction database table', function() {
       done();
     });
   });
+
   it('should fail to save without a ripple transaction id', function(done) {
     GatewayTransaction.create({
       ripple_transaction_id: 123,
@@ -68,4 +86,4 @@ describe('Gateway Transaction database table', function() {
     gatewayTransaction.destroy().then(done);
   })
 
-})
+});
