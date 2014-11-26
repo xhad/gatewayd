@@ -3,7 +3,8 @@
   "version": "3.31.1",
   "scripts": {
     "start": "./bin/gateway start",
-    "test": "grunt test"
+    "test": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "cli-table": "0.3.0",
     "commander": "2.1.0",
     "cors": "^2.4.1",
+    "coveralls": "^2.11.2",
     "db-migrate": "^0.6.4",
     "ejs": "",
     "express": "^4.8.3",
@@ -37,6 +39,7 @@
     "grunt-env": "^0.4.2",
     "grunt-jsdoc": "^0.5.4",
     "host-meta-plugin": "^0.1.5",
+    "istanbul": "^0.3.2",
     "jbuilder": "",
     "mocha": "~1.14.0",
     "nconf": "~0.6",
