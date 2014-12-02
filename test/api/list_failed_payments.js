@@ -1,45 +1,47 @@
-var gateway = require(__dirname+'/../../');
-var assert = require('assert');
-var _ = require('underscore-node');
-
-var newFailedPayment;
+var gatewayd = require(__dirname+'/../../');
+var chai = require('chai');
 
 describe('List Failed Payments', function(){
 
-  var failedPayment;
-
-  before(function(done) {
-    gateway.data.models.rippleTransactions.create({
-      to_address_id: 1,
-      from_address_id: 2,
-      to_amount: 101,
-      from_amount: 101,
-      to_currency: 'XAG',
-      from_currency: 'XAG',
-      to_issuer: 1,
-      from_issuer: 1,
-      state: 'failed'
-    }).complete(function(error, rippleTransaction){
-      newFailedPayment = rippleTransaction;
-      done();
-    }); 
-  });
-
-  it('should return payments in the "failed" state', function(done){
-    gateway.api.listFailedPayments(function(error, payments) {
-      failedPayment = _.filter(payments, function(payment) {
-        assert.strictEqual(payment.state, 'failed');
-        return newFailedPayment.id === payment.id;
-      })[0];
-      assert.strictEqual(failedPayment.id, newFailedPayment.id);
-      assert.strictEqual(failedPayment.to_currency, 'XAG');
-      assert.strictEqual(parseFloat(failedPayment.to_amount), 101);
+  beforeEach(function (done) {
+    gatewayd.database.sync({force: true}).then(function () {
       done();
     });
   });
 
-  after(function(done) {
-    newFailedPayment.destroy().complete(done);
+  it('should return payments in the "failed" state', function(done){
+    gatewayd.models.rippleTransactions.bulkCreate([
+      {
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 5.00,
+        to_currency: 'USD',
+        from_amount: 5.00,
+        from_currency: 'USD',
+        state: 'failed'
+      },
+      {
+        to_address_id: 1,
+        from_address_id: 2,
+        to_amount: 6.00,
+        to_currency: 'USD',
+        from_amount: 6.00,
+        from_currency: 'USD',
+        state: 'failed'
+      }
+    ]).then(function () {
+      gatewayd.api.listFailedPayments(function (error, rippleTransactions) {
+        chai.assert.strictEqual(rippleTransactions.length, 2);
+        for (var i = 0; i < rippleTransactions.length; i++) {
+          chai.assert.strictEqual(rippleTransactions[i].state, 'failed');
+          chai.assert.strictEqual(rippleTransactions[i].to_address_id, 1);
+          chai.assert.strictEqual(rippleTransactions[i].from_address_id, 2);
+          chai.assert.strictEqual(rippleTransactions[i].to_currency, 'USD');
+          chai.assert.strictEqual(rippleTransactions[i].from_currency, 'USD');
+        }
+        done();
+      })
+    });
   });
 
 });
