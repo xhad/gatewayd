@@ -1,3 +1,19 @@
+### 12/3/2014
+
+### 3.32.0
+
+### Fixed Bugs:
+- Store memos and invoice_id when enqueuing outgoing payments
+- Issue with travis build and added coveralls and istanbul for coverage
+- Typo in externalAccount assocation
+- Circular dependency caused by requiring gatewayd
+- Deposits endpoint now validating that external_account_id points to valid externalAccount
+
+
+### Added Features
+- Associate ExternalAccounts to ExternalTransactions
+- Add properties `to_account_id` and `from_account_id`
+
 ### 11/12/2014
 
 ### 3.31.0
