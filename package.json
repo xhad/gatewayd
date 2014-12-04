@@ -1,6 +1,6 @@
 {
   "name": "gatewayd",
-  "version": "3.31.1",
+  "version": "3.32.0",
   "scripts": {
     "start": "./bin/gateway start",
     "test": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js",

@@ -17,6 +17,8 @@ All of these commands assume your are in the base of the cloned project director
 
 ### Install gatewayd's dependencies using NPM:
 
+The user installing gatewayd's dependencies should be root user, or have a super user grant access to your user to the .npm directory.
+
     sudo npm install --global pg grunt grunt-cli forever db-migrate jshint
     sudo npm install pm2 -g --unsafe-perm
     npm install --save
@@ -84,4 +86,4 @@ The executable is located at bin/gateway:
 
 ## Configure gatewayd
 
-Once gatewayd is installed, [configure your gateway](https://dev.ripple.com/gatewayd.html#configuration) wallets and server
+Once gatewayd is installed, [configure your gateway](https://ripple.com/build/gatewayd/#configuration) wallets and server
