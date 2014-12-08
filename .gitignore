@@ -10,3 +10,4 @@ logfile
 env/deploy/config.json
 logs/*.log
 Gatewaydfile.js
+coverage
