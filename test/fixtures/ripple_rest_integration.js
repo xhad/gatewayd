@@ -16,6 +16,10 @@ module.exports = {
         error_type: 'transaction',
         error: 'Rippled Busy',
         message: 'The server is experiencing heavy load and is unable to process the request right now. Please try again.'
+      },
+      server: {
+        success: false,
+        error_type: 'server'
       }
     },
 
