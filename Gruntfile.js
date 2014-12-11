@@ -3,7 +3,6 @@ var config = require( __dirname + '/config/environment.js' );
 module.exports = function (grunt) {
 
   grunt.initConfig({
-
     migrate: {
       options: {
         config: './lib/data/database.json',
@@ -29,7 +28,7 @@ module.exports = function (grunt) {
         options: {
           reporter: 'spec'
         },
-        src: ['test/http/**/*.js']
+        src: ['test/models/**/*.js']
       }
     },
 
@@ -41,8 +40,8 @@ module.exports = function (grunt) {
         'bin/gateway',
         'config/*',
         'lib/**/*.js',
-        'processes/**/*.js',
-        'test/**/*.js'
+        '!lib/data/migrations/*.js',
+        'processes/**/*.js'
       ],
       options: {
         jshintrc: '.jshintrc'
@@ -56,7 +55,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('test', ['jshint', 'mochaTest']);
+  grunt.registerTask('test', ['jshint', 'mochaTest:test']);
 
   grunt.registerTask('default', ['migrate']);
 };

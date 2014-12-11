@@ -1,19 +1,24 @@
 language: node_js
 node_js:
   - "0.10"
-before_install:
-script: "npm test"
 addons:
   postgresql: "9.3"
-before_script:
+before_install:
   - npm install -g pg
-  - npm install -g db-migrate
   - npm install -g grunt
   - npm install -g grunt-cli
-  - psql -c 'create database ripple_gateway_test;' -U postgres
-  - cd lib/data/ && db-migrate up
-env:
-  - DATABASE_URL=postgres://postgres:@localhost:5432/ripple_gateway_test KEY=123456789
+install:
+  - npm install
+before_script:
+  - psql -c "create user gatewayd_user with password 'password';" -U postgres
+  - psql -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8';" -U postgres
+  - export NODE_ENV=test
+  - grunt migrate
+  - grunt jshint
+script:
+  - npm test
+after_success:
+  - npm run coveralls
 notifications:
   email:
     false

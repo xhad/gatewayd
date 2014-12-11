@@ -1,17 +1,19 @@
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'test_in_memory';
+const gatewayd = require(__dirname+'/../../');
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
-var RippleTransactions = require(__dirname+'/../../').data.models.rippleTransactions;
+var RippleTransactions = gatewayd.models.rippleTransactions;
 var Chance = require('chance');
-var chance = new Chance();
+var UInt256 = require('ripple-lib').UInt256;
 
-describe('RippleTransactions ', function() {
+describe('db_ripple_seed', function() {
 
   chai.use(chaiAsPromised);
+  var chance = new Chance();
 
   beforeEach(function(done) {
-    RippleTransactions.initModel(true).then(function() {
+    gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });
@@ -21,12 +23,25 @@ describe('RippleTransactions ', function() {
         chanceFromAddressId = chance.integer({min: 1, max: 99999}),
         chanceToAmount = chance.floating({fixed: 2}),
         chanceToCurrency = chance.currency().code,
-        chanceToIssuer = 'r' + chance.character({length: 34, alpha: true}),
         chanceFromAmount = chance.floating({fixed: 2}),
         chanceFromCurrency = chance.currency().code,
-        chanceFromIssuer = 'r' + chance.character({length: 34, alpha: true}),
-        chanceInvoiceId = chance.hash({length: 32, casing: 'upper'});
+        chanceInvoiceId = UInt256.from_number(chance.integer({min: 1, max: 99999})).value;
 
+    var chanceToIssuer;
+    gatewayd.api.generateWallet(function(error, result) {
+      if (error) {
+        throw new Error('Unable to generate address');
+      }
+      chanceToIssuer = result.address;
+    });
+
+    var chanceFromIssuer;
+    gatewayd.api.generateWallet(function(error, result) {
+      if (error) {
+        throw new Error('Unable to generate address');
+      }
+      chanceFromIssuer = result.address;
+    });
 
     return RippleTransactions.create({
       to_address_id: chanceToAddressId,
@@ -37,7 +52,8 @@ describe('RippleTransactions ', function() {
       from_amount: chanceFromAmount,
       from_currency: chanceFromCurrency,
       from_issuer: chanceFromIssuer,
-      invoice_id: chanceInvoiceId
+      invoice_id: chanceInvoiceId,
+      direction: 'to-ripple'
     }).then(function(transaction) {
         chai.assert.strictEqual(transaction.to_address_id, chanceToAddressId);
         chai.assert.strictEqual(transaction.from_address_id, chanceFromAddressId);
