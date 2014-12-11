@@ -3,6 +3,7 @@
   "version": "3.32.0",
   "scripts": {
     "start": "./bin/gateway start",
+    "pretest": "grunt jshint",
     "test": "NODE_ENV=test_in_memory ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js test/api/**/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
@@ -30,6 +31,7 @@
     "ejs": "",
     "express": "^4.8.3",
     "express-authorization": "0.1.1",
+    "flipper": "0.0.3",
     "forever": "",
     "gatewayd-admin": "1.9.1",
     "gatewayd-setup-wizard-plugin": "^2.0.5",
@@ -41,6 +43,7 @@
     "host-meta-plugin": "^0.1.5",
     "istanbul": "^0.3.2",
     "jbuilder": "",
+    "lodash": "^2.4.1",
     "mocha": "~1.14.0",
     "nconf": "~0.6",
     "node-uuid": "1.4.1",
@@ -62,8 +65,7 @@
     "underscore-node": "0.1.2",
     "validator": "^3.11.0",
     "winston": "^0.7.3",
-    "winston-loggly": "^1.0.1",
-    "lodash": "^2.4.1"
+    "winston-loggly": "^1.0.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
