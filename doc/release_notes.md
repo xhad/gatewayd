@@ -1,3 +1,37 @@
+### 12/3/2014
+
+### 3.32.0
+
+### Fixed Bugs:
+- Store memos and invoice_id when enqueuing outgoing payments
+- Issue with travis build and added coveralls and istanbul for coverage
+- Typo in externalAccount assocation
+- Circular dependency caused by requiring gatewayd
+- Deposits endpoint now validating that external_account_id points to valid externalAccount
+
+
+### Added Features
+- Associate ExternalAccounts to ExternalTransactions
+- Add properties `to_account_id` and `from_account_id`
+
+### 11/12/2014
+
+### 3.31.0
+
+### Fixed Bugs:
+- Config file overwriting file issues
+- Replaced database.example.json with database.json
+
+### Added Features
+- Support for memos and invoice_id fields
+- Mark unconfirmed payments pending
+- Associate ripple addresses and ripple transactions in database
+- Add direction to ripple transactions (to-ripple, from-ripple)
+- Add invoice_id to external transactions
+- Validate Ripple Address using validator
+- Commandline interface for seeding ripple records
+- Enabled sqlite in memory and sqlite persistent connectors
+
 ##11/05/2014
 
 ###3.30.1

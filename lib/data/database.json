@@ -1,0 +1,50 @@
+{
+  "test_in_memory": {
+    "driver": "sqlite3",
+    "dialect":"sqlite",
+    "database": "gatewayd_db_test",
+    "user": "gatewayd_user",
+    "password": "",
+    "logging": false
+  },
+  "test": {
+    "driver": "pg",
+    "dialect":"postgres",
+    "database": "gatewayd_db_test",
+    "user": "gatewayd_user",
+    "password": "",
+    "host": "localhost",
+    "port": "5432",
+    "logging": false
+  },
+  "development": {
+    "driver": "pg",
+    "dialect":"postgres",
+    "database": "gatewayd_db",
+    "user": "gatewayd_user",
+    "password": "password",
+    "host": "localhost",
+    "port": "5432",
+    "logging": false
+  },
+  "staging": {
+    "driver": "pg",
+    "dialect":"postgres",
+    "database": "",
+    "user": "",
+    "password": "",
+    "host": "",
+    "port": "",
+    "logging": false
+  },
+  "production": {
+    "driver": "pg",
+    "dialect":"postgres",
+    "database": "",
+    "user": "",
+    "password": "",
+    "host": "",
+    "port": "",
+    "logging": false
+  }
+}

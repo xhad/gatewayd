@@ -3,7 +3,6 @@ var gateway = require('../');
 var program = require('commander');
 const requireAll = require('require-all-to-camel');
 var cli = requireAll(__dirname+'/../lib/cli/');
-var logger = require('winston');
 var promptly = require('promptly');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
@@ -286,6 +285,11 @@ program
   .command('enqueue_outgoing_payment <address> <amount> <currency>')
   .description('run the setup wizard using the current configuration')
   .action(cli.enqueueOutgoingPayment);
+
+program
+  .command('db_ripple_tx_seed <how_many>')
+  .description('create x number of transaction records with random data')
+  .action(cli.dbRippleTxSeed);
 
 program.parse(process.argv);
 

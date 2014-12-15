@@ -1,5 +1,5 @@
 var SqlMqWorker = require('sql-mq-worker');
-var PolicyEngine = require(__dirname+'/../lib/core/policy_engine.js'/;
+var PolicyEngine = require(__dirname+'/../lib/core/policy_engine.js');
 var gatewayd = require(__dirname+'/../');
 var policyEngine = new PolicyEngine();
 

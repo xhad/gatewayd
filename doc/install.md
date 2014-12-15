@@ -17,6 +17,8 @@ All of these commands assume your are in the base of the cloned project director
 
 ### Install gatewayd's dependencies using NPM:
 
+The user installing gatewayd's dependencies should be root user, or have a super user grant access to your user to the .npm directory.
+
     sudo npm install --global pg grunt grunt-cli forever db-migrate jshint
     sudo npm install pm2 -g --unsafe-perm
     npm install --save
@@ -30,27 +32,51 @@ Create the postgres user for gatewayd:
 Create the database and grant the created user as owner:
 
     sudo psql -U postgres -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
+    
+Create the corresponding test database:
+    
+    sudo psql -U postgres -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8'"    
 
-### Add to the created postgres credentials config/config.json.
-
-    ...
-    {
-      "DATABASE_URL": "postgres://gatewayd_user:password@localhost:5432/gatewayd_db"
-    }
-    ...
-
-### Copy lib/data/database.example.json to lib/data/database.json and put your database configuration there. ( your DATABASE_URL )
-
-    ...
-    'development': {
-      'ENV': 'postgres://gatewayd_user:password@localhost:5432/gatewayd_db'
-    }
-    ...
-
-
+#### Make any environment specific database changes to lib/data/database.json (It should work by default if you followed the above instructions)
+ 
+     ...
+     "test": {
+         "dialect":"postgres",
+         "database": "gatewayd_db_test",
+         "user": "gatewayd_user",
+         "password": "",
+         "host": "localhost",
+         "port": "5432",
+         "logging": true
+       },
+       "development": {
+         "dialect":"postgres",
+         "database": "gatewayd_db",
+         "user": "gatewayd_user",
+         "password": "",
+         "host": "localhost",
+         "port": "5432",
+         "logging": true
+       },
+       "staging": {
+         "dialect":"postgres",
+         "database": "",
+         "user": "",
+         "password": "",
+         "host": "",
+         "port": "",
+         "logging": false
+       },
+     ...
+ 
 ### Use Grunt to configure the postgres database
 
-    grunt migrate
+     grunt migrate
+ 
+### Use Grunt to configure the test postgres database
+
+     export NODE_ENV=test
+     grunt migrate  
 
 ## Running gatewayd
 
@@ -60,4 +86,4 @@ The executable is located at bin/gateway:
 
 ## Configure gatewayd
 
-Once gatewayd is installed, [configure your gateway](https://dev.ripple.com/gatewayd.html#configuration) wallets and server
+Once gatewayd is installed, [configure your gateway](https://ripple.com/build/gatewayd/#configuration) wallets and server

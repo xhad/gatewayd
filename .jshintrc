@@ -18,7 +18,8 @@
   "sub": true,
   "-W004": true,
   "strict": false,
-
+  "esnext": true,
+  "predef": [ "-Promise" ],
   "globals": {
     "require": false,
     "module": false,
@@ -32,7 +33,8 @@
     "describe": false,
     "before": false,
     "after": false,
-    "setTimeout": false
+    "setTimeout": false,
+    "global": false
   }
 }
 

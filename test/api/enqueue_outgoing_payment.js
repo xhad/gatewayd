@@ -1,98 +1,58 @@
-var assert = require('assert');
-var gateway = require(__dirname+'/../../');
+process.env.NODE_ENV = 'test_in_memory';
+const gatewayd = require(__dirname+'/../../');
+const fixtures = require(__dirname+'/../fixtures/outgoing_payments.js');
 
-var firstPayment, secondPayment;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var enqueueOutgoingPayment = require(__dirname+'/../../lib/api/enqueue_outgoing_payment.js');
+var Promise = require('bluebird');
 
-describe('Enqueue Outgoing Payment', function() {
-  it('should accept an address, amount, and currency', function(done) {
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'ZMK',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
-    }, function(error, outgoingPayment) {
-      assert(!error);
-      assert(outgoingPayment.id > 0);
-      assert.strictEqual(outgoingPayment.to_amount, '0.01');
-      assert.strictEqual(outgoingPayment.to_currency, 'ZMK');
-      firstPayment = outgoingPayment;
+describe('enqueue_outgoing_payment', function() {
+
+  chai.use(chaiAsPromised);
+
+  beforeEach(function(done) {
+    gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });
 
-  it('should set the from_currency, from_amount', function(done) {
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'USD',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
-    }, function(error, outgoingPayment) {
-      assert(!error);
-      assert(outgoingPayment.id > 0);
-      assert(outgoingPayment.id != firstPayment.id);
-      assert(outgoingPayment.to_amount);
-      assert(outgoingPayment.to_currency);
-      assert(outgoingPayment.from_amount);
-      assert(outgoingPayment.from_currency);
-      done();
-    });
+  it('should successfully persist a record in the ripple_transaction table in the \'outgoing\' state', function() {
+    return enqueueOutgoingPayment(fixtures.requests.valid)
+      .then(function(rippleTransaction) {
+        chai.assert.strictEqual(rippleTransaction.to_amount, 0.01);
+        chai.assert.strictEqual(rippleTransaction.to_currency, 'ZMK');
+        chai.assert.strictEqual(rippleTransaction.to_issuer, gatewayd.config.get('COLD_WALLET'));
+        chai.assert.strictEqual(rippleTransaction.from_amount, 0.01);
+        chai.assert.strictEqual(rippleTransaction.from_currency, 'ZMK');
+        chai.assert.strictEqual(rippleTransaction.from_issuer, gatewayd.config.get('COLD_WALLET'));
+        chai.assert.strictEqual(rippleTransaction.state, 'outgoing');
+    }).error(function(error) {
+      throw new Error(JSON.stringify(error));
+    })
   });
 
-  it('should return an error from an invalid address', function(done) { 
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'ZMK',
-      address: '234343'
-    }, function(error, outgoingPayment) {
-      assert(error instanceof Error);
-      assert(error instanceof gateway.errors.enqueueOutgoingPaymentError);
-      assert.strictEqual(error.name, 'EnqueueOutgoingPaymentError');
-      assert.strictEqual(error.field, 'address');
-      assert.strictEqual(error.message, 'invalid ripple address');
-      assert(!outgoingPayment);
-      done();
-    });
+  it('should fail to validate because amount is not a float', function() {
+    return chai.assert.isRejected(enqueueOutgoingPayment(fixtures.requests.invalid_amount));
   });
 
-  it('should optionally accept a destinationTag', function(done) {
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'USD',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
-      destinationTag: 55431
-    }, function(error, outgoingPayment) {
-      gateway.data.models.rippleAddresses.find({ where: {
-        id: outgoingPayment.to_address_id
-      }}) 
-      .complete(function(error, address) {
-        assert.strictEqual(address.address, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
-        assert.strictEqual(address.tag, 55431);
-        done();
-      });
-    });
+  it('should fail to validate because currency is not valid', function() {
+    return chai.assert.isRejected(enqueueOutgoingPayment(fixtures.requests.invalid_currency));
+
   });
 
-  it('should default the issuer to the cold wallet', function(done) {
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'USD',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
-    }, function(error, outgoingPayment) {
-      assert.strictEqual(outgoingPayment.to_issuer, gateway.config.get('COLD_WALLET'));
-      assert.strictEqual(outgoingPayment.from_issuer, gateway.config.get('COLD_WALLET'));
-      done();
-    });
+  it('should fail to validate because address is not a valid ripple address', function() {
+    return chai.assert.isRejected(enqueueOutgoingPayment(fixtures.requests.invalid_address));
+
   });
 
-  it('should optionally accept an issuer', function(done) {
-    gateway.api.enqueueOutgoingPayment({
-      amount: '0.01',
-      currency: 'USD',
-      address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
-      issuer: 'rP5ShE8dGBH6hHtNvRESdMceen36XFBQmh'
-    }, function(error, outgoingPayment) {
-      assert.strictEqual(outgoingPayment.to_issuer, 'rP5ShE8dGBH6hHtNvRESdMceen36XFBQmh');
-      assert.strictEqual(outgoingPayment.from_issuer, 'rP5ShE8dGBH6hHtNvRESdMceen36XFBQmh');
-      done();
-    });
+  it('should fail to validate because destinationTag is not valid', function() {
+    return chai.assert.isRejected(enqueueOutgoingPayment(fixtures.requests.invalid_destination_tag));
+  });
+
+  it('should fail to validate because issuer is not a valid ripple address', function() {
+    return chai.assert.isRejected(enqueueOutgoingPayment(fixtures.requests.invalid_issuer_address));
+
   });
 });
 
