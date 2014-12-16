@@ -1,51 +1,55 @@
 var Promise = require('bluebird');
-var gatewayd = require(__dirname+'/../');
-
 Error.stackTraceLimit = Infinity;
 
-process.on('uncaughtException', function(error) {
-  gatewayd.logger.error('Caught exception: ' + error.stack);
+process.on('uncaughtException', function(err) {
+  gatewayd.logger.error('Caught exception: ' + err);
 });
 
-Promise.onPossiblyUnhandledRejection(function(error) {
-  gatewayd.logger.error('Caught exception: ' + error.stack);
+Promise.onPossiblyUnhandledRejection(function(err) {
+  gatewayd.logger.error('Caught exception: ' + err);
 });
 
-var Listener = require(__dirname+'/../lib/ripple_listener.js');
-var listener = new Listener();
-var IncomingPayment = require(__dirname+'/../lib/core/incoming_payment.js');
+var gatewayd                = require(__dirname+'/../');
+const RippleAccountMonitor  = require('ripple-account-monitor');
+const IncomingPayment       = require(__dirname+'/../lib/core/incoming_payment.js');
+const coldWallet            = gatewayd.config.get('COLD_WALLET');
+const rippleRestBaseUrl     = gatewayd.config.get('RIPPLE_REST_API');
 
-listener.onPayment = function(payment) {
-
-  var incomingPayment = new IncomingPayment(payment);
-  incomingPayment.processPayment()
-    .then(function(processedPayment){
-      gatewayd.logger.info('payment:incoming:recorded', JSON.stringify(processedPayment));
-    })
-    .error(function(error){
-      gatewayd.logger.error('payment:incoming:error', error);
-    });
-};
-
-gatewayd.api.getColdWallet(function(error, address) {
-  if (error) {
-    throw new Error(error);
-  }
-  if (!address) {
-    throw new Error('Ripple COLD_WALLET not set');
-  }
-  if (address.getLastPaymentHash()) {
-    const hash = address.getLastPaymentHash();
-    listener.start(hash);
-    logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
-  } else {
-    logger.info('LAST_PAYMENT_HASH not set... gatewayd is now fetching it from Ripple.');
-    address.fetchLastPaymentHash().then(function(hash) {
-      address.setLastPaymentHash(hash).then(function() {
-        listener.start(hash);
-        logger.info('Listening for incoming ripple payments from Ripple REST, starting at', hash);
+const monitor = new RippleAccountMonitor({
+  rippleRestUrl: rippleRestBaseUrl,
+  account: coldWallet,
+  onTransaction: function(transaction, next) {
+    gatewayd.api.setLastPaymentHash(transaction.hash)
+      .then(function(hash){
+        gatewayd.logger.info('payment:hash set to:', hash);
+        next();
+      })
+      .error(function(error) {
+        gatewayd.logger.error('payment:set last payment hash:error', error);
+        next();
       });
-    });
+  },
+  onPayment: function(paymentNotification, next) {
+    var incomingPayment = new IncomingPayment(paymentNotification);
+    incomingPayment.processPayment()
+      .then(function(processedPayment){
+        gatewayd.logger.info('payment:incoming:recorded', JSON.stringify(processedPayment));
+        next();
+      })
+      .error(function(error){
+        console.log(error);
+        gatewayd.logger.error('payment:incoming:error', error);
+        next();
+      });
+  },
+  onError: function(error) {
+    gatewayd.logger.error('RippleAccountMonitor::Error', error);
   }
 });
 
+gatewayd.api.getOrFetchLastPaymentHash()
+  .then(function(paymentHash){
+    monitor.lastHash = paymentHash;
+    monitor.start();
+    logger.info('Listening for incoming ripple payments from Ripple REST, starting at', monitor.lastHash);
+  });

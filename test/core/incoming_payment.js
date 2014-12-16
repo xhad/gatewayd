@@ -1,159 +1,131 @@
-process.env.NODE_ENV = 'test_in_memory';
-const chai = require('chai');
-const sinon = require('sinon');
-const gatewayd = require(__dirname+'/../../');
-const IncomingPayment = require(__dirname+'/../../lib/core/incoming_payment.js');
-var RippleTransactions = gatewayd.models.rippleTransactions;
-var fixtures = require(__dirname+'/../fixtures/incoming_payments.js');
+process.env.NODE_ENV          = 'test_in_memory';
+const chai                    = require('chai');
+const sinon                   = require('sinon');
+var gatewayd                  = require(__dirname+'/../../');
+const IncomingPayment         = require(__dirname+'/../../lib/core/incoming_payment.js');
+const RippleRestClient        = require('ripple-rest-client');
+const incomingPaymentFixtures = require(__dirname+'/../fixtures/incoming_payments.js');
+var RippleTransactions        = gatewayd.models.rippleTransactions;
 
 describe('Incoming Payment', function() {
 
-  before(function() {
+  var getPaymentSpy;
+  before(function(){
     var configStub = sinon.stub(gatewayd.config, 'get');
-    configStub.withArgs('COLD_WALLET').returns(fixtures.incoming_payments.valid.destination_account);
+    getPaymentSpy = sinon.spy();
+    configStub.withArgs('COLD_WALLET').returns(incomingPaymentFixtures.incoming_payments.valid.destination_account);
   });
 
   beforeEach(function(done) {
+    sinon.stub(RippleRestClient.prototype, 'getPayment')
+      .yields(null, incomingPaymentFixtures.incoming_payments.valid);
+
     gatewayd.database.sync({force: true}).then(function() {
       done();
     });
   });
 
-  it('should successfully record incoming payment with out a destination tag', function(done) {
-    var incomingPayment = new IncomingPayment(fixtures.incoming_payments.valid);
+  it('should successfully processes incoming payment', function(done) {
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
     incomingPayment.processPayment()
-      .then(function(processedPayment){
-        RippleTransactions
-          .find({
-            where: {
-              transaction_hash: incomingPayment.payment.hash
-            }
-          })
-          .then(function(rippleTransaction){
-            chai.assert(rippleTransaction);
-            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_hash, incomingPayment.payment.hash);
-            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_state, incomingPayment.payment.result);
-            done();
-          })
-          .error(function(error) {
-            done(new Error(JSON.stringify(error)));
-          });
-      })
-      .error(function(error) {
-        done(new Error(JSON.stringify(error)));
-      });
-  });
-
-  it('should successfully record incoming payment with a destination tag', function(done) {
-    var paymentWithDestinationTag = fixtures.incoming_payments.valid;
-    paymentWithDestinationTag.destination_tag = '123';
-
-    var incomingPayment = new IncomingPayment(paymentWithDestinationTag);
-    incomingPayment.processPayment()
-      .then(function(processedPayment){
-        RippleTransactions
-          .find({
-            where: {
-              transaction_hash: incomingPayment.payment.hash
-            }
-          })
-          .then(function(rippleTransaction){
-            chai.assert(rippleTransaction);
-            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_hash, incomingPayment.payment.hash);
-            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_state, incomingPayment.payment.result);
-            done();
-          })
-          .error(function(error) {
-            done(new Error(JSON.stringify(error)));
-          });
-      })
-      .error(function(error) {
-        done(new Error(JSON.stringify(error)));
-      });
-  });
-
-  it('should validate incoming payments -- tecPATH_DRY', function(done){
-    var invalidPayment = fixtures.incoming_payments.valid;
-    invalidPayment.result = 'tecPATH_DRY';
-
-    var incomingPayment = new IncomingPayment(fixtures.incoming_payments.valid);
-    incomingPayment._validatePayment()
       .then(function(){
+        RippleTransactions
+          .find({
+            where: {
+              transaction_hash: incomingPayment.payment.hash
+            }
+          })
+          .then(function(rippleTransaction){
+            chai.assert(rippleTransaction);
+            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_hash, incomingPayment.payment.hash);
+            chai.assert.strictEqual(rippleTransaction.dataValues.transaction_state, incomingPayment.payment.result);
+            done();
+          })
+          .error(function(error) {
+            done(error);
+          });
+      })
+      .error(function(error) {
+        done(error);
+      });
+  });
+
+  it('should get payment from notification', function(done){
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
+
+    RippleRestClient.prototype.getPayment(incomingPaymentFixtures.incoming_payments.valid, getPaymentSpy);
+
+    incomingPayment._getPayment()
+      .then(function(payment){
+        chai.assert(getPaymentSpy.called);
+        chai.assert.deepEqual(payment, incomingPaymentFixtures.incoming_payments.valid);
         done();
       })
-      .error(function(error){
-        chai.assert.strictEqual(error.message, 'NOTtesSUCCESS');
-        done();
+      .error(function(error) {
+        done(new Error(error));
       });
-
   });
 
   it('should prepare Incoming Payment', function(done){
-    var incomingPayment = new IncomingPayment(fixtures.incoming_payments.valid);
-    incomingPayment._prepareIncomingPayment()
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
+    incomingPayment._prepareIncomingPayment(incomingPaymentFixtures.incoming_payments.valid)
       .then(function(preparedPayment){
         chai.assert(preparedPayment.state, 'incoming');
         chai.assert(preparedPayment.transaction_state, 'tesSUCCESS');
         done();
       })
       .error(function(error){
-        done(new Error(JSON.stringify(error)));
+        done(new Error(error));
       });
   });
 
-  it('should record validated and prepared Incoming Payment', function(done){
-    var incomingPayment = new IncomingPayment(fixtures.incoming_payments.valid);
-
-    incomingPayment._recordIncomingPayment(fixtures.incoming_payments.to_record)
-      .then(function(recodedPayment){
-        chai.assert(recodedPayment.dataValues.transaction_hash, fixtures.incoming_payments.valid.hash);
-        chai.assert(recodedPayment.dataValues.transaction_state, fixtures.incoming_payments.valid.result);
+  it('should update last payment hash', function(done){
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
+    incomingPayment._updateLastPaymentHash(incomingPaymentFixtures.incoming_payments.recorded_payment)
+      .then(function(recordedPayment){
+        chai.assert(recordedPayment.dataValues.transaction_hash, incomingPaymentFixtures.incoming_payments.valid.hash);
         done();
       })
       .error(function(error){
-        done(new Error(JSON.stringify(error)));
+        done(new Error(error));
       });
   });
 
+  it('should validate incoming payments -- tecPATH_DRY', function(done){
 
-  it('should not persist incoming payment with a result of tecPATH_DRY', function(done) {
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
 
-    var paymentWithDestinationTag = fixtures.incoming_payments.valid;
-    paymentWithDestinationTag.result = 'tecPATH_DRY';
+    var tecPacthDryPayment = incomingPaymentFixtures.incoming_payments.valid;
+    tecPacthDryPayment.result = 'tecPATH_DRY';
+    incomingPayment.payment = tecPacthDryPayment;
 
-    var incomingPayment = new IncomingPayment(paymentWithDestinationTag);
-    incomingPayment.processPayment()
-      .then(function(processedPayment){
-        chai.assert(!processedPayment);
-        done();
-      })
+    incomingPayment._validatePayment(incomingPayment.payment)
       .error(function(error){
-        chai.assert(error);
         chai.assert.strictEqual(error.message, 'NOTtesSUCCESS');
         done();
       });
   });
 
+  it('should validate incoming payments -- account is not cold wallet', function(done) {
 
-  it('should not persist incoming payment with a result where the destination account is not the cold wallet', function(done) {
+    var incomingPayment = new IncomingPayment(incomingPaymentFixtures.incoming_payments.notification);
 
-    var paymentWithDestinationTag = fixtures.incoming_payments.valid;
-    paymentWithDestinationTag.destination_account = 'r123';
+    var invalidPayment = incomingPaymentFixtures.incoming_payments.valid;
+    invalidPayment.destination_account = 'r123';
+    incomingPayment.payment = invalidPayment;
 
-    var incomingPayment = new IncomingPayment(paymentWithDestinationTag);
-    incomingPayment.processPayment()
-      .then(function(processedPayment){
-        chai.assert(!processedPayment);
-      })
+    incomingPayment._validatePayment(incomingPayment.payment)
       .error(function(error){
-        chai.assert(error);
         chai.assert.strictEqual(error.message, 'NotColdWallet');
         done();
       });
   });
 
-  after(function() {
+  after(function(){
     gatewayd.config.get.restore();
   });
 
+  afterEach(function() {
+    RippleRestClient.prototype.getPayment.restore();
+  });
 });
