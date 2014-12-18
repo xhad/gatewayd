@@ -27,15 +27,15 @@ The user installing gatewayd's dependencies should be root user, or have a super
 
 Create the postgres user for gatewayd:
 
-    sudo psql -U postgres -c "create user gatewayd_user with password 'password'"
+    sudo -U postgres psql -c "create user gatewayd_user with password 'password'"
 
 Create the database and grant the created user as owner:
 
-    sudo psql -U postgres -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
+    sudo -U postgres psql -c "create database gatewayd_db with owner gatewayd_user encoding='utf8'"
     
 Create the corresponding test database:
     
-    sudo psql -U postgres -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8'"    
+    sudo -U postgres psql -c "create database gatewayd_db_test with owner gatewayd_user encoding='utf8'"    
 
 #### Make any environment specific database changes to lib/data/database.json (It should work by default if you followed the above instructions)
  
