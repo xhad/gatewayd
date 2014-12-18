@@ -20,3 +20,5 @@ for (var i in initializers) {
 
 require(__dirname+'/Gatewaydfile')(exports);
 
+exports.Application = require(__dirname+'/lib/application')(exports);
+
