@@ -67,7 +67,7 @@
     "validator": "^3.11.0",
     "winston": "^0.7.3",
     "winston-loggly": "^1.0.1",
-    "winston-raygun": "0.0.3"
+    "winston-raygun": "0.0.6"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",
