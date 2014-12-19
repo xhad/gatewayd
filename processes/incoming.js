@@ -44,7 +44,10 @@ function start(gatewayd) {
     .then(function(paymentHash){
       monitor.lastHash = paymentHash;
       monitor.start();
-      gatewayd.logger.info('Listening for incoming ripple payments from Ripple REST, starting at', monitor.lastHash);
+      gatewayd.logger.info('Listening for incoming ripple payments starting at', monitor.lastHash);
+    })
+    .error(function(error) {
+      gatewayd.logger.fatal(error);
     });
 }
 
