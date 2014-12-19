@@ -4,7 +4,8 @@
   "scripts": {
     "start": "./bin/gateway start",
     "test": "NODE_ENV=test_in_memory ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js test/api/**/*.js",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "build": "grunt jshint"
   },
   "repository": {
     "type": "git",
@@ -54,9 +55,9 @@
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
     "ripple-account-monitor": "^2.2.0",
-    "ripple-lib": "",
+    "ripple-lib": "^0.9.4",
     "ripple-rest-client": "1.11.0",
-    "ripple-wallet": "1.0.0",
+    "ripple-wallet-generator": "^1.0.1",
     "sequelize": "^1.7.0",
     "sinon": "^1.12.1",
     "sql-mq-worker": "^1.0.3",
