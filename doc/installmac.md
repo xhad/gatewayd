@@ -83,7 +83,7 @@ The executable is located at bin/gateway:
 
 ## Configure gatewayd
 
-Once gatewayd is installed, [configure your gateway](./setup.md) wallets and server
+Once gatewayd is installed, [configure your gateway](https://ripple.com/build/gatewayd/#setting-up-wallets-for-gatewayd) wallets and server
 
 ### [Postgres basics](http://jazstudios.blogspot.com/2010/06/postgresql-login-commands.html)
 
