@@ -35,5 +35,18 @@ module.exports = {
   minimalExternalTransaction: {
     external_account_id: 2,
     deposit: true
+  },
+
+  rippleTransaction: {
+    to_address_id: 1,
+    from_address_id: 2,
+    to_amount: 5,
+    to_currency: 'USD',
+    to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+    from_amount: 6,
+    from_currency: 'USD',
+    from_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+    invoice_id: '',
+    direction: 'from-ripple'
   }
 };
