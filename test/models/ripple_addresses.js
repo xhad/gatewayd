@@ -40,6 +40,23 @@ describe('ripple_addresses model', function() {
     });
   });
 
+  it('should be able to set a big integer as tag', function(done) {
+    var bigTag = 4294967290;
+    gatewayd.api.generateWallet(function(error, wallet) {
+      RippleAddress.findOrCreate({
+        type: 'hosted',
+        managed: true,
+        address: wallet.address,
+        tag: bigTag
+      })
+      .then(function(rippleAddress) {
+        console.log(rippleAddress.toJSON());
+        assert.strictEqual(rippleAddress.tag, bigTag);
+        done();
+      });
+    });
+  });
+
   after(function(done) {
     rippleAddress.destroy().then(done);
   });
