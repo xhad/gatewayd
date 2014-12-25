@@ -12,6 +12,10 @@ exports.processes = require(__dirname+'/lib/processes/');
 exports.logger = require(__dirname+'/lib/data/logs.js');
 exports.features = require(__dirname+'/lib/features');
 
+if (exports.features.isEnabled('bridge-payments')) {
+  exports.protocol = require(__dirname+'/lib/protocol');
+}
+
 var initializers = requireAll(__dirname+'/config/initializers/');
 
 for (var i in initializers) {
