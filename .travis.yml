@@ -15,6 +15,9 @@ before_script:
   - export NODE_ENV=test
   - grunt migrate
   - grunt jshint
+  - bin/gateway get_key
+  - bin/gateway set_cold_wallet r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk
+  - bin/gateway set_hot_wallet rp4HXbYuh8WRHunmhiK9Wvpmw6AZRYNba7 shMSLEHQVFx9L1Gy2GHyMJty2vnPr
 script:
   - npm test
 after_success:

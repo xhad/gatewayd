@@ -1,28 +1,24 @@
-var request = require('supertest');
-var app = require(__dirname+'/../../lib/app.js');
-var gateway = require(__dirname+'/../../');
+var assert    = require('assert');
+var supertest = require('supertest');
+var gatewayd  = require(__dirname+'/../../');
 
 describe('set hot wallet', function(){
 
-  it('should return unauthorized without credentials', function(done){
-    request(app)
-      .post('/v1/config/wallets/hot')
-      .expect(401)
-      .end(function(err){
-        if (err) throw err;
-        done();
-      });
+  before(function() {
+    http = supertest(gatewayd.server);
   });
 
-  it('should return successfully with credentials', function(done){
-    request(app)
+  it('should set the hot wallet in config and databse', function(done){
+    http
       .post('/v1/config/wallets/hot')
-      .set('Accept', 'application/json')
-      .send({ address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr', secret: 'ssuBBapjuJ2hE5wto254aNWERa8VV' })
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth(undefined, gatewayd.config.get('KEY'))
+      .send({
+        address: 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr',
+        secret: 'ssuBBapjuJ2hE5wto254aNWERa8VV'
+      })
       .expect(200)
-      .end(function(err){
-        if (err) throw err;
+      .end(function(error, response){
+        assert.strictEqual(response.body.HOT_WALLET.address, 'rscJF4TWS2jBe43MvUomTtCcyrbtTRMSNr');
         done();
       });
   });

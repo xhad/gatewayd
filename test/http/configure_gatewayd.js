@@ -17,7 +17,7 @@ describe('Configure gatewayd', function() {
 
   it('should successfully save configuration -- v1/config', function(done) {
     configureGatewaydSet.resolves({ notifications_url: 'https://ripple.com' });
-    request(app)
+    http
       .post('/v1/config')
       .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .expect(200)
@@ -29,7 +29,7 @@ describe('Configure gatewayd', function() {
   });
 
   it('should ignore non-whitelisted save configuration -- v1/config', function(done) {
-    request(app)
+    http
       .post('/v1/config')
       .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .expect(200)
@@ -43,7 +43,7 @@ describe('Configure gatewayd', function() {
 
   it('should respond with error -- missing config object', function(done) {
     configureGatewaydSet.rejects(new Error('ConfigurationParametersMissing'));
-    request(app)
+    http
       .post('/v1/config')
       .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .expect(400)

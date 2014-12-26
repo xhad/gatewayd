@@ -23,7 +23,7 @@ nconf.defaults({
   'DOMAIN': 'example.com', // Domain of gateway, for ripple.txt and auth
   'HOT_WALLET': { address: false, secret: false }, // Required
   'COLD_WALLET': null, // Required
-  'CURRENCIES': null, // Required
+  'CURRENCIES': [], // Required
   'WITHDRAWAL_FEE': 0.01, // Required - default 1%
   'DEPOSIT_FEE': 0.01, // Required - default 1%
   'LOGGLY': false,

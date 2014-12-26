@@ -1,29 +1,22 @@
-var request = require('supertest');
-var app = require(__dirname+'/../../lib/app.js');
-var gateway = require(__dirname+'/../../');
+var supertest = require('supertest');
+var gatewayd  = require(__dirname+'/../../');
+var assert    = require('assert');
 
 describe('set domain', function(){
 
-  it('should return unauthorized without credentials', function(done){
-    request(app)
-      .post('/v1/config/domain')
-      .expect(401)
-      .end(function(err){
-        if (err) throw err;
-        done();
-      });
+  before(function() {
+    http = supertest(gatewayd.server);
   });
 
   it('should return successfully with credentials', function(done){
-    request(app)
+    http
       .post('/v1/config/domain')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .expect(200)
       .end(function(err){
         if (err) throw err;
         done();
       });
   });
-
 });
 

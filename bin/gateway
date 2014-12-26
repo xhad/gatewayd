@@ -3,7 +3,6 @@ var gateway = require('../');
 var program = require('commander');
 const requireAll = require('require-all-to-camel');
 var cli = requireAll(__dirname+'/../lib/cli/');
-var promptly = require('promptly');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 
@@ -30,17 +29,6 @@ program
   .command('clear_withdrawal <external_transaction_id>')
   .description('clear pending withdrawal to external account')
   .action(cli.clearWithdrawal);
-
-program
-  .command('fund_hot_wallet <amount> <currency>')
-  .description('issue funds from cold wallet to hot wallet') 
-  .action(function(amount, currency) {
-    promptly.password('Cold wallet secret: ', function(err, secret) {
-      if (!err) {
-        cli.fundHotWallet(amount, currency, secret);
-      }
-    });
-  });
 
 program
   .command('record_deposit <amount> <currency> <external_account_id>')
@@ -190,21 +178,6 @@ program
   .command('get_key')
   .description('get the admin api key')
   .action(cli.getKey);
-
-program
-  .command('list_currencies')
-  .description('List all currencies supported by the gateway')
-  .action(cli.listCurrencies);
-
-program
-  .command('add_currency <currency> <amount>')
-  .description('add support for a currency and trustline amount')
-  .action(cli.addCurrency);
-
-program
-  .command('remove_currency <currency>')
-  .description('remove support for a currency')
-  .action(cli.removeCurrency);
 
 program
   .command('set_trust <currency> <amount>')

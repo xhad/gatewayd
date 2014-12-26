@@ -23,7 +23,6 @@ describe('CRUD Policies', function(){
       .end(function(error, response){
         assert(response.body.success);
         assert(response.body.polcies);
-        console.log(response.body.policies);
         done();
       });
   });

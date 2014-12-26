@@ -23,7 +23,6 @@ describe('CRUD ExternalTransactions', function(){
       .end(function(error, response){
         assert(response.body.success);
         assert(response.body.external_transactions);
-        console.log(response.body.external_transactions);
         done();
       });
   });

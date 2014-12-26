@@ -39,5 +39,4 @@ describe('Loading features from a file', function() {
 
 });
 
-console.log(gatewayd.features.allFeatures());
 
