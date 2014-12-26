@@ -58,26 +58,6 @@ program
   .action(cli.listOutgoingPayments);
 
 program
-  .command('list_users')
-  .description('list registered users')
-  .action(cli.listUsers);
-
-program
-  .command('list_user_external_accounts <userId>')
-  .description('list external accounts for a user')
-  .action(cli.listUserExternalAccounts);
-
-program
-  .command('add_external_account <name> <userId>')
-  .description('add an external account to a user')
-  .action(cli.addExternalAccount);
-
-program
-  .command('register_user <username> <password> <ripple_address>')
-  .description('create a user with a ripple address')
-  .action(cli.registerUser);
-
-program
   .command('start') 
   .description('start the gateway processes')
   .action(cli.startGateway);
@@ -255,16 +235,6 @@ program
   .command('list_processes')
   .description('list the processes currently run by ripple-gateway')
   .action(cli.listProcesses);
-
-program
-  .command('activate_user')
-  .description('enable a user to use the ripple gateway')
-  .action(cli.activateUser);
-
-program
-  .command('deactivate_user <userId>')
-  .description('disable a user from using the ripple gateway')
-  .action(cli.deactivateUser);
 
 program
   .command('list_failed_payments')
