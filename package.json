@@ -1,10 +1,11 @@
 {
   "name": "gatewayd",
-  "version": "3.32.0",
+  "version": "3.33.0",
   "scripts": {
     "start": "./bin/gateway start",
-    "test": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "test": "NODE_ENV=test_in_memory ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js test/api/**/*.js test/utils/**/*.js",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "lint": "grunt jshint"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
     "bluebird": "^0.11.6",
     "body-parser": "^1.6.3",
     "bridge-payments-plugin": "^0.1.2",
+    "bridge-quote-service-client": "^0.1.4",
     "chai": "^1.9.2",
     "chai-as-promised": "^4.1.1",
     "chance": "^0.6.1",
@@ -27,9 +29,11 @@
     "cors": "^2.4.1",
     "coveralls": "^2.11.2",
     "db-migrate": "^0.6.4",
+    "domain-supervisor": "^0.3.0",
     "ejs": "",
     "express": "^4.8.3",
     "express-authorization": "0.1.1",
+    "flipper": "0.0.3",
     "forever": "",
     "gatewayd-admin": "1.9.1",
     "gatewayd-setup-wizard-plugin": "^2.0.5",
@@ -41,6 +45,7 @@
     "host-meta-plugin": "^0.1.5",
     "istanbul": "^0.3.2",
     "jbuilder": "",
+    "lodash": "^2.4.1",
     "mocha": "~1.14.0",
     "nconf": "~0.6",
     "node-uuid": "1.4.1",
@@ -50,11 +55,12 @@
     "request": "",
     "require-all": "",
     "require-all-to-camel": "^1.0.0",
+    "ripple-account-monitor": "^2.2.0",
     "ripple-lib": "",
-    "ripple-rest-client": "1.11.0",
+    "ripple-rest-client": "^1.11.0",
     "ripple-wallet": "1.0.0",
     "sequelize": "^1.7.0",
-    "sinon": "^1.9.1",
+    "sinon": "^1.12.1",
     "sql-mq-worker": "^1.0.3",
     "sqlite3": "^3.0.2",
     "superagent": "^0.18.0",
@@ -62,7 +68,8 @@
     "underscore-node": "0.1.2",
     "validator": "^3.11.0",
     "winston": "^0.7.3",
-    "winston-loggly": "^1.0.1"
+    "winston-loggly": "^1.0.1",
+    "winston-raygun": "0.0.6"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "^0.10.0",

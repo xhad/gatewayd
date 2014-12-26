@@ -1,3 +1,20 @@
+### 12/25/2014
+
+### 3.33.0
+
+### AddedFeatures:
+- Enable XRP Payments by removing requirement for issuer
+- Ripple REST error handler class
+- Ripple Account Monitor replaces old ripple listener
+- Aggregate liabilities by currency
+- Enable optional features behind feature flag
+- [FEATURE FLAG] Run all gatewayd processes in single Node.js/system process
+- [FEATURE FLAG] Support Raygun for error reporting optionally
+- auto-generate invoice id if empty
+- Add HTTP Response handler from ripple rest
+- Paginate Ripple Transactions results
+- Include toAccount and fromAccount assocations in External Transactions
+
 ### 12/3/2014
 
 ### 3.32.0

@@ -1,29 +1,56 @@
-var gateway = require(__dirname+'/../../');
-var assert = require('assert');
+var gatewayd          = require(__dirname+'/../../');
+var assert            = require('assert');
+var RippleRestClient  = require('ripple-rest-client');
+var sinon             = require('sinon');
+const walletsFixture  = require(__dirname+'/../fixtures/wallets.js');
 
 describe('Set trust lines', function(){
-  it('should set a line of trust from the gateway hot wallet to the gateway cold wallet', function(done){
-    this.timeout(5000);
-    var amount = 100;
-    var currency = 'TIT';
 
-    gateway.api.setTrustLine(currency, amount, function(error, response){
+  before(function(){
+    var configStub = sinon.stub(gatewayd.config, 'get');
+    configStub.withArgs('HOT_WALLET').returns(walletsFixture.HOT_WALLET);
+  });
+
+  it('should set a line of trust from the gateway hot wallet to the gateway cold wallet', function(done){
+    var amount    = 100;
+    var currency  = 'POP';
+
+    var rippleRestStub = sinon.stub(RippleRestClient.prototype, 'setTrustLines');
+    rippleRestStub.yields(null, {account: walletsFixture.HOT_WALLET.address, counterparty: walletsFixture.COLD_WALLET, limit: amount, currency: currency});
+    gatewayd.api.setTrustLine({currency: currency, amount: amount}, function(error, response){
+      if (error) {
+        done(error);
+      }
       assert.strictEqual(error, null);
-      assert.strictEqual(response.account, gateway.config.get('HOT_WALLET').address);
-      assert.strictEqual(response.counterparty, gateway.config.get('COLD_WALLET'));
-      assert.strictEqual(response.limit, amount.toString());
+      assert.strictEqual(response.account, walletsFixture.HOT_WALLET.address);
+      assert.strictEqual(response.counterparty, walletsFixture.COLD_WALLET);
+      assert.strictEqual(response.limit, amount);
       assert.strictEqual(response.currency, currency);
+      rippleRestStub.restore();
       done();
     });
   });
 
   it('should fail due to missing amount', function(done){
-    var amount = 100;
-    var currency = '';
+    var amount    = 100;
+    var currency  = '';
 
-    gateway.api.setTrustLine(currency, amount, function(error, response) {
-      assert.strictEqual(response, undefined);
+    var rippleRestStub = sinon.stub(RippleRestClient.prototype, 'setTrustLines');
+    rippleRestStub.yields({success: false, error: 'Parameter missing: trustline.currency', error_type: 'invalid_request'}, null);
+
+    gatewayd.api.setTrustLine({currency: currency, amount: amount}, function(error, response) {
+      assert(error);
+      assert(!response);
+      assert.strictEqual(error.success, false);
+      assert.strictEqual(error.error, 'Parameter missing: trustline.currency');
+      assert.strictEqual(error.error_type, 'invalid_request');
+      rippleRestStub.restore();
       done();
     });
   });
+
+  after(function(){
+    gatewayd.config.get.restore();
+  });
+
 });

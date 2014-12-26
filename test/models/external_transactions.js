@@ -3,7 +3,11 @@ const gatewayd = require(__dirname+'/../../');
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
+var fixtures = require(__dirname+'/../fixtures/transactions');
 var ExternalTransactions = gatewayd.models.externalTransactions;
+
+var fixtureExternalTransaction = fixtures.externalTransaction;
+var fixtureMinimalTransaction = fixtures.minimalExternalTransaction;
 
 describe('external_transactions model', function() {
   chai.use(chaiAsPromised);
@@ -15,40 +19,33 @@ describe('external_transactions model', function() {
   });
 
   it('should successfully persist a external_transaction record', function() {
-    return ExternalTransactions.create({
-      external_account_id: 1,
-      amount: 5,
-      currency: 'USD',
-      invoice_id: '12345',
-      deposit: true
+    return ExternalTransactions.create(fixtureExternalTransaction).then(function(transaction) {
+      return ExternalTransactions.find(transaction.id);
     }).then(function(transaction) {
-        chai.assert.strictEqual(transaction.external_account_id, 1);
-        chai.assert.strictEqual(transaction.amount, 5);
-        chai.assert.strictEqual(transaction.currency, 'USD');
-        chai.assert.strictEqual(transaction.invoice_id, '12345');
+      chai.assert.strictEqual(transaction.external_account_id, fixtureExternalTransaction.external_account_id);
+      chai.assert.strictEqual(transaction.source_amount, fixtureExternalTransaction.source_amount);
+      chai.assert.strictEqual(transaction.source_currency, fixtureExternalTransaction.source_currency);
+      chai.assert.strictEqual(transaction.source_account_id, fixtureExternalTransaction.source_account_id);
+      chai.assert.strictEqual(transaction.destination_amount, fixtureExternalTransaction.destination_amount);
+      chai.assert.strictEqual(transaction.destination_currency, fixtureExternalTransaction.destination_currency);
+      chai.assert.strictEqual(transaction.destination_account_id, fixtureExternalTransaction.destination_account_id);
+      chai.assert.strictEqual(transaction.amount, fixtureExternalTransaction.amount);
+      chai.assert.strictEqual(transaction.currency, fixtureExternalTransaction.currency);
+      chai.assert.strictEqual(transaction.invoice_id, fixtureExternalTransaction.invoice_id);
+      chai.assert.strictEqual(transaction.memos, fixtureExternalTransaction.memos);
     }).error(function(error) {
-        throw new Error(JSON.stringify(error));
-    })
+      throw new Error(JSON.stringify(error));
+    });
   });
 
-  it('create should be rejected if amount is missing', function() {
-    return chai.assert.isRejected(ExternalTransactions.create({
-      external_account_id: 2,
-      currency: 'USD',
-      deposit: true
-    }, {
-      to_address_id: [ 'Validation notNull failed: amount' ]
-    }))
-  });
-
-  it('create should be rejected if currency is missing', function() {
-    return chai.assert.isRejected(ExternalTransactions.create({
-      external_account_id: 2,
-      amount: 5,
-      deposit: true
-    }, {
-      to_address_id: [ 'Validation notNull failed: currency' ]
-    }));
+  it('should successfully persist if amount and currency are missing', function() {
+    return ExternalTransactions.create(fixtureMinimalTransaction).then(function(transaction) {
+      return ExternalTransactions.find(transaction.id);
+    }).then(function(transaction) {
+      chai.assert.strictEqual(transaction.external_account_id, fixtureMinimalTransaction.external_account_id);
+    }).error(function(error) {
+      throw new Error(JSON.stringify(error));
+    });
   });
 
 });

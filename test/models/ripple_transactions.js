@@ -1,10 +1,9 @@
-process.env.NODE_ENV = 'test_in_memory';
-const gatewayd = require(__dirname+'/../../');
-
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-var RippleTransactions = gatewayd.models.rippleTransactions;
-
+process.env.NODE_ENV            = 'test_in_memory';
+const gatewayd                  = require(__dirname+'/../../');
+var chai                        = require('chai');
+var chaiAsPromised              = require('chai-as-promised');
+var RippleTransactions          = gatewayd.models.rippleTransactions;
+const rippleTransactionFixtures = require(__dirname+'/../fixtures/transactions');
 describe('ripple_transactions model', function() {
 
   chai.use(chaiAsPromised);
@@ -264,6 +263,15 @@ describe('ripple_transactions model', function() {
       chai.assert(transaction.id);
       done();
     });
+  });
+
+  it('should auto-generate invoice_id if not provided', function(done) {
+    return RippleTransactions.create(rippleTransactionFixtures.rippleTransaction)
+      .then(function(transaction) {
+        chai.assert(transaction.invoice_id);
+        chai.assert(gatewayd.validator.isValidHash(transaction.invoice_id));
+        done();
+      });
   });
 
   it('create should be rejected if invoice_id is not a valid SHA-256 hash', function() {
