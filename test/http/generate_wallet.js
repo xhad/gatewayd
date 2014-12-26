@@ -1,28 +1,21 @@
-var request = require('supertest');
-var app = require(__dirname+'/../../lib/app.js');
-var gateway = require(__dirname+'/../../');
+var assert    = require('assert');
+var supertest = require('supertest');
+var gatewayd  = require(__dirname+'/../../');
 
 describe('generate wallet', function(){
-  it('should return unauthorized without credentials', function(done){
-    request(app)
-      .post('/v1/wallets/generate')
-      .expect(401)
-      .end(function(err){
-        if (err) throw err;
-        done();
-      });
+
+  before(function() {
+    http = supertest(gatewayd.server);
   });
 
-  it('should return successfully with credentials', function(done){
-    request(app)
+  it('should return a newly generated wallet', function(done){
+    http
       .post('/v1/wallets/generate')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
       .expect(200)
-      .end(function(err){
-        if (err) throw err;
+      .end(function(error, response){
+        assert(gatewayd.validator.isRippleAddress(response.body.wallet.address));
         done();
       });
   });
-
 });
 
