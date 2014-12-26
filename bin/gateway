@@ -181,21 +181,6 @@ program
   .action(cli.getKey);
 
 program
-  .command('list_currencies')
-  .description('List all currencies supported by the gateway')
-  .action(cli.listCurrencies);
-
-program
-  .command('add_currency <currency> <amount>')
-  .description('add support for a currency and trustline amount')
-  .action(cli.addCurrency);
-
-program
-  .command('remove_currency <currency>')
-  .description('remove support for a currency')
-  .action(cli.removeCurrency);
-
-program
   .command('set_trust <currency> <amount>')
   .description('set level of trust from hot to cold wallet') 
   .action(cli.setTrustLine);
