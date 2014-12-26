@@ -1,18 +1,18 @@
 var assert = require('assert');
 var http = require('supertest');
-var gateway = require(__dirname+'/../../');
+var gatewayd = require(__dirname+'/../../');
 var expressApp = require(__dirname+'/../../lib/app.js'); 
 
 describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
 
   before(function() {
-    gateway.config.set('BASIC_AUTH', false);
+    gatewayd.config.set('BASIC_AUTH', false);
   })
 
   it('POST /payments/outgoing should enque an outgoing payment', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
         currency: 'XAU',
@@ -27,8 +27,8 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
         assert.strictEqual(response.body.payment.state, 'outgoing');
         assert.strictEqual(response.body.payment.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
         assert.strictEqual(response.body.payment.from_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
-        assert.strictEqual(response.body.payment.to_amount, '1.5');
-        assert.strictEqual(response.body.payment.from_amount, '1.5');
+        assert.strictEqual(response.body.payment.to_amount, 1.5);
+        assert.strictEqual(response.body.payment.from_amount, 1.5);
         assert.strictEqual(response.body.payment.to_currency, 'XAU');
         assert.strictEqual(response.body.payment.from_currency, 'XAU');
         assert.strictEqual(response.body.success, true);
@@ -39,7 +39,7 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
   it('should report an invalid ripple address', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: '1235343',
         currency: 'XAU',
@@ -57,7 +57,7 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
   it('should report an invalid issuer', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
         currency: 'XAU',
@@ -76,7 +76,7 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
   it('should report an invalid destination tag', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
         currency: 'XAU',
@@ -95,7 +95,7 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
   it('should report an invalid amount', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
         currency: 'XAU',
@@ -113,7 +113,7 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
   it('should report an invalid currency', function(done) {
     http(expressApp)
       .post('/v1/payments/outgoing')
-      .auth('admin@'+gateway.config.get('DOMAIN'), gateway.config.get('KEY'))
+      .auth('admin@'+gatewayd.config.get('DOMAIN'), gatewayd.config.get('KEY'))
       .send({
         address: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
         currency: '',

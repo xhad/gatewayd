@@ -28,7 +28,6 @@ describe('gateway_transactions model', function() {
       assert.strictEqual(transaction.policy_id, 789);
       done();
     })
-    .error(console.log);
   });
 
   it('should accept a state', function(done) {
@@ -46,7 +45,6 @@ describe('gateway_transactions model', function() {
           done();
         });
     })
-    .error(console.log);
   });
 
   it('should fail to save without a ripple transaction id', function(done) {

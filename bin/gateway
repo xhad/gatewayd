@@ -3,7 +3,6 @@ var gateway = require('../');
 var program = require('commander');
 const requireAll = require('require-all-to-camel');
 var cli = requireAll(__dirname+'/../lib/cli/');
-var promptly = require('promptly');
 
 process.env.DATABASE_URL = gateway.config.get('DATABASE_URL');
 

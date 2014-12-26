@@ -23,7 +23,6 @@ describe('CRUD RippleAddresses', function(){
       .end(function(error, response){
         assert(response.body.success);
         assert(response.body.ripple_addresses);
-        console.log(response.body.ripple_addresses);
         done();
       });
   });

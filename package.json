@@ -3,7 +3,7 @@
   "version": "3.32.0",
   "scripts": {
     "start": "./bin/gateway start",
-    "test": "NODE_ENV=test_in_memory ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js test/api/**/*.js test/utils/**/*.js",
+    "test": "NODE_ENV=test_in_memory npm run lint && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --ui tdd --reporter spec --timeout 10000 --slow 500 test/models/**/*.js test/api/**/*.js test/utils/**/*.js test/http/*.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "grunt jshint"
   },
@@ -61,6 +61,7 @@
     "ripple-wallet": "1.0.0",
     "sequelize": "^1.7.0",
     "sinon": "^1.12.1",
+    "sinon-as-promised": "^2.0.3",
     "sql-mq-worker": "^1.0.3",
     "sqlite3": "^3.0.2",
     "superagent": "^0.18.0",

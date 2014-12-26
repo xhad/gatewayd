@@ -11,6 +11,7 @@ describe('generate wallet', function(){
   it('should return a newly generated wallet', function(done){
     http
       .post('/v1/wallets/generate')
+      .auth(undefined, gatewayd.config.get('KEY'))
       .expect(200)
       .end(function(error, response){
         assert(gatewayd.validator.isRippleAddress(response.body.wallet.address));

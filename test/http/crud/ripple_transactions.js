@@ -23,7 +23,6 @@ describe('CRUD RippleTransactions', function(){
       .end(function(error, response){
         assert(response.body.success);
         assert(response.body.ripple_transactions);
-        console.log(response.body.ripple_transactions);
         done();
       });
   });

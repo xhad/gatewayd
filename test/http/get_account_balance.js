@@ -13,7 +13,6 @@ describe('get hot wallet balance', function(){
       .get('/v1/balances')
       .expect(200)
       .end(function(error, response){
-        console.log(response.body);
         done();
       });
   });

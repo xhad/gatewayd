@@ -1,38 +1,36 @@
-var request = require('supertest');
-var app = require(__dirname+'/../../../lib/app.js');
-var gatewayd = require(__dirname+'/../../../');
-var assert = require('assert');
-var crypto = require('crypto');
+var supertest = require('supertest');
+var gatewayd  = require(__dirname+'/../../../');
+var assert    = require('assert');
+var crypto    = require('crypto');
 
 var random = function(){ return crypto.randomBytes(16).toString('hex'); };
-
-var auth = {
-  name: 'admin@'+gatewayd.config.get('DOMAIN'),
-  key: gatewayd.config.get('KEY')
-}
 
 var externalAccountCreatedId;
 
 describe('CRUD ExternalAccounts', function(){
 
+  before(function() {
+    http = supertest(gatewayd.server);
+  });
+
   it('should list externalAccounts', function(done){
-    request(app)
+    http
       .get('/v1/external_accounts')
-      .auth(auth.name, auth.key)
       .expect(200)
       .end(function(error, response){
         assert(response.body.success);
         assert(response.body.external_accounts);
-        console.log(response.body.external_accounts);
         done();
       });
   });
 
   it('should create a externalAccount', function(done){
-    request(app)
+    http
       .post('/v1/external_accounts')
-      .send()
-      .auth(auth.user, auth.key)
+      .send({
+        address: random()+'@stevenzeiler.com',
+        type: 'coinbase'
+      })
       .expect(200)
       .end(function(error, response){
         assert(response.body.success); 
@@ -43,10 +41,9 @@ describe('CRUD ExternalAccounts', function(){
   });
 
   it.skip('should update a externalAccount', function(done) {
-    request(app)
+    http
       .put('/v1/external_accounts/'+externalAccountCreated.id)
       .send()
-      .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response) {
         done();
@@ -54,9 +51,8 @@ describe('CRUD ExternalAccounts', function(){
   });
 
   it.skip('should show a single externalAccount', function(done) {
-    request(app)
+    http
       .get('/v1/external_accounts/'+externalAccountCreated.id)
-      .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response) {
         done();
@@ -64,9 +60,8 @@ describe('CRUD ExternalAccounts', function(){
   });
 
   it.skip('should delete a externalAccount', function(done) {
-    request(app)
+    http
       .delete('/v1/external_accounts/'+externalAccountCreated.id)
-      .auth(auth.user, auth.key)
       .expect(200)
       .end(function(error, response) {
         done();
