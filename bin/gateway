@@ -229,7 +229,7 @@ program
 program
   .command('set_trust <currency> <amount>')
   .description('set level of trust from hot to cold wallet') 
-  .action(cli.setTrustLine);
+  .action(cli.setTrust);
 
 program
   .command('get_trust_lines')
