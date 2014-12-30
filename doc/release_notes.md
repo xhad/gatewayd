@@ -1,3 +1,16 @@
+### 12/30/2014
+
+### 3.34.0
+
+### Added Features:
+- Make to_issuer, from_issuer optional on ripple payment
+  Previously defaulted to COLD_WALLET
+
+### Fixed Bugs:
+- Bump bridge-quote-service-client version
+- Remove logs/ directory from git
+- Automatically create logs/ directory and log file
+
 ### 12/25/2014
 
 ### 3.33.0
