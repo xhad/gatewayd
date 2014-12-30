@@ -18,17 +18,17 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
         currency: 'XAU',
         amount: 1.5,
         destinationTag: 5555,
-        issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk' 
+        to_issuer: 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk'
       })
       .expect(200)
       .end(function(error, response) {
         assert(response.body.payment.id > 0);
         assert(response.body.payment.to_address_id > 0);
         assert.strictEqual(response.body.payment.state, 'outgoing');
-        assert.strictEqual(response.body.payment.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
-        assert.strictEqual(response.body.payment.from_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
-        assert.strictEqual(response.body.payment.to_amount, '1.5');
-        assert.strictEqual(response.body.payment.from_amount, '1.5');
+        assert.strictEqual(response.body.payment.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk')
+        assert.strictEqual(response.body.payment.from_issuer, null)
+        assert.strictEqual(response.body.payment.to_amount, 1.5);
+        assert.strictEqual(response.body.payment.from_amount, 1.5);
         assert.strictEqual(response.body.payment.to_currency, 'XAU');
         assert.strictEqual(response.body.payment.from_currency, 'XAU');
         assert.strictEqual(response.body.success, true);
