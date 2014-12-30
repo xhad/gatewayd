@@ -31,10 +31,10 @@ describe('enqueue_outgoing_payment', function() {
       .then(function(rippleTransaction) {
         chai.assert.strictEqual(rippleTransaction.to_amount, 0.01);
         chai.assert.strictEqual(rippleTransaction.to_currency, 'ZMK');
-        chai.assert.strictEqual(rippleTransaction.to_issuer, undefined);
+        chai.assert.strictEqual(rippleTransaction.to_issuer, null);
         chai.assert.strictEqual(rippleTransaction.from_amount, 0.01);
         chai.assert.strictEqual(rippleTransaction.from_currency, 'ZMK');
-        chai.assert.strictEqual(rippleTransaction.from_issuer, undefined);
+        chai.assert.strictEqual(rippleTransaction.from_issuer, null);
         chai.assert.strictEqual(rippleTransaction.state, 'outgoing');
         done();
     }).error(function(error) {
