@@ -1,13 +1,13 @@
 var assert = require('assert');
 var http = require('supertest');
 var gateway = require(__dirname+'/../../');
-var expressApp = require(__dirname+'/../../lib/app.js'); 
+var expressApp = require(__dirname+'/../../lib/app.js');
 
 describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
 
   before(function() {
     gateway.config.set('BASIC_AUTH', false);
-  })
+  });
 
   it('POST /payments/outgoing should enque an outgoing payment', function(done) {
     http(expressApp)
@@ -25,8 +25,8 @@ describe('Enqueue Outgoing Payment HTTP Endpoint', function() {
         assert(response.body.payment.id > 0);
         assert(response.body.payment.to_address_id > 0);
         assert.strictEqual(response.body.payment.state, 'outgoing');
-        assert.strictEqual(response.body.payment.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk')
-        assert.strictEqual(response.body.payment.from_issuer, null)
+        assert.strictEqual(response.body.payment.to_issuer, 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk');
+        assert.strictEqual(response.body.payment.from_issuer, null);
         assert.strictEqual(response.body.payment.to_amount, 1.5);
         assert.strictEqual(response.body.payment.from_amount, 1.5);
         assert.strictEqual(response.body.payment.to_currency, 'XAU');
