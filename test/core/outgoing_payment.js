@@ -257,4 +257,34 @@ describe('Sending a queued payment to ripple', function() {
       });
   });
 
+  it('should update the outgoing payment with the source balance changes', function(done) {
+
+    var validatedPayment = fixtures.successful_responses.validated_payment;
+
+    validatedPayment.source_balance_changes = [
+      { value: '-1.012', currency: 'XRP', issuer: '' },
+      { value: '1',      currency: 'BTC', issuer: 'rJMtFJ7hKzvcGyzKp9rN9PrqNPReSsdFv5' },
+      { value: '0.45',   currency: 'BTC', issuer: 'rwjYEBN9DSMnxLzGVEfbqmabDd2sr2kzcz' }
+    ];
+
+    validatedPayment.destination_balance_changes = [
+      { value: '0.5', currency: 'XAU', issuer: 'rJMtFJ7hKzvcGyzKp9rN9PrqNPReSsdFv5' },
+      { value: '0.2', currency: 'XAU', issuer: 'rwjYEBN9DSMnxLzGVEfbqmabDd2sr2kzcz' }
+    ];
+
+    RippleTransactions
+      .create(fixtures.outgoing_record_invoice_id_memos)
+      .then(function(rippleTransaction){
+        outgoingPayment = new OutgoingPayment(rippleTransaction);
+        return outgoingPayment._recordAcceptanceOrRejectionStatus(validatedPayment)
+      })
+      .then(function(rippleTransaction) {
+        chai.assert.strictEqual(rippleTransaction.to_currency, 'XAU');
+        chai.assert.strictEqual(rippleTransaction.to_amount, 0.7);
+        chai.assert.strictEqual(rippleTransaction.from_currency, 'BTC');
+        chai.assert.strictEqual(rippleTransaction.from_amount, 1.45);
+        done();
+      });
+  });
+
 });
