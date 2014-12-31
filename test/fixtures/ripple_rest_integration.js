@@ -91,8 +91,12 @@ module.exports = {
       hash: '9DDCEBAB6D751C22755F9303B59E1E2FDC8308B551A4C5AE89343BD6F2255169',
       timestamp: '2014-06-30T00:28:46.000Z',
       fee: '0.000012',
-      source_balance_changes: [],
-      destination_balance_changes: []
+      source_balance_changes: [
+        { value: '-0.013939', currency: 'XRP', issuer: '' },
+      ],
+      destination_balance_changes: [
+        { value: '0.001939', currency: 'XRP', issuer: '' },
+      ]
     }
   },
   requests: {
