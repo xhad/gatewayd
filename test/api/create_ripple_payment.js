@@ -52,9 +52,7 @@ describe('api.createRipplePayment', function() {
             });
           });
         })
-        .error(function(error) {
-          done(error);
-        });
+        .error(done);
     });
   });
 
@@ -95,9 +93,7 @@ describe('api.createRipplePayment', function() {
             });
           });
         })
-        .error(function(error) {
-          done(error);
-        });
+        .error(done);
     });
   });
 });
