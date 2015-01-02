@@ -3,8 +3,8 @@
 var nconf = require('nconf');
 
 nconf
+  .env()
   .file({ file: __dirname+'/config.json' })
-  .env();
 
 nconf.defaults({
   'ENVIRONMENT': 'production',
