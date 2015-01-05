@@ -41,6 +41,7 @@ module.exports = function (grunt) {
         'config/*',
         'lib/**/*.js',
         '!lib/data/migrations/*.js',
+        '!lib/data/node_modules/**/*.js',
         'processes/**/*.js'
       ],
       options: {

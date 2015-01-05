@@ -1,7 +1,19 @@
-var gatewayd = require(__dirname+'/../../');
-var assert   = require('assert');
+var assert          = require('assert');
+var sinon           = require('sinon');
+var gatewayd        = require(__dirname+'/../../');
+var walletsFixture  = require(__dirname+'/../fixtures/wallets.js');
 
 describe('api.createRipplePayment', function() {
+
+  before(function() {
+    var configStub = sinon.stub(gatewayd.config, 'get');
+    configStub.withArgs('HOT_WALLET').returns(walletsFixture.HOT_WALLET);
+    configStub.withArgs('COLD_WALLET').returns(walletsFixture.COLD_WALLET);
+  });
+
+  after(function() {
+    gatewayd.config.get.restore();
+  });
 
   describe('outgoing ripple payment', function() {
 
@@ -41,7 +53,7 @@ describe('api.createRipplePayment', function() {
           });
         })
         .error(function(error) {
-          console.log('ERROR', error);
+          done(error);
         });
     });
   });
@@ -53,7 +65,7 @@ describe('api.createRipplePayment', function() {
       var options = {
         state                : 'invoice',
         direction            : 'from-ripple',
-        source_address       : 'r4EwBWxrx5HxYRyisfGzMto3AT8FZiYdWk',
+        source_address       : walletsFixture.COLD_WALLET,
         source_tag           : 9993222,
         destination_tag      : 788833,
         destination_amount   : 10,
@@ -84,7 +96,7 @@ describe('api.createRipplePayment', function() {
           });
         })
         .error(function(error) {
-          console.log('ERROR', error);
+          done(error);
         });
     });
   });
