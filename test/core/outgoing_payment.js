@@ -283,6 +283,9 @@ describe('Sending a queued payment to ripple', function() {
         chai.assert.strictEqual(rippleTransaction.from_amount, 1.45);
         done();
       })
+      .error(function(error) {
+        done(new Error(error);
+      });
   });
 
 });
