@@ -22,19 +22,14 @@ describe('Outgoing Payment', function() {
         .create(fixtures.outgoing_record)
         .then(function (rippleTransaction) {
           var outgoingPayment = new OutgoingPayment(rippleTransaction);
-          outgoingPayment._rippleRestResponseHandler(fixtures.errors.insufficient_funds)
+          return outgoingPayment._rippleRestResponseHandler(fixtures.errors.insufficient_funds)
             .then(function(handledError){
               chai.assert.strictEqual(handledError.record.state, 'failed');
               chai.assert.strictEqual(handledError.record.transaction_state, 'terINSUF_FEE_B');
               done();
             })
-            .error(function(error){
-              throw new Error(error);
-            });
         })
-        .error(function(error){
-          throw new Error(error);
-        });
+        .error(done);
     });
 
     it('should handle transaction not found -- retry', function(done) {
@@ -42,20 +37,15 @@ describe('Outgoing Payment', function() {
         .create(fixtures.outgoing_record)
         .then(function (rippleTransaction) {
           var outgoingPayment = new OutgoingPayment(rippleTransaction);
-          outgoingPayment._rippleRestResponseHandler(fixtures.errors.invalid_requests.transaction_not_found)
+          return outgoingPayment._rippleRestResponseHandler(fixtures.errors.invalid_requests.transaction_not_found)
             .then(function(handledError){
 
               chai.assert.strictEqual(handledError.record.state, 'outgoing');
               chai.assert.strictEqual(handledError.handled, 'retry');
               done();
             })
-            .error(function(error){
-              throw new Error(error);
-            });
         })
-        .error(function(error){
-          throw new Error(error);
-        });
+        .error(done);
     });
 
 
@@ -85,18 +75,13 @@ describe('Outgoing Payment', function() {
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
         var outgoingPayment = new OutgoingPayment(rippleTransaction);
-        outgoingPayment._rippleRestResponseHandler(fixtures.errors.connection.no_rippled_connection)
+        return outgoingPayment._rippleRestResponseHandler(fixtures.errors.connection.no_rippled_connection)
           .then(function(handledError){
             chai.assert.strictEqual(handledError.handled, 'retry');
             done();
           })
-          .error(function(error){
-            throw new Error(error);
-          });
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it('should handle rippled busy error -- retry', function(done) {
@@ -105,18 +90,13 @@ describe('Outgoing Payment', function() {
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
         var outgoingPayment = new OutgoingPayment(rippleTransaction);
-        outgoingPayment._rippleRestResponseHandler(fixtures.errors.connection.rippled_busy)
+        return outgoingPayment._rippleRestResponseHandler(fixtures.errors.connection.rippled_busy)
           .then(function(handledError){
             chai.assert.strictEqual(handledError.handled, 'retry');
             done();
           })
-          .error(function(error){
-            throw new Error(error);
-          });
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it('should handle socket hang up connection error -- retry', function(done) {
@@ -127,17 +107,13 @@ describe('Outgoing Payment', function() {
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
         var outgoingPayment = new OutgoingPayment(rippleTransaction);
-        outgoingPayment._rippleRestResponseHandler(error)
+        return outgoingPayment._rippleRestResponseHandler(error)
           .then(function(error){
             chai.assert.strictEqual(error.handled, 'retry');
             done();
-          }).error(function(error){
-            throw new Error(error);
-          });
+          })
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
 });
@@ -165,9 +141,7 @@ describe('Sending a queued payment to ripple', function() {
             done();
           })
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it.skip('should send a ripple payment, response must have a status url', function(done){
@@ -176,18 +150,14 @@ describe('Sending a queued payment to ripple', function() {
       .create(fixtures.outgoing_record)
       .then(function (rippleTransaction) {
         var outgoingPayment = new OutgoingPayment(rippleTransaction);
-        outgoingPayment._sendPayment(fixtures.requests.payment)
+        return outgoingPayment._sendPayment(fixtures.requests.payment)
           .then(function(payment){
             chai.assert(payment.success);
             chai.assert(payment.status_url);
             done();
-          }).error(function(error){
-            throw new Error(error);
-          });
+          })
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it('should mark record pending while a payment is being confirmed', function(done){
@@ -202,9 +172,7 @@ describe('Sending a queued payment to ripple', function() {
             done();
           });
       })
-      .error(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it.skip('should successfully submit outgoing payments and must have transaction_hash and transaction_state', function(done){
@@ -226,10 +194,8 @@ describe('Sending a queued payment to ripple', function() {
         chai.assert.strictEqual(payment.transaction_state, 'tesSUCCESS');
         chai.assert(payment.transaction_hash);
         done();
-      })
-      .catch(function(error){
-        throw new Error(error);
-      });
+     })
+    .error(done);
   });
 
   it.skip('should successfully submit outgoing payments with invoice and memos fields', function(done){
@@ -250,9 +216,7 @@ describe('Sending a queued payment to ripple', function() {
         chai.assert.equal(confirmedPayment.invoice_id, fixtures.outgoing_record_invoice_id_memos.invoice_id);
         done();
       })
-      .catch(function(error){
-        throw new Error(error);
-      });
+      .error(done);
   });
 
   it('should update the outgoing payment with the source balance changes', function(done) {
@@ -283,9 +247,7 @@ describe('Sending a queued payment to ripple', function() {
         chai.assert.strictEqual(rippleTransaction.from_amount, 1.45);
         done();
       })
-      .error(function(error) {
-        done(new Error(error);
-      });
+      .error(done);
   });
 
 });
