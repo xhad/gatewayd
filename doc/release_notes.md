@@ -1,3 +1,16 @@
+### 01/06/2014
+
+### 3.34.1
+
+### Fixed Bugs:
+- gatewayd set_trust CLI call
+- Travis build issues
+- update outgoing, incoming payments with actual amounts
+- bump gatewayd admin minor version
+- mark withdrawal error as failed in ripple_transactions table
+- fix ProcessSet #add and #remove
+- Fix pm2 process starting using node.js pm2 library
+
 ### 12/30/2014
 
 ### 3.34.0
