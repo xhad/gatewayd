@@ -18,7 +18,9 @@ describe('gateway_transactions model', function() {
     GatewayTransaction.create({
       ripple_transaction_id: 123,
       external_transaction_id: 456,
-      policy_id: 789
+      policy_id: 789,
+      direction: 'to-ripple',
+      state: 'pending'
     })
     .then(function(transaction) {
       gatewayTransaction = transaction;
@@ -28,14 +30,16 @@ describe('gateway_transactions model', function() {
       assert.strictEqual(transaction.policy_id, 789);
       done();
     })
-    .error(console.log);
+    .error(done);
   });
 
   it('should accept a state', function(done) {
     GatewayTransaction.create({
       ripple_transaction_id: 123,
       external_transaction_id: 456,
-      policy_id: 789
+      policy_id: 789,
+      direction: 'to-ripple',
+      state: 'pending'
     })
     .then(function(transaction) {
       gatewayTransaction.updateAttributes({
@@ -46,13 +50,13 @@ describe('gateway_transactions model', function() {
           done();
         });
     })
-    .error(console.log);
+    .error(done);
   });
 
   it('should fail to save without a ripple transaction id', function(done) {
     GatewayTransaction.create({
       external_transaction_id: 456,
-      policy_id: 789
+      policy_id: 789,
     })
     .error(function(error) {
       assert.strictEqual(error.ripple_transaction_id[0], 'Validation notNull failed: ripple_transaction_id');
