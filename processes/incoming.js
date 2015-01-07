@@ -40,12 +40,28 @@ function Monitor(gatewayd) {
 
 function start(gatewayd) {
   var monitor = new Monitor(gatewayd);
-  gatewayd.api.getOrFetchLastPaymentHash()
-    .then(function(paymentHash){
-      monitor.lastHash = paymentHash;
-      monitor.start();
-      gatewayd.logger.info('Listening for incoming ripple payments from Ripple REST, starting at', monitor.lastHash);
-    });
+  var paymentHash;
+
+  gatewayd.utils.promiseWhile(function() { return !paymentHash; },
+    function() {
+      return new Promise(function(resolve) {
+        gatewayd.api.getOrFetchLastPaymentHash()
+          .then(function(hash) {
+            paymentHash = hash;
+            resolve();
+          })
+          .error(function(error) {
+            gatewayd.logger.error(error);
+            gatewayd.logger.error('no payments found for cold wallet, retrying...');
+            setTimeout(resolve, 2000);
+          });
+      });
+  })
+  .then(function(){
+    monitor.lastHash = paymentHash;
+    monitor.start();
+    gatewayd.logger.info('Listening for incoming ripple payments from Ripple REST, starting at', monitor.lastHash);
+  });
 }
 
 if (gatewayd.features.isEnabled('supervisor')) {
