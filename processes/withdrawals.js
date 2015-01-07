@@ -9,7 +9,18 @@ var worker = new SqlMqWorker({
   }},
   job: function(incomingPayment, callback) {
     var withdrawalProcessor = new WithdrawalProcessor(incomingPayment);
-    withdrawalProcessor.processIncomingPayment(callback);
+    withdrawalProcessor.processIncomingPayment(function(error) {
+      if (error) {
+        var data   = incomingPayment.data || {};
+        data.error = error;
+        incomingPayment.updateAttributes({
+          state: 'failed',
+          data: data
+        }).complete(callback);
+      } else {
+        callback();
+      }
+    });
   }
 });
 
