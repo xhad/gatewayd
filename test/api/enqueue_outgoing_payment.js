@@ -32,8 +32,6 @@ describe('enqueue_outgoing_payment', function() {
         chai.assert.strictEqual(rippleTransaction.to_amount, 0.01);
         chai.assert.strictEqual(rippleTransaction.to_currency, 'ZMK');
         chai.assert.isUndefined(rippleTransaction.to_issuer);
-        chai.assert.strictEqual(rippleTransaction.from_amount, 0.01);
-        chai.assert.strictEqual(rippleTransaction.from_currency, 'ZMK');
         chai.assert.isUndefined(rippleTransaction.from_issuer);
         chai.assert.strictEqual(rippleTransaction.state, 'outgoing');
         done();
@@ -54,8 +52,6 @@ describe('enqueue_outgoing_payment', function() {
       chai.assert.strictEqual(rippleTransaction.to_amount, 0.01);
       chai.assert.strictEqual(rippleTransaction.to_currency, 'ZMK');
       chai.assert.strictEqual(rippleTransaction.to_issuer, to_issuer);
-      chai.assert.strictEqual(rippleTransaction.from_amount, 0.01);
-      chai.assert.strictEqual(rippleTransaction.from_currency, 'ZMK');
       chai.assert.strictEqual(rippleTransaction.from_issuer, from_issuer);
       chai.assert.strictEqual(rippleTransaction.state, 'outgoing');
       done();
