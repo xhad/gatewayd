@@ -6,7 +6,8 @@ function worker(gatewayd) {
   return new SqlMqWorker({
     Class: gatewayd.data.models.rippleTransactions,
     predicate: { where: {
-      state: 'outgoing'
+      state: 'invoice',
+      direction: 'to-ripple'
     }},
     job: function(outgoingPayment, callback) {
       var outgoingPaymentProcessor = new OutgoingPaymentProcessor(outgoingPayment);
