@@ -16,6 +16,11 @@ Gatewayd's features include:
   - gateway administration
   - support for custom plugins
 
+## Installation
+
+- Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/install.md) for Ubuntu
+- Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/installmac.md) for Mac
+
 ## Documentation
 
 The [Ripple Dev Portal](https://ripple.com/build/gatewayd/) contains detailed information on Gatewayd and its APIs.
@@ -41,11 +46,6 @@ The [Ripple Dev Portal](https://ripple.com/build/gatewayd/) contains detailed in
   - The Ripple REST API provides a simplified HTTP/JSON interface to all the Ripple protocol network operations, such as payments and other transactions.
 
 4. [git](http://git-scm.com/) is required for installation and updating. It is not used during general operation.
-
-## Installation
-
-- Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/install.md) for Ubuntu
-- Comprehensive [installation script](https://github.com/ripple/gatewayd/blob/master/doc/installmac.md) for Mac
 
 ## Updating ##
 
