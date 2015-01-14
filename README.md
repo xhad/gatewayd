@@ -82,3 +82,17 @@ You can get usage information for the commandline as follows:
 
     bin/gateway -h
 
+## Code Release Process ##
+
+The following is an example flow for releasing changes to master:
+
+- create a new release branch such as `release-3.35.1` with the patch
+- bump the version patch number in the package.json: change 3.35.0 to 3.35.1
+- cherry pick the patch commit into the release branch `git cherry-pick <commit>`
+- summarize the release in doc/releases.md
+- create a git tag with the version number:  `git tag -a v3.35.1`
+- merge the release branch into the `master` branch
+- push master to the origin remote: `git push origin master`
+- push release tag to origin remote: `git push --tags`
+- rebase the develop branch: `git checkout develop && git rebase master`
+
