@@ -1,0 +1,53 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:mime:20170907':
+    - host-meta-plugin > ripple-name > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-quote-service-client > ripple-lib > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > ripple-name > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > ripple-name > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > ripple-lib > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > ripple-lib > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - gatewayd-setup-wizard-plugin > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - gatewayd-setup-wizard-plugin > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - host-meta-plugin > ripple-name > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-quote-service-client > ripple-lib > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - host-meta-plugin > supertest > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - ripple-wallet > ripple-lib > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - ripple-wallet > ripple-lib > superagent > form-data > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-quote-service-client > ripple-rest-client > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > ripple-rest-client > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - gatewayd-setup-wizard-plugin > ripple-rest-client > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - ripple-rest-client > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+    - ripple-account-monitor > ripple-rest-client > superagent > mime:
+        patched: '2018-06-25T22:31:09.820Z'
+  'npm:tunnel-agent:20170305':
+    - bridge-quote-service-client > coveralls > request > tunnel-agent:
+        patched: '2018-06-25T22:31:09.820Z'
+    - bridge-payments-plugin > coveralls > request > tunnel-agent:
+        patched: '2018-06-25T22:31:09.820Z'
+    - winston-loggly > loggly > request > tunnel-agent:
+        patched: '2018-06-25T22:31:09.820Z'
