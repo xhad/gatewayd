@@ -1,0 +1,21 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.12.0
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:minimatch:20160620':
+    - bridge-payments-plugin > istanbul > fileset > minimatch:
+        patched: '2018-10-23T23:27:15.445Z'
+    - bridge-quote-service-client > istanbul > fileset > minimatch:
+        patched: '2018-10-23T23:27:15.445Z'
+    - bridge-payments-plugin > mocha > glob > minimatch:
+        patched: '2018-10-23T23:27:15.445Z'
+    - bridge-quote-service-client > mocha > glob > minimatch:
+        patched: '2018-10-23T23:27:15.445Z'
+  'npm:tunnel-agent:20170305':
+    - bridge-payments-plugin > coveralls > request > tunnel-agent:
+        patched: '2018-10-23T23:27:15.445Z'
+    - bridge-quote-service-client > coveralls > request > tunnel-agent:
+        patched: '2018-10-23T23:27:15.445Z'
+    - winston-loggly > loggly > request > tunnel-agent:
+        patched: '2018-10-23T23:27:15.445Z'
