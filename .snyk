@@ -1,0 +1,158 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.3
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - bridge-payments-plugin > mocha > debug:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > mocha > debug:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > superagent > debug:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > superagent > debug:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:extend:20180424':
+    - bridge-payments-plugin > ripple-rest-client > superagent > extend:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > ripple-rest-client > superagent > extend:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-account-monitor > ripple-rest-client > superagent > extend:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-rest-client > superagent > extend:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-rest-client > superagent > extend:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:hoek:20180212':
+    - bridge-quote-service-client > coveralls > request > hawk > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > coveralls > request > hawk > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - winston-loggly > loggly > request > hawk > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - sqlite3 > node-pre-gyp > hawk > sntp > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - sqlite3 > node-pre-gyp > hawk > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - winston-loggly > loggly > request > hawk > sntp > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - sqlite3 > node-pre-gyp > hawk > cryptiles > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > coveralls > request > hawk > sntp > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - sqlite3 > node-pre-gyp > hawk > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > coveralls > request > hawk > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - winston-loggly > loggly > request > hawk > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > coveralls > request > hawk > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - winston-loggly > loggly > request > hawk > cryptiles > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > coveralls > request > hawk > cryptiles > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > coveralls > request > hawk > cryptiles > boom > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > coveralls > request > hawk > sntp > hoek:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:lodash:20180130':
+    - ripple-rest-client > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-rest-client > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-rest-client > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > ripple-rest-client > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-account-monitor > ripple-rest-client > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+    - pm2 > babel > babel-core > babel-plugin-proto-to-assign > lodash:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:mime:20170907':
+    - gatewayd-setup-wizard-plugin > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - host-meta-plugin > ripple-name > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-lib > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-lib > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-name > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-wallet > ripple-lib > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-name > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-lib > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-lib > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - host-meta-plugin > supertest > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - host-meta-plugin > ripple-name > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-wallet > ripple-lib > superagent > form-data > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-rest-client > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-rest-client > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-rest-client > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > ripple-rest-client > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-account-monitor > ripple-rest-client > superagent > mime:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:minimatch:20160620':
+    - bridge-payments-plugin > istanbul > fileset > minimatch:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > mocha > glob > minimatch:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > mocha > glob > minimatch:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > istanbul > fileset > minimatch:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:ms:20170412':
+    - bridge-payments-plugin > mocha > debug > ms:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > mocha > debug > ms:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:ms:20151024':
+    - bridge-payments-plugin > superagent > debug > ms:
+        patched: '2019-04-11T00:47:54.119Z'
+    - gatewayd-setup-wizard-plugin > superagent > debug > ms:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:qs:20140806-1':
+    - host-meta-plugin > supertest > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-wallet > ripple-lib > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+    - host-meta-plugin > ripple-name > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-name > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-lib > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-payments-plugin > ripple-lib > superagent > qs:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:tunnel-agent:20170305':
+    - bridge-payments-plugin > coveralls > request > tunnel-agent:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > coveralls > request > tunnel-agent:
+        patched: '2019-04-11T00:47:54.119Z'
+    - winston-loggly > loggly > request > tunnel-agent:
+        patched: '2019-04-11T00:47:54.119Z'
+  'npm:ws:20160920':
+    - bridge-payments-plugin > ripple-lib > ws:
+        patched: '2019-04-11T00:47:54.119Z'
+    - bridge-quote-service-client > ripple-lib > ws:
+        patched: '2019-04-11T00:47:54.119Z'
+    - ripple-wallet > ripple-lib > ws:
+        patched: '2019-04-11T00:47:54.119Z'
