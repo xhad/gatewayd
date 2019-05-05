@@ -41,7 +41,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-db-migrate": "^0.2.0",
     "grunt-env": "^0.4.2",
-    "grunt-jsdoc": "^0.5.4",
+    "grunt-jsdoc": "^0.6.4",
     "host-meta-plugin": "^0.1.5",
     "istanbul": "^0.3.2",
     "jbuilder": "",
