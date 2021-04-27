@@ -67,7 +67,7 @@
     "superagent": "^0.18.0",
     "supertest": "^0.13.0",
     "underscore-node": "0.1.2",
-    "validator": "^3.11.0",
+    "validator": "^13.6.0",
     "winston": "^0.7.3",
     "winston-loggly": "^1.0.1",
     "winston-raygun": "0.0.6"
