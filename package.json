@@ -27,7 +27,7 @@
     "cli-table": "0.3.0",
     "commander": "2.1.0",
     "cors": "^2.4.1",
-    "coveralls": "^2.11.2",
+    "coveralls": "^3.0.0",
     "db-migrate": "^0.6.4",
     "domain-supervisor": "^0.3.0",
     "ejs": "",
