@@ -47,7 +47,7 @@
     "jbuilder": "",
     "lodash": "^2.4.1",
     "mocha": "~1.14.0",
-    "nconf": "~0.6",
+    "nconf": "~0.12.0",
     "node-uuid": "1.4.1",
     "passport": "",
     "passport-http": "",
